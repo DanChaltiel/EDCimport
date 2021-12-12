@@ -89,4 +89,4 @@ jobs:
           # 
           # # The message for the commit.
           # # Default: 'Commit from GitHub Actions (name of the workflow)'
-          message: 'update dev version (Github Actions)'
+          message: 'Update dev version (Github Actions)'
