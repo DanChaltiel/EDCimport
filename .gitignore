@@ -1,3 +1,47 @@
+
+# RStudio internals
+.Rproj.user
+*.RData
+*.Rhistory
+crosstable.Rcheck/
+
+# this messes up github linguistics (see https://github.com/github/linguist/issues/4927)
+pkgdown/index\.html 
+
+# MS Word files
+test*.docx
+~*.docx
+
+#test files
+TODO.R
+dev-*.R
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+.RData
+.Rproj.user
+.Rhistory
+.Rprofile
+
+/doc/
+/docs/
+/Meta/
+
+*~*
+inst/doc
+examples/example_result.png
+examples/example_code.png
+
+TODO\.R
+DEV\.R
+
+
+
 # History files
 .Rhistory
 .Rapp.history

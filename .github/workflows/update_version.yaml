@@ -1,0 +1,13 @@
+on: push
+
+name: Update dev version
+
+jobs:
+  build:
+    runs-on: macOS-latest
+    steps:
+      - name: Update version
+        run: |
+          install.packages("desc")
+          desc::desc_bump_version("dev")
+        shell: Rscript {0}

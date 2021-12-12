@@ -1,0 +1,28 @@
+Package: EDCimport
+Title: Import data from EDC softwares
+Version: 0.1.0.9000
+Authors@R: 
+    c(person(given = "Dan",
+             family = "Chaltiel",
+             role = c("aut", "cre"),
+             email = "dan.chaltiel@gmail.com",
+             comment = c(ORCID = "0000-0003-3488-779X")))
+Description: Grab all data from your favorite Electronic Data Capture software.
+License: GPL-3
+Depends:
+    R (>= 3.1.0)
+Imports:
+    tidyverse,
+    glue,
+    officer
+Suggests: 
+    covr,
+    testthat,
+VignetteBuilder: 
+    knitr
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
+Config/testthat/edition: 3
+Config/testthat/parallel: true
