@@ -13,80 +13,19 @@ jobs:
       - uses: actions/checkout@v2
 
       - uses: r-lib/actions/setup-r@master
+        
+      - uses: r-lib/actions/setup-r-dependencies@v1
         with:
-          r-version: ${{ matrix.config.r }}
-          http-user-agent: ${{ matrix.config.http-user-agent }}
-
-      # - uses: r-lib/actions/setup-pandoc@master
-      # 
-      # - name: Query dependencies
-      #   run: |
-      #     install.packages('desc')
-      #     install.packages('sessioninfo')
-      #     saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
-      #     writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
-      #   shell: Rscript {0}
-      # 
-      # - name: Cache R packages
-      #   uses: actions/cache@v1
-      #   with:
-      #     path: ${{ env.R_LIBS_USER }}
-      #     key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
-      #     restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
-      # 
-      # - name: Install dependencies
-      #   run: |
-      #     remotes::install_deps(dependencies = TRUE)
-      #   shell: Rscript {0}
+          extra-packages: desc
         
       - name: Update version
         run: |
-          install.packages("desc")
+          #install.packages("desc")
           desc::desc_bump_version("dev")
         shell: Rscript {0}
         
       - name: Add & Commit
         uses: EndBug/add-and-commit@v7.5.0
         with:
-          # # The arguments for the `git add` command (see the paragraph below for more info)
-          # # Default: '.'
-          # add: 'src'
-          # 
-          # # The name of the user that will be displayed as the author of the commit.
-          # # Default: depends on the default_author input
-          # author_name: Author Name
-          # 
-          # # The email of the user that will be displayed as the author of the commit.
-          # # Default: depends on the default_author input
-          # author_email: mail@example.com
-          # 
-          # # The name of the branch to use, if different from the one that triggered the workflow.
-          # # Default: the branch that triggered the run
-          # branch: some-branch
-          # 
-          # # How the action should behave when the targeted branch is missing: "create" will create a new one on the remote, "throw" will exit
-          # # Default: throw
-          # branch_mode: create
-          # 
-          # # The name of the custom committer you want to use, if different from the author of the commit.
-          # # Default: the name of the author (set with either author_name or default_author)
-          committer_name: Github Actions
-          # 
-          # # The email of the custom committer you want to use, if different from the author of the commit.
-          # # Default: the email of the author (set with either author_email or default_author)
-          # committer_email: mail@example.com
-          # 
-          # # The local path to the directory where your repository is located. You should use actions/checkout first to set it up.
-          # # Default: '.'
-          # cwd: './path/to/the/repo'
-          # 
-          # # Determines the way the action fills missing author name and email. Three options are available:
-          # # - github_actor -> UserName <UserName@users.noreply.github.com>
-          # # - user_info -> Your Display Name <your-actual@email.com>
-          # # - github_actions -> github-actions <email associated with the github logo>
-          # # Default: github_actor
           default_author: github_actions
-          # 
-          # # The message for the commit.
-          # # Default: 'Commit from GitHub Actions (name of the workflow)'
           message: 'Update dev version (Github Actions)'
