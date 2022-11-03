@@ -15,6 +15,13 @@
 read_trialmaster = function(archive, use_cache=TRUE, verbose=1){
   directory = dirname(archive)
   extract_datetime = parse_file_datetime(archive)
+  if(is.na(extract_datetime)){
+    cli_warn(c("Extraction datetime could not be read from archive's name.", 
+               x="Archive's name should contain the datetime as {.code SAS_XPORT_yyyy_mm_dd_hh_MM}", 
+               i="Actual archive's name: {archive}"), 
+             class="edc_tm_bad_name")
+  }
+  
   proj_name = parse_file_project(archive)
   cache_file = glue("{directory}/{proj_name}_{format_ymd(extract_datetime)}.rds")
   if(file.exists(cache_file) && isTRUE(use_cache)){
@@ -71,8 +78,7 @@ read_tm_all_xpt = function(directory, datetime_extraction){
              class="edc_tm_no_procformat")
   }
   
-  date_extraction = format_ymd(datetime_extraction)
-  rtn$date_extraction = date_extraction
+  rtn$date_extraction = format_ymd(datetime_extraction)
   rtn$datetime_extraction = datetime_extraction
   rtn$.tablelist = tibble(dataset=tolower(datasets_names)) %>% 
     mutate(names=map(.data$dataset, ~names(rtn[[.x]])), 
