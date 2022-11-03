@@ -14,7 +14,7 @@ read_trialmaster(archive, use_cache = TRUE, verbose = 1)
 \item{verbose}{one of \code{c(0, 1, 2)}. The higher, the more information will be printed}
 }
 \value{
-a list containing one dataframe for each \code{.xpt} file in the folder, the extraction date (\code{datetime_extraction}), and a summary of all imported tables (\code{.tablelist}).
+a list containing one dataframe for each \code{.xpt} file in the folder, the extraction date (\code{datetime_extraction}), and a summary of all imported tables (\code{.lookup}).
 }
 \description{
 Import the \code{.zip} archive of a TrialMaster trial export as a list of dataframes. Use \code{options(trialmaster_pw="xxx")} to indicate the password if the archive is protected. The archive filename should be leaved untouched as it contains the project name and the date of extraction. \cr

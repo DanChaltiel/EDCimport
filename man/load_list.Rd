@@ -9,7 +9,7 @@ load_list(x, env = parent.frame(), remove = TRUE)
 \arguments{
 \item{x}{a list}
 
-\item{env}{the environement onto which the list shoudl be loaded}
+\item{env}{the environment onto which the list should be loaded}
 
 \item{remove}{if \code{TRUE}, \code{x} will be removed from the environment afterward}
 }

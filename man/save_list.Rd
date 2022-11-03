@@ -9,7 +9,7 @@ save_list(x, filename)
 \arguments{
 \item{x}{a list}
 
-\item{filename}{the filename, with the \code{.RData} extention.}
+\item{filename}{the filename, with the \code{.RData} extension.}
 }
 \value{
 nothing, called for its side-effect

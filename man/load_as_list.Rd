@@ -7,7 +7,7 @@
 load_as_list(filename)
 }
 \arguments{
-\item{filename}{the filename, with the \code{.RData} extention.}
+\item{filename}{the filename, with the \code{.RData} extension.}
 }
 \value{
 a list

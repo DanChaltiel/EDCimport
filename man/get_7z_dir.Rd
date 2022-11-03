@@ -2,7 +2,7 @@
 % Please edit documentation in R/7zip.R
 \name{get_7z_dir}
 \alias{get_7z_dir}
-\title{Retreive the path to 7zip executable directory}
+\title{Retrieve the path to 7zip executable directory}
 \usage{
 get_7z_dir()
 }
@@ -10,5 +10,5 @@ get_7z_dir()
 the path to 7zip executable directory
 }
 \description{
-Retreive the path to 7zip executable directory. Use \code{options(path_7zip="path/to/7zip")} to change its behaviour.
+Retrieve the path to 7zip executable directory. Use \code{options(path_7zip="path/to/7zip")} to change its behavior.
 }

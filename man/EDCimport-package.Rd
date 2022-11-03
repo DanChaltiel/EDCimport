@@ -4,9 +4,9 @@
 \name{EDCimport-package}
 \alias{EDCimport}
 \alias{EDCimport-package}
-\title{EDCimport: Import data from EDC softwares}
+\title{EDCimport: Import data from EDC software}
 \description{
-Grab all data from your favorite Electronic Data Capture software. Currently supporting TrialMaster and Macro.
+Grab all data from your favorite Electronic Data Capture software.
 }
 \author{
 \strong{Maintainer}: Dan Chaltiel \email{dan.chaltiel@gmail.com} (\href{https://orcid.org/0000-0003-3488-779X}{ORCID})
