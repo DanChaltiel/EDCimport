@@ -1,8 +1,8 @@
 
 
+skip_on_cran()
 
 # load_list() ---------------------------------------------------------------------------------
-skip_on_cran()
 
 test_that("load_list() works", {
   x=list(a=1, b=mtcars)
@@ -37,24 +37,47 @@ test_that("save_list() works", {
 })
 
 
-# find_keyword() ------------------------------------------------------------------------------
+# get_lookup() & find_keyword() ---------------------------------------------------------------
 
-#TODO tester aussi quand certaines variables sont manquantes ?
+test_that("get_lookup() works", {
+  
+  lookup = list(i=crosstable::iris2, m=mtcars) %>% get_lookup()
+  expect_equal(lengths(lookup$names), c(i=5, m=11))
+  expect_true(all(nzchar(lookup$labels$i)))
+  expect_false(any(nzchar(lookup$labels$m)))
+  # lookup %>% unnest(everything())
+  
+  x = list(i=crosstable::iris2, mtcars)
+  get_lookup(x) %>% 
+    expect_error(class="edc_lookup_unnamed")
+  x = list(i=1, .lookup=mtcars)
+  get_lookup(x) %>% 
+    expect_error(class="edc_lookup_empty")
+})
+
 test_that("find_keyword() works", {
-  mtcars2=crosstable::mtcars2
-  iris2=crosstable::iris2
-  tablelist = tibble(
-    dataset=c("mtcars2", "iris2"),
-    names=map(dataset, ~names(get(.x))),
-    labels=map(dataset, ~var_label(get(.x)))
-  )
-  x1=find_keyword("hp", data=tablelist)
+  lookup = list(iris2=crosstable::iris2, mtcars2=crosstable::mtcars2) %>% get_lookup()
+  x1=find_keyword("hp", data=lookup)
   expect_equal(x1$names, c("hp", "hp_date"))
-  x2=find_keyword("number|date", data=tablelist)
+  x2=find_keyword("number|date", data=lookup)
   expect_equal(x2$names, c("cyl", "gear", "carb", "hp_date", "qsec_posix"))
-  x3=find_keyword("number|date", data=tablelist, ignore_case=FALSE)
+  x3=find_keyword("number|date", data=lookup, ignore_case=FALSE)
   expect_equal(x3$names, "hp_date")
 })
+
+
+test_that("find_keyword() works with read_trialmaster()", {
+  clean_cache()
+  expect_message(w <- read_trialmaster(filename),
+                 class="read_tm_zip")
+  local_options(edc_lookup=w$.lookup)
+  x1=find_keyword("sex")
+  expect_equal(x1$names, "SEX")
+})
+
+
+
+
 
 # 7-zip ---------------------------------------------------------------------------------------
 
@@ -84,7 +107,7 @@ test_that("Extract zip with password", {
 test_that("Extract zip with wrong password", {
   target = new_target("test_7zerr")
   x=extract_7z(filename, target, password="foobar") %>%
-    expect_error(class="edc_7z_error")
+    expect_error(class="edc_7z_bad_password_error")
 })
 
 test_that("7zip not in the path", {
