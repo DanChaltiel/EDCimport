@@ -7,12 +7,10 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-      R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
-      R_KEEP_PKG_SOURCE: yes
     steps:
       - uses: actions/checkout@v2
 
-      - uses: r-lib/actions/setup-r@master
+      - uses: r-lib/actions/setup-r@main
         with:
           install-r: false 
         
@@ -22,7 +20,7 @@ jobs:
           desc::desc_bump_version("dev")
         shell: Rscript {0}
         
-      - name: Add & Commit
+      - name: Commit the version change
         uses: EndBug/add-and-commit@v7.5.0
         with:
           default_author: github_actions
