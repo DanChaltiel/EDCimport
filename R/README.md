@@ -8,7 +8,7 @@
 
 <!-- badges: end -->
 
-EDCimport is a package designed to easily import data from EDC softwares TrialMaster and Macro.
+EDCimport is a package designed to easily import data from EDC software TrialMaster and Macro.
 
 ## Installation
 

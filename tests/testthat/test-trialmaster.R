@@ -24,7 +24,7 @@ test_that("Read an archive", {
   #expect formats
   expect_s3_class(site$INCLSITE, "factor")
   expect_equal(as.character(site$INCLSITE), "Yes")
-  expect_equal(dim(.tablelist), c(5,3))
+  expect_equal(dim(.lookup), c(5,3))
   clean_cache()
 })
 

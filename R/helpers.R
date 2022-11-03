@@ -4,7 +4,7 @@
 #'
 #' @param data_list a list containing at least 1 dataframe
 #'
-#' @return a dataframe summarising column names and labels 
+#' @return a dataframe summarizing column names and labels 
 #' @export
 #'
 #' @examples
@@ -78,7 +78,7 @@ find_keyword = function(keyword, data=getOption("edc_lookup", NULL), ignore_case
 #' Load a list in an environment
 #'
 #' @param x a list
-#' @param env the environement onto which the list shoudl be loaded
+#' @param env the environment onto which the list should be loaded
 #' @param remove if `TRUE`, `x` will be removed from the environment afterward
 #'
 #' @return nothing, called for its side-effect
@@ -106,7 +106,7 @@ load_list = function(x, env=parent.frame(), remove=TRUE){
 #' 
 #' Instead of loading a `.RData` file in the global environment, extract every object into a list.
 #'
-#' @param filename the filename, with the `.RData` extention.
+#' @param filename the filename, with the `.RData` extension.
 #'
 #' @return a list
 #' @export
@@ -126,7 +126,7 @@ load_as_list = function(filename){
 #' Save a list as `.RData` file
 #'
 #' @param x a list
-#' @param filename the filename, with the `.RData` extention.
+#' @param filename the filename, with the `.RData` extension.
 #'
 #' @return nothing, called for its side-effect
 #' @export

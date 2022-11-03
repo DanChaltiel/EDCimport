@@ -1,7 +1,7 @@
 
-#' Retreive the path to 7zip executable directory
+#' Retrieve the path to 7zip executable directory
 #' 
-#' Retreive the path to 7zip executable directory. Use `options(path_7zip="path/to/7zip")` to change its behavior.
+#' Retrieve the path to 7zip executable directory. Use `options(path_7zip="path/to/7zip")` to change its behavior.
 #'
 #' @return the path to 7zip executable directory
 #' @export
