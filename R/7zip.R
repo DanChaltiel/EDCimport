@@ -1,7 +1,7 @@
 
 #' Retreive the path to 7zip executable directory
 #' 
-#' Retreive the path to 7zip executable directory. Use `options(path_7zip="path/to/7zip")` to change its behaviour.
+#' Retreive the path to 7zip executable directory. Use `options(path_7zip="path/to/7zip")` to change its behavior.
 #'
 #' @return the path to 7zip executable directory
 #' @export
@@ -72,6 +72,11 @@ extract_7z = function(archive, target_dir, password=NULL, path_7zip=NULL){
     if(status==1){
       cli_warn(msg, class="edc_7z_warn")
     } else {
+      if(any(str_detect(msg, "Wrong password"))){
+        cli_abort(c("Wrong password, archive could not be extracted.",
+                    i="Did you forget to run {.code options(trialmaster_pw=xxx)}?"), 
+                  class="edc_7z_bad_password_error")
+      }
       cli_abort(msg, class="edc_7z_error")
     }
   }
