@@ -13,7 +13,11 @@
 #' library(tidyr)
 #' tl %>% unnest(everything()) %>% unnest(everything())
 get_lookup = function(data_list){
-  expect_type(data_list, "list")
+  if(!is.list(data_list)){
+    cli_abort(c("{.code data_list} should be a list.", 
+                i="{.code class(data_list)}: {.val {class(data_list)}}"), 
+              class="edc_lookup_empty")
+  }
   data_list_n = format(names(data_list))
   data_list = data_list %>% keep(is.data.frame)
   data_list[".lookup"] = NULL
