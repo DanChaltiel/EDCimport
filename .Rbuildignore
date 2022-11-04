@@ -11,6 +11,8 @@ DEV\.R
 
 .*~.*
 
+.*\.rds
+
 ^README.Rmd$
 ^\.lintr$
 ^.*\.Rproj$
