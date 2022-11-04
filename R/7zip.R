@@ -72,7 +72,7 @@ extract_7z = function(archive, target_dir, password=NULL, path_7zip=NULL){
     if(status==1){
       cli_warn(msg, class="edc_7z_warn")
     } else {
-      if(any(str_detect(msg, "Wrong password"))){
+      if(any(str_detect(tolower(msg), "wrong password"))){
         cli_abort(c("Wrong password, archive could not be extracted.",
                     i="Did you forget to run {.code options(trialmaster_pw=xxx)}?"), 
                   class="edc_7z_bad_password_error")

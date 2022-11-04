@@ -1,5 +1,7 @@
 
 
+skip_on_cran()
+
 test_that("Read an archive", {
   rm(list=ls())
   clean_cache()

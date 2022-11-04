@@ -106,6 +106,9 @@ test_that("Extract zip with password", {
 
 test_that("Extract zip with wrong password", {
   target = new_target("test_7zerr")
+  # print(Sys.getenv())
+  skip_if(Sys.getenv("RSTUDIO_CHILD_PROCESS_PANE") =="build", 
+          "Run manually, build pane is behaving wrong: https://stackoverflow.com/q/74308687/3888000")
   x=extract_7z(filename, target, password="foobar") %>%
     expect_error(class="edc_7z_bad_password_error")
 })
