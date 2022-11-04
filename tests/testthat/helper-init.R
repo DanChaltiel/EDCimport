@@ -49,4 +49,11 @@ snapshot_review_bg = function(...){
               env = c(R_BROWSER = brw))
 }
 
+temp_target = function(name){
+  target = file.path2(tempdir(), "name")
+  unlink(target, recursive=TRUE)
+  dir.create(target, showWarnings=FALSE)
+  target
+}
+
 message('Helper-init loaded')

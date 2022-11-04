@@ -81,22 +81,14 @@ test_that("find_keyword() works with read_trialmaster()", {
 
 # 7-zip ---------------------------------------------------------------------------------------
 
-
-new_target = function(name){
-  target = file.path2(tempdir(), "name")
-  unlink(target, recursive=TRUE)
-  dir.create(target, showWarnings=FALSE)
-  target
-}
-
 test_that("Extract zip without password", {
   #This would actually work as well with a random password
-  target = new_target("test_7z2")
+  target = temp_target("test_7z2")
   extract_7z(filename_nopw, target)
   expect_true("procformat.sas" %in% dir(target))
 })
 test_that("Extract zip with password", {
-  target = new_target("test_7z1")
+  target = temp_target("test_7z1")
   extract_7z(filename, target, password="0")
   expect_true("procformat.sas" %in% dir(target))
 })
@@ -105,7 +97,7 @@ test_that("Extract zip with password", {
 ## 7z Errors ----
 
 test_that("Extract zip with wrong password", {
-  target = new_target("test_7zerr")
+  target = temp_target("test_7zerr")
   # print(Sys.getenv())
   skip_if(Sys.getenv("RSTUDIO_CHILD_PROCESS_PANE") =="build", 
           "Run manually, build pane is behaving wrong: https://stackoverflow.com/q/74308687/3888000")
@@ -117,7 +109,7 @@ test_that("7zip not in the path", {
   withr::local_envvar(list(PATH = ""))
   cur_path = Sys.getenv("PATH")
   expect_false(str_detect(cur_path, "7-Zip"))
-  target = new_target("test_7z_path")
+  target = temp_target("test_7z_path")
   
   #manual path: wrong
   extract_7z(filename, target, path_7zip="foobar")  %>%
