@@ -4,20 +4,27 @@
 \alias{read_trialmaster}
 \title{Read the \code{.zip} archive of a TrialMaster export}
 \usage{
-read_trialmaster(archive, use_cache = TRUE, verbose = 1)
+read_trialmaster(
+  archive,
+  use_cache = TRUE,
+  pw = getOption("trialmaster_pw", NULL),
+  verbose = 1
+)
 }
 \arguments{
 \item{archive}{the path to the archive}
 
 \item{use_cache}{if \code{TRUE}, read the \code{.rds} cache if any or extract the archive and create a cache. If \code{FALSE} extract the archive without creating a cache file.}
 
-\item{verbose}{one of \code{c(0, 1, 2)}. The higher, the more information will be printed}
+\item{pw}{The password if the archive is protected. To avoid writing passwords in plain text, it is better to indicate your password using \code{options(trialmaster_pw="xxx")} than \code{pw="xxx"}.}
+
+\item{verbose}{one of \code{c(0, 1, 2)}. The higher, the more information will be printed'}
 }
 \value{
 a list containing one dataframe for each \code{.xpt} file in the folder, the extraction date (\code{datetime_extraction}), and a summary of all imported tables (\code{.lookup}).
 }
 \description{
-Import the \code{.zip} archive of a TrialMaster trial export as a list of dataframes. Use \code{options(trialmaster_pw="xxx")} to indicate the password if the archive is protected. The archive filename should be leaved untouched as it contains the project name and the date of extraction. \cr
+Import the \code{.zip} archive of a TrialMaster trial export as a list of dataframes. The archive filename should be leaved untouched as it contains the project name and the date of extraction. \cr
 Generate a \code{.rds} cache file for future reads. \cr
 If \verb{7zip} is not installed or available, use \code{\link[=read_tm_all_xpt]{read_tm_all_xpt()}} instead.
 }

@@ -1,18 +1,19 @@
 
 #' Read the `.zip` archive of a TrialMaster export
 #' 
-#' Import the `.zip` archive of a TrialMaster trial export as a list of dataframes. Use `options(trialmaster_pw="xxx")` to indicate the password if the archive is protected. The archive filename should be leaved untouched as it contains the project name and the date of extraction. \cr
+#' Import the `.zip` archive of a TrialMaster trial export as a list of dataframes. The archive filename should be leaved untouched as it contains the project name and the date of extraction. \cr
 #' Generate a `.rds` cache file for future reads. \cr
 #' If `7zip` is not installed or available, use [read_tm_all_xpt()] instead.
 #'
 #' @param archive the path to the archive
 #' @param use_cache if `TRUE`, read the `.rds` cache if any or extract the archive and create a cache. If `FALSE` extract the archive without creating a cache file.
-#' @param verbose one of `c(0, 1, 2)`. The higher, the more information will be printed
-#'
+#' @param pw The password if the archive is protected. To avoid writing passwords in plain text, it is better to indicate your password using `options(trialmaster_pw="xxx")` than `pw="xxx"`.
+#' @param verbose one of `c(0, 1, 2)`. The higher, the more information will be printed'
 #'
 #' @inherit read_tm_all_xpt return
 #' @export
-read_trialmaster = function(archive, use_cache=TRUE, verbose=1){
+read_trialmaster = function(archive, use_cache=TRUE, pw=getOption("trialmaster_pw", NULL), 
+                            verbose=1){
   directory = dirname(archive)
   extract_datetime = parse_file_datetime(archive)
   if(is.na(extract_datetime)){
@@ -31,7 +32,6 @@ read_trialmaster = function(archive, use_cache=TRUE, verbose=1){
     if(verbose>0) cli_inform("Unzipping {.val {archive}}", class="read_tm_zip")
     temp_folder = file.path2(tempdir(), str_remove(archive, "\\.zip"))
     dir.create(temp_folder, recursive=TRUE, showWarnings=FALSE)
-    pw = getOption("trialmaster_pw")
     msg = extract_7z(archive, temp_folder, pw)
     if(verbose>1) cli_inform(msg)
     rtn = read_tm_all_xpt(temp_folder, extract_datetime)
