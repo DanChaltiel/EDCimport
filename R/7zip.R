@@ -10,8 +10,10 @@ get_7z_dir = function(){
   default = "C:/Program Files/7-Zip/"
   path_7zip = getOption("path_7zip", default)
   if(!dir.exists(path_7zip)){
-    cli_abort(c("Path {.val {path_7zip}} does not lead to 7-Zip. Either correct the argument or the path.", 
-                i="Try to add 7zip to the PATH environment variable"))
+    cli_abort(c("Path {.val {path_7zip}} does not lead to 7-Zip.", 
+                x="Try to add 7-Zip to the PATH environment variable.", 
+                x='Otherwise, use {.code options(path_7zip="path/to/7zip")} to change the', 
+                i='See section PATH in {.code ?extract_7z} for more informations.'))
   }
   path_7zip
 }
