@@ -5,7 +5,7 @@
   "description": "Grab all data from your favorite Electronic Data Capture software.",
   "name": "EDCimport: Import data from EDC software",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "0.2.0",
+  "version": "0.2.0.9000",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -270,8 +270,9 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "104.491KB",
+  "fileSize": "99.507KB",
   "codeRepository": "https://github.com/DanChaltiel/EDCimport",
+  "releaseNotes": "https://github.com/DanChaltiel/EDCimport/blob/master/NEWS.md",
   "readme": "https://github.com/DanChaltiel/EDCimport/blob/main/README.md",
   "developmentStatus": "https://lifecycle.r-lib.org/articles/stages.html"
 }
