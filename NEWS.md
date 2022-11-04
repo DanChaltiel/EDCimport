@@ -3,7 +3,7 @@
 
 EDCimport is a package designed to easily import data from EDC software TrialMaster and Macro. Browse code at <https://github.com/DanChaltiel/EDCimport>.
 
-# EDCimport 0.2.0 <sub><sup>(?)</sup></sub>
+# EDCimport 0.2.1 <sub><sup>2022/11/04</sup></sub>
 
 - Import your data from TrialMaster using `tm = read_trialmaster("path/to/archive.zip")`.
 
