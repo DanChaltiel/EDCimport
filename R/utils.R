@@ -54,12 +54,12 @@ parse_file_project = function(x){
 #' @noRd
 #' @keywords internal
 format_ymd = function(x){
-  stopifnot(is.Date(x))
+  stopifnot(is.POSIXct(x) || is.Date(x))
   format(x, "%Y-%m-%d")
 }
 #' @noRd
 #' @keywords internal
 format_ymdhm = function(x){
-  stopifnot(is.Date(x))
+  stopifnot(is.POSIXct(x) || is.Date(x))
   format(x, "%Y-%m-%d %Hh%M")
 }
