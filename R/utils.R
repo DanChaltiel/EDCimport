@@ -45,7 +45,7 @@ parse_file_datetime = function(x){
 #' @noRd
 #' @keywords internal
 get_folder_datetime = function(folder){
-  rtn = dir(folder, full.names=TRUE) %>% file.info() %>% pull(mtime) %>% unique()
+  rtn = dir(folder, full.names=TRUE) %>% file.info() %>% pull("mtime") %>% unique()
   if(length(rtn)>1) cli::cli_warn("Folder {folder} had files with different dates: {rtn}")
   as_datetime(rtn[[1]])
 }
