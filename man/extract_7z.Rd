@@ -21,6 +21,12 @@ the success/error message. Mainly used for its side effect of extracting the arc
 \description{
 Use 7zip to extract an archive. Obviously, 7zip should be installed beforehand.
 }
+\section{Install 7-zip}{
+
+
+If 7-zip is not installed on your computer, the easiest way to get it is to run \code{\link[installr:install.7zip]{installr::install.7zip()}}.
+}
+
 \section{Add 7zip to the \code{PATH}}{
 
 

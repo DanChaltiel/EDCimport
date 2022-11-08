@@ -29,6 +29,10 @@ get_7z_dir = function(){
 #' @param password the password of the archive, if any
 #' @param path_7zip See section below. Default to [get_7z_dir()].
 #' 
+#' @section Install 7-zip:
+#' 
+#' If 7-zip is not installed on your computer, the easiest way to get it is to run [installr::install.7zip()].
+#' 
 #' @section Add 7zip to the `PATH`:
 #' 
 #' For this function to work, 7-zip should be registered as a `PATH` environment variable. There are many resources online to help you register if, e.g. https://www.java.com/en/download/help/path.html. 
