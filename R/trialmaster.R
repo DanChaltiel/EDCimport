@@ -30,7 +30,7 @@ read_trialmaster = function(archive, use_cache=TRUE, pw=getOption("trialmaster_p
     rtn = readRDS(cache_file)
   } else {
     if(verbose>0) cli_inform("Unzipping {.val {archive}}", class="read_tm_zip")
-    temp_folder = file.path2(tempdir(), str_remove(archive, "\\.zip"))
+    temp_folder = file.path2(tempdir(), str_remove(basename(archive), "\\.zip"))
     dir.create(temp_folder, recursive=TRUE, showWarnings=FALSE)
     msg = extract_7z(archive, temp_folder, pw)
     if(verbose>1) cli_inform(msg)
