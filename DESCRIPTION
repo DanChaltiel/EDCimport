@@ -7,7 +7,7 @@ Authors@R:
              role = c("aut", "cre"),
              email = "dan.chaltiel@gmail.com",
              comment = c(ORCID = "0000-0003-3488-779X")))
-Description: Grab all data from your favorite Electronic Data Capture software.
+Description: EDCimport is a package designed to easily import data from EDC software TrialMaster and Macro.
 License: GPL-3
 Depends:
     R (>= 3.1.0)
