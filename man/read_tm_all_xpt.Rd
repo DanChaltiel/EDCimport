@@ -12,7 +12,7 @@ read_tm_all_xpt(directory, datetime_extraction)
 \item{datetime_extraction}{the datetime of the data extraction}
 }
 \value{
-a list containing one dataframe for each \code{.xpt} file in the folder, the extraction date (\code{datetime_extraction}), and a summary of all imported tables (\code{.lookup}).
+a list containing one dataframe for each \code{.xpt} file in the folder, the extraction date (\code{datetime_extraction}), and a summary of all imported tables (\code{.lookup}). If not set yet, option \code{edc_lookup} is automatically set to \code{.lookup}.
 }
 \description{
 Read all \code{.xpt} files in a directory (unzipped TrialMaster archive). \cr
