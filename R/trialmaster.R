@@ -50,7 +50,7 @@ read_trialmaster = function(archive, use_cache=TRUE, pw=getOption("trialmaster_p
 #' @param directory `<character>` unzipped archive using SAS_XPORT format. Will read the extraction date from the directory name
 #' @param datetime_extraction the datetime of the data extraction
 #'
-#' @return a list containing one dataframe for each `.xpt` file in the folder, the extraction date (`datetime_extraction`), and a summary of all imported tables (`.lookup`).
+#' @return a list containing one dataframe for each `.xpt` file in the folder, the extraction date (`datetime_extraction`), and a summary of all imported tables (`.lookup`). If not set yet, option `edc_lookup` is automatically set to `.lookup`.
 #' @export
 #' @importFrom haven read_xpt
 read_tm_all_xpt = function(directory, datetime_extraction){
@@ -82,6 +82,11 @@ read_tm_all_xpt = function(directory, datetime_extraction){
   rtn$date_extraction = format_ymd(datetime_extraction)
   rtn$datetime_extraction = datetime_extraction
   rtn$.lookup = get_lookup(rtn)
+  
+  if(is.null(getOption("edc_lookup", NULL))){
+    options(edc_lookup=rtn$.lookup)
+  }
+  
   rtn
 }
 
