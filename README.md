@@ -49,7 +49,7 @@ You can now either use the resulting list, or load it to the global environment.
 mean(tm$dataset1$column5)
 
 #load it to the global env
-load_list(tm) #removes `tm` to save some RAM
+load_list(tm) #this also removes `tm` to save RAM
 mean(dataset1$column5)
 ```
 
@@ -60,7 +60,6 @@ The dataset lookup table `.lookup` is a dataframe containing for each dataset al
 Its main use is to work with `find_keyword()`. For instance, say you do not remember in which dataset and column is located the "date of ECG". `find_keyword()` will search every column name and label and will give you the answer:
 
 ``` r
-options(edc_lookup=tm$.lookup)
 find_keyword("date")
 ```
 
@@ -79,6 +78,8 @@ find_keyword("date")
 #>  9 vs      ECGDAT  Date of ECG                 
 #> 10 vs      VISITDT Visit Date
 ```
+
+Note that `find_keyword()` uses the `edc_lookup` option, automatically set by `read_trialmaster()`.
 
 ## MACRO
 
