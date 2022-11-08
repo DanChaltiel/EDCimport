@@ -45,8 +45,8 @@ test_that("Read an archive with a bad name", {
   rm(list=ls())
   expect_warning(w <- read_trialmaster(filename_bad, use_cache=FALSE, verbose=0),
                  class="edc_tm_bad_name")
-  expect_true(is.na(w$datetime_extraction))
-  expect_true(is.na(w$date_extraction))
+  expect_false(is.na(w$datetime_extraction))
+  expect_false(is.na(w$date_extraction))
   expect_equal(as.character(w$site$INCLSITE), "Yes")
   clean_cache()
 })

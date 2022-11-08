@@ -38,6 +38,20 @@ parse_file_datetime = function(x){
     ymd_hm()
 }
 
+#' Get the date of data extraction from the modification time of all files
+#'
+#' @param folder a folder
+#' @return date as a POSIXct scalar
+#' @noRd
+#' @keywords internal
+get_folder_datetime = function(folder){
+  rtn = dir(folder, full.names=TRUE) %>% file.info() %>% pull(mtime) %>% unique()
+  if(length(rtn)>1) cli::cli_warn("Folder {folder} had files with different dates: {rtn}")
+  as_datetime(rtn[[1]])
+}
+
+
+
 #' Parse a file name to get the name of the project
 #'
 #' @param x a file

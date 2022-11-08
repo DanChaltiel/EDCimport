@@ -34,6 +34,7 @@ read_trialmaster = function(archive, use_cache=TRUE, pw=getOption("trialmaster_p
     dir.create(temp_folder, recursive=TRUE, showWarnings=FALSE)
     msg = extract_7z(archive, temp_folder, pw)
     if(verbose>1) cli_inform(msg)
+    if(is.na(extract_datetime)) extract_datetime = get_folder_datetime(temp_folder)
     rtn = read_tm_all_xpt(temp_folder, extract_datetime)
     if(isTRUE(use_cache)) saveRDS(rtn, cache_file)
   }
