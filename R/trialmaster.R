@@ -24,7 +24,7 @@ read_trialmaster = function(archive, use_cache=TRUE, pw=getOption("trialmaster_p
   }
   
   proj_name = parse_file_project(archive)
-  cache_file = glue("{directory}/{proj_name}_{format_ymd(extract_datetime)}.rds")
+  cache_file = glue("{directory}/{proj_name}_{format_ymdhm(extract_datetime)}.rds")
   if(file.exists(cache_file) && isTRUE(use_cache)){
     if(verbose>0) cli_inform("Reading cache: {.val {cache_file}}", class="read_tm_cache")
     rtn = readRDS(cache_file)

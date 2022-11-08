@@ -49,8 +49,7 @@ You can now either use the resulting list, or load it to the global environment.
 mean(tm$dataset1$column5)
 
 #load it to the global env
-load_list(tm)
-remove(tm) #save some RAM
+load_list(tm) #removes `tm` to save some RAM
 mean(dataset1$column5)
 ```
 

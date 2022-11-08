@@ -32,7 +32,9 @@ get_lookup = function(data_list){
   }
   tibble(dataset=tolower(names(data_list))) %>% 
     mutate(names=map(data_list, ~names(.x)), 
-           labels=map(data_list, ~var_label(.x, unlist=TRUE)))
+           labels=map(data_list, ~var_label(.x, unlist=TRUE)), 
+           nrow=map_dbl(data_list, nrow), 
+           ncol=map_dbl(data_list, ncol))
 }
 
 #' Find a keyword
@@ -103,6 +105,7 @@ load_list = function(x, env=parent.frame(), remove=TRUE){
               class="load_list_unnamed_error")
   }
   list2env(x, env)
+  
   if(remove) remove(list=vname(x), envir=env)
 }
 

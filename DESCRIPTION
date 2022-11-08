@@ -1,6 +1,6 @@
 Package: EDCimport
-Title: Import Data from EDC Software
-Version: 0.2.1
+Title: Import data from EDC software
+Version: 0.2.0.9003
 Authors@R: 
     c(person(given = "Dan",
              family = "Chaltiel",
