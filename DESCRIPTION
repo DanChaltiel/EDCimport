@@ -1,5 +1,5 @@
 Package: EDCimport
-Version: 0.2.0.9003
+Version: 0.2.0.9004
 Title: Import Data from EDC Software
 Authors@R: 
     c(person(given = "Dan",
