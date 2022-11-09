@@ -4,9 +4,17 @@
 \name{EDCimport-package}
 \alias{EDCimport}
 \alias{EDCimport-package}
-\title{EDCimport: Import data from EDC software}
+\title{EDCimport: Import Data from EDC Software}
 \description{
-EDCimport is a package designed to easily import data from EDC software TrialMaster and Macro.
+A convenient toolbox to import data from EDC software TrialMaster and Macro.
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/DanChaltiel/EDCimport}
+  \item Report bugs at \url{https://github.com/DanChaltiel/EDCimport/issues}
+}
+
 }
 \author{
 \strong{Maintainer}: Dan Chaltiel \email{dan.chaltiel@gmail.com} (\href{https://orcid.org/0000-0003-3488-779X}{ORCID})

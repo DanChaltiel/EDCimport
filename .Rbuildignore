@@ -11,7 +11,7 @@ DEV\.R
 
 .*~.*
 
-.*\.rds
+[.]rds$
 
 ^README.Rmd$
 ^\.lintr$
