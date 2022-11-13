@@ -20,7 +20,7 @@ options(
 )
 
 options(trialmaster_pw="0")
-getOption("trialmaster_pw")
+# getOption("trialmaster_pw")
 
 cachename="CRF_Dan_2022-08-25 15h16.rds"
 filename="CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16.zip"
@@ -56,4 +56,18 @@ temp_target = function(name){
   target
 }
 
+is_testing_in_buildpane = function(){
+  # Sys.getenv("RSTUDIO_CHILD_PROCESS_PANE") =="build"
+  
+  # print("----------")
+  # # print(Sys.getenv("RSTUDIO_CHILD_PROCESS_PANE"))
+  # print(getwd())
+  # print(Sys.getenv())
+  # print("----------")
+  
+  str_ends(getwd(), "testthat/?")
+}
+
+
+clean_cache()
 message('Helper-init loaded')
