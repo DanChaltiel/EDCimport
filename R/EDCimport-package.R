@@ -3,7 +3,6 @@
 #' @import forcats
 #' @import glue
 #' @import labelled
-#' @import lubridate
 #' @rawNamespace import(purrr, except=c(invoke, flatten_raw, as_function, flatten_dbl, flatten_lgl, flatten_int, `%@%`, flatten_chr, splice, flatten)) 
 #' @import rlang
 #' @import stringr

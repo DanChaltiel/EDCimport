@@ -20,7 +20,6 @@ Imports:
     forcats,
     haven,
     labelled,
-    lubridate,
     purrr,
     readr,
     rlang,

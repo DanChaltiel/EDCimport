@@ -35,7 +35,8 @@ parse_file_datetime = function(x){
     basename() %>% 
     str_match("SAS_XPORT_(\\d{4}_\\d{2}_\\d{2}_\\d{2}_\\d{2})") %>% 
     .[,2] %>%
-    ymd_hm()
+    strptime(format="%Y_%m_%d_%H_%M") %>% 
+    as.POSIXct()
 }
 
 #' Get the date of data extraction from the modification time of all files
@@ -47,7 +48,7 @@ parse_file_datetime = function(x){
 get_folder_datetime = function(folder){
   rtn = dir(folder, full.names=TRUE) %>% file.info() %>% pull("mtime") %>% unique()
   if(length(rtn)>1) cli::cli_warn("Folder {folder} had files with different dates: {rtn}")
-  as_datetime(rtn[[1]])
+  rtn[[1]]
 }
 
 
@@ -68,12 +69,12 @@ parse_file_project = function(x){
 #' @noRd
 #' @keywords internal
 format_ymd = function(x){
-  stopifnot(is.POSIXct(x) || is.Date(x))
+  stopifnot(inherits(x, "POSIXct") || inherits(x, "Date"))
   format(x, "%Y-%m-%d")
 }
 #' @noRd
 #' @keywords internal
 format_ymdhm = function(x){
-  stopifnot(is.POSIXct(x) || is.Date(x))
+  stopifnot(inherits(x, "POSIXct") || inherits(x, "Date"))
   format(x, "%Y-%m-%d %Hh%M")
 }
