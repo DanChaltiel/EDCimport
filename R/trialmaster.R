@@ -16,6 +16,10 @@ read_trialmaster = function(archive, use_cache=TRUE, pw=getOption("trialmaster_p
                             verbose=1){
   directory = dirname(archive)
   extract_datetime = parse_file_datetime(archive)
+  if(!file.exists(archive)){
+    cli_abort("Archive {.val {archive}} does not exist.", 
+             class="edc_tm_404")
+  }
   if(is.na(extract_datetime)){
     cli_warn(c("Extraction datetime could not be read from archive's name.", 
                x="Archive's name should contain the datetime as {.code SAS_XPORT_yyyy_mm_dd_hh_MM}", 
