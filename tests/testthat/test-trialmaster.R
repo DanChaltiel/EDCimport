@@ -3,7 +3,6 @@
 skip_on_cran()
 
 test_that("Read an archive", {
-  rm(list=ls())
   clean_cache()
 
   expect_message(w <- read_trialmaster(filename),
@@ -33,7 +32,6 @@ test_that("Read an archive", {
 
 
 test_that("Read an archive without procformat", {
-  rm(list=ls())
   expect_warning(w <- read_trialmaster(filename_noformat, use_cache=FALSE, verbose=0),
                  class="edc_tm_no_procformat")
   expect_equal(as.character(w$site$INCLSITE), "1") #format=Yes
@@ -42,7 +40,6 @@ test_that("Read an archive without procformat", {
 
 
 test_that("Read an archive with a bad name", {
-  rm(list=ls())
   expect_warning(w <- read_trialmaster(filename_bad, use_cache=FALSE, verbose=0),
                  class="edc_tm_bad_name")
   expect_false(is.na(w$datetime_extraction))
