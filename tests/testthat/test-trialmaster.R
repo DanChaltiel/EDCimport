@@ -33,7 +33,7 @@ test_that("Read an archive", {
 
 test_that("Read an archive without procformat", {
   expect_warning(w <- read_trialmaster(filename_noformat, use_cache=FALSE, verbose=0),
-                 class="edc_tm_no_procformat")
+                 class="edc_tm_no_procformat_warning")
   expect_equal(as.character(w$site$INCLSITE), "1") #format=Yes
   clean_cache()
 })
