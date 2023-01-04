@@ -30,11 +30,15 @@ get_lookup = function(data_list){
     cli_abort("Datasets in {.code data_list} should have a name.", 
               class="edc_lookup_unnamed")
   }
+  f = function(.x, expr, default) if(is.data.frame(.x)) expr else default
+  
   tibble(dataset=tolower(names(data_list))) %>% 
-    mutate(names=map(data_list, ~names(.x)), 
-           labels=map(data_list, ~var_label(.x, unlist=TRUE)), 
-           nrow=map_dbl(data_list, nrow), 
-           ncol=map_dbl(data_list, ncol))
+    mutate(
+      names=map(data_list, ~f(.x, names(.x), NULL)), 
+      labels=map(data_list, ~f(.x, var_label(.x, unlist=TRUE), NULL)), 
+      nrow=map_dbl(data_list, ~f(.x, nrow(.x), 0)), 
+      ncol=map_dbl(data_list, ~f(.x, ncol(.x), 0)), 
+    )
 }
 
 #' Find a keyword
