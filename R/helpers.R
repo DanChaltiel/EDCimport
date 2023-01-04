@@ -19,7 +19,6 @@ get_lookup = function(data_list){
               class="edc_lookup_empty")
   }
   data_list_n = format(names(data_list))
-  data_list = data_list %>% keep(is.data.frame)
   data_list[".lookup"] = NULL
   if(length(data_list)==0){
     cli_abort(c("{.code data_list} is empty or contains only non-dataframe elements.", 
@@ -76,15 +75,35 @@ get_lookup = function(data_list){
 find_keyword = function(keyword, data=getOption("edc_lookup", NULL), ignore_case=TRUE){
   stopifnot(!is.null(data))
   f = if(isTRUE(ignore_case)) tolower else identity
+  keyword = f(keyword)
+  f2 = function(x,y) map2_chr(x, y, ~if(.y) {.x} else {f(.x)})
   
-  data %>% 
+  tmp = data %>% 
     unnest(c(names, labels)) %>% 
-    mutate(labels=unlist(labels)) %>% 
-  # mutate(labels=map_chr(labels, ~ifelse(is.null(.x), NA, .x))) %>%  #better ? 
-    filter(str_detect(f(names), f(keyword)) |
-             str_detect(f(labels), f(keyword)))
+    mutate(
+      labels=unlist(labels), 
+      invalid=invalid_utf8(labels),
+      names=f2(names, invalid),
+      labels=f2(labels, invalid),
+    ) %>% 
+    filter(str_detect(names, keyword) | str_detect(labels, keyword))
+  
+  if(isTRUE(ignore_case) && any(tmp$invalid)){
+    cols = tmp %>% filter(invalid) %>% unite("x", c("dataset", "names"), sep="$") %>% pull(x)
+    cli_warn(c("Some columns have labels containing non UTF8 characters. {.arg ignore_case} has been ignored for these.", 
+             i="Columns: {.code {cols}}."), 
+             class="find_keyword_utf8_warning")
+  }
+  
+  tmp %>% 
+    select(-invalid)
 }
 
+
+#' @source https://stackoverflow.com/a/57261396/3888000
+invalid_utf8 = function(x){
+  !is.na(x) & is.na(iconv(x, "UTF-8", "UTF-8"))
+}
 
 #' Load a list in an environment
 #'
