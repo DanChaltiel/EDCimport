@@ -30,10 +30,10 @@ read_trialmaster = function(archive, use_cache=TRUE, pw=getOption("trialmaster_p
   proj_name = parse_file_project(archive)
   cache_file = glue("{directory}/{proj_name}_{format_ymdhm(extract_datetime)}.rds")
   if(file.exists(cache_file) && isTRUE(use_cache)){
-    if(verbose>0) cli_inform("Reading cache: {.val {cache_file}}", class="read_tm_cache")
+    if(verbose>0) cli_inform("Reading cache: {.file {cache_file}}", class="read_tm_cache")
     rtn = readRDS(cache_file)
   } else {
-    if(verbose>0) cli_inform("Unzipping {.val {archive}}", class="read_tm_zip")
+    if(verbose>0) cli_inform("Unzipping {.file {archive}}", class="read_tm_zip")
     temp_folder = file.path2(tempdir(), str_remove(basename(archive), "\\.zip"))
     dir.create(temp_folder, recursive=TRUE, showWarnings=FALSE)
     msg = extract_7z(archive, temp_folder, pw)
