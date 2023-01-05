@@ -5,9 +5,15 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 # EDCimport 0.2.2 <sub><sup>2023/xx/xx</sup></sub>
 
+#### New features
+
 - Reading errors are now handled by `read_trialmaster()` instead of failing. If one XPT file is corrupted, the resulting object will contain the error message instead of the dataset.
 
+#### Bug fixes
+
 - `find_keyword()` is now robust to non-UTF8 characters in labels.
+
+- Option `edc_lookup` is not set even when reading from cache.
 
 # EDCimport 0.2.1 <sub><sup>2022/11/01</sup></sub>
 

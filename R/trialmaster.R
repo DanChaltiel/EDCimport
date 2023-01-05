@@ -32,6 +32,9 @@ read_trialmaster = function(archive, use_cache=TRUE, pw=getOption("trialmaster_p
   if(file.exists(cache_file) && isTRUE(use_cache)){
     if(verbose>0) cli_inform("Reading cache: {.file {cache_file}}", class="read_tm_cache")
     rtn = readRDS(cache_file)
+    if(is.null(getOption("edc_lookup", NULL))){
+      options(edc_lookup=rtn$.lookup)
+    }
   } else {
     if(verbose>0) cli_inform("Unzipping {.file {archive}}", class="read_tm_zip")
     temp_folder = file.path2(tempdir(), str_remove(basename(archive), "\\.zip"))
