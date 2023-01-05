@@ -50,7 +50,7 @@ test_that("get_lookup() works", {
   x = list(i=crosstable::iris2, mtcars)
   get_lookup(x) %>% 
     expect_error(class="edc_lookup_unnamed")
-  x = list(i=1, .lookup=mtcars)
+  x = list(date_extraction=1, datetime_extraction=1, .lookup=mtcars)
   get_lookup(x) %>% 
     expect_error(class="edc_lookup_empty")
 })

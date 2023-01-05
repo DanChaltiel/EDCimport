@@ -19,7 +19,7 @@ get_lookup = function(data_list){
               class="edc_lookup_empty")
   }
   data_list_n = format(names(data_list))
-  data_list[".lookup"] = NULL
+  data_list[".lookup"] = data_list["date_extraction"] = data_list["datetime_extraction"] = NULL
   if(length(data_list)==0){
     cli_abort(c("{.code data_list} is empty or contains only non-dataframe elements.", 
                 i="{.code names(data_list)}: {.val {data_list_n}}"), 
@@ -83,10 +83,11 @@ find_keyword = function(keyword, data=getOption("edc_lookup", NULL), ignore_case
     mutate(
       labels=unlist(labels), 
       invalid=invalid_utf8(labels),
-      names=f2(names, invalid),
-      labels=f2(labels, invalid),
+      names2=f2(names, invalid),
+      labels2=f2(labels, invalid),
     ) %>% 
-    filter(str_detect(names, keyword) | str_detect(labels, keyword))
+    filter(str_detect(names2, keyword) | str_detect(labels2, keyword)) %>% 
+    select(-names2, -labels2)
   
   if(isTRUE(ignore_case) && any(tmp$invalid)){
     cols = tmp %>% filter(invalid) %>% unite("x", c("dataset", "names"), sep="$") %>% pull(x)
