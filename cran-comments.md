@@ -8,6 +8,8 @@
 
 ## Comments
 
+ - `rm(list=ls())` were removed from tests, although this was NOT in any example or vignette.
+ 
  - DESCRIPTION has been modified to be clearer. I took inspiration from `dplyr`'s description and I think I achieve the same level of detail. This packages doesn't do many things so I'm not sure how to be more specific. Note that features related to Macro are still WIP.
  
  - An example data archive has been packed in `inst/exdata`. However, as this example relies on 7-zip to run, it would fail on most automatic testing platforms so I left it in a `\dontrun`. I plan on supporting other platforms one day so this should be temporary.

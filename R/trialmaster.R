@@ -13,7 +13,7 @@
 #' @inherit read_tm_all_xpt return
 #' @export
 read_trialmaster = function(archive, use_cache=TRUE, pw=getOption("trialmaster_pw", NULL), 
-                            verbose=1){
+                            verbose=getOption("edc_verbose", 1)){
   directory = dirname(archive)
   extract_datetime = parse_file_datetime(archive)
   if(!file.exists(archive)){

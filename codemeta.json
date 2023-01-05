@@ -2,7 +2,7 @@
   "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
   "@type": "SoftwareSourceCode",
   "identifier": "EDCimport",
-  "description": "A convenient toolbox to import data exported from EDC software TrialMaster and Macro.",
+  "description": "A convenient toolbox to import data exported from Electronic Data Capture (EDC) software 'TrialMaster' and 'Macro'.",
   "name": "EDCimport: Import Data from EDC Software",
   "codeRepository": "https://github.com/DanChaltiel/EDCimport",
   "issueTracker": "https://github.com/DanChaltiel/EDCimport/issues",
@@ -188,18 +188,6 @@
     },
     "8": {
       "@type": "SoftwareApplication",
-      "identifier": "lubridate",
-      "name": "lubridate",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=lubridate"
-    },
-    "9": {
-      "@type": "SoftwareApplication",
       "identifier": "purrr",
       "name": "purrr",
       "provider": {
@@ -210,7 +198,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=purrr"
     },
-    "10": {
+    "9": {
       "@type": "SoftwareApplication",
       "identifier": "readr",
       "name": "readr",
@@ -222,7 +210,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=readr"
     },
-    "11": {
+    "10": {
       "@type": "SoftwareApplication",
       "identifier": "rlang",
       "name": "rlang",
@@ -234,7 +222,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=rlang"
     },
-    "12": {
+    "11": {
       "@type": "SoftwareApplication",
       "identifier": "stringr",
       "name": "stringr",
@@ -246,7 +234,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=stringr"
     },
-    "13": {
+    "12": {
       "@type": "SoftwareApplication",
       "identifier": "tibble",
       "name": "tibble",
@@ -258,7 +246,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=tibble"
     },
-    "14": {
+    "13": {
       "@type": "SoftwareApplication",
       "identifier": "tidyr",
       "name": "tidyr",
@@ -272,7 +260,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "115.786KB",
+  "fileSize": "116.381KB",
   "releaseNotes": "https://github.com/DanChaltiel/EDCimport/blob/master/NEWS.md",
   "readme": "https://github.com/DanChaltiel/EDCimport/blob/main/README.md",
   "developmentStatus": "https://lifecycle.r-lib.org/articles/stages.html"
