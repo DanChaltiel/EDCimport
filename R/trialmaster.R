@@ -42,7 +42,14 @@ read_trialmaster = function(archive, use_cache=TRUE, pw=getOption("trialmaster_p
     msg = extract_7z(archive, temp_folder, pw)
     if(verbose>1) cli_inform(msg)
     if(is.na(extract_datetime)) extract_datetime = get_folder_datetime(temp_folder)
-    rtn = read_tm_all_xpt(temp_folder, extract_datetime)
+    format_file = file.path2(temp_folder, "procformat.sas")
+    if(!file.exists(format_file)){
+      cli_warn("No file {.val procformat.sas} found in {.arg directory}. 
+             Data formats cannot be applied.", 
+             class="edc_tm_no_procformat_warning") 
+      format_file = NULL
+    }
+    rtn = read_tm_all_xpt(temp_folder, format_file=format_file, datetime_extraction=extract_datetime)
     if(isTRUE(use_cache)) saveRDS(rtn, cache_file)
   }
   rtn
@@ -54,15 +61,17 @@ read_trialmaster = function(archive, use_cache=TRUE, pw=getOption("trialmaster_p
 #' If `7zip` is installed, you should probably rather use [read_trialmaster()] instead. \cr
 #' If a `procformat.sas` file exists in the directory, formats will be applied.
 #'
-#' @param directory `<character>` unzipped archive using SAS_XPORT format. Will read the extraction date from the directory name
-#' @param datetime_extraction the datetime of the data extraction
+#' @param directory the path to the unzipped archive using SAS_XPORT format. Will read the extraction date from the directory name.
+#' @param format_file the path to the `procformat.sas` file that should be used to apply formats. Use `NULL` to not apply formats.
+#' @param datetime_extraction the datetime of the data extraction. Default to the most common date of last modification in `directory`.
 #'
 #' @return a list containing one dataframe for each `.xpt` file in the folder, the extraction date (`datetime_extraction`), and a summary of all imported tables (`.lookup`). If not set yet, option `edc_lookup` is automatically set to `.lookup`.
 #' @export
 #' @importFrom haven read_xpt
-read_tm_all_xpt = function(directory, datetime_extraction){
+read_tm_all_xpt = function(directory, format_file="procformat.sas", datetime_extraction=NULL){
   datasets = dir(directory, pattern = "\\.xpt$", full.names=TRUE)
   datasets_names = basename(datasets) %>% str_remove("\\.xpt")
+  if(is.null(datetime_extraction)) datetime_extraction=get_folder_datetime(directory)
   
   rtn = datasets %>% 
     set_names(tolower(datasets_names)) %>% 
@@ -71,11 +80,14 @@ read_tm_all_xpt = function(directory, datetime_extraction){
                error=function(e) e)
     })
   
-  #TODO mettre format_file=NULL en argument et lancer le Warn depuis read_trialmaster()
-  #chercher format_file and chemin absolu, sinon en chemin relatif depuis wd, sinon en chemin relatif depuis directory
-  format_file = file.path2(directory, "procformat.sas")
-  if(file.exists(format_file)){
-    sas_formats = read_sas_format(format_file)
+  if(!is.null(format_file)){
+    procformat = file.path2(directory, format_file)
+    if(!file.exists(procformat)) procformat = format_file
+    if(!file.exists(procformat)) {
+      cli_abort("File {.file {format_file}} does not exist.", 
+                class="edc_tm_no_procformat_error")
+    }
+    sas_formats = read_sas_format(procformat)
     rtn = rtn %>% 
       imap(~{
         if(is_error(.x)) return(.x)
@@ -83,10 +95,6 @@ read_tm_all_xpt = function(directory, datetime_extraction){
           apply_sas_formats(sas_formats) %>%
           haven::as_factor()
       })
-  } else {
-    cli_warn("No file {.val procformat.sas} found in {.arg directory}. 
-             Data formats cannot be applied.", 
-             class="edc_tm_no_procformat_warning") 
   }
   
   errs = keep(rtn, is_error)
