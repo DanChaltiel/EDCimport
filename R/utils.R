@@ -13,6 +13,7 @@ file.path2 = function(...){
   file.path(...) %>% str_replace_all(paste0(fsep, "+"), fsep)
 }
 
+
 #' Lookup a variable name
 #' 
 #' @source [checkmate::vname()]
@@ -22,6 +23,19 @@ file.path2 = function(...){
 vname = function(x) {
   paste0(deparse(eval.parent(substitute(substitute(x))), width.cutoff = 500L), 
          collapse = "\n")
+}
+
+
+#' Parse a file name to get the name of the project
+#'
+#' @param x a file
+#' @noRd
+#' @keywords internal
+parse_file_project = function(x){
+  x %>% 
+    basename() %>% 
+    str_match("(.*)_Export") %>% 
+    .[,2]
 }
 
 
@@ -39,37 +53,28 @@ parse_file_datetime = function(x){
     as.POSIXct()
 }
 
+
 #' Get the date of data extraction from the modification time of all files
 #'
 #' @param folder a folder
 #' @return date as a POSIXct scalar
 #' @noRd
 #' @keywords internal
-get_folder_datetime = function(folder){
-  rtn = dir(folder, full.names=TRUE) %>% file.info() %>% pull("mtime") %>% unique()
-  if(length(rtn)>1) cli::cli_warn("Folder {folder} had files with different dates: {rtn}")
-  rtn[[1]]
-}
-
-
-
-#' Parse a file name to get the name of the project
-#'
-#' @param x a file
-#' @noRd
-#' @keywords internal
-parse_file_project = function(x){
-  x %>% 
-    basename() %>% 
-    str_match("(.*)_Export") %>% 
-    .[,2]
+get_folder_datetime = function(folder, verbose=TRUE){
+  rtn = dir(folder, full.names=TRUE) %>% file.info() %>% count(mtime=round(mtime, "secs"))
+  if(isTRUE(verbose) && nrow(rtn)>1){
+    cli::cli_warn(c("Folder {.file {folder}} contains files with different modification times. 
+                    The most frequent one was returned.", 
+                    i="Times: {.val {rtn$mtime}}"))
+  }
+  rtn %>% slice_max(n) %>% pull(mtime) %>% .[[1]]
 }
 
 
 #' @noRd
 #' @keywords internal
 format_ymd = function(x){
-  stopifnot(inherits(x, "POSIXct") || inherits(x, "Date"))
+  stopifnot(inherits(x, "POSIXt") || inherits(x, "Date"))
   format(x, "%Y-%m-%d")
 }
 #' @noRd
