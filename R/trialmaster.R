@@ -7,12 +7,13 @@
 #'
 #' @param archive the path to the archive
 #' @param use_cache if `TRUE`, read the `.rds` cache if any or extract the archive and create a cache. If `FALSE` extract the archive without creating a cache file.
-#' @param pw The password if the archive is protected. To avoid writing passwords in plain text, it is better to indicate your password using `options(trialmaster_pw="xxx")` than `pw="xxx"`.
+#' @param pw The password if the archive is protected. To avoid writing passwords in plain text, it is better to indicate your password using `options(trialmaster_pw="xxx")` in another file than using `pw="xxx"`.
 #' @param verbose one of `c(0, 1, 2)`. The higher, the more information will be printed'
 #'
 #' @inherit read_tm_all_xpt return
 #' @export
-read_trialmaster = function(archive, use_cache=TRUE, pw=getOption("trialmaster_pw", NULL), 
+read_trialmaster = function(archive, ..., use_cache=TRUE, 
+                            pw=getOption("trialmaster_pw"), 
                             verbose=getOption("edc_verbose", 1)){
   directory = dirname(archive)
   extract_datetime = parse_file_datetime(archive)
@@ -23,12 +24,11 @@ read_trialmaster = function(archive, use_cache=TRUE, pw=getOption("trialmaster_p
   if(is.na(extract_datetime)){
     cli_warn(c("Extraction datetime could not be read from archive's name.", 
                x="Archive's name should contain the datetime as {.code SAS_XPORT_yyyy_mm_dd_hh_MM}", 
-               i="Actual archive's name: {archive}"), 
+               i="Actual archive's name: {.val {archive}}"), 
              class="edc_tm_bad_name")
   }
   
-  proj_name = parse_file_project(archive)
-  cache_file = glue("{directory}/{proj_name}_{format_ymdhm(extract_datetime)}.rds")
+  cache_file = glue("{directory}/trialmaster_export_{format_ymdhm(extract_datetime)}.rds")
   if(file.exists(cache_file) && isTRUE(use_cache)){
     if(verbose>0) cli_inform("Reading cache: {.file {cache_file}}", class="read_tm_cache")
     rtn = readRDS(cache_file)

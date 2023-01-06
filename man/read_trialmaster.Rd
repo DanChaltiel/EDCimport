@@ -6,8 +6,9 @@
 \usage{
 read_trialmaster(
   archive,
+  ...,
   use_cache = TRUE,
-  pw = getOption("trialmaster_pw", NULL),
+  pw = getOption("trialmaster_pw"),
   verbose = getOption("edc_verbose", 1)
 )
 }
@@ -16,7 +17,7 @@ read_trialmaster(
 
 \item{use_cache}{if \code{TRUE}, read the \code{.rds} cache if any or extract the archive and create a cache. If \code{FALSE} extract the archive without creating a cache file.}
 
-\item{pw}{The password if the archive is protected. To avoid writing passwords in plain text, it is better to indicate your password using \code{options(trialmaster_pw="xxx")} than \code{pw="xxx"}.}
+\item{pw}{The password if the archive is protected. To avoid writing passwords in plain text, it is better to indicate your password using \code{options(trialmaster_pw="xxx")} in another file than using \code{pw="xxx"}.}
 
 \item{verbose}{one of \code{c(0, 1, 2)}. The higher, the more information will be printed'}
 }
