@@ -8,7 +8,7 @@ read_trialmaster(
   archive,
   use_cache = TRUE,
   pw = getOption("trialmaster_pw", NULL),
-  verbose = 1
+  verbose = getOption("edc_verbose", 1)
 )
 }
 \arguments{

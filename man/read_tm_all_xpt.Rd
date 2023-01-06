@@ -4,12 +4,18 @@
 \alias{read_tm_all_xpt}
 \title{Read all \code{.xpt} files in a directory}
 \usage{
-read_tm_all_xpt(directory, datetime_extraction)
+read_tm_all_xpt(
+  directory,
+  format_file = "procformat.sas",
+  datetime_extraction = NULL
+)
 }
 \arguments{
-\item{directory}{\verb{<character>} unzipped archive using SAS_XPORT format. Will read the extraction date from the directory name}
+\item{directory}{the path to the unzipped archive using SAS_XPORT format. Will read the extraction date from the directory name.}
 
-\item{datetime_extraction}{the datetime of the data extraction}
+\item{format_file}{the path to the \code{procformat.sas} file that should be used to apply formats. Use \code{NULL} to not apply formats.}
+
+\item{datetime_extraction}{the datetime of the data extraction. Default to the most common date of last modification in \code{directory}.}
 }
 \value{
 a list containing one dataframe for each \code{.xpt} file in the folder, the extraction date (\code{datetime_extraction}), and a summary of all imported tables (\code{.lookup}). If not set yet, option \code{edc_lookup} is automatically set to \code{.lookup}.
