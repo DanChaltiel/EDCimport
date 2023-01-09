@@ -92,7 +92,8 @@ find_keyword = function(keyword, data=getOption("edc_lookup", NULL), ignore_case
   if(isTRUE(ignore_case) && any(tmp$invalid)){
     cols = tmp %>% filter(invalid) %>% unite("x", c("dataset", "names"), sep="$") %>% pull(x)
     cli_warn(c("Some columns have labels containing non UTF8 characters. {.arg ignore_case} has been ignored for these.", 
-             i="Columns: {.code {cols}}."), 
+             i="Columns: {.code {cols}}.",
+             i='For instance, try to run: {.code attr({cols[1]}, "label")}.'), 
              class="find_keyword_utf8_warning")
   }
   
