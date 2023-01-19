@@ -24,7 +24,7 @@ read_sas_format = function(file){
           str_split("[\\r\\n]{1,2}") %>%
           .[[1]]
         format_values %>% sapply(function(kv){
-          kv = str_match(kv, "(.*)=(.*)")[-1]
+          kv = str_match(kv, "(.*?)=(.*)")[-1]
           rtn = kv[1] %>% str_remove_all("^'|'$")
           names(rtn) = kv[2] %>% str_remove_all("^'|'$")
           rtn
