@@ -74,10 +74,10 @@ get_lookup = function(data_list){
 #' }
 find_keyword = function(keyword, data=getOption("edc_lookup", NULL), ignore_case=TRUE){
   stopifnot(!is.null(data))
+  invalid=names2=labels2=x=NULL
   f = if(isTRUE(ignore_case)) tolower else identity
   keyword = f(keyword)
   f2 = function(x,y) map2_chr(x, y, ~if(.y) {.x} else {f(.x)})
-  
   tmp = data %>% 
     unnest(c(names, labels)) %>% 
     mutate(

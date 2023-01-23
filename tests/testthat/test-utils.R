@@ -36,6 +36,11 @@ test_that("save_list() works", {
   expect_length(b,11)
 })
 
+test_that("get_folder_datetime() works", {
+  expect_warning(get_folder_datetime(dirname(filename)), 
+                 class="get_folder_datetime_modiftime_warning")
+})
+
 
 # get_lookup() & find_keyword() ---------------------------------------------------------------
 

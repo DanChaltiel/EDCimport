@@ -26,17 +26,6 @@ vname = function(x) {
 }
 
 
-#' Parse a file name to get the name of the project
-#'
-#' @param x a file
-#' @noRd
-#' @keywords internal
-parse_file_project = function(x){
-  x %>% 
-    basename() %>% 
-    str_match("(.*)_Export") %>% 
-    .[,2]
-}
 
 
 #' Parse a file name to get the date of data extraction
@@ -61,13 +50,15 @@ parse_file_datetime = function(x){
 #' @noRd
 #' @keywords internal
 get_folder_datetime = function(folder, verbose=TRUE){
+  mtime=NULL
   rtn = dir(folder, full.names=TRUE) %>% file.info() %>% count(mtime=round(mtime, "secs"))
   if(isTRUE(verbose) && nrow(rtn)>1){
     cli::cli_warn(c("Folder {.file {folder}} contains files with different modification times. 
                     The most frequent one was returned.", 
-                    i="Times: {.val {rtn$mtime}}"))
+                    i="Times: {.val {rtn$mtime}}"),
+                  class="get_folder_datetime_modiftime_warning")
   }
-  rtn %>% slice_max(n) %>% pull(mtime) %>% .[[1]]
+  rtn %>% slice_max(n) %>% .[1,"mtime"]
 }
 
 

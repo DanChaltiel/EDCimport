@@ -15,6 +15,8 @@ read_trialmaster(
 \arguments{
 \item{archive}{the path to the archive}
 
+\item{...}{unused}
+
 \item{use_cache}{if \code{TRUE}, read the \code{.rds} cache if any or extract the archive and create a cache. If \code{FALSE} extract the archive without creating a cache file.}
 
 \item{pw}{The password if the archive is protected. To avoid writing passwords in plain text, it is better to indicate your password using \code{options(trialmaster_pw="xxx")} in another file than using \code{pw="xxx"}.}

@@ -22,7 +22,7 @@ options(
 options(trialmaster_pw="0")
 # getOption("trialmaster_pw")
 
-cachename="CRF_Dan_2022-08-25 15h16.rds"
+cachename="trialmaster_export_2022-08-25 15h16.rds"
 filename="CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16.zip"
 filename_noformat="CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16_noformat.zip"
 filename_nopw="CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16_nopw.zip"

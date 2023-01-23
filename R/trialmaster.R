@@ -9,6 +9,7 @@
 #' @param use_cache if `TRUE`, read the `.rds` cache if any or extract the archive and create a cache. If `FALSE` extract the archive without creating a cache file.
 #' @param pw The password if the archive is protected. To avoid writing passwords in plain text, it is better to indicate your password using `options(trialmaster_pw="xxx")` in another file than using `pw="xxx"`.
 #' @param verbose one of `c(0, 1, 2)`. The higher, the more information will be printed'
+#' @param ... unused
 #'
 #' @inherit read_tm_all_xpt return
 #' @export
@@ -17,6 +18,7 @@ read_trialmaster = function(archive, ..., use_cache=TRUE,
                             verbose=getOption("edc_verbose", 1)){
   directory = dirname(archive)
   extract_datetime = parse_file_datetime(archive)
+  check_dots_empty()
   if(!file.exists(archive)){
     cli_abort("Archive {.val {archive}} does not exist.", 
              class="edc_tm_404")
