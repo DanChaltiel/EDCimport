@@ -21,7 +21,10 @@ devtools::install_github("DanChaltiel/EDCimport")
 
 You will also need [`7-zip`](https://www.7-zip.org/download.html) installed, and preferably added to the [`PATH`](https://www.java.com/en/download/help/path.html).
 
-Note that this package is expected to run on Windows. If you use any other OS, please contact me so we can make it work with them too.
+### Windows-only
+
+This package was developed to work on Windows and is unlikely to work on any other OS.
+Feel free to submit a PR if you manage to get it to work on another OS.
 
 ## TrialMaster
 
