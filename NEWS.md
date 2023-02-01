@@ -14,7 +14,7 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 - `find_keyword()` is now robust to non-UTF8 characters in labels.
 
-- Option `edc_lookup` is not set even when reading from cache.
+- Option `edc_lookup` is now set even when reading from cache.
 
 - SAS formats containing a `=` now work as intended.
 
