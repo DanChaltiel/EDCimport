@@ -77,10 +77,7 @@ read_tm_all_xpt = function(directory, format_file="procformat.sas", datetime_ext
   
   rtn = datasets %>% 
     set_names(tolower(datasets_names)) %>% 
-    imap(~{
-      tryCatch({read_xpt(.x) %>% as_tibble() %>% na_if("")}, 
-               error=function(e) e)
-    })
+    imap(~tryCatch(read_xpt(.x), error=function(e) e))
   
   if(!is.null(format_file)){
     procformat = file.path2(directory, format_file)
@@ -94,6 +91,8 @@ read_tm_all_xpt = function(directory, format_file="procformat.sas", datetime_ext
       imap(~{
         if(is_error(.x)) return(.x)
         .x %>% 
+          as_tibble() %>% 
+          mutate(across(where(is.character), na_if, y="")) %>% 
           apply_sas_formats(sas_formats) %>%
           haven::as_factor()
       })
