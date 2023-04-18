@@ -191,10 +191,12 @@ save_list = function(x, filename){
 #' @export
 swimmerplot = function(.lookup=getOption("edc_lookup", NULL), id="SUBJID", plotly=TRUE){
   check_installed("ggplot2", reason="for `swimmerplot()` to work.")
+  parent = parent.frame()
+  
   x = .lookup$dataset %>%
     set_names() %>% 
     map(~{
-      dat = get(.x)
+      dat = get(.x, envir=parent)
       if(!id %in% names(dat)) return(NULL)
       a = dat %>% 
         select(id=!!id, where(is.Date))

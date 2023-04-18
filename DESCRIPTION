@@ -34,6 +34,7 @@ Suggests:
     knitr,
     plotly,
     testthat (>= 3.0.0),
+    vdiffr,
     withr
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

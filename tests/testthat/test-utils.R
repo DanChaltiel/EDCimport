@@ -12,7 +12,7 @@ test_that("load_list() works", {
   expect_false(exists("x", inherits=FALSE))
 })
 
-test_that("load_list() works cithout remove", {
+test_that("load_list() works without remove", {
   x=list(a=1, b=mtcars)
   load_list(x, remove=FALSE)
   expect_equal(a,1)
