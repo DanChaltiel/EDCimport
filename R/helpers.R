@@ -178,3 +178,47 @@ save_list = function(x, filename){
   }
   save(list=names(x), file=filename, envir=as.environment(x))
 }
+
+
+
+#' Get a swimmer plot of all dates in the database
+#'
+#' @param .lookup the result of [get_lookup()]
+#' @param id an identifier for a given row
+#' @param plotly whether to use {plotly} to get an interactive plot
+#'
+#' @return a plot
+#' @export
+swimmerplot = function(.lookup=getOption("edc_lookup", NULL), id="SUBJID", plotly=TRUE){
+  check_installed("ggplot2", reason="for `swimmerplot()` to work.")
+  x = .lookup$dataset %>%
+    set_names() %>% 
+    map(~{
+      dat = get(.x)
+      if(!id %in% names(dat)) return(NULL)
+      a = dat %>% 
+        select(id=!!id, where(is.Date))
+      if(ncol(a)<2) return(NULL)
+      a %>% 
+        pivot_longer(-id) %>% 
+        mutate(label=unlist(var_label(a)[name]) %||% name,
+               variable=paste0(toupper(.x), " - ", toupper(name)))
+    })
+  
+  p = list_rbind(x) %>% 
+    mutate(id=factor(id)) %>% 
+    ggplot2::ggplot(ggplot2::aes(x=value, y=id, color=label, group=id, label=variable)) + 
+    ggplot2::geom_line() +
+    ggplot2::geom_point() +
+    ggplot2::labs(x=NULL, y=id, color="Variable")
+  
+  if(isTRUE(plotly)){
+    check_installed("plotly", reason="for `swimmerplot(plotly=TRUE)` to work.")
+    p = plotly::ggplotly(p)
+  }
+  
+  p
+}
+
+
+# plotly::ggplotly()

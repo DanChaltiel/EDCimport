@@ -74,3 +74,9 @@ format_ymdhm = function(x){
   stopifnot(inherits(x, "POSIXct") || inherits(x, "Date"))
   format(x, "%Y-%m-%d %Hh%M")
 }
+
+#' @noRd
+#' @keywords internal
+is.Date = function (x) {
+  inherits(x, "POSIXt") || inherits(x, "POSIXct") || inherits(x, "Date")
+}

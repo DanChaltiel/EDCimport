@@ -30,7 +30,9 @@ Suggests:
     callr,
     covr,
     crosstable,
+    ggplot2,
     knitr,
+    plotly,
     testthat (>= 3.0.0),
     withr
 Encoding: UTF-8
