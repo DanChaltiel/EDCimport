@@ -7,15 +7,21 @@
 swimmerplot(
   .lookup = getOption("edc_lookup", NULL),
   id = "SUBJID",
+  origin = NULL,
+  aes_color = c("variable", "label"),
   plotly = TRUE
 )
 }
 \arguments{
-\item{.lookup}{the result of \code{\link[=get_lookup]{get_lookup()}}}
+\item{.lookup}{the lookup table, loaded along with the database or result of \code{\link[=get_lookup]{get_lookup()}}}
 
 \item{id}{an identifier for a given row}
 
-\item{plotly}{whether to use {plotly} to get an interactive plot}
+\item{origin}{a variable to consider as the time 0, given as "dataset$column"}
+
+\item{aes_color}{either \code{variable} ("{dataset} - {column}") or \code{label} (column label)}
+
+\item{plotly}{whether to use \code{{plotly}} to get an interactive plot}
 }
 \value{
 a plot
