@@ -13,7 +13,7 @@ test_that("swimmerplot", {
     db[[paste0("date",i)]] = start+rnorm(N, i*10, 10)*day 
   }
   
-  db0=db %>% select(SUBJID, 1:3)
+  db0=db %>% select(SUBJID, 1:3) %>% mutate(group=ifelse(runif(n())>0.5, "A", "B"))
   db1=db %>% select(SUBJID, 4:6)
   db2=db %>% select(SUBJID, 7:9)
   db3=db %>% select(SUBJID, 10:13)
@@ -22,5 +22,19 @@ test_that("swimmerplot", {
   
   p = swimmerplot(.lookup, plotly=FALSE)
   vdiffr::expect_doppelganger("swimmerplot", p)
+  
+  p2 = swimmerplot(.lookup, origin="db0$date_naissance", plotly=FALSE)
+  vdiffr::expect_doppelganger("swimmerplot with origin", p2)
+  
+  p3 = swimmerplot(.lookup, group="db0$group", plotly=FALSE)
+  vdiffr::expect_doppelganger("swimmerplot with group", p3)
+  
+  
+  expect_error(swimmerplot(.lookup, origin="aaaaa", plotly=FALSE), 
+               class="edc_swimplot_origin")
+  expect_error(swimmerplot(.lookup, origin="xxx$date_naissance", plotly=FALSE), 
+               class="edc_swimplot_origin_dataset")
+  expect_error(swimmerplot(.lookup, origin="db0$date_xxxxxxxxx", plotly=FALSE), 
+               class="edc_swimplot_origin_column")
 })
 
