@@ -47,14 +47,8 @@ swimmerplot = function(.lookup=getOption("edc_lookup", NULL), id="SUBJID",
     }) %>% 
     list_rbind()
   
-  # group = "enrolres$arm"
   if(!is.null(group)){
-    if(!str_detect(group, "^.*\\$.*$")){
-      cli_abort("{.arg group} is not in the form `dataset$column`.", 
-                class="edc_swimplot_group")
-    }
-    group2 = str_split(group, "\\$", 2)[[1]]
-    dat_group = get(group2[1], envir=parent) %>% select(id=!!id, group=!!group2[2])
+    dat_group = parse_var(group, id, parent)
     if(anyDuplicated(dat_group$id)!=0){
       cli_abort("{.arg group} ({group}) should identify subjects ({id}) uniquely.", 
                 class="edc_swimplot_group_dup")
@@ -67,25 +61,7 @@ swimmerplot = function(.lookup=getOption("edc_lookup", NULL), id="SUBJID",
   
   x_label = "Calendar date"
   if(!is.null(origin)){
-    if(!str_detect(origin, "^.*\\$.*$")){
-      cli_abort("{.arg origin} is not in the form `dataset$column`.", 
-                class="edc_swimplot_origin")
-    }
-    origin2 = str_split(origin, "\\$", 2)[[1]]
-    dat_origin = dat %>% 
-      filter(dataset==origin2[1])
-    if(nrow(dat_origin)==0){
-      cli_abort(c("{.arg origin} is wrong: no dataset {.val {origin2[1]}} was found."), 
-                class="edc_swimplot_origin_dataset")
-    }
-    dat_origin = dat_origin %>% 
-      filter(name==origin2[2]) %>% 
-      select(id, origin=value)
-    if(nrow(dat_origin)==0){
-      cli_abort(c("{.arg origin} is wrong: no column {.val {origin2[2]}} in dataset {.val {origin2[1]}} was found."), 
-                class="edc_swimplot_origin_column")
-    }
-    # browser()
+    dat_origin = parse_var(origin, id, parent)
     dat = dat %>%
       left_join(dat_origin, by="id") %>% 
       mutate(
@@ -118,6 +94,39 @@ swimmerplot = function(.lookup=getOption("edc_lookup", NULL), id="SUBJID",
   }
   
   p
+}
+
+
+
+parse_var = function(input, id, env){
+  input_name = rlang::caller_arg(input)
+  
+  if(!str_detect(input, "^.*\\$.*$")){
+    cli_abort(c(x="{.arg {input_name}} is not in the form `dataset$column`.", 
+                i="{.arg {input_name}} = {.val {input}}"), 
+              class="edc_swimplot_parse", 
+              call=parent.frame())
+  }
+  input2 = str_split(input, "\\$", 2)[[1]]
+  
+  if(!exists(input2[1], envir=env)){
+    cli_abort(c(x="{.arg {input_name}} is wrong: no dataset {.val {input2[1]}} was found.", 
+                i="{.arg {input_name}} = {.val {input}}"), 
+              class="edc_swimplot_parse_dataset", 
+              call=parent.frame())
+  }
+  
+  dat_input = get(input2[1], envir=env)
+  
+  if(!input2[2] %in% names(dat_input)){
+    cli_abort(c(x="{.arg {input_name}} is wrong: no column {.val {input2[2]}} in dataset {.val {input2[1]}} was found.", 
+                i="{.arg {input_name}} = {.val {input}}"), 
+              class="edc_swimplot_parse_column", 
+              call=parent.frame())
+  }
+  
+  dat_input %>% 
+    select(id=!!id, !!input_name:=!!input2[2])
 }
 
 

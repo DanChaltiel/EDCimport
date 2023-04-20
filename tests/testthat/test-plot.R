@@ -14,7 +14,8 @@ test_that("swimmerplot", {
   }
   
   db0=db %>% select(SUBJID, 1:3) %>% mutate(group=ifelse(runif(n())>0.5, "A", "B"))
-  db1=db %>% select(SUBJID, 4:6)
+  db1=db %>% select(SUBJID, 4:6) %>% mutate(x=ifelse(runif(n())>0.5, "X", "Y"))
+  db1=bind_rows(db1, db1)
   db2=db %>% select(SUBJID, 7:9)
   db3=db %>% select(SUBJID, 10:13)
   
@@ -31,10 +32,15 @@ test_that("swimmerplot", {
   
   
   expect_error(swimmerplot(.lookup, origin="aaaaa", plotly=FALSE), 
-               class="edc_swimplot_origin")
+               class="edc_swimplot_parse")
   expect_error(swimmerplot(.lookup, origin="xxx$date_naissance", plotly=FALSE), 
-               class="edc_swimplot_origin_dataset")
+               class="edc_swimplot_parse_dataset")
   expect_error(swimmerplot(.lookup, origin="db0$date_xxxxxxxxx", plotly=FALSE), 
-               class="edc_swimplot_origin_column")
+               class="edc_swimplot_parse_column")
+  
+  expect_error(swimmerplot(.lookup, group="aaaaa", plotly=FALSE), 
+               class="edc_swimplot_parse")
+  expect_error(swimmerplot(.lookup, group="db1$x", plotly=FALSE), 
+               class="edc_swimplot_group_dup")
 })
 
