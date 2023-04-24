@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">EDCimport</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1.9013</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1.9014</span>
       </span>
     </div>
 
@@ -94,31 +94,26 @@
 <div class="section level3">
 <h3 id="load-the-data">Load the data<a class="anchor" aria-label="anchor" href="#load-the-data"></a>
 </h3>
-<p>First, you need to request an export of type <code>SAS Xport</code>, with the checkbox “Include Codelists” ticked. This export should generate a zip archive.</p>
-<p>Then, simply provide the archive password using <code><a href="https://rdrr.io/r/base/options.html" class="external-link">options()</a></code> (if any), and use <code><a href="reference/read_trialmaster.html">read_trialmaster()</a></code> to load the data from the archive:</p>
+<p>First, you need to request an export of type <code>SAS Xport</code>, with the checkbox “Include Codelists” ticked. This export should generate a <code>.zip</code> archive.</p>
+<p>Then, simply use <code><a href="reference/read_trialmaster.html">read_trialmaster()</a></code> with the archive password (if any) to retrieve the data from the archive:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DanChaltiel/EDCimport" class="external-link">EDCimport</a></span><span class="op">)</span></span>
-<span><span class="va">filename</span> <span class="op">=</span> <span class="st">"path/to/my/archive"</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>trialmaster_pw<span class="op">=</span><span class="st">"foobar"</span><span class="op">)</span></span>
-<span><span class="va">tm</span> <span class="op">=</span> <span class="fu"><a href="reference/read_trialmaster.html">read_trialmaster</a></span><span class="op">(</span><span class="va">filename</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="use-the-data">Use the data<a class="anchor" aria-label="anchor" href="#use-the-data"></a>
-</h3>
+<span><span class="va">tm</span> <span class="op">=</span> <span class="fu"><a href="reference/read_trialmaster.html">read_trialmaster</a></span><span class="op">(</span><span class="st">"path/to/my/archive.zip"</span>, pw<span class="op">=</span><span class="st">"foobar"</span><span class="op">)</span></span></code></pre></div>
 <p>The resulting object <code>tm</code> is a list containing all the datasets, plus the date of extraction (<code>datetime_extraction</code>) and a dataset summary (<code>.lookup</code>).</p>
-<p>You can now either use the resulting list, or load it to the global environment. For instance,</p>
+<p>You can now use <code><a href="reference/load_list.html">load_list()</a></code> to import the list in the global environment and use your tables:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#use it directly</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">tm</span><span class="op">$</span><span class="va">dataset1</span><span class="op">$</span><span class="va">column5</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">#load it to the global env</span></span>
-<span><span class="fu"><a href="reference/load_list.html">load_list</a></span><span class="op">(</span><span class="va">tm</span><span class="op">)</span> <span class="co">#this also removes `tm` to save RAM</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/load_list.html">load_list</a></span><span class="op">(</span><span class="va">tm</span><span class="op">)</span> <span class="co">#this also removes `tm` to save memory</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">dataset1</span><span class="op">$</span><span class="va">column5</span><span class="op">)</span></span></code></pre></div>
 </div>
+</div>
+<div class="section level2">
+<h2 id="utils">Utils<a class="anchor" aria-label="anchor" href="#utils"></a>
+</h2>
+<p><code>EDCimport</code> include a set of useful tools that help with using the imported database.</p>
 <div class="section level3">
-<h3 id="search-the-data">Search the data<a class="anchor" aria-label="anchor" href="#search-the-data"></a>
+<h3 id="search-the-whole-database">Search the whole database<a class="anchor" aria-label="anchor" href="#search-the-whole-database"></a>
 </h3>
-<p>The dataset lookup table <code>.lookup</code> is a dataframe containing for each dataset all its column names and labels.</p>
+<p><code>.lookup</code> is a dataframe containing for each dataset all its column names and labels.</p>
 <p>Its main use is to work with <code><a href="reference/find_keyword.html">find_keyword()</a></code>. For instance, say you do not remember in which dataset and column is located the “date of ECG”. <code><a href="reference/find_keyword.html">find_keyword()</a></code> will search every column name and label and will give you the answer:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/find_keyword.html">find_keyword</a></span><span class="op">(</span><span class="st">"date"</span><span class="op">)</span></span></code></pre></div>
@@ -138,11 +133,18 @@
 <span><span class="co">#&gt; 10 vs      VISITDT Visit Date</span></span></code></pre></div>
 <p>Note that <code><a href="reference/find_keyword.html">find_keyword()</a></code> uses the <code>edc_lookup</code> option, automatically set by <code><a href="reference/read_trialmaster.html">read_trialmaster()</a></code>.</p>
 </div>
+<div class="section level3">
+<h3 id="swimmer-plot">Swimmer Plot<a class="anchor" aria-label="anchor" href="#swimmer-plot"></a>
+</h3>
+<p>The <code><a href="reference/swimmerplot.html">swimmerplot()</a></code> function will create a swimmerplot of all variables of class date in the whole database.</p>
+<p>There are 2 arguments of interest: - <code>group</code>, a grouping variable (e.g. the treatment arm) - <code>origin</code>, a date variable acting as the time zero (e.g. the date of enrollment)</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/swimmerplot.html">swimmerplot</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/swimmerplot.html">swimmerplot</a></span><span class="op">(</span>group<span class="op">=</span><span class="st">"enrolres$arm"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/swimmerplot.html">swimmerplot</a></span><span class="op">(</span>origin<span class="op">=</span><span class="st">"enrolres$enroldt"</span><span class="op">)</span></span></code></pre></div>
+<p>This output a <code>plotly</code> interactive graph where you can select the dates of interest and zoom in with your mouse.</p>
+<p><img src="man/swimmerplot.png"></p>
 </div>
-<div class="section level2">
-<h2 id="macro">MACRO<a class="anchor" aria-label="anchor" href="#macro"></a>
-</h2>
-<p>Work in progress</p>
 </div>
 </div>
   </div>
