@@ -82,7 +82,11 @@ Note that `find_keyword()` uses the `edc_lookup` option, automatically set by `r
 
 The `swimmerplot()` function will create a swimmerplot of all variables of class date in the whole database.
 
-There are 2 arguments of interest: - `group`, a grouping variable (e.g. the treatment arm) - `origin`, a date variable acting as the time zero (e.g. the date of enrollment)
+There are 2 arguments of interest:
+
+-   `group`, a grouping variable (e.g. the treatment arm)
+
+-   `origin`, a date variable acting as the time zero (e.g. the date of enrollment)
 
 ``` r
 swimmerplot()

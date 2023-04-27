@@ -179,4 +179,33 @@ save_list = function(x, filename){
   save(list=names(x), file=filename, envir=as.environment(x))
 }
 
+#TODO faire une fonction qui cherche les lignes dupliquées -> flextable ? ggplot
+#mutate_all as_factor as_numeric puis une couleur par niveau (avec un roulement de couleur tous les X=10 couleurs)
+#permettra d'identifier les lignes dupliquées sur certaines colonnes et pas d'autres
+#tester sur MUCILA DAIRY 4 dernières colonnes
 
+#TODO unify
+#TODO https://github.com/r-lib/cli/issues 
+#' Unify a vector
+#' 
+#' Turn a vector of length N to a vector of length 1 after checking that there is only one unique value. This preserves the `label` attribute if it is set.
+#'
+#' @param x a vector
+#'
+#' @return a vector of length 1
+#' @export
+#'
+#' @examples
+#' unify(c(1,1,1,1))
+#' #unify(c(1,1,2,1))
+unify = function(x){
+  rtn = x[1]
+  lu = length(unique(na.omit(x)))
+  if(lu>1){
+    cli_warn(c("Unifying multiple values in {.val {caller_arg(x)}}, returning the first one ({.val {rtn})}", 
+               i="Unique values: {.val {unique(na.omit(x))}}"))
+  }
+  rtn_label = var_label(x)
+  if(!is.null(rtn_label)) attr(rtn, "label") = rtn_label
+  rtn
+}
