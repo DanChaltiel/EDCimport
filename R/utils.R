@@ -62,6 +62,12 @@ get_folder_datetime = function(folder, verbose=TRUE){
 }
 
 
+can_be_numeric = function(x){
+  stopifnot(is.atomic(x) || is.list(x))
+  xnum_na <- suppressWarnings(is.na(as.numeric(x)))
+  all(is.na(x)==xnum_na)
+}
+
 #' @noRd
 #' @keywords internal
 format_ymd = function(x){

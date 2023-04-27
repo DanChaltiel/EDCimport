@@ -55,9 +55,15 @@ swimmerplot = function(.lookup=getOption("edc_lookup", NULL), id="SUBJID",
     }
     
     dat = dat %>% left_join(dat_group, by="id")
-    
   }
   
+  if(can_be_numeric(dat$id)) dat$id=as.numeric(dat$id)
+  else if(all(str_detect(dat$id, "\\d+"))){
+    if(is_installed("gtools")) dat=slice(dat, gtools::mixedorder(id))
+    else cli_warn(c("{.arg id} contains numbers, you will need the 
+                    {.pkg gtools} package to sort it properly.", 
+                    i='Run {.run utils::install.package("gtools")}'))
+  }
   
   x_label = "Calendar date"
   if(!is.null(origin)){
@@ -77,7 +83,7 @@ swimmerplot = function(.lookup=getOption("edc_lookup", NULL), id="SUBJID",
   }
   
   p = dat %>% 
-    mutate(id=factor(id)) %>% 
+    mutate(id=as_factor(id)) %>% 
     ggplot2::ggplot(ggplot2::aes(x=value, y=id, group=id)) + 
     ggplot2::aes(color=!!sym(aes_color), label=!!sym(aes_label)) +
     ggplot2::geom_line(na.rm=TRUE) +

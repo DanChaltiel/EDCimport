@@ -31,6 +31,7 @@ Suggests:
     covr,
     crosstable,
     ggplot2,
+    gtools,
     knitr,
     plotly,
     testthat (>= 3.0.0),
