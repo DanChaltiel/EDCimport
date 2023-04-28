@@ -1,4 +1,9 @@
 
+
+# TODO swimmerplot origin_unit
+# TODO swimmerplot ajouter tooltip? avec date si origin!=NULL
+
+
 #' Get a swimmer plot of all dates in the database
 #'
 #' @param .lookup the lookup table, loaded along with the database or result of [get_lookup()]
@@ -10,6 +15,12 @@
 #'
 #' @return a plot
 #' @export
+#' 
+#' @examples
+#' \dontrun{
+#'   p = swimmerplot()
+#'   htmlwidgets::savewidget(p, "swimmerplot.html", selfcontained=TRUE)
+#' }
 swimmerplot = function(.lookup=getOption("edc_lookup", NULL), id="SUBJID", 
                        origin=NULL, group=NULL,
                        aes_color=c("variable", "label"), plotly=TRUE){
