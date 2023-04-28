@@ -124,6 +124,10 @@ invalid_utf8 = function(x){
 #' print(nrow(b))
 #' 
 load_list = function(x, env=parent.frame(), remove=TRUE){
+  if(length(x)==0){
+    cli_warn("List was empty.")
+    return(invisible())
+  }
   nz = nzchar(names(x))
   if(any(!nz)){
     cli_abort(c("Every member of {.arg x} should have a name.", 
