@@ -193,9 +193,15 @@ save_list = function(x, filename){
 #' @export
 #'
 #' @examples
-  if(!is.null(rtn_label)) attr(rtn, "label") = rtn_label
-  rtn
-}
+extend_lookup = function(id=getOption("edc_id", "SUBJID"), lookup=getOption("edc_lookup", NULL)){
+  if(is.null(lookup)) stop("lookup")
+  rtn = lookup %>% 
+    mutate(
+      n_id = map_int(dataset, ~length(unique(get(.x)[[id]]))),
+      rows_per_id = round(nrow/n_id,1),
+      crfname = map_chr(dataset, ~get(.x)[["crfname"]][1])
+    ) %>% 
+    arrange(n_id, desc(nrow)) %>% 
     relocate(c(names, labels), .after=last_col())
   assign(".lookup", rtn, envir=parent.frame())
 }
