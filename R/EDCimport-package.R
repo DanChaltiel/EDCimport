@@ -1,4 +1,5 @@
 #' @keywords internal
+#' @import cli
 #' @import dplyr
 #' @import forcats
 #' @import glue
