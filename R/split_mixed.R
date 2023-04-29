@@ -1,16 +1,10 @@
 
-
-
-
-# TODO getOption(EDCimport_id, "SUBJID")
-
-
 #' Split mixed datasets
 #' 
 #' Split mixed tables, i.e. tables that hold both long data (N values per patient) and short data (one value per patient, duplicated on N lines), into one long table and one short table.
 #'
 #' @param id the patient identifier, probably "SUBJID". Should be shared by all datasets.
-#' @param output_code whether to print the code. Can also be a file path.
+#' @param output_code whether to print the code to explictly write. Can also be a file path.
 #' @param verbose whether to print informations about the process.
 #' @param lookup the lookup table
 #' @param ... not used
@@ -19,44 +13,33 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' tm = read_trialmaster("filename.zip", pw="xx")
+#' #tm = read_trialmaster("filename.zip", pw="xx")
+#' tm = edc_example_mixed()
+#' names(tm)
 #' load_list(tm)
+#' print(long_mixed) #`val1` and `val2` are long but `val3` is short
 #' 
-#' mixed = split_mixed_datasets("SUBJID")
-#' load_list(mixed) 
-#' }
+#' mixed_data = split_mixed_datasets("SUBJID", lookup=.lookup)
+#' load_list(mixed_data)
+#' print(long_mixed_short) 
+#' print(long_mixed_long) 
+#' 
+#' #alternatively, get the code and only use the one you need
+#' split_mixed_datasets("SUBJID", lookup=.lookup, output_code=TRUE)
+#' split_mixed_datasets("SUBJID", lookup=.lookup, output_code="mixed_code.R")#' 
 split_mixed_datasets = function(id, ..., 
                                 verbose=TRUE, output_code=FALSE, 
                                 lookup=getOption("edc_lookup", NULL)){
   check_dots_empty()
   envir = parent.frame()
+  
+  
+  
+  
   datasets = lookup$dataset %>% 
     set_names() %>% 
     map(~get(.x, envir=envir))
   
-  
-  # dataset_mean_nval = lookup$dataset %>%
-  #   set_names() %>%
-  #   map(~{
-  #     dat = get(.x, envir=envir)
-  #     if(!id %in% names(dat)) return(NULL)
-  #     if(nrow(dat)==0 || ncol(dat)==0) return(NULL)
-  #     # dat %>%
-  #     #   group_by(across(all_of(id))) %>%
-  #     #   summarise_all(~length(unique(.x))) %>%
-  #     #   select(-all_of(id)) %>%
-  #     #   summarise_all(~length(unique(.x))) %>%
-  #     #   unlist()
-  #     dat %>%
-  #       group_by(across(all_of(id))) %>%
-  #       summarise_all(~length(unique(.x))) %>%
-  #       # select(all_of(id), GRPINSNO) %>%
-  #       select(-all_of(id)) %>%
-  #       summarise_all(~mean(.x)) %>%
-  #       # summarise_all(~length(.x)) %>%
-  #       unlist()
-  #   })
   dataset_mean_nval = datasets %>% 
     imap(~{
       if(!id %in% names(.x)) return(NULL)
