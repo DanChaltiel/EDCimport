@@ -1,62 +1,8 @@
 
-#TODO unify
-#TODO https://github.com/r-lib/cli/issues 
-#TODO en attendant https://github.com/r-lib/cli/issues/507
-#' Unify a vector
-#' 
-#' Turn a vector of length N to a vector of length 1 after checking that there is only one unique value. Useful to safely flatten a duplicated table. This preserves the `label` attribute if set.
-#'
-#' @param x a vector
-#'
-#' @return a vector of length 1
-#' @export
-#'
-#' @examples
-#' unify(c(1,1,1,1))
-#' #unify(c(1,1,2,1)) #warning
-unify = function(x){
-  rtn = x[1]
-  lu = length(unique(na.omit(x)))
-  if(lu>1){
-    cli_warn(c("Unifying multiple values in {.val {caller_arg(x)}}, returning the first one ({.val {rtn})}", 
-               i="Unique values: {.val {unique(na.omit(x))}}"))
-  }
-  rtn_label = var_label(x)
-  if(!is.null(rtn_label)) attr(rtn, "label") = rtn_label
-  rtn
-}
-unify = function(x){
-  rtn = x[1]
-  lu = length(unique(na.omit(x)))
-  if(lu>1){
-    cli_warn(c("Unifying multiple values in {.val {caller_arg(x)}}, returning the first one ({.val {rtn})}", 
-               i="Unique values: {.val {unique(na.omit(x))}}"))
-  }
-  rtn_label = var_label(x)
-  if(!is.null(rtn_label)) attr(rtn, "label") = rtn_label
-  rtn
-}
 
 
 
 # TODO getOption(EDCimport_id, "SUBJID")
-
-
-# library(scales)
-
-
-# palette = "viridis"
-# turnover = 5
-# colourer = scales::col_factor(palette, domain=NULL)
-# 
-# # library(flextable)
-# diary %>% 
-#   head(6) %>% 
-#   mutate_all(~as.numeric(as.factor(.x)) %% turnover) %>% 
-#   flextable::flextable() %>% autofit() %>% 
-#   flextable::fontsize() %>% 
-#   flextable::rotate(rotation=c("lrtb", "tbrl", "btlr")[3], part="header") %>% 
-#   flextable::bg(bg=colourer, part="body")
 
 
 #' Split mixed datasets
@@ -215,4 +161,41 @@ split_mixed_datasets = function(id, ...,
     keep(is.list) %>% 
     structure(mean_unique_values="mixed_long") %>% 
     invisible()
+}
+
+
+
+#' Unify a vector
+#' 
+#' Turn a vector of length N to a vector of length 1 after checking that there is only one unique value. Useful to safely flatten a duplicated table. This preserves the `label` attribute if set.
+#'
+#' @param x a vector
+#'
+#' @return a vector of length 1
+#' @export
+#'
+#' @examples
+#' unify(c(1,1,1,1))
+#' #unify(c(1,1,2,1)) #warning
+unify = function(x){
+  rtn = x[1]
+  lu = length(unique(na.omit(x)))
+  if(lu>1){
+    cli_warn(c("Unifying multiple values in {.val {caller_arg(x)}}, returning the first one ({.val {rtn})}", 
+               i="Unique values: {.val {unique(na.omit(x))}}"))
+  }
+  rtn_label = var_label(x)
+  if(!is.null(rtn_label)) attr(rtn, "label") = rtn_label
+  rtn
+}
+unify = function(x){
+  rtn = x[1]
+  lu = length(unique(na.omit(x)))
+  if(lu>1){
+    cli_warn(c("Unifying multiple values in {.val {caller_arg(x)}}, returning the first one ({.val {rtn})}", 
+               i="Unique values: {.val {unique(na.omit(x))}}"))
+  }
+  rtn_label = var_label(x)
+  if(!is.null(rtn_label)) attr(rtn, "label") = rtn_label
+  rtn
 }
