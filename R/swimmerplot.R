@@ -1,6 +1,5 @@
 
 
-# TODO swimmerplot origin_unit
 # TODO swimmerplot ajouter tooltip? avec date si origin!=NULL
 
 
@@ -11,6 +10,7 @@
 #' @param origin a variable to consider as time 0, given as "dataset$column"
 #' @param group a grouping variable, given as "dataset$column"
 #' @param aes_color either `variable` ("{dataset} - {column}") or `label` (column label)
+#' @param time_unit if `origin!=NULL`, the unit to measure time. One of `c("days", "weeks", "months", "years")`.
 #' @param plotly whether to use `{plotly}` to get an interactive plot
 #'
 #' @return a plot
@@ -21,10 +21,14 @@
 #'   p = swimmerplot()
 #'   htmlwidgets::savewidget(p, "swimmerplot.html", selfcontained=TRUE)
 #' }
-swimmerplot = function(.lookup=getOption("edc_lookup", NULL), id="SUBJID", 
-                       origin=NULL, group=NULL,
+swimmerplot = function(.lookup=getOption("edc_lookup", NULL), ..., 
+                       id="SUBJID", group=NULL, origin=NULL, 
+                       time_unit=c("days", "weeks", "months", "years"),
                        aes_color=c("variable", "label"), plotly=TRUE){
   check_installed("ggplot2", reason="for `swimmerplot()` to work.")
+  check_dots_empty()
+  time_unit = match.arg(time_unit[1], c(time_unit, str_remove(time_unit, "s$")))
+  if(!str_ends(time_unit, "s")) time_unit = paste0(time_unit, "s")
   aes_color = match.arg(aes_color)
   parent = parent.frame()
   
@@ -79,13 +83,14 @@ swimmerplot = function(.lookup=getOption("edc_lookup", NULL), id="SUBJID",
   x_label = "Calendar date"
   if(!is.null(origin)){
     dat_origin = parse_var(origin, id, parent)
+    values = c(days=1, weeks=7, months=365.24/12, years=365.24)
     dat = dat %>%
       left_join(dat_origin, by="id") %>% 
       mutate(
         value_bak = value,
-        value = as.double(value-origin, units="days")
+        value = as.double(value-origin, units="days") / values[time_unit]
       )
-    x_label = glue("Date difference from `{origin}` (in days)")
+    x_label = glue("Date difference from `{origin}` (in {time_unit})")
   }
   
   aes_label = "variable"
