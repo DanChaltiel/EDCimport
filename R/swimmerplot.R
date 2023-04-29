@@ -3,23 +3,32 @@
 # TODO swimmerplot ajouter tooltip? avec date si origin!=NULL
 
 
-#' Get a swimmer plot of all dates in the database
+#' Swimmer plot of all dates columns
+#' 
+#' Join all tables from `.lookup$dataset` on `id` 
 #'
 #' @param .lookup the lookup table, loaded along with the database or result of [get_lookup()]
-#' @param id an identifier for a given row
-#' @param origin a variable to consider as time 0, given as "dataset$column"
+#' @param id the patient identifier
 #' @param group a grouping variable, given as "dataset$column"
-#' @param aes_color either `variable` ("{dataset} - {column}") or `label` (column label)
+#' @param origin a variable to consider as time 0, given as "dataset$column"
 #' @param time_unit if `origin!=NULL`, the unit to measure time. One of `c("days", "weeks", "months", "years")`.
+#' @param aes_color either `variable` ("{dataset} - {column}") or `label` (the column label)
 #' @param plotly whether to use `{plotly}` to get an interactive plot
+#' @param ... not used
 #'
-#' @return a plot
+#' @return either a `plotly` or a `ggplot`
 #' @export
 #' 
 #' @examples
+#' #tm = read_trialmaster("filename.zip", pw="xx")
+#' tm = edc_example_plot()
+#' load_list(tm)
+#' p = swimmerplot(.lookup)
+#' p2 = swimmerplot(.lookup, origin="db0$date_naissance", time_unit="weeks")
+#' p3 = swimmerplot(.lookup, group="db0$group", aes_color="label")
 #' \dontrun{
-#'   p = swimmerplot()
-#'   htmlwidgets::savewidget(p, "swimmerplot.html", selfcontained=TRUE)
+#' #save the plotly plot as HTML to share it
+#' htmlwidgets::savewidget(p, "swimmerplot.html", selfcontained=TRUE)
 #' }
 swimmerplot = function(.lookup=getOption("edc_lookup", NULL), ..., 
                        id="SUBJID", group=NULL, origin=NULL, 
