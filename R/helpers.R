@@ -33,10 +33,10 @@ get_lookup = function(data_list){
   
   tibble(dataset=tolower(names(data_list))) %>% 
     mutate(
-      names=map(data_list, ~f(.x, names(.x), NULL)), 
-      labels=map(data_list, ~f(.x, var_label(.x, unlist=TRUE), NULL)), 
       nrow=map_dbl(data_list, ~f(.x, nrow(.x), 0)), 
       ncol=map_dbl(data_list, ~f(.x, ncol(.x), 0)), 
+      names=map(data_list, ~f(.x, names(.x), NULL)), 
+      labels=map(data_list, ~f(.x, var_label(.x, unlist=TRUE), NULL)), 
     )
 }
 
@@ -193,15 +193,36 @@ save_list = function(x, filename){
 #' @export
 #'
 #' @examples
-extend_lookup = function(id=getOption("edc_id", "SUBJID"), lookup=getOption("edc_lookup", NULL)){
-  if(is.null(lookup)) stop("lookup")
+extend_lookup = function(lookup, id=getOption("edc_id", "SUBJID")){
+  
   rtn = lookup %>% 
     mutate(
       n_id = map_int(dataset, ~length(unique(get(.x)[[id]]))),
       rows_per_id = round(nrow/n_id,1),
-      crfname = map_chr(dataset, ~get(.x)[["crfname"]][1])
+      # crfname = map_chr(dataset, ~get(.x)[["crfname"]][1])
+      crfname = map_chr(dataset, ~get_data_name(get(.x)))
     ) %>% 
     arrange(n_id, desc(nrow)) %>% 
     relocate(c(names, labels), .after=last_col())
-  assign(".lookup", rtn, envir=parent.frame())
+  # assign(".lookup", rtn, envir=parent.frame())
+  rtn
+}
+
+get_data_name = function(df){
+  # browser()
+  if(!is.null(attr(df, "data_name"))){
+    attr(df, "data_name")
+  } else if(!is.null(df[["crfname"]])){
+    df[["crfname"]][1]
+  } else {
+    NA
+  }
+}
+
+
+get_clean_names_fun = function(f){
+  if(is.null(f)) return(identity)
+  if(is_formula(f)) f = as_function(f)
+  if(!is.function(f)) cli_abort("{.arg {caller_arg(f)}} should be a function or a lambda-function, not a {.cls {class(f)}}.")
+  f
 }

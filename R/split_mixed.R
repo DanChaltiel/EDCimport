@@ -89,6 +89,8 @@ split_mixed_datasets = function(id, ...,
     set_names() %>% 
     map(~get(.x, envir=envir))
   
+  #TODO get_datasets et mettre datasets en paramètre puis continuer depuis trialmaster.R
+  
   
   # dataset_mean_nval = lookup$dataset %>%
   #   set_names() %>%
@@ -185,6 +187,8 @@ split_mixed_datasets = function(id, ...,
       
       code = glue("## `{.y}` (dim={nrow(dat)}x{ncol(dat)}) ---- \n\n", 
                   "{short_code} \n\n {long_code}", .null="ERROR")
+      attr(short, "data_name") = get_data_name(dat)
+      attr(long, "data_name") = get_data_name(dat)
       lst(short, long, code)
     })
   
@@ -205,10 +209,9 @@ split_mixed_datasets = function(id, ...,
                        to separate long and short data: ", 
                   " "="{.run browseURL({output_code})}"))
     cat(code, file=output_code)
-  } else {
+  } else if(verbose){
     cli_bullets(c(">"="Use {.fun EDCimport::load_list} on the result to get separated long and short data."))
   }
-  
   
   rtn %>% 
     list_flatten() %>% 
