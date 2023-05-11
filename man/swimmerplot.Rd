@@ -9,7 +9,7 @@ swimmerplot(
   ...,
   id = "SUBJID",
   group = NULL,
-  origin = NULL,
+  origin = NULL
   time_unit = c("days", "weeks", "months", "years"),
   aes_color = c("variable", "label"),
   plotly = TRUE
@@ -21,6 +21,8 @@ swimmerplot(
 \item{...}{not used}
 
 \item{id}{the patient identifier}
+
+\item{origin}{a variable to consider as time 0, given as "dataset$column"}
 
 \item{group}{a grouping variable, given as "dataset$column"}
 
@@ -48,5 +50,11 @@ p3 = swimmerplot(.lookup, group="db0$group", aes_color="label")
 \dontrun{
 #save the plotly plot as HTML to share it
 htmlwidgets::savewidget(p, "swimmerplot.html", selfcontained=TRUE)
+}
+}
+\examples{
+\dontrun{
+  p = swimmerplot()
+  htmlwidgets::savewidget(p, "swimmerplot.html", selfcontained=TRUE)
 }
 }

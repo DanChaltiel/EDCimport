@@ -8,12 +8,16 @@
 #' @param archive the path to the archive
 #' @param use_cache if `TRUE`, read the `.rds` cache if any or extract the archive and create a cache. If `FALSE` extract the archive without creating a cache file.
 #' @param pw The password if the archive is protected. To avoid writing passwords in plain text, it is better to indicate your password using `options(trialmaster_pw="xxx")` in another file than using `pw="xxx"`.
+#' @param clean_names_fun a function to clean column names, e.g. [janitor::clean_names()]
+#' @param split_mixed whether to split mixed datasets. See [split_mixed_datasets].
 #' @param verbose one of `c(0, 1, 2)`. The higher, the more information will be printed'
 #' @param ... unused
 #'
 #' @inherit read_tm_all_xpt return
 #' @export
 read_trialmaster = function(archive, ..., use_cache=TRUE, 
+                            clean_names_fun=NULL,
+                            split_mixed=FALSE,
                             pw=getOption("trialmaster_pw"), 
                             verbose=getOption("edc_verbose", 1)){
   directory = dirname(archive)
@@ -51,7 +55,10 @@ read_trialmaster = function(archive, ..., use_cache=TRUE,
              class="edc_tm_no_procformat_warning") 
       format_file = NULL
     }
-    rtn = read_tm_all_xpt(temp_folder, format_file=format_file, datetime_extraction=extract_datetime)
+    rtn = read_tm_all_xpt(temp_folder, format_file=format_file, 
+                          clean_names_fun=clean_names_fun, 
+                          split_mixed=split_mixed,
+                          datetime_extraction=extract_datetime)
     if(isTRUE(use_cache)) saveRDS(rtn, cache_file)
   }
   rtn
@@ -70,7 +77,11 @@ read_trialmaster = function(archive, ..., use_cache=TRUE,
 #' @return a list containing one dataframe for each `.xpt` file in the folder, the extraction date (`datetime_extraction`), and a summary of all imported tables (`.lookup`). If not set yet, option `edc_lookup` is automatically set to `.lookup`.
 #' @export
 #' @importFrom haven read_xpt
-read_tm_all_xpt = function(directory, format_file="procformat.sas", datetime_extraction=NULL){
+read_tm_all_xpt = function(directory, ..., format_file="procformat.sas", 
+                           clean_names_fun=NULL, split_mixed=FALSE, 
+                           datetime_extraction=NULL){
+  check_dots_empty()
+  clean_names_fun=get_clean_names_fun(clean_names_fun)
   datasets = dir(directory, pattern = "\\.xpt$", full.names=TRUE)
   datasets_names = basename(datasets) %>% str_remove("\\.xpt")
   if(is.null(datetime_extraction)) datetime_extraction=get_folder_datetime(directory)
@@ -94,15 +105,26 @@ read_tm_all_xpt = function(directory, format_file="procformat.sas", datetime_ext
           as_tibble() %>% 
           mutate(across(where(is.character), na_if, y="")) %>% 
           apply_sas_formats(sas_formats) %>%
+          clean_names_fun() %>% 
           haven::as_factor()
       })
   }
   
+  if(split_mixed){
+    mixed = split_mixed_datasets(rtn)
+  }
+  browser()
+  
   errs = keep(rtn, is_error)
   if(length(errs)>0){
-    cli_warn(c("SAS dataset{?s} {.val {names(errs)}} could not be read from the archive using {.fun haven::read_xpt}.",i="You can print the object{?s} to see the error message (e.g. run {.run print({names(errs[1])})})."), 
+    cli_warn(c("SAS dataset{?s} {.val {names(errs)}} could not be read from 
+               the archive using {.fun haven::read_xpt}.",
+               i="You can print the object{?s} to see the error message (e.g. 
+               run {.run print({names(errs[1])})})."), 
              class="edc_tm_problem_warning")
   }
+  
+  
   
   rtn$date_extraction = format_ymd(datetime_extraction)
   rtn$datetime_extraction = datetime_extraction
