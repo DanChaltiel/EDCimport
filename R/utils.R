@@ -9,6 +9,7 @@
 #' @noRd
 #' @keywords internal
 file.path2 = function(...){
+  #TODO utilise le package fs?
   fsep = .Platform$file.sep
   file.path(...) %>% str_replace_all(paste0(fsep, "+"), fsep)
 }
@@ -85,4 +86,26 @@ format_ymdhm = function(x){
 #' @keywords internal
 is.Date = function (x) {
   inherits(x, "POSIXt") || inherits(x, "POSIXct") || inherits(x, "Date")
+}
+
+#' @noRd
+#' @keywords internal
+#' @source https://stackoverflow.com/a/57261396/3888000
+is_invalid_utf8 = function(x){
+  !is.na(x) & is.na(iconv(x, "UTF-8", "UTF-8"))
+}
+
+
+
+
+#' @noRd
+#' @keywords internal
+get_data_name = function(df, crfname=getOption("edc_crfname", "crfname")){
+  if(!is.null(attr(df, "data_name"))){
+    attr(df, "data_name")
+  } else if(!is.null(df[[crfname]])){
+    df[[crfname]][1]
+  } else {
+    NA
+  }
 }

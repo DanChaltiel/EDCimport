@@ -15,8 +15,8 @@
 get_lookup = function(data_list){
   if(!is.list(data_list)){
     cli_abort(c("{.code data_list} should be a list.", 
-                i="{.code class(data_list)}: {.val {class(data_list)}}"), 
-              class="edc_lookup_empty")
+                i="{.code class(data_list)}: {.cls {class(data_list)}}"), 
+              class="edc_lookup_not_list")
   }
   data_list_n = format(names(data_list))
   data_list[".lookup"] = data_list["date_extraction"] = data_list["datetime_extraction"] = NULL
@@ -37,7 +37,8 @@ get_lookup = function(data_list){
       ncol=map_dbl(data_list, ~f(.x, ncol(.x), 0)), 
       names=map(data_list, ~f(.x, names(.x), NULL)), 
       labels=map(data_list, ~f(.x, var_label(.x, unlist=TRUE), NULL)), 
-    )
+    ) %>% 
+    arrange(nrow)
 }
 
 #' Find a keyword
@@ -82,7 +83,7 @@ find_keyword = function(keyword, data=getOption("edc_lookup", NULL), ignore_case
     unnest(c(names, labels)) %>% 
     mutate(
       labels=unlist(labels), 
-      invalid=invalid_utf8(labels),
+      invalid=is_invalid_utf8(labels),
       names2=f2(names, invalid),
       labels2=f2(labels, invalid),
     ) %>% 
@@ -101,11 +102,6 @@ find_keyword = function(keyword, data=getOption("edc_lookup", NULL), ignore_case
     select(-invalid)
 }
 
-
-#' @source https://stackoverflow.com/a/57261396/3888000
-invalid_utf8 = function(x){
-  !is.na(x) & is.na(iconv(x, "UTF-8", "UTF-8"))
-}
 
 #' Load a list in an environment
 #'
@@ -184,23 +180,25 @@ save_list = function(x, filename){
 }
 
 
-#'TODO extend_lookup
+#' Extend the lookup table
+#' 
+#' This utility extands the lookup table to include the name
 #'
 #' @param id 
 #' @param lookup 
 #'
-#' @return
+#' @return the lookup, extended
 #' @export
-#'
-#' @examples
-extend_lookup = function(lookup, id=getOption("edc_id", "SUBJID")){
-  
+extend_lookup = function(lookup, id=getOption("edc_id", "SUBJID"), 
+                         datasets = get_datasets(), 
+                         crfname = getOption("edc_crfname", "crfname")){
+  if(is.null(lookup)) stop("lookup")
+  # browser()
   rtn = lookup %>% 
     mutate(
       n_id = map_int(dataset, ~length(unique(get(.x)[[id]]))),
       rows_per_id = round(nrow/n_id,1),
-      # crfname = map_chr(dataset, ~get(.x)[["crfname"]][1])
-      crfname = map_chr(dataset, ~get_data_name(get(.x)))
+      crfname = map_chr(dataset, ~get_data_name(datasets[[.x]]), crfname=crfname)
     ) %>% 
     arrange(n_id, desc(nrow)) %>% 
     relocate(c(names, labels), .after=last_col())
@@ -208,21 +206,20 @@ extend_lookup = function(lookup, id=getOption("edc_id", "SUBJID")){
   rtn
 }
 
-get_data_name = function(df){
-  # browser()
-  if(!is.null(attr(df, "data_name"))){
-    attr(df, "data_name")
-  } else if(!is.null(df[["crfname"]])){
-    df[["crfname"]][1]
-  } else {
-    NA
-  }
+
+#' Retreive the datasets
+#' 
+#' Get the datasets from the lookup table as a list of data.frames.
+#'
+#' @param lookup the lookup table
+#' @param envir (internal use)
+#'
+#' @return a list of all datasets
+#' @export
+get_datasets = function(lookup=getOption("edc_lookup", NULL), envir=parent.frame()){
+  lookup$dataset %>% 
+    set_names() %>% 
+    map(~get(.x, envir=envir))
 }
 
 
-get_clean_names_fun = function(f){
-  if(is.null(f)) return(identity)
-  if(is_formula(f)) f = as_function(f)
-  if(!is.function(f)) cli_abort("{.arg {caller_arg(f)}} should be a function or a lambda-function, not a {.cls {class(f)}}.")
-  f
-}

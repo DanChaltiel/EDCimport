@@ -6,7 +6,7 @@
 #' @param id the patient identifier, probably "SUBJID". Should be shared by all datasets.
 #' @param output_code whether to print the code to explictly write. Can also be a file path.
 #' @param verbose whether to print informations about the process.
-#' @param lookup the lookup table
+#' @param datasets the datasets to consider. Use the helper [get_datasets()] if needed.
 #' @param ... not used
 #'
 #' @return a list of the new long and short tables. Use [load_list()] to load them in the global environment.
@@ -19,53 +19,18 @@
 #' load_list(tm)
 #' print(long_mixed) #`val1` and `val2` are long but `val3` is short
 #' 
-#' mixed_data = split_mixed_datasets("SUBJID", lookup=.lookup)
+#' mixed_data = split_mixed_datasets(tm, id="SUBJID")
 #' load_list(mixed_data)
 #' print(long_mixed_short) 
 #' print(long_mixed_long) 
 #' 
-#' #alternatively, get the code and only use the one you need
-#' split_mixed_datasets("SUBJID", lookup=.lookup, output_code=TRUE)
-#' split_mixed_datasets("SUBJID", lookup=.lookup, output_code="mixed_code.R")#' 
-split_mixed_datasets = function(id, ..., 
-                                verbose=TRUE, output_code=FALSE, 
-                                lookup=getOption("edc_lookup", NULL)){
+#' #alternatively, get the code and only use the datasets you need
+#' split_mixed_datasets(tm, id="SUBJID", output_code=TRUE)
+#' split_mixed_datasets(tm, id="SUBJID", output_code="mixed_code.R")
+split_mixed_datasets = function(datasets=get_datasets(), id,..., 
+                                verbose=TRUE, output_code=FALSE){
   check_dots_empty()
-  envir = parent.frame()
-  
-  
-  
-  
-  datasets = lookup$dataset %>% 
-    set_names() %>% 
-    map(~get(.x, envir=envir))
-  
-  
-  #TODO get_datasets et mettre datasets en paramètre puis continuer depuis trialmaster.R
-  
-  
-  # dataset_mean_nval = lookup$dataset %>%
-  #   set_names() %>%
-  #   map(~{
-  #     dat = get(.x, envir=envir)
-  #     if(!id %in% names(dat)) return(NULL)
-  #     if(nrow(dat)==0 || ncol(dat)==0) return(NULL)
-  #     # dat %>%
-  #     #   group_by(across(all_of(id))) %>%
-  #     #   summarise_all(~length(unique(.x))) %>%
-  #     #   select(-all_of(id)) %>%
-  #     #   summarise_all(~length(unique(.x))) %>%
-  #     #   unlist()
-  #     dat %>%
-  #       group_by(across(all_of(id))) %>%
-  #       summarise_all(~length(unique(.x))) %>%
-  #       # select(all_of(id), GRPINSNO) %>%
-  #       select(-all_of(id)) %>%
-  #       summarise_all(~mean(.x)) %>%
-  #       # summarise_all(~length(.x)) %>%
-  #       unlist()
-  #   })
-  
+  datasets = datasets %>% keep(~is.data.frame(.x))
   dataset_mean_nval = datasets %>% 
     imap(~{
       if(!id %in% names(.x)) return(NULL)
@@ -111,7 +76,7 @@ split_mixed_datasets = function(id, ...,
     structure(label=glue("Mean number of unique values per {id}"))
   
   if(length(mixed_long)==0){
-    cli_bullets(c("v"="There was no mixed table, no change needed."))
+    if(verbose) cli_bullets(c("v"="There was no mixed table, no change needed."))
     return(invisible(list()))
   }
   
@@ -119,7 +84,8 @@ split_mixed_datasets = function(id, ...,
     imap(~{
       a = paste(names(.x[.x==1]), collapse=', ')
       b = paste(names(.x[.x!=1]), collapse=', ')
-      dat = get(.y)
+      # dat = get(.y)
+      dat = datasets[[.y]]
       short = dat %>% 
         select({{id}}, all_of(names(.x[.x==1]))) %>% 
         group_by(across(all_of(id))) %>% 
@@ -154,13 +120,13 @@ split_mixed_datasets = function(id, ...,
                   " "="{.val {names(mixed_long)}}"))
   }
   
-  if(output_code=="console"){
+  if(isTRUE(output_code) || output_code=="console"){
     cli_bullets(c(">"="Copy the following code in your script to separate long and short data: "))
     cat(code)
-  } else if(isTRUE(output_code)){
+  } else if(is.character(output_code)){
     cli_bullets(c(">"="Copy the code from {.path {output_code}} in your script 
                        to separate long and short data: ", 
-                  " "="{.run browseURL({output_code})}"))
+                  " "="{.run utils::browseURL({output_code})}"))
     cat(code, file=output_code)
   } else if(verbose){
     cli_bullets(c(">"="Use {.fun EDCimport::load_list} on the result to get separated long and short data."))
@@ -198,14 +164,4 @@ unify = function(x){
   if(!is.null(rtn_label)) attr(rtn, "label") = rtn_label
   rtn
 }
-unify = function(x){
-  rtn = x[1]
-  lu = length(unique(na.omit(x)))
-  if(lu>1){
-    cli_warn(c("Unifying multiple values in {.val {caller_arg(x)}}, returning the first one ({.val {rtn})}", 
-               i="Unique values: {.val {unique(na.omit(x))}}"))
-  }
-  rtn_label = var_label(x)
-  if(!is.null(rtn_label)) attr(rtn, "label") = rtn_label
-  rtn
-}
+

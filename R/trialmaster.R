@@ -5,19 +5,18 @@
 #' Generate a `.rds` cache file for future reads. \cr
 #' If `7zip` is not installed or available, use [read_tm_all_xpt()] instead.
 #'
-#' @param archive the path to the archive
-#' @param use_cache if `TRUE`, read the `.rds` cache if any or extract the archive and create a cache. If `FALSE` extract the archive without creating a cache file.
-#' @param pw The password if the archive is protected. To avoid writing passwords in plain text, it is better to indicate your password using `options(trialmaster_pw="xxx")` in another file than using `pw="xxx"`.
-#' @param clean_names_fun a function to clean column names, e.g. [janitor::clean_names()]
-#' @param split_mixed whether to split mixed datasets. See [split_mixed_datasets].
-#' @param verbose one of `c(0, 1, 2)`. The higher, the more information will be printed'
+#' @param archive \[`character(1)`]\cr the path to the archive
+#' @param use_cache \[`logical(1)`: \sQuote{TRUE}]\cr if `TRUE`, read the `.rds` cache if any or extract the archive and create a cache. If `FALSE` extract the archive without creating a cache file.
+#' @param pw \[`character(1)`]\cr The password if the archive is protected. To avoid writing passwords in plain text, it is probably better to use `options(trialmaster_pw="xxx")` instead though.
+#' @param verbose \[`logical(1)`]\cr one of `c(0, 1, 2)`. The higher, the more information will be printed.
 #' @param ... unused
 #'
 #' @inherit read_tm_all_xpt return
+#' @inheritParams read_tm_all_xpt
 #' @export
 read_trialmaster = function(archive, ..., use_cache=TRUE, 
                             clean_names_fun=NULL,
-                            split_mixed=FALSE,
+                            split_mixed_id=NULL,
                             pw=getOption("trialmaster_pw"), 
                             verbose=getOption("edc_verbose", 1)){
   directory = dirname(archive)
@@ -57,7 +56,7 @@ read_trialmaster = function(archive, ..., use_cache=TRUE,
     }
     rtn = read_tm_all_xpt(temp_folder, format_file=format_file, 
                           clean_names_fun=clean_names_fun, 
-                          split_mixed=split_mixed,
+                          split_mixed_id=split_mixed_id,
                           datetime_extraction=extract_datetime)
     if(isTRUE(use_cache)) saveRDS(rtn, cache_file)
   }
@@ -70,18 +69,21 @@ read_trialmaster = function(archive, ..., use_cache=TRUE,
 #' If `7zip` is installed, you should probably rather use [read_trialmaster()] instead. \cr
 #' If a `procformat.sas` file exists in the directory, formats will be applied.
 #'
-#' @param directory the path to the unzipped archive using SAS_XPORT format. Will read the extraction date from the directory name.
-#' @param format_file the path to the `procformat.sas` file that should be used to apply formats. Use `NULL` to not apply formats.
-#' @param datetime_extraction the datetime of the data extraction. Default to the most common date of last modification in `directory`.
+#' @param directory \[`character(1)`]\cr the path to the unzipped archive using SAS_XPORT format. Will read the extraction date from the directory name.
+#' @param format_file \[`character(1)`]\cr the path to the `procformat.sas` file that should be used to apply formats. Use `NULL` to not apply formats.
+#' @param datetime_extraction \[`POSIXt(1)`]\cr the datetime of the data extraction. Default to the most common date of last modification in `directory`.
+#' @param clean_names_fun \[`function`]\cr a function to clean column names, e.g. [janitor::clean_names()]
+#' @param split_mixed_id \[`character(1)`]\cr the patient ID to split mixed datasets. See [split_mixed_datasets]. Beware of case if `clean_names_fun` is set.
 #'
 #' @return a list containing one dataframe for each `.xpt` file in the folder, the extraction date (`datetime_extraction`), and a summary of all imported tables (`.lookup`). If not set yet, option `edc_lookup` is automatically set to `.lookup`.
 #' @export
 #' @importFrom haven read_xpt
 read_tm_all_xpt = function(directory, ..., format_file="procformat.sas", 
-                           clean_names_fun=NULL, split_mixed=FALSE, 
+                           clean_names_fun=NULL, split_mixed_id=NULL, 
                            datetime_extraction=NULL){
   check_dots_empty()
-  clean_names_fun=get_clean_names_fun(clean_names_fun)
+  clean_names_fun = get_clean_names_fun(clean_names_fun)
+  
   datasets = dir(directory, pattern = "\\.xpt$", full.names=TRUE)
   datasets_names = basename(datasets) %>% str_remove("\\.xpt")
   if(is.null(datetime_extraction)) datetime_extraction=get_folder_datetime(directory)
@@ -110,10 +112,13 @@ read_tm_all_xpt = function(directory, ..., format_file="procformat.sas",
       })
   }
   
-  if(split_mixed){
-    mixed = split_mixed_datasets(rtn)
+  if(!is.null(split_mixed_id)){
+    stopifnot(is.character(split_mixed_id))
+    id_found = map_lgl(rtn, ~split_mixed_id %in% names(.x))
+    if(!any(id_found)) cli_warn("split_mixed_id {.val {split_mixed_id}} was not found in any dataset. Is it possible that you made a spelling mistake?")
+    mixed = split_mixed_datasets(split_mixed_id, datasets=rtn, verbose=FALSE)
+    rtn = c(rtn, mixed)
   }
-  browser()
   
   errs = keep(rtn, is_error)
   if(length(errs)>0){
@@ -129,9 +134,24 @@ read_tm_all_xpt = function(directory, ..., format_file="procformat.sas",
   rtn$date_extraction = format_ymd(datetime_extraction)
   rtn$datetime_extraction = datetime_extraction
   rtn$.lookup = get_lookup(rtn)
-  if(is.null(getOption("edc_lookup", NULL))){
-    options(edc_lookup=rtn$.lookup)
+  
+  if(!is.null(getOption("edc_lookup", NULL))){
+    cli_warn("Option {.val edc_lookup} has been overwritten.")
   }
+  options(edc_lookup=rtn$.lookup)
   rtn
 }
 
+
+# Utils ---------------------------------------------------------------------------------------
+
+
+
+#' @noRd
+#' @keywords internal
+get_clean_names_fun = function(f){
+  if(is.null(f)) return(identity)
+  if(is_formula(f)) f = as_function(f)
+  if(!is.function(f)) cli_abort("{.arg {caller_arg(f)}} should be a function or a lambda-function, not a {.cls {class(f)}}.")
+  f
+}
