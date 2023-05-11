@@ -19,7 +19,7 @@ If a procformat.sas file exists in the directory, formats will be applied."><!--
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">EDCimport</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1.9017</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1.9018</span>
       </span>
     </div>
 
@@ -59,7 +59,10 @@ If a <code>procformat.sas</code> file exists in the directory, formats will be a
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">read_tm_all_xpt</span><span class="op">(</span></span>
 <span>  <span class="va">directory</span>,</span>
+<span>  <span class="va">...</span>,</span>
 <span>  format_file <span class="op">=</span> <span class="st">"procformat.sas"</span>,</span>
+<span>  clean_names_fun <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  split_mixed_id <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  datetime_extraction <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -67,15 +70,23 @@ If a <code>procformat.sas</code> file exists in the directory, formats will be a
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>directory</dt>
-<dd><p>the path to the unzipped archive using SAS_XPORT format. Will read the extraction date from the directory name.</p></dd>
+<dd><p>[<code>character(1)</code>]<br> the path to the unzipped archive using SAS_XPORT format. Will read the extraction date from the directory name.</p></dd>
 
 
 <dt>format_file</dt>
-<dd><p>the path to the <code>procformat.sas</code> file that should be used to apply formats. Use <code>NULL</code> to not apply formats.</p></dd>
+<dd><p>[<code>character(1)</code>]<br> the path to the <code>procformat.sas</code> file that should be used to apply formats. Use <code>NULL</code> to not apply formats.</p></dd>
+
+
+<dt>clean_names_fun</dt>
+<dd><p>[<code>function</code>]<br> a function to clean column names, e.g. <code><a href="https://sfirke.github.io/janitor/reference/clean_names.html" class="external-link">janitor::clean_names()</a></code></p></dd>
+
+
+<dt>split_mixed_id</dt>
+<dd><p>[<code>character(1)</code>]<br> the patient ID to split mixed datasets. See <a href="split_mixed_datasets.html">split_mixed_datasets</a>. Beware of case if <code>clean_names_fun</code> is set.</p></dd>
 
 
 <dt>datetime_extraction</dt>
-<dd><p>the datetime of the data extraction. Default to the most common date of last modification in <code>directory</code>.</p></dd>
+<dd><p>[<code>POSIXt(1)</code>]<br> the datetime of the data extraction. Default to the most common date of last modification in <code>directory</code>.</p></dd>
 
 </dl></div>
     <div id="value">

@@ -19,6 +19,9 @@
     <loc>/reference/EDCimport_options.html</loc>
   </url>
   <url>
+    <loc>/reference/data_example.html</loc>
+  </url>
+  <url>
     <loc>/reference/extend_lookup.html</loc>
   </url>
   <url>
@@ -29,6 +32,9 @@
   </url>
   <url>
     <loc>/reference/get_7z_dir.html</loc>
+  </url>
+  <url>
+    <loc>/reference/get_datasets.html</loc>
   </url>
   <url>
     <loc>/reference/get_lookup.html</loc>
