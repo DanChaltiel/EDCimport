@@ -8,20 +8,26 @@ read_trialmaster(
   archive,
   ...,
   use_cache = TRUE,
+  clean_names_fun = NULL,
+  split_mixed_id = NULL,
   pw = getOption("trialmaster_pw"),
   verbose = getOption("edc_verbose", 1)
 )
 }
 \arguments{
-\item{archive}{the path to the archive}
+\item{archive}{[\code{character(1)}]\cr the path to the archive}
 
 \item{...}{unused}
 
-\item{use_cache}{if \code{TRUE}, read the \code{.rds} cache if any or extract the archive and create a cache. If \code{FALSE} extract the archive without creating a cache file.}
+\item{use_cache}{[\code{logical(1)}: \sQuote{TRUE}]\cr if \code{TRUE}, read the \code{.rds} cache if any or extract the archive and create a cache. If \code{FALSE} extract the archive without creating a cache file.}
 
-\item{pw}{The password if the archive is protected. To avoid writing passwords in plain text, it is better to indicate your password using \code{options(trialmaster_pw="xxx")} in another file than using \code{pw="xxx"}.}
+\item{clean_names_fun}{[\code{function}]\cr a function to clean column names, e.g. \code{\link[janitor:clean_names]{janitor::clean_names()}}}
 
-\item{verbose}{one of \code{c(0, 1, 2)}. The higher, the more information will be printed'}
+\item{split_mixed_id}{[\code{character(1)}]\cr the patient ID to split mixed datasets. See \link{split_mixed_datasets}. Beware of case if \code{clean_names_fun} is set.}
+
+\item{pw}{[\code{character(1)}]\cr The password if the archive is protected. To avoid writing passwords in plain text, it is probably better to use \code{options(trialmaster_pw="xxx")} instead though.}
+
+\item{verbose}{[\code{logical(1)}]\cr one of \code{c(0, 1, 2)}. The higher, the more information will be printed.}
 }
 \value{
 a list containing one dataframe for each \code{.xpt} file in the folder, the extraction date (\code{datetime_extraction}), and a summary of all imported tables (\code{.lookup}). If not set yet, option \code{edc_lookup} is automatically set to \code{.lookup}.

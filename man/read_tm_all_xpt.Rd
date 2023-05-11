@@ -6,16 +6,23 @@
 \usage{
 read_tm_all_xpt(
   directory,
+  ...,
   format_file = "procformat.sas",
+  clean_names_fun = NULL,
+  split_mixed_id = NULL,
   datetime_extraction = NULL
 )
 }
 \arguments{
-\item{directory}{the path to the unzipped archive using SAS_XPORT format. Will read the extraction date from the directory name.}
+\item{directory}{[\code{character(1)}]\cr the path to the unzipped archive using SAS_XPORT format. Will read the extraction date from the directory name.}
 
-\item{format_file}{the path to the \code{procformat.sas} file that should be used to apply formats. Use \code{NULL} to not apply formats.}
+\item{format_file}{[\code{character(1)}]\cr the path to the \code{procformat.sas} file that should be used to apply formats. Use \code{NULL} to not apply formats.}
 
-\item{datetime_extraction}{the datetime of the data extraction. Default to the most common date of last modification in \code{directory}.}
+\item{clean_names_fun}{[\code{function}]\cr a function to clean column names, e.g. \code{\link[janitor:clean_names]{janitor::clean_names()}}}
+
+\item{split_mixed_id}{[\code{character(1)}]\cr the patient ID to split mixed datasets. See \link{split_mixed_datasets}. Beware of case if \code{clean_names_fun} is set.}
+
+\item{datetime_extraction}{[\code{POSIXt(1)}]\cr the datetime of the data extraction. Default to the most common date of last modification in \code{directory}.}
 }
 \value{
 a list containing one dataframe for each \code{.xpt} file in the folder, the extraction date (\code{datetime_extraction}), and a summary of all imported tables (\code{.lookup}). If not set yet, option \code{edc_lookup} is automatically set to \code{.lookup}.

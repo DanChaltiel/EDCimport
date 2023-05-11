@@ -5,14 +5,16 @@
 \title{Split mixed datasets}
 \usage{
 split_mixed_datasets(
+  datasets = get_datasets(),
   id,
   ...,
   verbose = TRUE,
-  output_code = FALSE,
-  lookup = getOption("edc_lookup", NULL)
+  output_code = FALSE
 )
 }
 \arguments{
+\item{datasets}{the datasets to consider. Use the helper \code{\link[=get_datasets]{get_datasets()}} if needed.}
+
 \item{id}{the patient identifier, probably "SUBJID". Should be shared by all datasets.}
 
 \item{...}{not used}
@@ -20,8 +22,6 @@ split_mixed_datasets(
 \item{verbose}{whether to print informations about the process.}
 
 \item{output_code}{whether to print the code to explictly write. Can also be a file path.}
-
-\item{lookup}{the lookup table}
 }
 \value{
 a list of the new long and short tables. Use \code{\link[=load_list]{load_list()}} to load them in the global environment.
@@ -36,12 +36,12 @@ names(tm)
 load_list(tm)
 print(long_mixed) #`val1` and `val2` are long but `val3` is short
 
-mixed_data = split_mixed_datasets("SUBJID", lookup=.lookup)
+mixed_data = split_mixed_datasets(tm, id="SUBJID")
 load_list(mixed_data)
 print(long_mixed_short) 
 print(long_mixed_long) 
 
-#alternatively, get the code and only use the one you need
-split_mixed_datasets("SUBJID", lookup=.lookup, output_code=TRUE)
-split_mixed_datasets("SUBJID", lookup=.lookup, output_code="mixed_code.R")#' 
+#alternatively, get the code and only use the datasets you need
+split_mixed_datasets(tm, id="SUBJID", output_code=TRUE)
+split_mixed_datasets(tm, id="SUBJID", output_code="mixed_code.R")
 }

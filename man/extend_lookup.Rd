@@ -2,18 +2,23 @@
 % Please edit documentation in R/helpers.R
 \name{extend_lookup}
 \alias{extend_lookup}
-\title{TODO extend_lookup}
+\title{Extend the lookup table}
 \usage{
 extend_lookup(
+  lookup,
   id = getOption("edc_id", "SUBJID"),
-  lookup = getOption("edc_lookup", NULL)
+  datasets = get_datasets(),
+  crfname = getOption("edc_crfname", "crfname")
 )
 }
 \arguments{
-\item{id}{}
-
 \item{lookup}{}
+
+\item{id}{}
+}
+\value{
+the lookup, extended
 }
 \description{
-TODO extend_lookup
+This utility extands the lookup table to include the name
 }
