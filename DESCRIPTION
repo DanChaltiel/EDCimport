@@ -32,6 +32,7 @@ Suggests:
     crosstable,
     ggplot2,
     gtools,
+    janitor,
     knitr,
     plotly,
     testthat (>= 3.0.0),
