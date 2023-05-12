@@ -14,6 +14,10 @@
 #' @inherit read_tm_all_xpt return
 #' @inheritParams read_tm_all_xpt
 #' @export
+#' @importFrom cli cli_abort cli_inform cli_warn
+#' @importFrom glue glue
+#' @importFrom rlang check_dots_empty
+#' @importFrom stringr str_remove
 read_trialmaster = function(archive, ..., use_cache=TRUE, 
                             clean_names_fun=NULL,
                             split_mixed_id=NULL,
@@ -77,7 +81,15 @@ read_trialmaster = function(archive, ..., use_cache=TRUE,
 #'
 #' @return a list containing one dataframe for each `.xpt` file in the folder, the extraction date (`datetime_extraction`), and a summary of all imported tables (`.lookup`). If not set yet, option `edc_lookup` is automatically set to `.lookup`.
 #' @export
+#' @importFrom cli cli_abort cli_warn
+#' @importFrom dplyr across mutate
+#' @importFrom forcats as_factor
 #' @importFrom haven read_xpt
+#' @importFrom purrr imap keep map_lgl
+#' @importFrom rlang check_dots_empty is_error set_names
+#' @importFrom stringr str_remove
+#' @importFrom tibble as_tibble
+#' @importFrom tidyselect where
 read_tm_all_xpt = function(directory, ..., format_file="procformat.sas", 
                            clean_names_fun=NULL, split_mixed_id=NULL, 
                            datetime_extraction=NULL){
@@ -149,6 +161,8 @@ read_tm_all_xpt = function(directory, ..., format_file="procformat.sas",
 
 #' @noRd
 #' @keywords internal
+#' @importFrom cli cli_abort
+#' @importFrom rlang as_function is_formula
 get_clean_names_fun = function(f){
   if(is.null(f)) return(identity)
   if(is_formula(f)) f = as_function(f)

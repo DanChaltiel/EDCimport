@@ -1,0 +1,8 @@
+attr = base
+check_dots_empty = rlang
+desc = dplyr
+discard = purrr
+filter = dplyr
+is_formula = rlang
+regex = stringr
+set_names = rlang

@@ -12,6 +12,12 @@
 #' tl
 #' library(tidyr)
 #' tl %>% unnest(everything()) %>% unnest(everything())
+#' @importFrom cli cli_abort
+#' @importFrom dplyr arrange mutate
+#' @importFrom labelled var_label
+#' @importFrom purrr map map_dbl
+#' @importFrom rlang is_named
+#' @importFrom tibble tibble
 get_lookup = function(data_list){
   if(!is.list(data_list)){
     cli_abort(c("{.code data_list} should be a list.", 
@@ -73,6 +79,11 @@ get_lookup = function(data_list){
 #' options(edc_lookup=w$.lookup) #optional
 #' find_keyword("patient")
 #' }
+#' @importFrom cli cli_warn
+#' @importFrom dplyr filter mutate pull select
+#' @importFrom purrr map2_chr
+#' @importFrom stringr str_detect
+#' @importFrom tidyr unite unnest
 find_keyword = function(keyword, data=getOption("edc_lookup", NULL), ignore_case=TRUE){
   stopifnot(!is.null(data))
   invalid=names2=labels2=x=NULL
@@ -119,6 +130,8 @@ find_keyword = function(keyword, data=getOption("edc_lookup", NULL), ignore_case
 #' print(a)
 #' print(nrow(b))
 #' 
+#' @importFrom checkmate vname
+#' @importFrom cli cli_abort cli_warn
 load_list = function(x, env=parent.frame(), remove=TRUE){
   if(length(x)==0){
     cli_warn("List was empty.")
@@ -171,6 +184,8 @@ load_as_list = function(filename){
 #' file.remove("test.RData")
 #' print(a)
 #' print(nrow(b))
+#' @importFrom cli cli_abort
+#' @importFrom stringr str_ends
 save_list = function(x, filename){
   if(!str_ends(tolower(filename), "\\.rdata")){
     cli_abort(c("{.val filename} should have the `.RData` extension.", 
@@ -193,6 +208,9 @@ extend_lookup = function(lookup, id=getOption("edc_id", "SUBJID"),
                          datasets = get_datasets(), 
                          crfname = getOption("edc_crfname", "crfname")){
   if(is.null(lookup)) stop("lookup")
+#' @importFrom dplyr arrange desc mutate relocate
+#' @importFrom purrr map_chr map_int
+#' @importFrom tidyselect last_col
   # browser()
   rtn = lookup %>% 
     mutate(
@@ -216,10 +234,10 @@ extend_lookup = function(lookup, id=getOption("edc_id", "SUBJID"),
 #'
 #' @return a list of all datasets
 #' @export
+#' @importFrom purrr map
+#' @importFrom rlang set_names
 get_datasets = function(lookup=getOption("edc_lookup", NULL), envir=parent.frame()){
   lookup$dataset %>% 
     set_names() %>% 
     map(~get(.x, envir=envir))
 }
-
-

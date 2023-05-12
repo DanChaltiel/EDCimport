@@ -30,6 +30,16 @@
 #' #save the plotly plot as HTML to share it
 #' htmlwidgets::savewidget(p, "swimmerplot.html", selfcontained=TRUE)
 #' }
+#' @importFrom cli cli_abort cli_warn
+#' @importFrom dplyr left_join mutate select slice
+#' @importFrom forcats as_factor
+#' @importFrom ggplot2 aes facet_wrap geom_line geom_point ggplot labs
+#' @importFrom glue glue
+#' @importFrom purrr discard imap list_rbind map
+#' @importFrom rlang check_dots_empty check_installed is_installed set_names sym
+#' @importFrom stringr str_detect str_ends str_remove
+#' @importFrom tidyr pivot_longer
+#' @importFrom tidyselect where
 swimmerplot = function(.lookup=getOption("edc_lookup", NULL), ..., 
                        id="SUBJID", group=NULL, origin=NULL, 
                        time_unit=c("days", "weeks", "months", "years"),
@@ -129,6 +139,10 @@ swimmerplot = function(.lookup=getOption("edc_lookup", NULL), ...,
 
 
 
+#' @importFrom cli cli_abort
+#' @importFrom dplyr select
+#' @importFrom rlang caller_arg
+#' @importFrom stringr str_detect str_split
 parse_var = function(input, id, env){
   input_name = rlang::caller_arg(input)
   
@@ -159,6 +173,3 @@ parse_var = function(input, id, env){
   dat_input %>% 
     select(id=!!id, !!input_name:=!!input2[2])
 }
-
-
-# plotly::ggplotly()

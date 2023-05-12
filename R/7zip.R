@@ -5,10 +5,12 @@
 #'
 #' @return the path to 7zip executable directory
 #' @export
+#' @importFrom cli cli_abort
 get_7z_dir = function(){
   #TODO multiple default depending on OS?
   default = "C:/Program Files/7-Zip/"
   path_7zip = getOption("path_7zip", default)
+  #TODO dir.exists is weak af, better check the executable. But what about linux and macos?
   if(!dir.exists(path_7zip)){
     cli_abort(c("Path {.val {path_7zip}} does not lead to 7-Zip.", 
                 x="Try to add 7-Zip to the PATH environment variable.", 
@@ -42,6 +44,9 @@ get_7z_dir = function(){
 #' @return the success/error message. Mainly used for its side effect of extracting the archive.
 #' @seealso https://info.nrao.edu/computing/guide/file-access-and-archiving/7zip/7z-7za-command-line-guide#section-17
 #' @export
+#' @importFrom cli cli_abort cli_warn
+#' @importFrom glue glue
+#' @importFrom stringr str_detect
 extract_7z = function(archive, target_dir, password=NULL, path_7zip=NULL){
   if(!file.exists(archive)){
     cli_abort("Archive file {.val {archive}} does not exist.")
@@ -63,6 +68,12 @@ extract_7z = function(archive, target_dir, password=NULL, path_7zip=NULL){
   if(inherits(msg, "try-error")){
     cli_abort(msg, class="edc_7z_cmd_error")
   }
+  
+  # browser()
+  # pwc = if(is.null(password)) "" else password
+  # msg = archive::archive_extract(archive, dir=target_dir, password=pwc)
+  # TODO trycatch pour mauvais mot de passe
+  # return(msg[1])
   
   status = attr(msg, "status")
   if(!nzchar(msg[1])) msg=msg[-1]

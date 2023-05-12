@@ -1,11 +1,15 @@
 
+#' @importFrom cli cli_abort
+#' @importFrom purrr compact map
 #' @importFrom readr read_file
+#' @importFrom rlang set_names
+#' @importFrom stringr regex str_match str_remove_all str_split str_starts str_trim
 read_sas_format = function(file){
   if(!file.exists(file)){
     cli_abort("File {file} does not exist.")
   }
   source = read_file(file)
-  calls = source %>% str_split(";") %>% map(str_trim) %>% .[[1]]
+  calls = source %>% str_split(";") %>% map(~str_trim(.x)) %>% .[[1]]
   
   formats_names = calls %>% 
     sapply(function(.x){
@@ -41,6 +45,7 @@ read_sas_format = function(file){
 }
 
 
+#' @importFrom purrr map_df
 apply_sas_formats = function(df, formats){
   df %>% map_df(~{
     fname = attr(.x, "format.sas")
@@ -53,4 +58,3 @@ apply_sas_formats = function(df, formats){
     }
   })
 }
-

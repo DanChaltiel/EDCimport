@@ -12,6 +12,8 @@
 #' @export
 #' @name data_example
 #' @rdname data_example
+#' @importFrom stats rnorm
+#' @importFrom tibble lst tibble
 edc_example_mixed = function(N=100){
   
   short = tibble(SUBJID=1:N, val1=rnorm(N), val2=rnorm(N)+10)
@@ -30,6 +32,9 @@ edc_example_mixed = function(N=100){
 
 
 #' @rdname data_example
+#' @importFrom dplyr bind_rows mutate n select
+#' @importFrom stats rnorm runif
+#' @importFrom tibble lst tibble
 edc_example_plot = function(N=50, seed=42){
   set.seed(seed)
   start = ISOdate(2010, 04, 13)

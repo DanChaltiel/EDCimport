@@ -27,6 +27,13 @@
 #' #alternatively, get the code and only use the datasets you need
 #' split_mixed_datasets(tm, id="SUBJID", output_code=TRUE)
 #' split_mixed_datasets(tm, id="SUBJID", output_code="mixed_code.R")
+#' @importFrom cli cli_bullets
+#' @importFrom dplyr across group_by select summarise summarise_all
+#' @importFrom glue glue
+#' @importFrom purrr discard imap keep list_flatten map_chr
+#' @importFrom rlang check_dots_empty
+#' @importFrom tibble lst
+#' @importFrom tidyselect all_of everything
 split_mixed_datasets = function(datasets=get_datasets(), id,..., 
                                 verbose=TRUE, output_code=FALSE){
   check_dots_empty()
@@ -153,6 +160,8 @@ split_mixed_datasets = function(datasets=get_datasets(), id,...,
 #' @examples
 #' unify(c(1,1,1,1))
 #' #unify(c(1,1,2,1)) #warning
+#' @importFrom cli cli_warn
+#' @importFrom stats na.omit
 unify = function(x){
   rtn = x[1]
   lu = length(unique(na.omit(x)))
@@ -164,4 +173,3 @@ unify = function(x){
   if(!is.null(rtn_label)) attr(rtn, "label") = rtn_label
   rtn
 }
-

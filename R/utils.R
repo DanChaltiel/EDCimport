@@ -8,6 +8,7 @@
 #' @return a file path
 #' @noRd
 #' @keywords internal
+#' @importFrom stringr str_replace_all
 file.path2 = function(...){
   #TODO utilise le package fs?
   fsep = .Platform$file.sep
@@ -34,6 +35,7 @@ vname = function(x) {
 #' @param x a file
 #' @noRd
 #' @keywords internal
+#' @importFrom stringr str_match
 parse_file_datetime = function(x){
   x %>% 
     basename() %>% 
@@ -50,6 +52,8 @@ parse_file_datetime = function(x){
 #' @return date as a POSIXct scalar
 #' @noRd
 #' @keywords internal
+#' @importFrom cli cli_warn
+#' @importFrom dplyr count slice_max
 get_folder_datetime = function(folder, verbose=TRUE){
   mtime=NULL
   rtn = dir(folder, full.names=TRUE) %>% file.info() %>% count(mtime=round(mtime, "secs"))
