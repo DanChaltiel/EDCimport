@@ -3,23 +3,24 @@
 #' 
 #' Split mixed tables, i.e. tables that hold both long data (N values per patient) and short data (one value per patient, duplicated on N lines), into one long table and one short table.
 #'
+#' @param datasets the datasets to consider. Use the helper [get_datasets()] if needed.
 #' @param id the patient identifier, probably "SUBJID". Should be shared by all datasets.
+#' @param ignore_cols columns to ignore when considering a table as long. default to 
 #' @param output_code whether to print the code to explictly write. Can also be a file path.
 #' @param verbose whether to print informations about the process.
-#' @param datasets the datasets to consider. Use the helper [get_datasets()] if needed.
 #' @param ... not used
 #'
-#' @return a list of the new long and short tables. Use [load_list()] to load them in the global environment.
+#' @return a list of the new long and short tables. Use [load_list()] to load them into the global environment.
 #' @export
 #'
 #' @examples
 #' #tm = read_trialmaster("filename.zip", pw="xx")
 #' tm = edc_example_mixed()
 #' names(tm)
-#' load_list(tm)
-#' print(long_mixed) #`val1` and `val2` are long but `val3` is short
+#' #load_list(tm)
+#' print(tm$long_mixed) #`val1` and `val2` are long but `val3` is short
 #' 
-#' mixed_data = split_mixed_datasets(tm, id="SUBJID")
+#' mixed_data = split_mixed_datasets(tm, id="SUBJID", verbose=TRUE)
 #' load_list(mixed_data)
 #' print(long_mixed_short) 
 #' print(long_mixed_long) 
@@ -34,8 +35,10 @@
 #' @importFrom rlang check_dots_empty
 #' @importFrom tibble lst
 #' @importFrom tidyselect all_of everything
-split_mixed_datasets = function(datasets=get_datasets(), id,..., 
-                                verbose=TRUE, output_code=FALSE){
+split_mixed_datasets = function(datasets=get_datasets(), id, ..., 
+                                ignore_cols=getOption("edc_crfname", "CRFNAME"), 
+                                output_code=FALSE,
+                                verbose=TRUE){
   check_dots_empty()
   datasets = datasets %>% keep(~is.data.frame(.x))
   dataset_mean_nval = datasets %>% 
@@ -49,6 +52,7 @@ split_mixed_datasets = function(datasets=get_datasets(), id,...,
         summarise_all(~mean(.x)) %>%
         unlist()
     })
+  
   #TODO option pour faire plutôt length(unique(na.omit(.x))) ?
   #si c'est manquant sur une ligne et pas sur une autre on 
   #peut sans doute unifier quand même
@@ -71,15 +75,15 @@ split_mixed_datasets = function(datasets=get_datasets(), id,...,
   long = dataset_mean_nval %>% 
     discard(is.null) %>% 
     discard(~all(.x==1))
-  pure_long = long %>% keep(~length(unique(.x))==1)
+  f = function(x) length(unique(x[!tolower(names(x)) %in% ignore_cols]))
+  pure_long = long %>% keep(~f(.x)==1)
   
   if(length(pure_long)>0 && verbose){
     cli_bullets(c(v="There {?was/were} {length(pure_long)} pure long table{?s}:", 
                   " "="{.val {names(pure_long)}}"))
   }
   
-  
-  mixed_long = long %>% keep(~length(unique(.x))!=1) %>% 
+  mixed_long = long %>% keep(~f(.x)!=1) %>% 
     structure(label=glue("Mean number of unique values per {id}"))
   
   if(length(mixed_long)==0){
@@ -91,7 +95,6 @@ split_mixed_datasets = function(datasets=get_datasets(), id,...,
     imap(~{
       a = paste(names(.x[.x==1]), collapse=', ')
       b = paste(names(.x[.x!=1]), collapse=', ')
-      # dat = get(.y)
       dat = datasets[[.y]]
       short = dat %>% 
         select({{id}}, all_of(names(.x[.x==1]))) %>% 

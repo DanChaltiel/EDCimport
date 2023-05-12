@@ -8,8 +8,9 @@ split_mixed_datasets(
   datasets = get_datasets(),
   id,
   ...,
-  verbose = TRUE,
-  output_code = FALSE
+  ignore_cols = getOption("edc_crfname", "CRFNAME"),
+  output_code = FALSE,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -19,12 +20,14 @@ split_mixed_datasets(
 
 \item{...}{not used}
 
-\item{verbose}{whether to print informations about the process.}
+\item{ignore_cols}{columns to ignore when considering a table as long. default to}
 
 \item{output_code}{whether to print the code to explictly write. Can also be a file path.}
+
+\item{verbose}{whether to print informations about the process.}
 }
 \value{
-a list of the new long and short tables. Use \code{\link[=load_list]{load_list()}} to load them in the global environment.
+a list of the new long and short tables. Use \code{\link[=load_list]{load_list()}} to load them into the global environment.
 }
 \description{
 Split mixed tables, i.e. tables that hold both long data (N values per patient) and short data (one value per patient, duplicated on N lines), into one long table and one short table.
@@ -33,10 +36,10 @@ Split mixed tables, i.e. tables that hold both long data (N values per patient) 
 #tm = read_trialmaster("filename.zip", pw="xx")
 tm = edc_example_mixed()
 names(tm)
-load_list(tm)
-print(long_mixed) #`val1` and `val2` are long but `val3` is short
+#load_list(tm)
+print(tm$long_mixed) #`val1` and `val2` are long but `val3` is short
 
-mixed_data = split_mixed_datasets(tm, id="SUBJID")
+mixed_data = split_mixed_datasets(tm, id="SUBJID", verbose=TRUE)
 load_list(mixed_data)
 print(long_mixed_short) 
 print(long_mixed_long) 
