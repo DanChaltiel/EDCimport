@@ -197,21 +197,33 @@ save_list = function(x, filename){
 
 #' Extend the lookup table
 #' 
-#' This utility extands the lookup table to include the name
+#' This utility extends the lookup table to include:\cr
+#'   * `n_id` the number of patients present in the dataset
+#'   * `rows_per_id` the mean number of row per patient
+#'   * `crfname` the actual name of the dataset
 #'
-#' @param id 
-#' @param lookup 
+#' @param lookup the lookup table
+#' @param id the name of the column containing the patient ID
+#' @param crfname the name of the column containing the name of the CRF page
+#' @param datasets for experts only
 #'
 #' @return the lookup, extended
 #' @export
-extend_lookup = function(lookup, id=getOption("edc_id", "SUBJID"), 
-                         datasets = get_datasets(), 
-                         crfname = getOption("edc_crfname", "crfname")){
-  if(is.null(lookup)) stop("lookup")
 #' @importFrom dplyr arrange desc mutate relocate
 #' @importFrom purrr map_chr map_int
 #' @importFrom tidyselect last_col
-  # browser()
+#' @examples
+#' #tm = read_trialmaster("filename.zip", pw="xx")
+#' tm = edc_example_mixed()
+#' load_list(tm)
+#' .lookup
+#' .lookup = extend_lookup(.lookup)
+#' .lookup
+extend_lookup = function(lookup, ..., 
+                         id=getOption("edc_id", "SUBJID"), 
+                         crfname = getOption("edc_crfname", "crfname"), 
+                         datasets = get_datasets(lookup)){
+  check_dots_empty()
   rtn = lookup %>% 
     mutate(
       n_id = map_int(dataset, ~length(unique(get(.x)[[id]]))),
@@ -220,9 +232,9 @@ extend_lookup = function(lookup, id=getOption("edc_id", "SUBJID"),
     ) %>% 
     arrange(n_id, desc(nrow)) %>% 
     relocate(c(names, labels), .after=last_col())
-  # assign(".lookup", rtn, envir=parent.frame())
   rtn
 }
+
 
 
 #' Retreive the datasets

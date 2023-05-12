@@ -6,19 +6,37 @@
 \usage{
 extend_lookup(
   lookup,
+  ...,
   id = getOption("edc_id", "SUBJID"),
-  datasets = get_datasets(),
-  crfname = getOption("edc_crfname", "crfname")
+  crfname = getOption("edc_crfname", "crfname"),
+  datasets = get_datasets(lookup)
 )
 }
 \arguments{
-\item{lookup}{}
+\item{lookup}{the lookup table}
 
-\item{id}{}
+\item{id}{the name of the column containing the patient ID}
+
+\item{crfname}{the name of the column containing the name of the CRF page}
+
+\item{datasets}{for experts only}
 }
 \value{
 the lookup, extended
 }
 \description{
-This utility extands the lookup table to include the name
+This utility extends the lookup table to include:\cr
+\itemize{
+\item \code{n_id} the number of patients present in the dataset
+\item \code{rows_per_id} the mean number of row per patient
+\item \code{crfname} the actual name of the dataset
+}
+}
+\examples{
+#tm = read_trialmaster("filename.zip", pw="xx")
+tm = edc_example_mixed()
+load_list(tm)
+.lookup
+.lookup = extend_lookup(.lookup)
+.lookup
 }
