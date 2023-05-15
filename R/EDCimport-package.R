@@ -8,4 +8,12 @@
 NULL
 
 
+
+# Global settings -----------------------------------------------------------------------------
+
+
+#' @importFrom dplyr %>%
+#' @export
+dplyr::`%>%`
+
 globalVariables(c(".", ":=", "!!"))
