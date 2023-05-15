@@ -220,13 +220,35 @@ save_list = function(x, filename){
 #' .lookup = extend_lookup(.lookup)
 #' .lookup
 extend_lookup = function(lookup, ..., 
-                         id=getOption("edc_id", "SUBJID"), 
+                         id = getOption("edc_id", "SUBJID"), 
                          crfname = getOption("edc_crfname", "crfname"), 
                          datasets = get_datasets(lookup)){
   check_dots_empty()
+  browser()
+  
+  id="subjid"
+  unique(datasets$consump[id])
+  unique(datasets$consump[[crfname]])
+  .x="consump"
+  .x=datasets[[1]]
+  id_col = which(tolower(names(.x))==tolower(id))
+  crfname_col = which(tolower(names(.x))==tolower(crfname))
+  
+  #case-insensitive column selection
+  f = function(x){
+    # browser()
+    df = datasets[[x]]
+    rtn = df[,tolower(names(df))==tolower(id)]
+    if(ncol(rtn)>1) cli_abort("Error, several {.arg {id}} columns")
+    # if(ncol(rtn)==0) cli_abort("Error, no {.arg {id}} columns")
+    rtn[[1]]
+  }
+  f("consump")
+  
   rtn = lookup %>% 
     mutate(
-      n_id = map_int(dataset, ~length(unique(get(.x)[[id]]))),
+      # n_id = map_int(dataset, ~length(unique(datasets[[.x]][[id]]))),
+      n_id = map_int(dataset, ~length(unique(f(.x)))),
       rows_per_id = round(nrow/n_id,1),
       crfname = map_chr(dataset, ~get_data_name(datasets[[.x]]), crfname=crfname)
     ) %>% 
