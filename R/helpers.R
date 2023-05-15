@@ -253,3 +253,16 @@ get_datasets = function(lookup=getOption("edc_lookup", NULL), envir=parent.frame
     set_names() %>% 
     map(~get(.x, envir=envir))
 }
+
+
+#' Important column names
+#'
+#' @param patient_id the name of the column containing the patient ID
+#' @param crfname the name of the column containing the name of the CRF page
+#'
+#' @export
+#' @importFrom tibble lst
+get_key_cols = function(patient_id = getOption("edc_id", "SUBJID"), 
+                        crfname = getOption("edc_crfname", "crfname")){
+  lst(patient_id, crfname)
+}

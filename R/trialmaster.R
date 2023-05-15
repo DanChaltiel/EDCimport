@@ -20,7 +20,9 @@
 #' @importFrom stringr str_remove
 read_trialmaster = function(archive, ..., use_cache=TRUE, 
                             clean_names_fun=NULL,
-                            split_mixed_id=NULL,
+                            split_mixed=FALSE,
+                            extend_lookup=FALSE,
+                            key_columns=get_key_cols(),
                             pw=getOption("trialmaster_pw"), 
                             verbose=getOption("edc_verbose", 1)){
   directory = dirname(archive)
@@ -60,7 +62,9 @@ read_trialmaster = function(archive, ..., use_cache=TRUE,
     }
     rtn = read_tm_all_xpt(temp_folder, format_file=format_file, 
                           clean_names_fun=clean_names_fun, 
-                          split_mixed_id=split_mixed_id,
+                          split_mixed=split_mixed,
+                          extend_lookup=extend_lookup,
+                          key_columns=key_columns, 
                           datetime_extraction=extract_datetime)
     if(isTRUE(use_cache)) saveRDS(rtn, cache_file)
   }
@@ -76,13 +80,16 @@ read_trialmaster = function(archive, ..., use_cache=TRUE,
 #' @param directory \[`character(1)`]\cr the path to the unzipped archive using SAS_XPORT format. Will read the extraction date from the directory name.
 #' @param format_file \[`character(1)`]\cr the path to the `procformat.sas` file that should be used to apply formats. Use `NULL` to not apply formats.
 #' @param datetime_extraction \[`POSIXt(1)`]\cr the datetime of the data extraction. Default to the most common date of last modification in `directory`.
+#' @param ... 
+#' @param split_mixed \[`logical(1): FALSE`]\cr whether to split mixed datasets. See [split_mixed_datasets]. Beware of case if `clean_names_fun` is set.
+#' @param extend_lookup \[`character(1): FALSE`]\cr whether to enrich the lookup table. See [extend_lookup].
+#' @param key_columns \[`list`]\cr the result of [get_key_cols()], containing the column name used for patient ID and CRF name. Important for `split_mixed` and `extend_lookup`.
 #' @param clean_names_fun \[`function`]\cr a function to clean column names, e.g. [janitor::clean_names()]
-#' @param split_mixed_id \[`character(1)`]\cr the patient ID to split mixed datasets. See [split_mixed_datasets]. Beware of case if `clean_names_fun` is set.
 #'
 #' @return a list containing one dataframe for each `.xpt` file in the folder, the extraction date (`datetime_extraction`), and a summary of all imported tables (`.lookup`). If not set yet, option `edc_lookup` is automatically set to `.lookup`.
 #' @export
 #' @importFrom cli cli_abort cli_warn
-#' @importFrom dplyr across mutate
+#' @importFrom dplyr across mutate na_if
 #' @importFrom forcats as_factor
 #' @importFrom haven read_xpt
 #' @importFrom purrr imap keep map_lgl
@@ -91,7 +98,10 @@ read_trialmaster = function(archive, ..., use_cache=TRUE,
 #' @importFrom tibble as_tibble
 #' @importFrom tidyselect where
 read_tm_all_xpt = function(directory, ..., format_file="procformat.sas", 
-                           clean_names_fun=NULL, split_mixed_id=NULL, 
+                           clean_names_fun=NULL, 
+                           split_mixed=FALSE,
+                           extend_lookup=FALSE,
+                           key_columns=get_key_cols(),
                            datetime_extraction=NULL){
   check_dots_empty()
   clean_names_fun = get_clean_names_fun(clean_names_fun)
@@ -124,11 +134,12 @@ read_tm_all_xpt = function(directory, ..., format_file="procformat.sas",
       })
   }
   
-  if(!is.null(split_mixed_id)){
-    stopifnot(is.character(split_mixed_id))
-    id_found = map_lgl(rtn, ~split_mixed_id %in% names(.x))
-    if(!any(id_found)) cli_warn("split_mixed_id {.val {split_mixed_id}} was not found in any dataset. Is it possible that you made a spelling mistake?")
-    mixed = split_mixed_datasets(split_mixed_id, datasets=rtn, verbose=FALSE)
+  if(isTRUE(split_mixed)){
+    patient_id=key_columns$patient_id
+    stopifnot(is.character(patient_id))
+    id_found = map_lgl(rtn, ~patient_id %in% names(.x))
+    if(!any(id_found)) cli_warn("Patient ID column {.val {patient_id}} was not found in any dataset. Is it possible that you made a spelling mistake?")
+    mixed = split_mixed_datasets(patient_id, datasets=rtn, verbose=FALSE)
     rtn = c(rtn, mixed)
   }
   
@@ -142,10 +153,17 @@ read_tm_all_xpt = function(directory, ..., format_file="procformat.sas",
   }
   
   
-  
   rtn$date_extraction = format_ymd(datetime_extraction)
   rtn$datetime_extraction = datetime_extraction
   rtn$.lookup = get_lookup(rtn)
+  
+  if(isTRUE(extend_lookup)){
+    patient_id=key_columns$patient_id
+    stopifnot(is.character(patient_id))
+    id_found = map_lgl(rtn, ~patient_id %in% names(.x))
+    if(!any(id_found)) cli_warn("Patient ID column {.val {patient_id}} was not found in any dataset. Is it possible that you made a spelling mistake?")
+    rtn$.lookup = extend_lookup(rtn$.lookup, id=patient_id, crfname=key_columns$crfname)
+  }
   
   if(!is.null(getOption("edc_lookup", NULL))){
     cli_warn("Option {.val edc_lookup} has been overwritten.", 

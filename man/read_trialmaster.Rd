@@ -9,7 +9,9 @@ read_trialmaster(
   ...,
   use_cache = TRUE,
   clean_names_fun = NULL,
-  split_mixed_id = NULL,
+  split_mixed = FALSE,
+  extend_lookup = FALSE,
+  key_columns = get_key_cols(),
   pw = getOption("trialmaster_pw"),
   verbose = getOption("edc_verbose", 1)
 )
@@ -23,7 +25,11 @@ read_trialmaster(
 
 \item{clean_names_fun}{[\code{function}]\cr a function to clean column names, e.g. \code{\link[janitor:clean_names]{janitor::clean_names()}}}
 
-\item{split_mixed_id}{[\code{character(1)}]\cr the patient ID to split mixed datasets. See \link{split_mixed_datasets}. Beware of case if \code{clean_names_fun} is set.}
+\item{split_mixed}{[\code{logical(1): FALSE}]\cr whether to split mixed datasets. See \link{split_mixed_datasets}. Beware of case if \code{clean_names_fun} is set.}
+
+\item{extend_lookup}{[\code{character(1): FALSE}]\cr whether to enrich the lookup table. See \link{extend_lookup}.}
+
+\item{key_columns}{[\code{list}]\cr the result of \code{\link[=get_key_cols]{get_key_cols()}}, containing the column name used for patient ID and CRF name. Important for \code{split_mixed} and \code{extend_lookup}.}
 
 \item{pw}{[\code{character(1)}]\cr The password if the archive is protected. To avoid writing passwords in plain text, it is probably better to use \code{options(trialmaster_pw="xxx")} instead though.}
 
