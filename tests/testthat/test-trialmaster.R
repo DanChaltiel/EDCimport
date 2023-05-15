@@ -1,6 +1,7 @@
 
 
 skip_on_cran()
+skip_on_ci()
 
 test_that("Read an archive", {
   clean_cache()
@@ -11,6 +12,17 @@ test_that("Read an archive", {
                  class="read_tm_cache")
   expect_message(w <- read_trialmaster(filename, use_cache=FALSE),
                  class="read_tm_zip")
+  expect_warning(w <- read_trialmaster(filename, use_cache=FALSE),
+                 class="edc_lookup_overwrite_warn")
+  
+  w = read_trialmaster(filename, use_cache=FALSE) %>% 
+    expect_classed_conditions(message_class="read_tm_zip", 
+                              warning_class="edc_lookup_overwrite_warn")
+  w = read_trialmaster(filename, use_cache=FALSE) %>% 
+    expect_classed_conditions(message_class=c("read_tm_zip", "xxxx"),
+                              warning_class="edc_lookup_overwrite_warn")
+  
+  
   expect_length(w, 8)
 
 

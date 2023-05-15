@@ -123,3 +123,42 @@ test_that("7zip not in the path", {
   expect_true("procformat.sas" %in% dir(target))
 })
 
+
+
+
+# Expect --------------------------------------------------------------------------------------
+
+
+
+test_that("expect_classed_conditions()", {
+  fun1 = function(){
+    rlang::inform("I am a message", class="message1")
+    rlang::inform("I am a message too", class="message2")
+    rlang::inform("I am a message three", class="message3")
+    rlang::warn("Beware, I am a warning", class="warn1")
+    rlang::warn("Beware, I am a warning 2", class="warn2")
+    rlang::abort("STOP, I am the error!", class="error1")
+    999
+  }
+  fun2 = function(){
+    rlang::inform("I am a message", class="message1")
+    rlang::inform("I am a message too", class="message2")
+    rlang::inform("I am a message three", class="message3")
+    rlang::warn("Beware, I am a warning", class="warn1")
+    rlang::warn("Beware, I am a warning 2", class="warn2")
+    999
+  }
+  
+  a = expect_classed_conditions(fun1(), 
+                                message_class=c("message1", "message2", "message3"),
+                                warning_class=c("warn1", "warn2"), 
+                                error_class="error1")
+  a
+  
+  
+  b = expect_classed_conditions(fun2(), 
+                                message_class=c("message1", "message2", "message3"),
+                                warning_class=c("warn1", "warn2"))
+  b
+  expect_equal(b, 999)
+})
