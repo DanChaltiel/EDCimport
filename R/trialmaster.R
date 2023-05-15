@@ -148,7 +148,8 @@ read_tm_all_xpt = function(directory, ..., format_file="procformat.sas",
   rtn$.lookup = get_lookup(rtn)
   
   if(!is.null(getOption("edc_lookup", NULL))){
-    cli_warn("Option {.val edc_lookup} has been overwritten.")
+    cli_warn("Option {.val edc_lookup} has been overwritten.", 
+             class="edc_lookup_overwrite_warn")
   }
   options(edc_lookup=rtn$.lookup)
   rtn
