@@ -202,16 +202,17 @@ save_list = function(x, filename){
 #'   * `rows_per_id` the mean number of row per patient
 #'   * `crfname` the actual name of the dataset
 #'
-#' @param lookup the lookup table
-#' @param id the name of the column containing the patient ID
-#' @param crfname the name of the column containing the name of the CRF page
-#' @param datasets for experts only
+#' @param lookup \[`data.frame(1)`]\cr the lookup table
+#' @param datasets \[`data.frame(n)`]\cr for experts only
+#' @inheritParams read_tm_all_xpt
 #'
 #' @return the lookup, extended
 #' @export
-#' @importFrom dplyr arrange desc mutate relocate
+#' @importFrom cli cli_abort
+#' @importFrom dplyr arrange desc mutate relocate select
 #' @importFrom purrr map_chr map_int
-#' @importFrom tidyselect last_col
+#' @importFrom rlang check_dots_empty
+#' @importFrom tidyselect last_col matches
 #' @examples
 #' #tm = read_trialmaster("filename.zip", pw="xx")
 #' tm = edc_example_mixed()
@@ -220,37 +221,21 @@ save_list = function(x, filename){
 #' .lookup = extend_lookup(.lookup)
 #' .lookup
 extend_lookup = function(lookup, ..., 
-                         id = getOption("edc_id", "SUBJID"), 
-                         crfname = getOption("edc_crfname", "crfname"), 
+                         key_columns = get_key_cols(),
                          datasets = get_datasets(lookup)){
   check_dots_empty()
-  browser()
-  
-  id="subjid"
-  unique(datasets$consump[id])
-  unique(datasets$consump[[crfname]])
-  .x="consump"
-  .x=datasets[[1]]
-  id_col = which(tolower(names(.x))==tolower(id))
-  crfname_col = which(tolower(names(.x))==tolower(crfname))
-  
   #case-insensitive column selection
-  f = function(x){
-    # browser()
-    df = datasets[[x]]
-    rtn = df[,tolower(names(df))==tolower(id)]
-    if(ncol(rtn)>1) cli_abort("Error, several {.arg {id}} columns")
-    # if(ncol(rtn)==0) cli_abort("Error, no {.arg {id}} columns")
+  f = function(x, colname){
+    rtn = select(datasets[[x]], any_of2(colname))
+    if(ncol(rtn)==0) return(NA)
+    if(ncol(rtn)>1) cli_warn("Several columns named {.val {colname}}: {.val {names(rtn)}}.")
     rtn[[1]]
   }
-  f("consump")
-  
   rtn = lookup %>% 
     mutate(
-      # n_id = map_int(dataset, ~length(unique(datasets[[.x]][[id]]))),
-      n_id = map_int(dataset, ~length(unique(f(.x)))),
+      n_id = map_int(dataset, ~length(unique(f(.x, key_columns$patient_id)))),
       rows_per_id = round(nrow/n_id,1),
-      crfname = map_chr(dataset, ~get_data_name(datasets[[.x]]), crfname=crfname)
+      crfname = map_chr(dataset, ~get_data_name(datasets[[.x]]), crfname=key_columns$crfname)
     ) %>% 
     arrange(n_id, desc(nrow)) %>% 
     relocate(c(names, labels), .after=last_col())
@@ -279,12 +264,14 @@ get_datasets = function(lookup=getOption("edc_lookup", NULL), envir=parent.frame
 
 #' Important column names
 #'
-#' @param patient_id the name of the column containing the patient ID
-#' @param crfname the name of the column containing the name of the CRF page
+#' @param patient_id the name of the columns containing the patient ID
+#' @param crfname the name of the columns containing the name of the CRF page
+#' @param ... unused
 #'
 #' @export
 #' @importFrom tibble lst
-get_key_cols = function(patient_id = getOption("edc_id", "SUBJID"), 
-                        crfname = getOption("edc_crfname", "crfname")){
+get_key_cols = function(patient_id = getOption("edc_id", c("ptno", "subjid")), 
+                        crfname = getOption("edc_crfname", "crfname"), 
+                        ...){
   lst(patient_id, crfname)
 }

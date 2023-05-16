@@ -100,15 +100,25 @@ is_invalid_utf8 = function(x){
 }
 
 
-
+#' any_of() with case sensitivity
+#' @noRd
+#' @keywords internal
+#' @importFrom tidyselect matches
+any_of2 = function(x, ignore.case=TRUE, ...){
+  matches(paste(paste0("^",x,"$"), collapse="|"), ignore.case=ignore.case, ...)
+}
 
 #' @noRd
 #' @keywords internal
+#' @importFrom cli cli_warn
+#' @importFrom dplyr select
 get_data_name = function(df, crfname=getOption("edc_crfname", "crfname")){
+  sel = select(df, any_of2(crfname))
   if(!is.null(attr(df, "data_name"))){
     attr(df, "data_name")
-  } else if(!is.null(df[[crfname]])){
-    df[[crfname]][1]
+  } else if(ncol(sel)>0){
+    if(ncol(sel)>1) cli_warn("Several columns named {.val {crfname}}: {.val {names(sel)}}.")
+    sel[[1]][1]
   } else {
     NA
   }

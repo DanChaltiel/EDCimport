@@ -7,19 +7,18 @@
 extend_lookup(
   lookup,
   ...,
-  id = getOption("edc_id", "SUBJID"),
-  crfname = getOption("edc_crfname", "crfname"),
+  key_columns = get_key_cols(),
   datasets = get_datasets(lookup)
 )
 }
 \arguments{
-\item{lookup}{the lookup table}
+\item{lookup}{[\code{data.frame(1)}]\cr the lookup table}
 
-\item{id}{the name of the column containing the patient ID}
+\item{...}{}
 
-\item{crfname}{the name of the column containing the name of the CRF page}
+\item{key_columns}{[\code{list}]\cr the result of \code{\link[=get_key_cols]{get_key_cols()}}, containing the column name used for patient ID and CRF name. Important for \code{split_mixed} and \code{extend_lookup}.}
 
-\item{datasets}{for experts only}
+\item{datasets}{[\code{data.frame(n)}]\cr for experts only}
 }
 \value{
 the lookup, extended

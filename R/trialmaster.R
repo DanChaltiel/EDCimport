@@ -81,7 +81,7 @@ read_trialmaster = function(archive, ..., use_cache=TRUE,
 #' @param format_file \[`character(1)`]\cr the path to the `procformat.sas` file that should be used to apply formats. Use `NULL` to not apply formats.
 #' @param datetime_extraction \[`POSIXt(1)`]\cr the datetime of the data extraction. Default to the most common date of last modification in `directory`.
 #' @param ... 
-#' @param split_mixed \[`logical(1): FALSE`]\cr whether to split mixed datasets. See [split_mixed_datasets]. Beware of case if `clean_names_fun` is set.
+#' @param split_mixed \[`logical(1): FALSE`]\cr whether to split mixed datasets. See [split_mixed_datasets]. 
 #' @param extend_lookup \[`character(1): FALSE`]\cr whether to enrich the lookup table. See [extend_lookup].
 #' @param key_columns \[`list`]\cr the result of [get_key_cols()], containing the column name used for patient ID and CRF name. Important for `split_mixed` and `extend_lookup`.
 #' @param clean_names_fun \[`function`]\cr a function to clean column names, e.g. [janitor::clean_names()]
@@ -127,7 +127,7 @@ read_tm_all_xpt = function(directory, ..., format_file="procformat.sas",
         if(is_error(.x)) return(.x)
         .x %>% 
           as_tibble() %>% 
-          mutate(across(where(is.character), na_if, y="")) %>% 
+          mutate(across(where(is.character), ~na_if(.x), y="")) %>% 
           apply_sas_formats(sas_formats) %>%
           clean_names_fun() %>% 
           haven::as_factor()

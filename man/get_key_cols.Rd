@@ -5,14 +5,17 @@
 \title{Important column names}
 \usage{
 get_key_cols(
-  patient_id = getOption("edc_id", "SUBJID"),
-  crfname = getOption("edc_crfname", "crfname")
+  patient_id = getOption("edc_id", c("ptno", "subjid")),
+  crfname = getOption("edc_crfname", "crfname"),
+  ...
 )
 }
 \arguments{
-\item{patient_id}{the name of the column containing the patient ID}
+\item{patient_id}{the name of the columns containing the patient ID}
 
-\item{crfname}{the name of the column containing the name of the CRF page}
+\item{crfname}{the name of the columns containing the name of the CRF page}
+
+\item{...}{unused}
 }
 \description{
 Important column names
