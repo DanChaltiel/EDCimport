@@ -164,6 +164,7 @@ split_mixed_datasets = function(datasets=get_datasets(), id, ...,
 #' unify(c(1,1,1,1))
 #' #unify(c(1,1,2,1)) #warning
 #' @importFrom cli cli_warn
+#' @importFrom labelled var_label
 #' @importFrom stats na.omit
 unify = function(x){
   rtn = x[1]
