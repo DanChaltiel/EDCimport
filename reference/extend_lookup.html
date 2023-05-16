@@ -22,7 +22,7 @@ crfname the actual name of the dataset
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">EDCimport</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1.9020</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1.9021</span>
       </span>
     </div>
 
@@ -63,8 +63,7 @@ crfname the actual name of the dataset
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">extend_lookup</span><span class="op">(</span></span>
 <span>  <span class="va">lookup</span>,</span>
 <span>  <span class="va">...</span>,</span>
-<span>  id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"edc_id"</span>, <span class="st">"SUBJID"</span><span class="op">)</span>,</span>
-<span>  crfname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"edc_crfname"</span>, <span class="st">"crfname"</span><span class="op">)</span>,</span>
+<span>  key_columns <span class="op">=</span> <span class="fu"><a href="get_key_cols.html">get_key_cols</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  datasets <span class="op">=</span> <span class="fu"><a href="get_datasets.html">get_datasets</a></span><span class="op">(</span><span class="va">lookup</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -72,19 +71,19 @@ crfname the actual name of the dataset
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>lookup</dt>
-<dd><p>the lookup table</p></dd>
+<dd><p>[<code>data.frame(1)</code>]<br> the lookup table</p></dd>
 
 
-<dt>id</dt>
-<dd><p>the name of the column containing the patient ID</p></dd>
+<dt>...</dt>
+<dd></dd>
 
 
-<dt>crfname</dt>
-<dd><p>the name of the column containing the name of the CRF page</p></dd>
+<dt>key_columns</dt>
+<dd><p>[<code>list</code>]<br> the result of <code><a href="get_key_cols.html">get_key_cols()</a></code>, containing the column name used for patient ID and CRF name. Important for <code>split_mixed</code> and <code>extend_lookup</code>.</p></dd>
 
 
 <dt>datasets</dt>
-<dd><p>for experts only</p></dd>
+<dd><p>[<code>data.frame(n)</code>]<br> for experts only</p></dd>
 
 </dl></div>
     <div id="value">
@@ -107,10 +106,12 @@ crfname the actual name of the dataset
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> long_mixed   200     5 <span style="color: #949494;">&lt;chr [5]&gt;</span>    <span style="color: #949494;">&lt;chr [5]&gt;</span>   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> long_pure    300     4 <span style="color: #949494;">&lt;chr [4]&gt;</span>    <span style="color: #949494;">&lt;chr [4]&gt;</span>   </span>
 <span class="r-in"><span><span class="va">.lookup</span> <span class="op">=</span> <span class="fu">extend_lookup</span><span class="op">(</span><span class="va">.lookup</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Called from: extend_lookup(.lookup)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> debug: id = "subjid"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> debug: unique(datasets$consump[id])</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in map(., ~get(.x, envir = envir)):</span> <span style="color: #00BBBB;">ℹ</span> In index: 1.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in mutate(., n_id = map_int(dataset, ~length(unique(f(.x, key_columns$patient_id)))),     rows_per_id = round(nrow/n_id, 1), crfname = map_chr(dataset,         ~get_data_name(datasets[[.x]]), crfname = key_columns$crfname)):</span> <span style="color: #00BBBB;">ℹ</span> In argument: `n_id = map_int(dataset, ~length(unique(f(.x,</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span>   key_columns$patient_id))))`.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `map_int()`:</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> In index: 1.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `map()`:</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> In index: 1.</span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> With name: short.</span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `get()`:</span></span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> object 'short' not found</span>

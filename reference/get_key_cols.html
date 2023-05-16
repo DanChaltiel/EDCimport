@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">EDCimport</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1.9020</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1.9021</span>
       </span>
     </div>
 
@@ -54,19 +54,24 @@
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_key_cols</span><span class="op">(</span></span>
-<span>  patient_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"edc_id"</span>, <span class="st">"SUBJID"</span><span class="op">)</span>,</span>
-<span>  crfname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"edc_crfname"</span>, <span class="st">"crfname"</span><span class="op">)</span></span>
+<span>  patient_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"edc_id"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ptno"</span>, <span class="st">"subjid"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  crfname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"edc_crfname"</span>, <span class="st">"crfname"</span><span class="op">)</span>,</span>
+<span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>patient_id</dt>
-<dd><p>the name of the column containing the patient ID</p></dd>
+<dd><p>the name of the columns containing the patient ID</p></dd>
 
 
 <dt>crfname</dt>
-<dd><p>the name of the column containing the name of the CRF page</p></dd>
+<dd><p>the name of the columns containing the name of the CRF page</p></dd>
+
+
+<dt>...</dt>
+<dd><p>unused</p></dd>
 
 </dl></div>
 
