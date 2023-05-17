@@ -1,28 +1,39 @@
 
 
+
+
 skip_on_cran()
-skip_on_ci()
+cachename = test_path("trialmaster_export_2022-08-25 15h16.rds")
+filename = test_path("CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16.zip")
+filename_noformat = test_path("CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16_noformat.zip")
+filename_nopw = test_path("CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16_nopw.zip")
+filename_bad = test_path("CRF_Dan_Export.zip")
 
 test_that("Read an archive", {
   clean_cache()
-
-  expect_message(w <- read_trialmaster(filename),
-                 class="read_tm_zip")
-  expect_message(w <- read_trialmaster(filename),
-                 class="read_tm_cache")
-  expect_message(w <- read_trialmaster(filename, use_cache=FALSE),
-                 class="read_tm_zip")
-  expect_warning(w <- read_trialmaster(filename, use_cache=FALSE),
-                 class="edc_lookup_overwrite_warn")
+  
+  w = read_trialmaster(filename) %>% 
+    expect_classed_conditions(message_class="read_tm_zip")
+  w = read_trialmaster(filename) %>% 
+    expect_classed_conditions(message_class="read_tm_cache")
+  # expect_message(w <- read_trialmaster(filename),
+  #                class="read_tm_zip")
+  # expect_message(w <- read_trialmaster(filename),
+  #                class="read_tm_cache")
+  # expect_message(w <- read_trialmaster(filename, use_cache=FALSE),
+  #                class="read_tm_zip")
+  # expect_warning(w <- read_trialmaster(filename, use_cache=FALSE),
+  #                class="edc_lookup_overwrite_warn")
   
   w = read_trialmaster(filename, use_cache=FALSE) %>% 
     expect_classed_conditions(message_class="read_tm_zip", 
                               warning_class="edc_lookup_overwrite_warn")
-  w = read_trialmaster(filename, use_cache=FALSE) %>% 
-    expect_classed_conditions(message_class=c("read_tm_zip", "xxxx"),
-                              warning_class="edc_lookup_overwrite_warn")
+  # w = read_trialmaster(filename, use_cache=FALSE) %>% 
+  #   expect_classed_conditions(message_class=c("read_tm_zip", "xxxx"),
+  #                             warning_class="edc_lookup_overwrite_warn")
   
-  
+  # class(es[[1]])
+  # [1] "expectation_failure" "expectation"         "error"               "condition"      
   expect_length(w, 8)
 
 
@@ -59,3 +70,4 @@ test_that("Read an archive with a bad name", {
   expect_equal(as.character(w$site$INCLSITE), "Yes")
   clean_cache()
 })
+

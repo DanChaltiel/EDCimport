@@ -2,6 +2,7 @@
 
 export("%>%")
 export(edc_example_mixed)
+export(edc_example_plot)
 export(extend_lookup)
 export(extract_7z)
 export(find_keyword)

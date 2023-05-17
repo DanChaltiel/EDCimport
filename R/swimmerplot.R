@@ -45,7 +45,6 @@ swimmerplot = function(.lookup=getOption("edc_lookup", NULL), ...,
                        id="SUBJID", group=NULL, origin=NULL, 
                        time_unit=c("days", "weeks", "months", "years"),
                        aes_color=c("variable", "label"), plotly=TRUE){
-  check_installed("ggplot2", reason="for `swimmerplot()` to work.")
   check_dots_empty()
   time_unit = match.arg(time_unit[1], c(time_unit, str_remove(time_unit, "s$")))
   if(!str_ends(time_unit, "s")) time_unit = paste0(time_unit, "s")
@@ -120,14 +119,14 @@ swimmerplot = function(.lookup=getOption("edc_lookup", NULL), ...,
   
   p = dat %>% 
     mutate(id=as_factor(id)) %>% 
-    ggplot2::ggplot(ggplot2::aes(x=value, y=id, group=id)) + 
-    ggplot2::aes(color=!!sym(aes_color), label=!!sym(aes_label)) +
-    ggplot2::geom_line(na.rm=TRUE) +
-    ggplot2::geom_point(na.rm=TRUE) +
-    ggplot2::labs(x=x_label, y=id, color="Variable")
+    ggplot(aes(x=value, y=id, group=id)) + 
+    aes(color=!!sym(aes_color), label=!!sym(aes_label)) +
+    geom_line(na.rm=TRUE) +
+    geom_point(na.rm=TRUE) +
+    labs(x=x_label, y=id, color="Variable")
   
   if(!is.null(group)){
-    p = p + ggplot2::facet_wrap(~group, scales="free_y")
+    p = p + facet_wrap(~group, scales="free_y")
   }
   
   if(isTRUE(plotly)){

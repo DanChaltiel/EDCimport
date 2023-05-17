@@ -27,7 +27,9 @@
 #' 
 #' #alternatively, get the code and only use the datasets you need
 #' split_mixed_datasets(tm, id="SUBJID", output_code=TRUE)
-#' split_mixed_datasets(tm, id="SUBJID", output_code="mixed_code.R")
+#' filename = tempfile("mixed_code", fileext=".R")
+#' split_mixed_datasets(tm, id="SUBJID", output_code=filename)
+#' readLines(filename)
 #' @importFrom cli cli_bullets
 #' @importFrom dplyr across group_by select summarise summarise_all
 #' @importFrom glue glue
@@ -123,7 +125,8 @@ split_mixed_datasets = function(datasets=get_datasets(), id, ...,
   
   code = rtn %>% 
     map_chr("code") %>% 
-    paste(collapse="\n\n\n")
+    paste(collapse="\n\n\n") %>% 
+    paste("\n")
   
   if(length(mixed_long)>0 && verbose){
     cli_bullets(c(v="There {?was/were} {length(mixed_long)} mixed (short+long) table{?s}:", 

@@ -32,6 +32,7 @@ edc_example_mixed = function(N=100){
 
 
 #' @rdname data_example
+#' @export
 #' @importFrom dplyr bind_rows mutate n select
 #' @importFrom stats rnorm runif
 #' @importFrom tibble lst tibble

@@ -46,5 +46,7 @@ print(long_mixed_long)
 
 #alternatively, get the code and only use the datasets you need
 split_mixed_datasets(tm, id="SUBJID", output_code=TRUE)
-split_mixed_datasets(tm, id="SUBJID", output_code="mixed_code.R")
+filename = tempfile("mixed_code", fileext=".R")
+split_mixed_datasets(tm, id="SUBJID", output_code=filename)
+readLines(filename)
 }

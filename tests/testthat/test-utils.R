@@ -37,8 +37,18 @@ test_that("save_list() works", {
 })
 
 test_that("get_folder_datetime() works", {
-  expect_warning(get_folder_datetime(dirname(filename)), 
-                 class="get_folder_datetime_modiftime_warning")
+  folder = paste0(tempdir(), "/test_get_datetime")
+  dir.create(folder, showWarnings=FALSE)
+  file.create(paste0(folder, "/f1.R"))
+  file.create(paste0(folder, "/f2.R"))
+  file.create(paste0(folder, "/f3.R"))
+  file.create(paste0(folder, "/f4.R"))
+  file.create(paste0(folder, "/f5.R"))
+  dir(folder, full.names=TRUE)[1:3] %>% purrr::walk(~Sys.setFileTime(.x, "1975-01-01 CET"))
+  # dir(folder, full.names=TRUE) %>% file.info() %>% select(mtime)
+  x = get_folder_datetime(folder) %>% 
+    expect_classed_conditions(warning_class="get_folder_datetime_modiftime_warning")
+  expect_equal(as.character(x), "1975-01-01")
 })
 
 
@@ -47,7 +57,7 @@ test_that("get_folder_datetime() works", {
 test_that("get_lookup() works", {
   
   lookup = list(i=crosstable::iris2, m=mtcars) %>% get_lookup()
-  expect_equal(lengths(lookup$names), c(i=5, m=11))
+  expect_equal(lengths(lookup$names), c(m=11, i=5))
   expect_true(all(nzchar(lookup$labels$i)))
   expect_false(any(nzchar(lookup$labels$m)))
   # lookup %>% unnest(everything())
@@ -153,12 +163,26 @@ test_that("expect_classed_conditions()", {
                                 message_class=c("message1", "message2", "message3"),
                                 warning_class=c("warn1", "warn2"), 
                                 error_class="error1")
-  a
-  
+  expect_equal(a, "expect_classed_conditions__error")
   
   b = expect_classed_conditions(fun2(), 
                                 message_class=c("message1", "message2", "message3"),
                                 warning_class=c("warn1", "warn2"))
-  b
   expect_equal(b, 999)
+  
+  expect_classed_conditions(fun1(), 
+                            message_class=c("message1", "message2", "xxxx"),
+                            warning_class=c("warn1", "xxxx"), 
+                            error_class="xxxx") %>% 
+    expect_error("error1.*xxxx")
+  expect_classed_conditions(fun1(), 
+                            message_class=c("message1", "message2", "xxxx"),
+                            warning_class=c("warn1", "xxxx"), 
+                            error_class="error1") %>% 
+    expect_error("warn2.*xxxx")
+  expect_classed_conditions(fun1(), 
+                            message_class=c("message1", "message2", "xxxx"),
+                            warning_class=c("warn1", "warn2"), 
+                            error_class="error1") %>% 
+    expect_error("message3.*xxxx")
 })

@@ -16,8 +16,9 @@ Depends:
 Imports:
     cli,
     dplyr,
-    glue,
     forcats,
+    glue,
+    ggplot2,
     haven,
     labelled,
     purrr,
@@ -25,17 +26,16 @@ Imports:
     rlang,
     stringr,
     tibble,
-    tidyr
+    tidyr,
+    tidyselect
 Suggests: 
     callr,
-    covr,
     crosstable,
-    ggplot2,
     gtools,
     janitor,
     knitr,
     plotly,
-    testthat (>= 3.0.0),
+    testthat (>= 3.1.8),
     vdiffr,
     withr
 Encoding: UTF-8
