@@ -66,6 +66,7 @@ read_trialmaster = function(archive, ..., use_cache=TRUE,
                           extend_lookup=extend_lookup,
                           key_columns=key_columns, 
                           datetime_extraction=extract_datetime)
+    
     if(isTRUE(use_cache)) saveRDS(rtn, cache_file)
   }
   rtn
@@ -137,7 +138,8 @@ read_tm_all_xpt = function(directory, ..., format_file="procformat.sas",
   if(isTRUE(split_mixed)){
     patient_id=key_columns$patient_id
     stopifnot(is.character(patient_id))
-    id_found = map_lgl(rtn, ~patient_id %in% names(.x))
+    # browser()
+    id_found = map_lgl(rtn, ~any(patient_id %in% names(.x)))
     if(!any(id_found)) cli_warn("Patient ID column {.val {patient_id}} was not found in any dataset. Is it possible that you made a spelling mistake?")
     mixed = split_mixed_datasets(patient_id, datasets=rtn, verbose=FALSE)
     rtn = c(rtn, mixed)
@@ -160,9 +162,11 @@ read_tm_all_xpt = function(directory, ..., format_file="procformat.sas",
   if(isTRUE(extend_lookup)){
     patient_id=key_columns$patient_id
     stopifnot(is.character(patient_id))
-    id_found = map_lgl(rtn, ~patient_id %in% names(.x))
+    id_found = map_lgl(rtn, ~any(patient_id %in% names(.x)))
     if(!any(id_found)) cli_warn("Patient ID column {.val {patient_id}} was not found in any dataset. Is it possible that you made a spelling mistake?")
-    rtn$.lookup = extend_lookup(rtn$.lookup, id=patient_id, crfname=key_columns$crfname)
+    rtn$.lookup = extend_lookup(rtn$.lookup, datasets=rtn, 
+                                key_columns=get_key_cols(patient_id=patient_id, 
+                                                         crfname=key_columns$crfname))
   }
   
   if(!is.null(getOption("edc_lookup", NULL))){

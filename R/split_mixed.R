@@ -45,12 +45,12 @@ split_mixed_datasets = function(datasets=get_datasets(), id, ...,
   datasets = datasets %>% keep(~is.data.frame(.x))
   dataset_mean_nval = datasets %>% 
     imap(~{
-      if(!id %in% names(.x)) return(NULL)
+      if(!any(id %in% names(.x))) return(NULL)
       if(nrow(.x)==0 || ncol(.x)==0) return(NULL)
       .x %>% 
-        group_by(across(all_of(id))) %>% 
+        group_by(across(any_of(id))) %>% 
         summarise_all(~length(unique(.x))) %>% 
-        select(-all_of(id)) %>% 
+        select(-any_of(id)) %>% 
         summarise_all(~mean(.x)) %>%
         unlist()
     })
@@ -98,12 +98,13 @@ split_mixed_datasets = function(datasets=get_datasets(), id, ...,
       a = paste(names(.x[.x==1]), collapse=', ')
       b = paste(names(.x[.x!=1]), collapse=', ')
       dat = datasets[[.y]]
+      id = intersect(id, names(dat))[1]
       short = dat %>% 
-        select({{id}}, all_of(names(.x[.x==1]))) %>% 
+        select(all_of(id), all_of(names(.x[.x==1]))) %>% 
         group_by(across(all_of(id))) %>% 
         summarise(across(everything(), unify))
       long = dat %>% 
-        select({{id}}, all_of(names(.x[.x!=1])))
+        select(all_of(id), all_of(names(.x[.x!=1])))
       
       short_code = glue("{.y}",
                         "select({id}, {a})",
@@ -123,6 +124,7 @@ split_mixed_datasets = function(datasets=get_datasets(), id, ...,
       lst(short, long, code)
     })
   
+  # browser()
   code = rtn %>% 
     map_chr("code") %>% 
     paste(collapse="\n\n\n") %>% 
