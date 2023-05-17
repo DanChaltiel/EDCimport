@@ -96,4 +96,4 @@ swimmerplot(origin="enrolres$enroldt")
 
 This output a `plotly` interactive graph where you can select the dates of interest and zoom in with your mouse.
 
-![](man/swimmerplot.png)
+![](man/figures/swimmerplot.png)
