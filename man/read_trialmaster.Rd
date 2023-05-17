@@ -25,7 +25,7 @@ read_trialmaster(
 
 \item{clean_names_fun}{[\code{function}]\cr a function to clean column names, e.g. \code{\link[janitor:clean_names]{janitor::clean_names()}}}
 
-\item{split_mixed}{[\code{logical(1): FALSE}]\cr whether to split mixed datasets. See \link{split_mixed_datasets}. Beware of case if \code{clean_names_fun} is set.}
+\item{split_mixed}{[\code{logical(1): FALSE}]\cr whether to split mixed datasets. See \link{split_mixed_datasets}.}
 
 \item{extend_lookup}{[\code{character(1): FALSE}]\cr whether to enrich the lookup table. See \link{extend_lookup}.}
 

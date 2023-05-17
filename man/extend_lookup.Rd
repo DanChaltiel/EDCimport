@@ -14,7 +14,7 @@ extend_lookup(
 \arguments{
 \item{lookup}{[\code{data.frame(1)}]\cr the lookup table}
 
-\item{...}{}
+\item{...}{unused}
 
 \item{key_columns}{[\code{list}]\cr the result of \code{\link[=get_key_cols]{get_key_cols()}}, containing the column name used for patient ID and CRF name. Important for \code{split_mixed} and \code{extend_lookup}.}
 
