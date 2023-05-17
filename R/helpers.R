@@ -130,8 +130,8 @@ find_keyword = function(keyword, data=getOption("edc_lookup", NULL), ignore_case
 #' print(a)
 #' print(nrow(b))
 #' 
-#' @importFrom checkmate vname
 #' @importFrom cli cli_abort cli_warn
+#' @importFrom rlang caller_arg
 load_list = function(x, env=parent.frame(), remove=TRUE){
   if(length(x)==0){
     cli_warn("List was empty.")
@@ -145,7 +145,7 @@ load_list = function(x, env=parent.frame(), remove=TRUE){
   }
   list2env(x, env)
   
-  if(remove) remove(list=vname(x), envir=env)
+  if(remove) remove(list=caller_arg(x), envir=env)
 }
 
 #' Load a `.RData` file as a list
