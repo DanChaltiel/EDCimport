@@ -244,7 +244,7 @@ extend_lookup = function(lookup, ...,
 
 
 
-#' Retreive the datasets
+#' Retrieve the datasets
 #' 
 #' Get the datasets from the lookup table as a list of data.frames.
 #'

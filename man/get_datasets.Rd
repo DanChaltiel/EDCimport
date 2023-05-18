@@ -2,7 +2,7 @@
 % Please edit documentation in R/helpers.R
 \name{get_datasets}
 \alias{get_datasets}
-\title{Retreive the datasets}
+\title{Retrieve the datasets}
 \usage{
 get_datasets(lookup = getOption("edc_lookup", NULL), envir = parent.frame())
 }

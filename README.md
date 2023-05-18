@@ -94,6 +94,6 @@ edc_swimmerplot(group="enrolres$arm")
 edc_swimmerplot(origin="enrolres$enroldt")
 ```
 
-This output a `plotly` interactive graph where you can select the dates of interest and zoom in with your mouse.
+This outputs a `plotly` interactive graph where you can select the dates of interest and zoom in with your mouse.
 
 ![](man/figures/swimmerplot.png)

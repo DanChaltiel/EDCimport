@@ -6,7 +6,7 @@
 #' @param datasets the datasets to consider. Use the helper [get_datasets()] if needed.
 #' @param id the patient identifier, probably "SUBJID". Should be shared by all datasets.
 #' @param ignore_cols columns to ignore when considering a table as long. default to 
-#' @param output_code whether to print the code to explictly write. Can also be a file path.
+#' @param output_code whether to print the code to explicitly write. Can also be a file path.
 #' @param verbose whether to print informations about the process.
 #' @param ... not used
 #'

@@ -22,7 +22,7 @@ split_mixed_datasets(
 
 \item{ignore_cols}{columns to ignore when considering a table as long. default to}
 
-\item{output_code}{whether to print the code to explictly write. Can also be a file path.}
+\item{output_code}{whether to print the code to explicitly write. Can also be a file path.}
 
 \item{verbose}{whether to print informations about the process.}
 }
