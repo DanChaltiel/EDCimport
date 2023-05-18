@@ -46,6 +46,8 @@ load_list(tm) #this also removes `tm` to save memory
 mean(dataset1$column5)
 ```
 
+There are other options available, e.g. colnames cleaning & table splitting), see `?read_trialmaster` for more details.
+
 ## Utils
 
 `EDCimport` include a set of useful tools that help with using the imported database.
@@ -76,11 +78,11 @@ find_keyword("date")
 #> 10 vs      VISITDT Visit Date
 ```
 
-Note that `find_keyword()` uses the `edc_lookup` option, automatically set by `read_trialmaster()`.
+Note that `find_keyword()` uses the `edc_lookup` option as its second argument, automatically set by `read_trialmaster()`.
 
 ### Swimmer Plot
 
-The `edc_swimmerplot()` function will create a swimmer plot of all variables of class date in the whole database.
+The `edc_swimmerplot()` function will create a swimmer plot of all date variables in the whole database.
 
 There are 2 arguments of interest:
 
@@ -97,3 +99,5 @@ edc_swimmerplot(origin="enrolres$enroldt")
 This outputs a `plotly` interactive graph where you can select the dates of interest and zoom in with your mouse.
 
 ![](man/figures/swimmerplot.png)
+
+Note that any modification made after running `read_trialmaster()` is taken into account. For instance, mutating a column with `as.Date()` in one of the tables will add a new group in the plot.
