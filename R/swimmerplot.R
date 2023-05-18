@@ -1,6 +1,6 @@
 
 
-# TODO swimmerplot ajouter tooltip? avec date si origin!=NULL
+# TODO edc_swimmerplot ajouter tooltip? avec date si origin!=NULL
 
 
 #' Swimmer plot of all dates columns
@@ -23,12 +23,12 @@
 #' #tm = read_trialmaster("filename.zip", pw="xx")
 #' tm = edc_example_plot()
 #' load_list(tm)
-#' p = swimmerplot(.lookup)
-#' p2 = swimmerplot(.lookup, origin="db0$date_naissance", time_unit="weeks")
-#' p3 = swimmerplot(.lookup, group="db0$group", aes_color="label")
+#' p = edc_swimmerplot(.lookup)
+#' p2 = edc_swimmerplot(.lookup, origin="db0$date_naissance", time_unit="weeks")
+#' p3 = edc_swimmerplot(.lookup, group="db0$group", aes_color="label")
 #' \dontrun{
 #' #save the plotly plot as HTML to share it
-#' htmlwidgets::savewidget(p, "swimmerplot.html", selfcontained=TRUE)
+#' htmlwidgets::savewidget(p, "edc_swimmerplot.html", selfcontained=TRUE)
 #' }
 #' @importFrom cli cli_abort cli_warn
 #' @importFrom dplyr left_join mutate select slice
@@ -41,7 +41,7 @@
 #' @importFrom stringr str_detect str_ends str_remove
 #' @importFrom tidyr pivot_longer
 #' @importFrom tidyselect where
-swimmerplot = function(.lookup=getOption("edc_lookup", NULL), ..., 
+edc_swimmerplot = function(.lookup=getOption("edc_lookup", NULL), ..., 
                        id="SUBJID", group=NULL, origin=NULL, 
                        time_unit=c("days", "weeks", "months", "years"),
                        aes_color=c("variable", "label"), plotly=TRUE){
@@ -130,7 +130,7 @@ swimmerplot = function(.lookup=getOption("edc_lookup", NULL), ...,
   }
   
   if(isTRUE(plotly)){
-    check_installed("plotly", reason="for `swimmerplot(plotly=TRUE)` to work.")
+    check_installed("plotly", reason="for `edc_swimmerplot(plotly=TRUE)` to work.")
     p = plotly::ggplotly(p)
   }
   

@@ -80,7 +80,7 @@ Note that `find_keyword()` uses the `edc_lookup` option, automatically set by `r
 
 ### Swimmer Plot
 
-The `swimmerplot()` function will create a swimmerplot of all variables of class date in the whole database.
+The `edc_swimmerplot()` function will create a swimmer plot of all variables of class date in the whole database.
 
 There are 2 arguments of interest:
 
@@ -89,9 +89,9 @@ There are 2 arguments of interest:
 -   `origin`, a date variable acting as the time zero (e.g. the date of enrollment)
 
 ``` r
-swimmerplot()
-swimmerplot(group="enrolres$arm")
-swimmerplot(origin="enrolres$enroldt")
+edc_swimmerplot()
+edc_swimmerplot(group="enrolres$arm")
+edc_swimmerplot(origin="enrolres$enroldt")
 ```
 
 This output a `plotly` interactive graph where you can select the dates of interest and zoom in with your mouse.
