@@ -101,7 +101,7 @@ read_trialmaster = function(archive, ..., use_cache=TRUE,
 read_tm_all_xpt = function(directory, ..., format_file="procformat.sas", 
                            clean_names_fun=NULL, 
                            split_mixed=FALSE,
-                           extend_lookup=FALSE,
+                           extend_lookup=TRUE,
                            key_columns=get_key_cols(),
                            datetime_extraction=NULL){
   check_dots_empty()
