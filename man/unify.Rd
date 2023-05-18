@@ -18,4 +18,10 @@ Turn a vector of length N to a vector of length 1 after checking that there is o
 \examples{
 unify(c(1,1,1,1))
 #unify(c(1,1,2,1)) #warning
+
+library(dplyr)
+x=tibble(id=rep(letters[1:5],10), value=rep(1:5,10))
+x \%>\% group_by(id) \%>\% summarise(value=unify(value)) #safer than `value=value[1]`
+x$value[2]=1
+#x \%>\% group_by(id) \%>\% summarise(value=unify(value)) #warning about that non-unique value
 }

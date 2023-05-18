@@ -164,13 +164,19 @@ split_mixed_datasets = function(datasets=get_datasets(), id, ...,
 #'
 #' @return a vector of length 1
 #' @export
+#' @importFrom cli cli_warn
+#' @importFrom labelled var_label
+#' @importFrom stats na.omit
 #'
 #' @examples
 #' unify(c(1,1,1,1))
 #' #unify(c(1,1,2,1)) #warning
-#' @importFrom cli cli_warn
-#' @importFrom labelled var_label
-#' @importFrom stats na.omit
+#' 
+#' library(dplyr)
+#' x=tibble(id=rep(letters[1:5],10), value=rep(1:5,10))
+#' x %>% group_by(id) %>% summarise(value=unify(value)) #safer than `value=value[1]`
+#' x$value[2]=1
+#' #x %>% group_by(id) %>% summarise(value=unify(value)) #warning about that non-unique value
 unify = function(x){
   rtn = x[1]
   lu = length(unique(na.omit(x)))
