@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">EDCimport</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1.9023</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
       </span>
     </div>
 
@@ -82,7 +82,7 @@
 
 
 <dt>output_code</dt>
-<dd><p>whether to print the code to explictly write. Can also be a file path.</p></dd>
+<dd><p>whether to print the code to explicitly write. Can also be a file path.</p></dd>
 
 
 <dt>verbose</dt>
@@ -106,18 +106,18 @@
 <span class="r-in"><span><span class="co">#load_list(tm)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">tm</span><span class="op">$</span><span class="va">long_mixed</span><span class="op">)</span> <span class="co">#`val1` and `val2` are long but `val3` is short</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 200 × 5</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    SUBJID crfname                     val1  val2 val3 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>      1 both short and long data  0.262  10.4  B    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      1 both short and long data -<span style="color: #BB0000;">0.631</span>  11.1  B    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      2 both short and long data  1.72   10.8  C    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>      2 both short and long data -<span style="color: #BB0000;">0.993</span>  12.0  C    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>      3 both short and long data -<span style="color: #BB0000;">1.26</span>   10.3  D    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      3 both short and long data -<span style="color: #BB0000;">0.060</span><span style="color: #BB0000; text-decoration: underline;">5</span>  9.33 D    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>      4 both short and long data  0.463  10.1  E    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>      4 both short and long data  0.141  10.4  E    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      5 both short and long data  0.216   9.42 F    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>      5 both short and long data  2.30   10.6  F    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    SUBJID crfname                    val1  val2 val3 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>      1 both short and long data -<span style="color: #BB0000;">0.242</span>  9.15 B    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      1 both short and long data  0.572 10.1  B    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      2 both short and long data  0.706  8.67 C    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>      2 both short and long data  0.205 12.4  C    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>      3 both short and long data  0.552  7.50 D    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      3 both short and long data -<span style="color: #BB0000;">0.569</span> 12.2  D    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>      4 both short and long data  0.193 10.6  E    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>      4 both short and long data  0.621  9.42 E    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      5 both short and long data -<span style="color: #BB0000;">0.107</span> 10.3  F    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>      5 both short and long data -<span style="color: #BB0000;">0.124</span>  9.95 F    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 190 more rows</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">mixed_data</span> <span class="op">=</span> <span class="fu">split_mixed_datasets</span><span class="op">(</span><span class="va">tm</span>, id<span class="op">=</span><span class="st">"SUBJID"</span>, verbose<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
@@ -147,18 +147,18 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 90 more rows</span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">long_mixed_long</span><span class="op">)</span> </span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 200 × 3</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    SUBJID    val1  val2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>      1  0.262  10.4 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      1 -<span style="color: #BB0000;">0.631</span>  11.1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      2  1.72   10.8 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>      2 -<span style="color: #BB0000;">0.993</span>  12.0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>      3 -<span style="color: #BB0000;">1.26</span>   10.3 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      3 -<span style="color: #BB0000;">0.060</span><span style="color: #BB0000; text-decoration: underline;">5</span>  9.33</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>      4  0.463  10.1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>      4  0.141  10.4 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      5  0.216   9.42</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>      5  2.30   10.6 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    SUBJID   val1  val2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>      1 -<span style="color: #BB0000;">0.242</span>  9.15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      1  0.572 10.1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      2  0.706  8.67</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>      2  0.205 12.4 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>      3  0.552  7.50</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      3 -<span style="color: #BB0000;">0.569</span> 12.2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>      4  0.193 10.6 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>      4  0.621  9.42</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      5 -<span style="color: #BB0000;">0.107</span> 10.3 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>      5 -<span style="color: #BB0000;">0.124</span>  9.95</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 190 more rows</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#alternatively, get the code and only use the datasets you need</span></span></span>
@@ -198,9 +198,9 @@
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB;">"short"</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> There were 2 mixed (short+long) tables:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB;">"long_pure"</span> and <span style="color: #0000BB;">"long_mixed"</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> → Copy the code from <span style="color: #0000BB;">/tmp/RtmpgHGoIZ/mixed_code158927ef9501.R</span> in your script to</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> → Copy the code from <span style="color: #0000BB;">/tmp/Rtmp5Fd6cc/mixed_code159b6e2a3ae8.R</span> in your script to</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   separate long and short data:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>   `utils::browseURL(/tmp/RtmpgHGoIZ/mixed_code158927ef9501.R)`</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   `utils::browseURL(/tmp/Rtmp5Fd6cc/mixed_code159b6e2a3ae8.R)`</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/readLines.html" class="external-link">readLines</a></span><span class="op">(</span><span class="va">filename</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "## `long_pure` (dim=300x4) ---- "                    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [2] ""                                                    </span>

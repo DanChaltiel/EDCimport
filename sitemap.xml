@@ -22,6 +22,9 @@
     <loc>/reference/data_example.html</loc>
   </url>
   <url>
+    <loc>/reference/edc_swimmerplot.html</loc>
+  </url>
+  <url>
     <loc>/reference/extend_lookup.html</loc>
   </url>
   <url>
@@ -65,9 +68,6 @@
   </url>
   <url>
     <loc>/reference/split_mixed_datasets.html</loc>
-  </url>
-  <url>
-    <loc>/reference/swimmerplot.html</loc>
   </url>
   <url>
     <loc>/reference/unify.html</loc>

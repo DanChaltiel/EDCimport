@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">EDCimport</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1.9023</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
       </span>
     </div>
 
@@ -104,6 +104,7 @@
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/load_list.html">load_list</a></span><span class="op">(</span><span class="va">tm</span><span class="op">)</span> <span class="co">#this also removes `tm` to save memory</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">dataset1</span><span class="op">$</span><span class="va">column5</span><span class="op">)</span></span></code></pre></div>
+<p>There are other options available, e.g. colnames cleaning &amp; table splitting), see <code><a href="reference/read_trialmaster.html">?read_trialmaster</a></code> for more details.</p>
 </div>
 </div>
 <div class="section level2">
@@ -131,23 +132,24 @@
 <span><span class="co">#&gt;  8 visit   EEXPVDT Earliest Expected Visit Date</span></span>
 <span><span class="co">#&gt;  9 vs      ECGDAT  Date of ECG                 </span></span>
 <span><span class="co">#&gt; 10 vs      VISITDT Visit Date</span></span></code></pre></div>
-<p>Note that <code><a href="reference/find_keyword.html">find_keyword()</a></code> uses the <code>edc_lookup</code> option, automatically set by <code><a href="reference/read_trialmaster.html">read_trialmaster()</a></code>.</p>
+<p>Note that <code><a href="reference/find_keyword.html">find_keyword()</a></code> uses the <code>edc_lookup</code> option as its second argument, automatically set by <code><a href="reference/read_trialmaster.html">read_trialmaster()</a></code>.</p>
 </div>
 <div class="section level3">
 <h3 id="swimmer-plot">Swimmer Plot<a class="anchor" aria-label="anchor" href="#swimmer-plot"></a>
 </h3>
-<p>The <code><a href="reference/swimmerplot.html">swimmerplot()</a></code> function will create a swimmerplot of all variables of class date in the whole database.</p>
+<p>The <code><a href="reference/edc_swimmerplot.html">edc_swimmerplot()</a></code> function will create a swimmer plot of all date variables in the whole database.</p>
 <p>There are 2 arguments of interest:</p>
 <ul>
 <li><p><code>group</code>, a grouping variable (e.g. the treatment arm)</p></li>
 <li><p><code>origin</code>, a date variable acting as the time zero (e.g. the date of enrollment)</p></li>
 </ul>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/swimmerplot.html">swimmerplot</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/swimmerplot.html">swimmerplot</a></span><span class="op">(</span>group<span class="op">=</span><span class="st">"enrolres$arm"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/swimmerplot.html">swimmerplot</a></span><span class="op">(</span>origin<span class="op">=</span><span class="st">"enrolres$enroldt"</span><span class="op">)</span></span></code></pre></div>
-<p>This output a <code>plotly</code> interactive graph where you can select the dates of interest and zoom in with your mouse.</p>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/edc_swimmerplot.html">edc_swimmerplot</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/edc_swimmerplot.html">edc_swimmerplot</a></span><span class="op">(</span>group<span class="op">=</span><span class="st">"enrolres$arm"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/edc_swimmerplot.html">edc_swimmerplot</a></span><span class="op">(</span>origin<span class="op">=</span><span class="st">"enrolres$enroldt"</span><span class="op">)</span></span></code></pre></div>
+<p>This outputs a <code>plotly</code> interactive graph where you can select the dates of interest and zoom in with your mouse.</p>
 <p><img src="reference/figures/swimmerplot.png"></p>
+<p>Note that any modification made after running <code><a href="reference/read_trialmaster.html">read_trialmaster()</a></code> is taken into account. For instance, mutating a column with <code><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date()</a></code> in one of the tables will add a new group in the plot.</p>
 </div>
 </div>
 </div>

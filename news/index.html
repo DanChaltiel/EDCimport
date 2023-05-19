@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">EDCimport</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1.9023</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0</span>
       </span>
     </div>
 
@@ -48,13 +48,26 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="0.2.2" id="edcimport-022-2023xxxx">EDCimport 0.2.2 <sub><sup>2023/xx/xx</sup></sub><a class="anchor" aria-label="anchor" href="#edcimport-022-2023xxxx"></a></h2>
+<h2 class="page-header" data-toc-text="0.3.0" id="edcimport-030-20230519">EDCimport 0.3.0 <sub><sup>2023/05/19</sup></sub><small>2023-05-19</small><a class="anchor" aria-label="anchor" href="#edcimport-030-20230519"></a></h2>
 <div class="section level5">
-<h5 id="new-features-0-2-2">New features<a class="anchor" aria-label="anchor" href="#new-features-0-2-2"></a></h5>
-<ul><li>New function <code><a href="../reference/swimmerplot.html">swimmerplot()</a></code> to show a swimmer plot of all dates in the database and easily find outliers.</li>
+<h5 id="new-features-0-3-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-3-0"></a></h5>
+<ul><li><p>New function <code><a href="../reference/edc_swimmerplot.html">edc_swimmerplot()</a></code> to show a swimmer plot of all dates in the database and easily find outliers.</p></li>
+<li>
+<p>New features in <code><a href="../reference/read_trialmaster.html">read_trialmaster()</a></code>:</p>
+<ul><li>
+<code>clean_names_fun=some_fun</code> will clean all names of all tables. For instance, <code>clean_names_fun=janitor::clean_names()</code> will turn default SAS uppercase column names into valid R snake-case column names.</li>
+<li>
+<code>split_mixed=TRUE</code> will split tables that contain both long and short data regarding patient ID into one long table and one short table. See <code>?split_mixed_datasets()</code> for details.</li>
+<li>
+<code>extend_lookup =TRUE</code> will improve the lookup table with additional information. See <code>?extend_lookup()</code> for details.</li>
+<li>
+<code>key_columns=get_key_cols()</code> is where you can change the default column names for patient ID and CRF name (used in other new features).</li>
+</ul></li>
+<li><p>Standalone functions <code><a href="../reference/extend_lookup.html">extend_lookup()</a></code> and <code><a href="../reference/split_mixed_datasets.html">split_mixed_datasets()</a></code>.</p></li>
+<li><p>New helper <code><a href="../reference/unify.html">unify()</a></code>, which turns a vector of duplicate values into a vector of length 1.</p></li>
 </ul></div>
 <div class="section level5">
-<h5 id="bug-fixes-0-2-2">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-2-2"></a></h5>
+<h5 id="bug-fixes-0-3-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-3-0"></a></h5>
 <ul><li><p>Reading errors are now handled by <code><a href="../reference/read_trialmaster.html">read_trialmaster()</a></code> instead of failing. If one XPT file is corrupted, the resulting object will contain the error message instead of the dataset.</p></li>
 <li><p><code><a href="../reference/find_keyword.html">find_keyword()</a></code> is now robust to non-UTF8 characters in labels.</p></li>
 <li><p>Option <code>edc_lookup</code> is now set even when reading from cache.</p></li>
