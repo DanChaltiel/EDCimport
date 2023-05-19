@@ -79,7 +79,8 @@ edc_swimmerplot = function(.lookup=getOption("edc_lookup", NULL), ...,
                dataset=.y,
                variable=paste0(toupper(dataset), " - ", toupper(name)))
     }) %>% 
-    list_rbind()
+    list_rbind() %>% 
+    mutate(date=value)
   
   if(!is.null(group)){
     dat_group = parse_var(group, id, parent)
@@ -98,7 +99,7 @@ edc_swimmerplot = function(.lookup=getOption("edc_lookup", NULL), ...,
                     {.pkg gtools} package to sort it properly.", 
                     i='Run {.run utils::install.package("gtools")}'))
   }
-  
+  tooltip = c("x", "y", "color", "label")
   x_label = "Calendar date"
   if(!is.null(origin)){
     dat_origin = parse_var(origin, id, parent)
@@ -106,10 +107,11 @@ edc_swimmerplot = function(.lookup=getOption("edc_lookup", NULL), ...,
     dat = dat %>%
       left_join(dat_origin, by="id") %>% 
       mutate(
-        value_bak = value,
+        date = value,
         value = as.double(value-origin, units="days") / values[time_unit]
       )
     x_label = glue("Date difference from `{origin}` (in {time_unit})")
+    tooltip = c(tooltip, "date")
   }
   
   aes_label = "variable"
@@ -119,7 +121,7 @@ edc_swimmerplot = function(.lookup=getOption("edc_lookup", NULL), ...,
   
   p = dat %>% 
     mutate(id=as_factor(id)) %>% 
-    ggplot(aes(x=value, y=id, group=id)) + 
+    ggplot(aes(x=value, y=id, group=id, date=date)) + 
     aes(color=!!sym(aes_color), label=!!sym(aes_label)) +
     geom_line(na.rm=TRUE) +
     geom_point(na.rm=TRUE) +
@@ -131,7 +133,7 @@ edc_swimmerplot = function(.lookup=getOption("edc_lookup", NULL), ...,
   
   if(isTRUE(plotly)){
     check_installed("plotly", reason="for `edc_swimmerplot(plotly=TRUE)` to work.")
-    p = plotly::ggplotly(p)
+    p = plotly::ggplotly(p, tooltip=tooltip)
   }
   
   p
