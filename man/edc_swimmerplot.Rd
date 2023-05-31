@@ -21,11 +21,13 @@ edc_swimmerplot(
 
 \item{...}{not used}
 
-\item{id}{the patient identifier}
+\item{id}{the patient identifier. Will be coerced as numeric.}
 
 \item{group}{a grouping variable, given as "dataset$column"}
 
 \item{origin}{a variable to consider as time 0, given as "dataset$column"}
+
+\item{id_lim}{a numeric vector of length 2 providing the minimum and maximum \code{id} to subset on.}
 
 \item{time_unit}{if \code{origin!=NULL}, the unit to measure time. One of \code{c("days", "weeks", "months", "years")}.}
 
@@ -43,7 +45,7 @@ Join all tables from \code{.lookup$dataset} on \code{id}
 #tm = read_trialmaster("filename.zip", pw="xx")
 tm = edc_example_plot()
 load_list(tm)
-p = edc_swimmerplot(.lookup)
+p = edc_swimmerplot(.lookup, id_lim=c(5,45))
 p2 = edc_swimmerplot(.lookup, origin="db0$date_naissance", time_unit="weeks")
 p3 = edc_swimmerplot(.lookup, group="db0$group", aes_color="label")
 \dontrun{
