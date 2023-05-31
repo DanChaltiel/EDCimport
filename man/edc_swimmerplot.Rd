@@ -10,6 +10,7 @@ edc_swimmerplot(
   id = "SUBJID",
   group = NULL,
   origin = NULL,
+  id_lim = NULL,
   time_unit = c("days", "weeks", "months", "years"),
   aes_color = c("variable", "label"),
   plotly = TRUE
@@ -47,6 +48,6 @@ p2 = edc_swimmerplot(.lookup, origin="db0$date_naissance", time_unit="weeks")
 p3 = edc_swimmerplot(.lookup, group="db0$group", aes_color="label")
 \dontrun{
 #save the plotly plot as HTML to share it
-htmlwidgets::savewidget(p, "edc_swimmerplot.html", selfcontained=TRUE)
+htmlwidgets::saveWidget(p, "edc_swimmerplot.html", selfcontained=TRUE)
 }
 }

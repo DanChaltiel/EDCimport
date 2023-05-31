@@ -28,7 +28,7 @@
 #' p3 = edc_swimmerplot(.lookup, group="db0$group", aes_color="label")
 #' \dontrun{
 #' #save the plotly plot as HTML to share it
-#' htmlwidgets::savewidget(p, "edc_swimmerplot.html", selfcontained=TRUE)
+#' htmlwidgets::saveWidget(p, "edc_swimmerplot.html", selfcontained=TRUE)
 #' }
 #' @importFrom cli cli_abort cli_warn
 #' @importFrom dplyr left_join mutate select slice
