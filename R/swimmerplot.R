@@ -205,5 +205,6 @@ parse_var = function(input, id, env){
   }
   
   dat_input %>% 
-    select(id=!!id, !!input_name:=!!input2[2])
+    select(matches(id), !!input_name:=!!input2[2]) %>%
+    rename(id=1)
 }
