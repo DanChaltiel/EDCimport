@@ -34,7 +34,7 @@
 #' htmlwidgets::saveWidget(p, "edc_swimmerplot.html", selfcontained=TRUE)
 #' }
 #' @importFrom cli cli_abort cli_warn
-#' @importFrom dplyr between left_join mutate select slice
+#' @importFrom dplyr between left_join mutate rename select slice
 #' @importFrom forcats as_factor
 #' @importFrom ggplot2 aes facet_wrap geom_line geom_point ggplot labs
 #' @importFrom glue glue
@@ -45,7 +45,7 @@
 #' @importFrom tidyr pivot_longer
 #' @importFrom tidyselect where
 edc_swimmerplot = function(.lookup=getOption("edc_lookup", NULL), ..., 
-                           id="SUBJID", group=NULL, origin=NULL, 
+                           id=c("SUBJID", "PATNO"), group=NULL, origin=NULL, 
                            id_lim=NULL,
                            exclude=NULL,
                            time_unit=c("days", "weeks", "months", "years"),
@@ -67,13 +67,12 @@ edc_swimmerplot = function(.lookup=getOption("edc_lookup", NULL), ...,
   }
   
   dbs = dbs %>% 
-    discard(~!id %in% names(.x))
+    discard(~!any(id %in% names(.x)))
   if(length(dbs)==0){
     cli_abort(c("None of the datasets contains an identifier column", i="{.arg id}={.val {id}}"))
   }
-  
   dbs = dbs %>% 
-    map(~.x %>% select(id=!!id, where(is.Date))) %>% 
+    map(~.x %>% select(matches(id), where(is.Date)) %>% rename(id=1)) %>% 
     discard(~ncol(.x)<2)
   if(length(dbs)==0){
     cli_abort(c("None of the datasets contains a date column"))
@@ -158,7 +157,7 @@ edc_swimmerplot = function(.lookup=getOption("edc_lookup", NULL), ...,
     aes(color=!!sym(aes_color), label=!!sym(aes_label)) +
     geom_line(na.rm=TRUE) +
     geom_point(na.rm=TRUE) +
-    labs(x=x_label, y=id, color="Variable")
+    labs(x=x_label, y="Patient", color="Variable")
   
   if(!is.null(group)){
     p = p + facet_wrap(~group, scales="free_y")
