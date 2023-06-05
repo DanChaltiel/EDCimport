@@ -12,6 +12,7 @@
 #' @param group a grouping variable, given as "dataset$column"
 #' @param origin a variable to consider as time 0, given as "dataset$column"
 #' @param id_lim a numeric vector of length 2 providing the minimum and maximum `id` to subset on. 
+#' @param exclude a character vector of variables to exclude, in the form `dataset$column`.
 #' @param time_unit if `origin!=NULL`, the unit to measure time. One of `c("days", "weeks", "months", "years")`.
 #' @param aes_color either `variable` ("{dataset} - {column}") or `label` (the column label)
 #' @param plotly whether to use `{plotly}` to get an interactive plot
@@ -25,7 +26,8 @@
 #' tm = edc_example_plot()
 #' load_list(tm)
 #' p = edc_swimmerplot(.lookup, id_lim=c(5,45))
-#' p2 = edc_swimmerplot(.lookup, origin="db0$date_naissance", time_unit="weeks")
+#' p2 = edc_swimmerplot(.lookup, origin="db0$date_naissance", time_unit="weeks", 
+#'                      exclude=c("DB1$DATE2", "db3$date8"))
 #' p3 = edc_swimmerplot(.lookup, group="db0$group", aes_color="label")
 #' \dontrun{
 #' #save the plotly plot as HTML to share it
@@ -45,6 +47,7 @@
 edc_swimmerplot = function(.lookup=getOption("edc_lookup", NULL), ..., 
                        id="SUBJID", group=NULL, origin=NULL, 
                        id_lim=NULL,
+                       exclude=NULL,
                        time_unit=c("days", "weeks", "months", "years"),
                        aes_color=c("variable", "label"), plotly=TRUE){
   check_dots_empty()
@@ -91,7 +94,8 @@ edc_swimmerplot = function(.lookup=getOption("edc_lookup", NULL), ...,
           label=unlist(var_label(.x)[name]) %||% name,
           dataset=.y,
           variable=paste0(toupper(dataset), " - ", toupper(name))
-        )
+        ) %>% 
+        filter(!tolower(paste0(dataset, "$", name)) %in% tolower(exclude))
     }) %>% 
     list_rbind() %>% 
     mutate(date=value)

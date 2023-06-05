@@ -11,6 +11,7 @@ edc_swimmerplot(
   group = NULL,
   origin = NULL,
   id_lim = NULL,
+  exclude = NULL,
   time_unit = c("days", "weeks", "months", "years"),
   aes_color = c("variable", "label"),
   plotly = TRUE
@@ -29,6 +30,8 @@ edc_swimmerplot(
 
 \item{id_lim}{a numeric vector of length 2 providing the minimum and maximum \code{id} to subset on.}
 
+\item{exclude}{a character vector of variables to exclude, in the form \code{dataset$column}.}
+
 \item{time_unit}{if \code{origin!=NULL}, the unit to measure time. One of \code{c("days", "weeks", "months", "years")}.}
 
 \item{aes_color}{either \code{variable} ("{dataset} - {column}") or \code{label} (the column label)}
@@ -46,7 +49,8 @@ Join all tables from \code{.lookup$dataset} on \code{id}
 tm = edc_example_plot()
 load_list(tm)
 p = edc_swimmerplot(.lookup, id_lim=c(5,45))
-p2 = edc_swimmerplot(.lookup, origin="db0$date_naissance", time_unit="weeks")
+p2 = edc_swimmerplot(.lookup, origin="db0$date_naissance", time_unit="weeks", 
+                     exclude=c("DB1$DATE2", "db3$date8"))
 p3 = edc_swimmerplot(.lookup, group="db0$group", aes_color="label")
 \dontrun{
 #save the plotly plot as HTML to share it
