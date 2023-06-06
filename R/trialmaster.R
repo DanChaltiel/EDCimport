@@ -106,6 +106,8 @@ read_tm_all_xpt = function(directory, ..., format_file="procformat.sas",
                            datetime_extraction=NULL){
   check_dots_empty()
   clean_names_fun = get_clean_names_fun(clean_names_fun)
+  patient_id=key_columns$patient_id
+  stopifnot(is.character(patient_id))
   
   datasets = dir(directory, pattern = "\\.xpt$", full.names=TRUE)
   datasets_names = basename(datasets) %>% str_remove("\\.xpt")
@@ -114,6 +116,7 @@ read_tm_all_xpt = function(directory, ..., format_file="procformat.sas",
   rtn = datasets %>% 
     set_names(tolower(datasets_names)) %>% 
     imap(~tryCatch(read_xpt(.x), error=function(e) e))
+  id_found = map_lgl(rtn, ~any(tolower(patient_id) %in% tolower(names(.x))))
   
   if(!is.null(format_file)){
     procformat = file.path2(directory, format_file)
@@ -136,10 +139,6 @@ read_tm_all_xpt = function(directory, ..., format_file="procformat.sas",
   }
   
   if(isTRUE(split_mixed)){
-    patient_id=key_columns$patient_id
-    stopifnot(is.character(patient_id))
-    # browser()
-    id_found = map_lgl(rtn, ~any(patient_id %in% names(.x)))
     if(!any(id_found)) cli_warn("Patient ID column {.val {patient_id}} was not found in any dataset. Is it possible that you made a spelling mistake?")
     mixed = split_mixed_datasets(patient_id, datasets=rtn, verbose=FALSE)
     rtn = c(rtn, mixed)
@@ -160,9 +159,6 @@ read_tm_all_xpt = function(directory, ..., format_file="procformat.sas",
   rtn$.lookup = get_lookup(rtn)
   
   if(isTRUE(extend_lookup)){
-    patient_id=key_columns$patient_id
-    stopifnot(is.character(patient_id))
-    id_found = map_lgl(rtn, ~any(patient_id %in% names(.x)))
     if(!any(id_found)) cli_warn("Patient ID column {.val {patient_id}} was not found in any dataset. Is it possible that you made a spelling mistake?")
     rtn$.lookup = extend_lookup(rtn$.lookup, datasets=rtn, 
                                 key_columns=get_key_cols(patient_id=patient_id, 

@@ -226,15 +226,18 @@ extend_lookup = function(lookup, ...,
   check_dots_empty()
   #case-insensitive column selection
   f = function(x, colname){
-    rtn = select(datasets[[x]], any_of2(colname))
-    if(ncol(rtn)==0) return(NA)
-    if(ncol(rtn)>1) cli_warn("Several columns named {.val {colname}}: {.val {names(rtn)}}.")
-    rtn[[1]]
+    rtn = map(colname, ~select(datasets[[x]], any_of2(.x))) %>% 
+      keep(~min(dim(.x))>0)
+    ncols = map_dbl(rtn, ncol) %>% unique()
+    if(length(ncols)>1) cli_abort("Several columns named {.val {colname}} in dataset {.val {x}} with discrepancies.")
+    if(length(ncols)==0 || ncols==0) return(NA)
+    if(ncols>1) cli_warn("Several columns named {.val {colname}} in dataset {.val {x}}.")
+    length(unique(rtn[[1]][[1]]))
   }
   rtn = lookup %>% 
     mutate(
-      n_id = map_int(dataset, ~length(unique(f(.x, key_columns$patient_id)))),
-      rows_per_id = round(nrow/n_id,1),
+      n_id = map_int(dataset, ~f(.x, key_columns$patient_id)),
+      rows_per_id = round(nrow/n_id, 1),
       crfname = map_chr(dataset, ~get_data_name(datasets[[.x]]), crfname=key_columns$crfname)
     ) %>% 
     arrange(n_id, desc(nrow)) %>% 

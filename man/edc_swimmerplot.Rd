@@ -7,7 +7,7 @@
 edc_swimmerplot(
   .lookup = getOption("edc_lookup", NULL),
   ...,
-  id = "SUBJID",
+  id = c("SUBJID", "PATNO"),
   group = NULL,
   origin = NULL,
   id_lim = NULL,

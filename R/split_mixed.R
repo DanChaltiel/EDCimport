@@ -31,7 +31,7 @@
 #' split_mixed_datasets(tm, id="SUBJID", output_code=filename)
 #' readLines(filename)
 #' @importFrom cli cli_bullets
-#' @importFrom dplyr across group_by select summarise summarise_all
+#' @importFrom dplyr across group_by select summarise summarise_all ungroup
 #' @importFrom glue glue
 #' @importFrom purrr discard imap keep list_flatten map_chr
 #' @importFrom rlang check_dots_empty
@@ -50,6 +50,7 @@ split_mixed_datasets = function(datasets=get_datasets(), id, ...,
       .x %>% 
         group_by(across(any_of(id))) %>% 
         summarise_all(~length(unique(.x))) %>% 
+        ungroup() %>% 
         select(-any_of(id)) %>% 
         summarise_all(~mean(.x)) %>%
         unlist()
@@ -124,7 +125,6 @@ split_mixed_datasets = function(datasets=get_datasets(), id, ...,
       lst(short, long, code)
     })
   
-  # browser()
   code = rtn %>% 
     map_chr("code") %>% 
     paste(collapse="\n\n\n") %>% 
