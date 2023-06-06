@@ -6,7 +6,7 @@
 #' If `7zip` is not installed or available, use [read_tm_all_xpt()] instead.
 #'
 #' @param archive \[`character(1)`]\cr the path to the archive
-#' @param use_cache \[`logical(1)`: \sQuote{TRUE}]\cr if `TRUE`, read the `.rds` cache if any or extract the archive and create a cache. If `FALSE` extract the archive without creating a cache file.
+#' @param use_cache \[`mixed(1)`: \sQuote{TRUE}]\cr controls the `.rds` cache. If `TRUE`, read the cache if any or extract the archive and create a cache. If `FALSE` extract the archive without creating a cache file. Can also be `"read"` or `"write"`
 #' @param pw \[`character(1)`]\cr The password if the archive is protected. To avoid writing passwords in plain text, it is probably better to use `options(trialmaster_pw="xxx")` instead though.
 #' @param verbose \[`logical(1)`]\cr one of `c(0, 1, 2)`. The higher, the more information will be printed.
 #' @param ... unused
@@ -28,6 +28,10 @@ read_trialmaster = function(archive, ..., use_cache=TRUE,
   directory = dirname(archive)
   extract_datetime = parse_file_datetime(archive)
   check_dots_empty()
+  if(!missing(use_cache) && !use_cache %in% list(TRUE, FALSE, "read", "write")){
+    cli_abort("{.arg use_cache} should be one of {.val c(TRUE, FALSE, 'read', 'write')}.")
+  }
+  
   if(!file.exists(archive)){
     cli_abort("Archive {.val {archive}} does not exist.", 
              class="edc_tm_404")
@@ -40,7 +44,7 @@ read_trialmaster = function(archive, ..., use_cache=TRUE,
   }
   
   cache_file = glue("{directory}/trialmaster_export_{format_ymdhm(extract_datetime)}.rds")
-  if(file.exists(cache_file) && isTRUE(use_cache)){
+  if(file.exists(cache_file) && (isTRUE(use_cache) || use_cache=="read")){
     if(verbose>0) cli_inform("Reading cache: {.file {cache_file}}", class="read_tm_cache")
     rtn = readRDS(cache_file)
     options(edc_lookup=rtn$.lookup)
@@ -69,7 +73,10 @@ read_trialmaster = function(archive, ..., use_cache=TRUE,
                           key_columns=key_columns, 
                           datetime_extraction=extract_datetime)
     
-    if(isTRUE(use_cache)) saveRDS(rtn, cache_file)
+    if(isTRUE(use_cache) || use_cache=="write"){
+      if(verbose>0) cli_inform("Writing cache file {.file {archive}}", class="read_tm_zip")
+      saveRDS(rtn, cache_file)
+    }
   }
   rtn
 }

@@ -9,6 +9,8 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 - New argument `edc_swimmerplot(id_lim)` to subset the swimmer plot to some patients only.
 
+- New option `read_trialmaster(use_cache="write")` to read from the zip again but still update the cache.
+
 
 #### Bug fixes
 
