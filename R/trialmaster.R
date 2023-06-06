@@ -43,8 +43,10 @@ read_trialmaster = function(archive, ..., use_cache=TRUE,
   if(file.exists(cache_file) && isTRUE(use_cache)){
     if(verbose>0) cli_inform("Reading cache: {.file {cache_file}}", class="read_tm_cache")
     rtn = readRDS(cache_file)
-    if(is.null(getOption("edc_lookup", NULL))){
-      options(edc_lookup=rtn$.lookup)
+    options(edc_lookup=rtn$.lookup)
+    if(!is.null(getOption("edc_lookup", NULL))){
+      cli_warn("Option {.val edc_lookup} has been overwritten.", 
+               class="edc_lookup_overwrite_warn")
     }
   } else {
     if(verbose>0) cli_inform("Unzipping {.file {archive}}", class="read_tm_zip")
