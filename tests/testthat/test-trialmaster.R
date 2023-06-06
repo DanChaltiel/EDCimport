@@ -15,7 +15,8 @@ test_that("Read an archive", {
   w = read_trialmaster(filename) %>% 
     expect_classed_conditions(message_class="read_tm_zip")
   w = read_trialmaster(filename) %>% 
-    expect_classed_conditions(message_class="read_tm_cache")
+    expect_classed_conditions(message_class="read_tm_cache", 
+                              warning_class="edc_lookup_overwrite_warn")
   # expect_message(w <- read_trialmaster(filename),
   #                class="read_tm_zip")
   # expect_message(w <- read_trialmaster(filename),
