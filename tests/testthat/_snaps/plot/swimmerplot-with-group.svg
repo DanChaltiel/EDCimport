@@ -1522,7 +1522,7 @@
 <polyline points='30.05,71.54 32.79,71.54 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
 <polyline points='30.05,51.47 32.79,51.47 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
 <text x='304.71' y='568.24' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='69.11px' lengthAdjust='spacingAndGlyphs'>Calendar date</text>
-<text transform='translate(13.05,292.27) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='39.13px' lengthAdjust='spacingAndGlyphs'>SUBJID</text>
+<text transform='translate(13.05,292.27) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='34.25px' lengthAdjust='spacingAndGlyphs'>Patient</text>
 <rect x='587.58' y='189.57' width='126.94' height='205.41' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
 <text x='587.58' y='198.28' style='font-size: 11.00px; font-family: sans;' textLength='40.36px' lengthAdjust='spacingAndGlyphs'>Variable</text>
 <rect x='587.58' y='204.90' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
