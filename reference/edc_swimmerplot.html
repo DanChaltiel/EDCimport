@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">EDCimport</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0.9002</span>
       </span>
     </div>
 
@@ -56,7 +56,7 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">edc_swimmerplot</span><span class="op">(</span></span>
 <span>  .lookup <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"edc_lookup"</span>, <span class="cn">NULL</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span>,</span>
-<span>  id <span class="op">=</span> <span class="st">"SUBJID"</span>,</span>
+<span>  id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SUBJID"</span>, <span class="st">"PATNO"</span><span class="op">)</span>,</span>
 <span>  group <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  origin <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  id_lim <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -124,21 +124,9 @@
 <span class="r-in"><span><span class="va">tm</span> <span class="op">=</span> <span class="fu"><a href="data_example.html">edc_example_plot</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="load_list.html">load_list</a></span><span class="op">(</span><span class="va">tm</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">p</span> <span class="op">=</span> <span class="fu">edc_swimmerplot</span><span class="op">(</span><span class="va">.lookup</span>, id_lim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>,<span class="fl">45</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in map(., ~.x %&gt;% select(matches(id), where(is.Date)) %&gt;% rename(id = 1)):</span> <span style="color: #00BBBB;">ℹ</span> In index: 1.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> With name: db0.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `rename()`:</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> could not find function "rename"</span>
 <span class="r-in"><span><span class="va">p2</span> <span class="op">=</span> <span class="fu">edc_swimmerplot</span><span class="op">(</span><span class="va">.lookup</span>, origin<span class="op">=</span><span class="st">"db0$date_naissance"</span>, time_unit<span class="op">=</span><span class="st">"weeks"</span>, </span></span>
 <span class="r-in"><span>                     exclude<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"DB1$DATE2"</span>, <span class="st">"db3$.*"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in map(., ~.x %&gt;% select(matches(id), where(is.Date)) %&gt;% rename(id = 1)):</span> <span style="color: #00BBBB;">ℹ</span> In index: 1.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> With name: db0.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `rename()`:</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> could not find function "rename"</span>
 <span class="r-in"><span><span class="va">p3</span> <span class="op">=</span> <span class="fu">edc_swimmerplot</span><span class="op">(</span><span class="va">.lookup</span>, group<span class="op">=</span><span class="st">"db0$group"</span>, aes_color<span class="op">=</span><span class="st">"label"</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in map(., ~.x %&gt;% select(matches(id), where(is.Date)) %&gt;% rename(id = 1)):</span> <span style="color: #00BBBB;">ℹ</span> In index: 1.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> With name: db0.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `rename()`:</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> could not find function "rename"</span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span><span class="co">#save the plotly plot as HTML to share it</span></span></span>
 <span class="r-in"><span><span class="fu">htmlwidgets</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/htmlwidgets/man/saveWidget.html" class="external-link">saveWidget</a></span><span class="op">(</span><span class="va">p</span>, <span class="st">"edc_swimmerplot.html"</span>, selfcontained<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
