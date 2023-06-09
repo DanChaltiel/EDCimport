@@ -11,6 +11,8 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 - New option `read_trialmaster(use_cache="write")` to read from the zip again but still update the cache.
 
+- New function `manual_correction()` to safely hard-code a correction while waiting for the TrialMaster database to be updated.
+
 
 #### Bug fixes
 

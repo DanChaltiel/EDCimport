@@ -278,3 +278,87 @@ get_key_cols = function(patient_id = getOption("edc_id", c("ptno", "subjid")),
                         ...){
   lst(patient_id, crfname)
 }
+
+
+#' Manual correction
+#' 
+#' @description
+#'  
+#' When finding wrong or unexpected values in an exported table, it can be useful to temporarily correct them by hard-coding a value. 
+#' However, this manual correction should be undone as soon as the central database is updated with the correction. 
+#' 
+#'  - `manual_correction()` applies a correction in a specific table column location and throws an error if the correction is already in place. This check applies only once per R session so you can source your script without errors.
+#'  - `reset_manual_correction()` resets all checks. For instance, it is called by [read_trialmaster()].
+#'
+#' @param data,col,rows the rows of a column of a dataframe where the error lies
+#' @param wrong the actual wrong value
+#' @param correct the temporary correction value
+#' @param verbose whether to print informations (once)
+#'
+#' @return nothing, used for side effects
+#' @export
+#'
+#' @examples
+#' x = iris
+#' x$Sepal.Length[c(1,3,5)]
+#' manual_correction(x, Sepal.Length, rows=c(1,3,5),
+#'                   wrong=c(5.1, 4.7, 5.0), correct=c(5, 4, 3))
+#' x$Sepal.Length[c(1,3,5)]
+#' manual_correction(x, Sepal.Length, rows=c(1,3,5),
+#'                   wrong=c(5.1, 4.7, 5.0), correct=c(5, 4, 3))
+#'                   
+#' #if the database is corrected, an error is thrown
+#' \dontrun{
+#' reset_manual_correction()
+#' x$Sepal.Length[c(1,3,5)] = c(5, 4, 3)
+#' manual_correction(x, Sepal.Length, rows=c(1,3,5),
+#'                   wrong=c(5.1, 4.7, 5.0), correct=c(5, 4, 3))
+#' }
+manual_correction = function(data, col, rows, wrong, correct, 
+                             verbose=getOption("edc_correction_verbose", TRUE)){
+  col = quo_name(enquo(col))
+  stopifnot(is.data.frame(data))
+  data_name = rlang::caller_arg(data)
+  
+  if(length(rows)!=length(wrong) || length(rows)!=length(correct)){
+    cli_abort("{.arg rows} ({length(rows)}), {.arg wrong} ({length(wrong)}), and {.arg correct} ({length(correct)}) should be the same length.")
+  }
+  if(any(rows>nrow(data))){
+    cli_abort("At least one value of {.arg rows} is larger than the number of rows in {.arg data_name}")
+  }
+    
+  label = glue("{data_name}${col}")
+  collapse = function(..., sep="_") paste(..., collapse=sep)
+  opt_key = glue("edc_correction_done_{data_name}_{col}_{collapse(rows)}")
+  if (isTRUE(getOption(opt_key))) {
+    return(invisible())
+  }
+  
+  val = data[[col]][rows]
+  if(is.null(val)){
+    cli_abort("Could not find column {.val {col}} in data {.val {data_name}}")
+  }
+  
+  if(identical(val, wrong)) {
+    if(isTRUE(verbose)) cli_inform(c("Manual correction of {.val {label}}:", 
+                                     i="Old: {wrong}", 
+                                     i="New: {correct}"))
+    data[[col]][rows] = correct
+    assign(data_name, data, envir=parent.frame())
+    options(setNames(list(TRUE), opt_key))
+  } else if(all(is.na(val)) && !all(is.na(wrong))) {
+    if(isTRUE(verbose)) cli_warn("Manual correction of {.val {label}}: nothing done (NA)")
+    return(invisible(TRUE))
+  } else {
+    cli_abort("{.val {label}} has been corrected, remove manual correction")
+  }
+}
+
+
+#' @name manual_correction
+#' @export
+reset_manual_correction = function(){
+  x=options()
+  x=x[str_starts(names(x), "edc_correction_done_")] %>% map(~NULL)
+  options(x)
+}

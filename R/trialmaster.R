@@ -114,6 +114,7 @@ read_tm_all_xpt = function(directory, ..., format_file="procformat.sas",
                            key_columns=get_key_cols(),
                            datetime_extraction=NULL){
   check_dots_empty()
+  reset_manual_correction()
   clean_names_fun = get_clean_names_fun(clean_names_fun)
   patient_id=key_columns$patient_id
   stopifnot(is.character(patient_id))
