@@ -109,3 +109,13 @@ get_data_name = function(df, crfname=getOption("edc_crfname", "crfname")){
     NA
   }
 }
+
+#' @noRd
+#' @keywords internal
+copy_label_from = function(x, from){
+  from_labs = map_chr(from, ~attr(.x, "label"))
+  mutate(x, across(everything(), ~{
+    attr(.x, "label") = from_labs[dplyr::cur_column()]
+    .x
+  }))
+}

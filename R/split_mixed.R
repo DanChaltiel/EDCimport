@@ -103,9 +103,11 @@ split_mixed_datasets = function(datasets=get_datasets(), id, ...,
       short = dat %>% 
         select(all_of(id), all_of(names(.x[.x==1]))) %>% 
         group_by(across(all_of(id))) %>% 
-        summarise(across(everything(), unify))
+        summarise(across(everything(), unify)) %>% 
+        copy_label_from(dat)
       long = dat %>% 
-        select(all_of(id), all_of(names(.x[.x!=1])))
+        select(all_of(id), all_of(names(.x[.x!=1]))) %>% 
+        copy_label_from(dat)
       
       short_code = glue("{.y}",
                         "select({id}, {a})",
