@@ -19,7 +19,7 @@ If 7zip is not installed or available, use read_tm_all_xpt() instead."><!-- math
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">EDCimport</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0.9003</span>
       </span>
     </div>
 
@@ -81,7 +81,7 @@ If <code>7zip</code> is not installed or available, use <code><a href="read_tm_a
 
 
 <dt>use_cache</dt>
-<dd><p>[<code>logical(1)</code>: ‘TRUE’]<br> if <code>TRUE</code>, read the <code>.rds</code> cache if any or extract the archive and create a cache. If <code>FALSE</code> extract the archive without creating a cache file.</p></dd>
+<dd><p>[<code>mixed(1)</code>: ‘TRUE’]<br> controls the <code>.rds</code> cache. If <code>TRUE</code>, read the cache if any or extract the archive and create a cache. If <code>FALSE</code> extract the archive without creating a cache file. Can also be <code>"read"</code> or <code>"write"</code></p></dd>
 
 
 <dt>clean_names_fun</dt>

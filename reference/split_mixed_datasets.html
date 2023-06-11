@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">EDCimport</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0.9003</span>
       </span>
     </div>
 
@@ -125,41 +125,19 @@
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB;">".lookup"</span>.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> There was 1 short table:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB;">"short"</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> There were 2 mixed (short+long) tables:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB;">"long_pure"</span> and <span style="color: #0000BB;">"long_mixed"</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> → Use `EDCimport::load_list()` on the result to get separated long and short</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>   data.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in map2(.x, vec_index(.x), .f, ...):</span> <span style="color: #00BBBB;">ℹ</span> In index: 1.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> With name: long_pure.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `map_chr()`:</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> In index: 1.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> With name: SUBJID.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error:</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> Result must be length 1, not 0.</span>
 <span class="r-in"><span><span class="fu"><a href="load_list.html">load_list</a></span><span class="op">(</span><span class="va">mixed_data</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'mixed_data' not found</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">long_mixed_short</span><span class="op">)</span> </span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 100 × 3</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    SUBJID crfname                  val3 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>      1 both short and long data B    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      2 both short and long data C    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      3 both short and long data D    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>      4 both short and long data E    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>      5 both short and long data F    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      6 both short and long data G    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>      7 both short and long data H    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>      8 both short and long data I    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      9 both short and long data J    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>     10 both short and long data K    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 90 more rows</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'long_mixed_short' not found</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">long_mixed_long</span><span class="op">)</span> </span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 200 × 3</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    SUBJID   val1  val2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>      1 -<span style="color: #BB0000;">0.242</span>  9.15</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      1  0.572 10.1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      2  0.706  8.67</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>      2  0.205 12.4 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>      3  0.552  7.50</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      3 -<span style="color: #BB0000;">0.569</span> 12.2 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>      4  0.193 10.6 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>      4  0.621  9.42</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      5 -<span style="color: #BB0000;">0.107</span> 10.3 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>      5 -<span style="color: #BB0000;">0.124</span>  9.95</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 190 more rows</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'long_mixed_long' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#alternatively, get the code and only use the datasets you need</span></span></span>
 <span class="r-in"><span><span class="fu">split_mixed_datasets</span><span class="op">(</span><span class="va">tm</span>, id<span class="op">=</span><span class="st">"SUBJID"</span>, output_code<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
@@ -167,61 +145,29 @@
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB;">".lookup"</span>.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> There was 1 short table:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB;">"short"</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> There were 2 mixed (short+long) tables:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB;">"long_pure"</span> and <span style="color: #0000BB;">"long_mixed"</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> → Copy the following code in your script to separate long and short data:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ## `long_pure` (dim=300x4) ---- </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> long_pure_short = long_pure %&gt;% </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   select(SUBJID, crfname) %&gt;% </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   group_by(SUBJID) %&gt;% </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   summarise(across(everything(), unify)) #dim=100x2 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  long_pure_long = long_pure %&gt;% </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   select(SUBJID, val1, val2) #dim=300x3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ## `long_mixed` (dim=200x5) ---- </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> long_mixed_short = long_mixed %&gt;% </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   select(SUBJID, crfname, val3) %&gt;% </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   group_by(SUBJID) %&gt;% </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   summarise(across(everything(), unify)) #dim=100x3 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  long_mixed_long = long_mixed %&gt;% </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   select(SUBJID, val1, val2) #dim=200x3 </span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in map2(.x, vec_index(.x), .f, ...):</span> <span style="color: #00BBBB;">ℹ</span> In index: 1.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> With name: long_pure.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `map_chr()`:</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> In index: 1.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> With name: SUBJID.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error:</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> Result must be length 1, not 0.</span>
 <span class="r-in"><span><span class="va">filename</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"mixed_code"</span>, fileext<span class="op">=</span><span class="st">".R"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">split_mixed_datasets</span><span class="op">(</span><span class="va">tm</span>, id<span class="op">=</span><span class="st">"SUBJID"</span>, output_code<span class="op">=</span><span class="va">filename</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> <span style="color: #0000BB;">"SUBJID"</span> was not found in 1 table:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB;">".lookup"</span>.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> There was 1 short table:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB;">"short"</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> There were 2 mixed (short+long) tables:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB;">"long_pure"</span> and <span style="color: #0000BB;">"long_mixed"</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> → Copy the code from <span style="color: #0000BB;">/tmp/Rtmp73vNkn/mixed_code15c520589838.R</span> in your script to</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>   separate long and short data:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>   `utils::browseURL(/tmp/Rtmp73vNkn/mixed_code15c520589838.R)`</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in map2(.x, vec_index(.x), .f, ...):</span> <span style="color: #00BBBB;">ℹ</span> In index: 1.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> With name: long_pure.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `map_chr()`:</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> In index: 1.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> With name: SUBJID.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error:</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> Result must be length 1, not 0.</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/readLines.html" class="external-link">readLines</a></span><span class="op">(</span><span class="va">filename</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "## `long_pure` (dim=300x4) ---- "                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [2] ""                                                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [3] "long_pure_short = long_pure %&gt;% "                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [4] "  select(SUBJID, crfname) %&gt;% "                      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "  group_by(SUBJID) %&gt;% "                             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [6] "  summarise(across(everything(), unify)) #dim=100x2 "</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] ""                                                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [8] " long_pure_long = long_pure %&gt;% "                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "  select(SUBJID, val1, val2) #dim=300x3"             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [10] ""                                                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [11] ""                                                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [12] "## `long_mixed` (dim=200x5) ---- "                   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [13] ""                                                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [14] "long_mixed_short = long_mixed %&gt;% "                  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [15] "  select(SUBJID, crfname, val3) %&gt;% "                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [16] "  group_by(SUBJID) %&gt;% "                             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "  summarise(across(everything(), unify)) #dim=100x3 "</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [18] ""                                                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [19] " long_mixed_long = long_mixed %&gt;% "                  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [20] "  select(SUBJID, val1, val2) #dim=200x3 "            </span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot open file '/tmp/RtmpBXOm24/mixed_code15f14d748d2e.R': No such file or directory</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in file(con, "r"):</span> cannot open the connection</span>
 </code></pre></div>
     </div>
   </div>
