@@ -55,7 +55,7 @@ clean_cache = function(){
   options(edc_lookup=NULL)
 }
 v=utils::View
-
+condition_overview=crosstable:::condition_overview
 
 snapshot_review_bg = function(...){
   # brw = function(url) .Call("rs_browseURL", url, PACKAGE="(embedding)")
