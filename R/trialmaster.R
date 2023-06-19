@@ -74,7 +74,7 @@ read_trialmaster = function(archive, ..., use_cache=TRUE,
                           datetime_extraction=extract_datetime)
     
     if(isTRUE(use_cache) || use_cache=="write"){
-      if(verbose>0) cli_inform("Writing cache file {.file {archive}}", class="read_tm_zip")
+      if(verbose>0) cli_inform("Writing cache file {.file {cache_file}}", class="read_tm_zip")
       saveRDS(rtn, cache_file)
     }
   }
