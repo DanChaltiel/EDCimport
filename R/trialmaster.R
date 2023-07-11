@@ -141,7 +141,7 @@ read_tm_all_xpt = function(directory, ..., format_file="procformat.sas",
         if(is_error(.x)) return(.x)
         .x %>% 
           as_tibble() %>% 
-          mutate(across(where(is.character), ~na_if(.x, y=""))) %>% 
+          mutate(across(where(~is.character(.x)), ~try(na_if(.x, y="")))) %>% 
           apply_sas_formats(sas_formats) %>%
           clean_names_fun() %>% 
           haven::as_factor()
