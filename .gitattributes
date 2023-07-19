@@ -2,4 +2,4 @@
 * text=auto
 
 # remove files from deployment
-tests/testthat/CRF_DAN_Export* export-ignore
+tests/testthat export-ignore
