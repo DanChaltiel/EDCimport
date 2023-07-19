@@ -1,2 +1,5 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# remove files from deployment
+tests/testthat/CRF_DAN_Export* export-ignore
