@@ -21,7 +21,7 @@
 read_trialmaster = function(archive, ..., use_cache=TRUE, 
                             clean_names_fun=NULL,
                             split_mixed=FALSE,
-                            extend_lookup=FALSE,
+                            extend_lookup=TRUE,
                             key_columns=get_key_cols(),
                             pw=getOption("trialmaster_pw"), 
                             verbose=getOption("edc_verbose", 1)){

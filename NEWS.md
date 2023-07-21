@@ -16,7 +16,7 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 #### Bug fixes
 
-- 
+- `read_trialmaster(extend_lookup=TRUE)` is now the default, as it shoudn't cause any breaking change
 
 # EDCimport 0.3.0 <sub><sup>2023/05/19</sup></sub>
 
@@ -27,7 +27,7 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 - New features in `read_trialmaster()`:
   - `clean_names_fun=some_fun` will clean all names of all tables. For instance, `clean_names_fun=janitor::clean_names()` will turn default SAS uppercase column names into valid R snake-case column names.
   - `split_mixed=TRUE` will split tables that contain both long and short data regarding patient ID into one long table and one short table. See `?split_mixed_datasets()` for details.
-  - `extend_lookup =TRUE` will improve the lookup table with additional information. See `?extend_lookup()` for details.
+  - `extend_lookup=TRUE` will improve the lookup table with additional information. See `?extend_lookup()` for details.
   - `key_columns=get_key_cols()` is where you can change the default column names for patient ID and CRF name (used in other new features).
   
 - Standalone functions `extend_lookup()` and `split_mixed_datasets()`.
