@@ -326,15 +326,15 @@ manual_correction = function(data, col, rows, wrong, correct,
   if(any(rows>nrow(data))){
     cli_abort("At least one value of {.arg rows} is larger than the number of rows in {.arg data_name}")
   }
-    
+  
+  val = data[[col]][rows]
   label = glue("{data_name}${col}")
   collapse = function(..., sep="_") paste(..., collapse=sep)
   opt_key = glue("edc_correction_done_{data_name}_{col}_{collapse(rows)}")
-  if (isTRUE(getOption(opt_key))) {
+  if(identical(val, correct) && isTRUE(getOption(opt_key))) {
     return(invisible())
   }
   
-  val = data[[col]][rows]
   if(is.null(val)){
     cli_abort("Could not find column {.val {col}} in data {.val {data_name}}")
   }
