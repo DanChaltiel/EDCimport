@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">EDCimport</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0.9008</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0.9009</span>
       </span>
     </div>
 
@@ -58,7 +58,8 @@
 <div class="section level5">
 <h5 id="bug-fixes-0-4-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-4-0"></a></h5>
 <ul><li>
-</li></ul></div>
+<code>read_trialmaster(extend_lookup=TRUE)</code> is now the default, as it shoudn’t cause any breaking change</li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.3.0" id="edcimport-030-20230519">EDCimport 0.3.0 <sub><sup>2023/05/19</sup></sub><small>2023-05-19</small><a class="anchor" aria-label="anchor" href="#edcimport-030-20230519"></a></h2>
@@ -72,7 +73,7 @@
 <li>
 <code>split_mixed=TRUE</code> will split tables that contain both long and short data regarding patient ID into one long table and one short table. See <code>?split_mixed_datasets()</code> for details.</li>
 <li>
-<code>extend_lookup =TRUE</code> will improve the lookup table with additional information. See <code>?extend_lookup()</code> for details.</li>
+<code>extend_lookup=TRUE</code> will improve the lookup table with additional information. See <code>?extend_lookup()</code> for details.</li>
 <li>
 <code>key_columns=get_key_cols()</code> is where you can change the default column names for patient ID and CRF name (used in other new features).</li>
 </ul></li>
