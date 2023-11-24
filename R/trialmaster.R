@@ -71,7 +71,8 @@ read_trialmaster = function(archive, ..., use_cache=FALSE,
                           split_mixed=split_mixed,
                           extend_lookup=extend_lookup,
                           key_columns=key_columns, 
-                          datetime_extraction=extract_datetime)
+                          datetime_extraction=extract_datetime, 
+                          verbose=verbose)
     
     if(isTRUE(use_cache) || use_cache=="write"){
       if(verbose>0) cli_inform("Writing cache file {.file {cache_file}}", class="read_tm_zip")
@@ -112,11 +113,12 @@ read_tm_all_xpt = function(directory, ..., format_file="procformat.sas",
                            split_mixed=FALSE,
                            extend_lookup=TRUE,
                            key_columns=get_key_cols(),
-                           datetime_extraction=NULL){
+                           datetime_extraction=NULL, 
+                           verbose=getOption("edc_verbose", 1)){
   check_dots_empty()
   reset_manual_correction()
   clean_names_fun = get_clean_names_fun(clean_names_fun)
-  patient_id=key_columns$patient_id
+  patient_id = key_columns$patient_id
   stopifnot(is.character(patient_id))
   
   datasets = dir(directory, pattern = "\\.xpt$", full.names=TRUE)
@@ -148,6 +150,15 @@ read_tm_all_xpt = function(directory, ..., format_file="procformat.sas",
       })
   }
   
+  .lookup = get_lookup(rtn)
+  bad_utf8 = check_invalid_utf8(.lookup, warn=verbose>0)
+  bad_utf8 %>%
+    purrr::pwalk(function(...) {
+      x = tibble(...)
+      attr(rtn[[x$dataset]][[x$names]], "label") <<- x$valid_labels
+    })
+  .lookup = get_lookup(rtn)
+  
   if(isTRUE(split_mixed)){
     if(!any(id_found)) cli_warn("Patient ID column {.val {patient_id}} was not found in any dataset. Is it possible that you made a spelling mistake?")
     mixed = split_mixed_datasets(patient_id, datasets=rtn, verbose=FALSE)
@@ -163,11 +174,10 @@ read_tm_all_xpt = function(directory, ..., format_file="procformat.sas",
              class="edc_tm_problem_warning")
   }
   
-  
   rtn$date_extraction = format_ymd(datetime_extraction)
   rtn$datetime_extraction = datetime_extraction
-  rtn$.lookup = get_lookup(rtn)
-  
+  rtn$.lookup = .lookup
+    
   if(isTRUE(extend_lookup)){
     if(!any(id_found)) cli_warn("Patient ID column {.val {patient_id}} was not found in any dataset. Is it possible that you made a spelling mistake?")
     rtn$.lookup = extend_lookup(rtn$.lookup, datasets=rtn, 

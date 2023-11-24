@@ -3,6 +3,7 @@
 
 EDCimport is a package designed to easily import data from EDC software TrialMaster and Macro. Browse code at <https://github.com/DanChaltiel/EDCimport>.
 
+
 # EDCimport 0.4.0 <sub><sup>2023/xx/xx</sup></sub>
 
 #### New features
@@ -12,6 +13,8 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 - New option `read_trialmaster(use_cache="write")` to read from the zip again but still update the cache.
 
 - New function `manual_correction()` to safely hard-code a correction while waiting for the TrialMaster database to be updated.
+
+- Non-UTF8 characters in labels are now identified and corrected during reading (#5).
 
 
 #### Bug fixes

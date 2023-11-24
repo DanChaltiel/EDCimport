@@ -85,6 +85,30 @@ is_invalid_utf8 = function(x){
   !is.na(x) & is.na(iconv(x, "UTF-8", "UTF-8"))
 }
 
+#' @noRd
+#' @keywords internal
+check_invalid_utf8 = function(lookup=.lookup, warn=FALSE){
+  x = lookup %>% 
+    arrange(desc(nrow)) %>% 
+    unnest(c(names, labels)) %>% 
+    mutate(
+      invalid=is_invalid_utf8(labels)
+    ) %>% 
+    filter(invalid) %>% 
+    mutate(
+      dataset, names, labels, 
+      valid_labels=iconv(labels, to="UTF-8"),
+      .keep = "none"
+    )
+  
+  bad_utf8 = glue("{x$dataset}${x$names} ({x$valid_labels}) ") %>% set_names("i")
+  if(nrow(x)>0 && isTRUE(warn)){
+    cli_warn(c("Found {length(bad_utf8)} invalid UTF-8 label{?s}:", bad_utf8))
+  }
+  
+  x
+}
+
 
 #' any_of() with case sensitivity
 #' @noRd
