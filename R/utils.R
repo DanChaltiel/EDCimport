@@ -87,6 +87,14 @@ is_invalid_utf8 = function(x){
 
 #' @noRd
 #' @keywords internal
+#' @source vctrs::`%0%`
+#' @seealso https://github.com/r-lib/rlang/issues/1583
+`%0%` = function (x, y) {
+  if(length(x) == 0L) y else x
+}
+
+#' @noRd
+#' @keywords internal
 check_invalid_utf8 = function(lookup=.lookup, warn=FALSE){
   x = lookup %>% 
     arrange(desc(nrow)) %>% 

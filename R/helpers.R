@@ -221,7 +221,7 @@ save_list = function(x, filename){
 #' .lookup = extend_lookup(.lookup)
 #' .lookup
 extend_lookup = function(lookup, ..., 
-                         key_columns = get_key_cols(),
+                         key_columns = get_key_cols(lookup),
                          datasets = get_datasets(lookup)){
   check_dots_empty()
   #case-insensitive column selection
@@ -247,6 +247,7 @@ extend_lookup = function(lookup, ...,
 
 
 
+
 #' Retrieve the datasets
 #' 
 #' Get the datasets from the lookup table as a list of data.frames.
@@ -266,18 +267,47 @@ get_datasets = function(lookup=getOption("edc_lookup", NULL), envir=parent.frame
 
 
 #' Important column names
+#' 
+#' Retreive names of `patient_id` (usually "SUBJID" and "PATNO") and `crfname` (usually "CRFNAME") from the actual names of the datasets
 #'
-#' @param patient_id the name of the columns containing the patient ID
-#' @param crfname the name of the columns containing the name of the CRF page
-#' @param ... unused
+#' @param lookup the lookup table
 #'
+#' @return a list of characters
+#' 
 #' @export
+#' @importFrom dplyr mutate select
+#' @importFrom purrr map map_chr
 #' @importFrom tibble lst
-get_key_cols = function(patient_id = getOption("edc_id", c("ptno", "subjid")), 
-                        crfname = getOption("edc_crfname", "crfname"), 
-                        ...){
-  lst(patient_id, crfname)
+get_key_cols = function(lookup=getOption("edc_lookup", NULL)){
+  patient_id = getOption("edc_id", c("PTNO", "SUBJID"))
+  crfname = getOption("edc_crfname", "CRFNAME")
+  if(is.null(lookup)) return(lst(patient_id, crfname))
+  
+  rtn = lookup %>% 
+    select(dataset, names) %>% 
+    mutate(
+      patient_id=map_chr(names, ~.x[tolower(.x) %in% tolower(patient_id)] %0% NA), 
+      crfname=map_chr(names, ~.x[tolower(.x) %in% tolower(crfname)] %0% NA)
+    )
+  if(any(is.na(rtn$patient_id))){
+    cli_warn(c("Default patient identificator could not be found in some datasets", 
+               i='Dataset{?s} without identificator: {rtn[is.na(rtn$patient_id), "dataset"]}', 
+               i='Use {.run options(edc_id=c("my_id_col", "my_other_id_col"))}'), 
+             class="edcimport_get_key_cols_missing_id")
+  }
+  if(any(is.na(rtn$crfname))){
+    cli_warn(c("Default CRF form name could not be found in some datasets", 
+               i='Dataset{?s} without identificator: {rtn[is.na(rtn$crfname), "dataset"]}', 
+               i='Use {.run options(edc_crfname=c("my_crfname_col", "my_other_crfname_col"))}'), 
+             class="edcimport_get_key_cols_missing_crfname")
+  }
+  
+  rtn %>% 
+    select(patient_id, crfname) %>% 
+    map(~unique(na.omit(.x)), na.rm=TRUE)
 }
+
+
 
 
 #' Manual correction
