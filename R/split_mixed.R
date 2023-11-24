@@ -5,7 +5,7 @@
 #'
 #' @param datasets the datasets to consider. Use the helper [get_datasets()] if needed.
 #' @param id the patient identifier, probably "SUBJID". Should be shared by all datasets.
-#' @param ignore_cols columns to ignore when considering a table as long. default to 
+#' @param ignore_cols columns to ignore when considering a table as long. Default to `getOption("edc_crfname", "CRFNAME")`
 #' @param output_code whether to print the code to explicitly write. Can also be a file path.
 #' @param verbose whether to print informations about the process.
 #' @param ... not used
@@ -37,11 +37,12 @@
 #' @importFrom rlang check_dots_empty
 #' @importFrom tibble lst
 #' @importFrom tidyselect all_of everything
-split_mixed_datasets = function(datasets=get_datasets(), id, ..., 
+split_mixed_datasets = function(datasets=get_datasets(), id=get_key_cols(), ..., 
                                 ignore_cols=getOption("edc_crfname", "CRFNAME"), 
                                 output_code=FALSE,
                                 verbose=TRUE){
   check_dots_empty()
+  if(is.list(id)) id = id$patient_id
   datasets = datasets %>% keep(~is.data.frame(.x))
   dataset_mean_nval = datasets %>% 
     imap(~{

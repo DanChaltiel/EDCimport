@@ -14,6 +14,8 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 - New function `manual_correction()` to safely hard-code a correction while waiting for the TrialMaster database to be updated.
 
+- You can now use the syntax `read_trialmaster(split_mixed=c("col1", "col2"))` to split only the datasets you need to (#10).
+
 - Non-UTF8 characters in labels are now identified and corrected during reading (#5).
 
 
