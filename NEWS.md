@@ -18,6 +18,11 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 - `read_trialmaster(extend_lookup=TRUE)` is now the default, as it shoudn't cause any breaking change
 
+#### Modifications
+
+- New default `read_trialmaster(use_cache=FALSE)`, as caching is not that useful after all so you should opt-in rather than opt-out.
+
+
 # EDCimport 0.3.0 <sub><sup>2023/05/19</sup></sub>
 
 #### New features
