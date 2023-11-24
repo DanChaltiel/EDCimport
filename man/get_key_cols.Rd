@@ -4,19 +4,14 @@
 \alias{get_key_cols}
 \title{Important column names}
 \usage{
-get_key_cols(
-  patient_id = getOption("edc_id", c("ptno", "subjid")),
-  crfname = getOption("edc_crfname", "crfname"),
-  ...
-)
+get_key_cols(lookup = getOption("edc_lookup", NULL))
 }
 \arguments{
-\item{patient_id}{the name of the columns containing the patient ID}
-
-\item{crfname}{the name of the columns containing the name of the CRF page}
-
-\item{...}{unused}
+\item{lookup}{the lookup table}
+}
+\value{
+a list of characters
 }
 \description{
-Important column names
+Retreive names of \code{patient_id} (usually "SUBJID" and "PATNO") and \code{crfname} (usually "CRFNAME") from the actual names of the datasets
 }

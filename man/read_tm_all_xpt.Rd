@@ -11,8 +11,9 @@ read_tm_all_xpt(
   clean_names_fun = NULL,
   split_mixed = FALSE,
   extend_lookup = TRUE,
-  key_columns = get_key_cols(),
-  datetime_extraction = NULL
+  datetime_extraction = NULL,
+  verbose = getOption("edc_verbose", 1),
+  key_columns = "deprecated"
 )
 }
 \arguments{
@@ -28,9 +29,9 @@ read_tm_all_xpt(
 
 \item{extend_lookup}{[\code{character(1): FALSE}]\cr whether to enrich the lookup table. See \link{extend_lookup}.}
 
-\item{key_columns}{[\code{list}]\cr the result of \code{\link[=get_key_cols]{get_key_cols()}}, containing the column name used for patient ID and CRF name. Important for \code{split_mixed} and \code{extend_lookup}.}
-
 \item{datetime_extraction}{[\code{POSIXt(1)}]\cr the datetime of the data extraction. Default to the most common date of last modification in \code{directory}.}
+
+\item{key_columns}{deprecated}
 }
 \value{
 a list containing one dataframe for each \code{.xpt} file in the folder, the extraction date (\code{datetime_extraction}), and a summary of all imported tables (\code{.lookup}). If not set yet, option \code{edc_lookup} is automatically set to \code{.lookup}.

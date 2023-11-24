@@ -7,7 +7,7 @@
 extend_lookup(
   lookup,
   ...,
-  key_columns = get_key_cols(),
+  key_columns = get_key_cols(lookup),
   datasets = get_datasets(lookup)
 )
 }
@@ -16,7 +16,7 @@ extend_lookup(
 
 \item{...}{unused}
 
-\item{key_columns}{[\code{list}]\cr the result of \code{\link[=get_key_cols]{get_key_cols()}}, containing the column name used for patient ID and CRF name. Important for \code{split_mixed} and \code{extend_lookup}.}
+\item{key_columns}{deprecated}
 
 \item{datasets}{[\code{data.frame(n)}]\cr for experts only}
 }

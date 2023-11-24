@@ -6,7 +6,7 @@
 \usage{
 split_mixed_datasets(
   datasets = get_datasets(),
-  id,
+  id = get_key_cols(),
   ...,
   ignore_cols = getOption("edc_crfname", "CRFNAME"),
   output_code = FALSE,
@@ -20,7 +20,7 @@ split_mixed_datasets(
 
 \item{...}{not used}
 
-\item{ignore_cols}{columns to ignore when considering a table as long. default to}
+\item{ignore_cols}{columns to ignore when considering a table as long. Default to \code{getOption("edc_crfname", "CRFNAME")}}
 
 \item{output_code}{whether to print the code to explicitly write. Can also be a file path.}
 
