@@ -9,10 +9,12 @@
 #' @noRd
 #' @keywords internal
 #' @importFrom stringr str_replace_all
-file.path2 = function(...){
+file.path2 = function(..., ext=NULL){
   #TODO utilise le package fs?
   fsep = .Platform$file.sep
-  file.path(...) %>% str_replace_all(paste0(fsep, "+"), fsep)
+  rtn = file.path(...) %>% str_replace_all(paste0(fsep, "+"), fsep)
+  if(!is.null(ext)) rtn = paste0(rtn, ext)
+  rtn
 }
 
 

@@ -22,6 +22,7 @@ options(
 library(rlang, warn.conflicts=FALSE)
 
 options(trialmaster_pw="0")
+options(edc="TRNO")
 # getOption("trialmaster_pw")
 
 # cachename="trialmaster_export_2022-08-25 15h16.rds"
