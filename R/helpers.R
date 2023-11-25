@@ -1,51 +1,9 @@
 
 
-#' Generate a lookup table
-#'
-#' @param data_list a list containing at least 1 dataframe
-#'
-#' @return a dataframe summarizing column names and labels 
-#' @export
-#'
-#' @examples
-#' tl = list(r=crosstable::iris2, x=mtcars) %>% get_lookup()
-#' tl
-#' library(tidyr)
-#' tl %>% unnest(everything()) %>% unnest(everything())
-#' @importFrom cli cli_abort
-#' @importFrom dplyr arrange mutate
-#' @importFrom labelled var_label
-#' @importFrom purrr map map_dbl
-#' @importFrom rlang is_named
-#' @importFrom tibble tibble
-get_lookup = function(data_list){
-  if(!is.list(data_list)){
-    cli_abort(c("{.code data_list} should be a list.", 
-                i="{.code class(data_list)}: {.cls {class(data_list)}}"), 
-              class="edc_lookup_not_list")
-  }
-  data_list_n = format(names(data_list))
-  data_list[".lookup"] = data_list["date_extraction"] = data_list["datetime_extraction"] = NULL
-  if(length(data_list)==0){
-    cli_abort(c("{.code data_list} is empty or contains only non-dataframe elements.", 
-                i="{.code names(data_list)}: {.val {data_list_n}}"), 
-              class="edc_lookup_empty")
-  }
-  if(!is_named(data_list)){
-    cli_abort("Datasets in {.code data_list} should have a name.", 
-              class="edc_lookup_unnamed")
-  }
-  f = function(.x, expr, default) if(is.data.frame(.x)) expr else default
-  
-  tibble(dataset=tolower(names(data_list))) %>% 
-    mutate(
-      nrow=map_dbl(data_list, ~f(.x, nrow(.x), 0)), 
-      ncol=map_dbl(data_list, ~f(.x, ncol(.x), 0)), 
-      names=map(data_list, ~f(.x, names(.x), NULL)), 
-      labels=map(data_list, ~f(.x, var_label(.x, unlist=TRUE), NULL)), 
-    ) %>% 
-    arrange(nrow)
-}
+
+# User helpers --------------------------------------------------------------------------------
+
+
 
 #' Find a keyword
 #' 
@@ -146,6 +104,134 @@ load_list = function(x, env=parent.frame(), remove=TRUE){
   list2env(x, env)
   
   if(remove) remove(list=caller_arg(x), envir=env)
+}
+
+
+#' Manual correction
+#' 
+#' @description
+#'  
+#' When finding wrong or unexpected values in an exported table, it can be useful to temporarily correct them by hard-coding a value. 
+#' However, this manual correction should be undone as soon as the central database is updated with the correction. 
+#' 
+#'  - `manual_correction()` applies a correction in a specific table column location and throws an error if the correction is already in place. This check applies only once per R session so you can source your script without errors.
+#'  - `reset_manual_correction()` resets all checks. For instance, it is called by [read_trialmaster()].
+#'
+#' @param data,col,rows the rows of a column of a dataframe where the error lies
+#' @param wrong the actual wrong value
+#' @param correct the temporary correction value
+#' @param verbose whether to print informations (once)
+#'
+#' @return nothing, used for side effects
+#' @export
+#'
+#' @examples
+#' x = iris
+#' x$Sepal.Length[c(1,3,5)]
+#' manual_correction(x, Sepal.Length, rows=c(1,3,5),
+#'                   wrong=c(5.1, 4.7, 5.0), correct=c(5, 4, 3))
+#' x$Sepal.Length[c(1,3,5)]
+#' manual_correction(x, Sepal.Length, rows=c(1,3,5),
+#'                   wrong=c(5.1, 4.7, 5.0), correct=c(5, 4, 3))
+#'                   
+#' #if the database is corrected, an error is thrown
+#' \dontrun{
+#' reset_manual_correction()
+#' x$Sepal.Length[c(1,3,5)] = c(5, 4, 3)
+#' manual_correction(x, Sepal.Length, rows=c(1,3,5),
+#'                   wrong=c(5.1, 4.7, 5.0), correct=c(5, 4, 3))
+#' }
+manual_correction = function(data, col, rows, wrong, correct, 
+                             verbose=getOption("edc_correction_verbose", TRUE)){
+  col = quo_name(enquo(col))
+  stopifnot(is.data.frame(data))
+  data_name = rlang::caller_arg(data)
+  
+  if(length(rows)!=length(wrong) || length(rows)!=length(correct)){
+    cli_abort("{.arg rows} ({length(rows)}), {.arg wrong} ({length(wrong)}), and {.arg correct} ({length(correct)}) should be the same length.")
+  }
+  if(any(rows>nrow(data))){
+    cli_abort("At least one value of {.arg rows} is larger than the number of rows in {.arg data_name}")
+  }
+  
+  val = data[[col]][rows]
+  label = glue("{data_name}${col}")
+  collapse = function(..., sep="_") paste(..., collapse=sep)
+  opt_key = glue("edc_correction_done_{data_name}_{col}_{collapse(rows)}")
+  if(identical(val, correct) && isTRUE(getOption(opt_key))) {
+    return(invisible())
+  }
+  
+  if(is.null(val)){
+    cli_abort("Could not find column {.val {col}} in data {.val {data_name}}")
+  }
+  
+  if(identical(val, wrong)) {
+    if(isTRUE(verbose)) cli_inform(c("Manual correction of {.val {label}}:", 
+                                     i="Old: {wrong}", 
+                                     i="New: {correct}"))
+    data[[col]][rows] = correct
+    assign(data_name, data, envir=parent.frame())
+    options(setNames(list(TRUE), opt_key))
+  } else if(all(is.na(val)) && !all(is.na(wrong))) {
+    if(isTRUE(verbose)) cli_warn("Manual correction of {.val {label}}: nothing done (NA)")
+    return(invisible(TRUE))
+  } else {
+    cli_abort("{.val {label}} has been corrected, remove manual correction")
+  }
+}
+
+
+
+# Internal helpers ----------------------------------------------------------------------------
+
+
+
+#' Generate a lookup table
+#'
+#' @param data_list a list containing at least 1 dataframe
+#'
+#' @return a dataframe summarizing column names and labels 
+#' @export
+#'
+#' @examples
+#' tl = list(r=crosstable::iris2, x=mtcars) %>% get_lookup()
+#' tl
+#' library(tidyr)
+#' tl %>% unnest(everything()) %>% unnest(everything())
+#' @importFrom cli cli_abort
+#' @importFrom dplyr arrange mutate
+#' @importFrom labelled var_label
+#' @importFrom purrr map map_dbl
+#' @importFrom rlang is_named
+#' @importFrom tibble tibble
+get_lookup = function(data_list){
+  if(!is.list(data_list)){
+    cli_abort(c("{.code data_list} should be a list.", 
+                i="{.code class(data_list)}: {.cls {class(data_list)}}"), 
+              class="edc_lookup_not_list")
+  }
+  data_list_n = format(names(data_list))
+  data_list[".lookup"] = data_list["date_extraction"] = data_list["datetime_extraction"] = NULL
+  if(length(data_list)==0){
+    cli_abort(c("{.code data_list} is empty or contains only non-dataframe elements.", 
+                i="{.code names(data_list)}: {.val {data_list_n}}"), 
+              class="edc_lookup_empty")
+  }
+  if(!is_named(data_list)){
+    cli_abort("Datasets in {.code data_list} should have a name.", 
+              class="edc_lookup_unnamed")
+  }
+  f = function(.x, expr, default) if(is.data.frame(.x)) expr else default
+  
+  tibble(dataset=tolower(names(data_list))) %>% 
+    mutate(
+      nrow=map_dbl(data_list, ~f(.x, nrow(.x), 0)), 
+      ncol=map_dbl(data_list, ~f(.x, ncol(.x), 0)), 
+      names=map(data_list, ~f(.x, names(.x), NULL)), 
+      labels=map(data_list, ~f(.x, var_label(.x, unlist=TRUE), NULL)), 
+    ) %>% 
+    arrange(nrow)
 }
 
 #' Load a `.RData` file as a list
@@ -309,80 +395,6 @@ get_key_cols = function(lookup=getOption("edc_lookup", NULL)){
 
 
 
-
-#' Manual correction
-#' 
-#' @description
-#'  
-#' When finding wrong or unexpected values in an exported table, it can be useful to temporarily correct them by hard-coding a value. 
-#' However, this manual correction should be undone as soon as the central database is updated with the correction. 
-#' 
-#'  - `manual_correction()` applies a correction in a specific table column location and throws an error if the correction is already in place. This check applies only once per R session so you can source your script without errors.
-#'  - `reset_manual_correction()` resets all checks. For instance, it is called by [read_trialmaster()].
-#'
-#' @param data,col,rows the rows of a column of a dataframe where the error lies
-#' @param wrong the actual wrong value
-#' @param correct the temporary correction value
-#' @param verbose whether to print informations (once)
-#'
-#' @return nothing, used for side effects
-#' @export
-#'
-#' @examples
-#' x = iris
-#' x$Sepal.Length[c(1,3,5)]
-#' manual_correction(x, Sepal.Length, rows=c(1,3,5),
-#'                   wrong=c(5.1, 4.7, 5.0), correct=c(5, 4, 3))
-#' x$Sepal.Length[c(1,3,5)]
-#' manual_correction(x, Sepal.Length, rows=c(1,3,5),
-#'                   wrong=c(5.1, 4.7, 5.0), correct=c(5, 4, 3))
-#'                   
-#' #if the database is corrected, an error is thrown
-#' \dontrun{
-#' reset_manual_correction()
-#' x$Sepal.Length[c(1,3,5)] = c(5, 4, 3)
-#' manual_correction(x, Sepal.Length, rows=c(1,3,5),
-#'                   wrong=c(5.1, 4.7, 5.0), correct=c(5, 4, 3))
-#' }
-manual_correction = function(data, col, rows, wrong, correct, 
-                             verbose=getOption("edc_correction_verbose", TRUE)){
-  col = quo_name(enquo(col))
-  stopifnot(is.data.frame(data))
-  data_name = rlang::caller_arg(data)
-  
-  if(length(rows)!=length(wrong) || length(rows)!=length(correct)){
-    cli_abort("{.arg rows} ({length(rows)}), {.arg wrong} ({length(wrong)}), and {.arg correct} ({length(correct)}) should be the same length.")
-  }
-  if(any(rows>nrow(data))){
-    cli_abort("At least one value of {.arg rows} is larger than the number of rows in {.arg data_name}")
-  }
-  
-  val = data[[col]][rows]
-  label = glue("{data_name}${col}")
-  collapse = function(..., sep="_") paste(..., collapse=sep)
-  opt_key = glue("edc_correction_done_{data_name}_{col}_{collapse(rows)}")
-  if(identical(val, correct) && isTRUE(getOption(opt_key))) {
-    return(invisible())
-  }
-  
-  if(is.null(val)){
-    cli_abort("Could not find column {.val {col}} in data {.val {data_name}}")
-  }
-  
-  if(identical(val, wrong)) {
-    if(isTRUE(verbose)) cli_inform(c("Manual correction of {.val {label}}:", 
-                                     i="Old: {wrong}", 
-                                     i="New: {correct}"))
-    data[[col]][rows] = correct
-    assign(data_name, data, envir=parent.frame())
-    options(setNames(list(TRUE), opt_key))
-  } else if(all(is.na(val)) && !all(is.na(wrong))) {
-    if(isTRUE(verbose)) cli_warn("Manual correction of {.val {label}}: nothing done (NA)")
-    return(invisible(TRUE))
-  } else {
-    cli_abort("{.val {label}} has been corrected, remove manual correction")
-  }
-}
 
 
 #' @name manual_correction
