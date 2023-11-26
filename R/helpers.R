@@ -183,6 +183,37 @@ manual_correction = function(data, col, rows, wrong, correct,
 
 
 
+#' Check completion of subject ID column
+#' 
+#' Compare a subject ID vector to the study's reference subject ID (usually something like `enrolres$subjid`).
+#'
+#' @param x the subject ID column to check
+#' @param ref the reference for subject ID. Should usually be set through `options(edc_subjid_ref=xxx)`. See example.
+#' @param lookup the lookup table, 
+#'
+#' @return nothing, called for warnings
+#' @export
+#'
+#' @examples
+#' tm = read_trialmaster_example()
+#' load_list(tm)
+#' options(edc_subjid_ref=db0$SUBJID)
+#' #usually, you set something like:
+#' #options(edc_subjid_ref=enrolres$subjid)
+#' check_subjid(db1$SUBJID)
+#' check_subjid(db1$SUBJID %>% setdiff(2))
+#' check_subjid(c(db1$SUBJID, 99))
+check_subjid = function(x, ref=getOption("edc_subjid_ref")){
+  if(is.null(ref)){
+    cli_abort("{.arg ref} cannot be NULL in {.fun check_subjid}. See {.help EDCimport::check_subjid} to see how to set it.")
+  }
+  m = setdiff(ref, x) %>% sort()
+  if(length(m)>0) cli_warn("Missing subject ID in {.arg {rlang::caller_arg(x)}}: {.val {m}}")
+  m = setdiff(x, ref) %>% sort()
+  if(length(m)>0) cli_warn("Additionnal subject ID {.arg {rlang::caller_arg(x)}}: {.val {m}}")
+  invisible(NULL)
+}
+
 # Internal helpers ----------------------------------------------------------------------------
 
 

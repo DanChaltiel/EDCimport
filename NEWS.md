@@ -8,24 +8,31 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 #### New features
 
+- New function `check_subjid()` to check if a vector is not missing some patients (#8). for instance: 
+```r
+options(edc_subjid_ref=enrolres$subjid)
+check_subjid(treatment$subjid)
+check_subjid(ae$subjid)
+```
+
+- New function `manual_correction()` to safely hard-code a correction while waiting for the TrialMaster database to be updated.
+
 - New argument `edc_swimmerplot(id_lim)` to subset the swimmer plot to some patients only.
 
 - New option `read_trialmaster(use_cache="write")` to read from the zip again but still update the cache.
 
-- New function `manual_correction()` to safely hard-code a correction while waiting for the TrialMaster database to be updated.
-
 - You can now use the syntax `read_trialmaster(split_mixed=c("col1", "col2"))` to split only the datasets you need to (#10).
-
-- Non-UTF8 characters in labels are now identified and corrected during reading (#5).
 
 
 #### Bug fixes
 
-- `read_trialmaster(extend_lookup=TRUE)` is now the default, as it shoudn't cause any breaking change
+- Non-UTF8 characters in labels are now identified and corrected during reading (#5).
 
-#### Modifications
+#### Minor breaking changes
 
-- New default `read_trialmaster(use_cache=FALSE)`, as caching is not that useful after all so you should opt-in rather than opt-out.
+- `read_trialmaster(use_cache=FALSE)` is now the default. Caching is not that useful after all so you should opt-in rather than opt-out.
+
+- `read_trialmaster(extend_lookup=TRUE)` is now the default.
 
 
 # EDCimport 0.3.0 <sub><sup>2023/05/19</sup></sub>
