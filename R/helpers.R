@@ -234,6 +234,17 @@ get_lookup = function(data_list){
     arrange(nrow)
 }
 
+
+#' @rdname get_lookup
+set_lookup = function(lookup){
+  if(!is.null(getOption("edc_lookup", NULL))){
+    cli_warn("Option {.val edc_lookup} has been overwritten.", 
+             class="edc_lookup_overwrite_warn")
+  }
+  options(edc_lookup=lookup)
+}
+
+
 #' Load a `.RData` file as a list
 #' 
 #' Instead of loading a `.RData` file in the global environment, extract every object into a list.

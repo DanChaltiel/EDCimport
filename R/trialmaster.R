@@ -47,11 +47,7 @@ read_trialmaster = function(archive, ..., use_cache=FALSE,
   if(file.exists(cache_file) && (isTRUE(use_cache) || use_cache=="read")){
     if(verbose>0) cli_inform("Reading cache: {.file {cache_file}}", class="read_tm_cache")
     rtn = readRDS(cache_file)
-    options(edc_lookup=rtn$.lookup)
-    if(!is.null(getOption("edc_lookup", NULL))){
-      cli_warn("Option {.val edc_lookup} has been overwritten.", 
-               class="edc_lookup_overwrite_warn")
-    }
+    set_lookup(rtn$.lookup)
   } else {
     if(verbose>0) cli_inform("Unzipping {.file {archive}}", class="read_tm_zip")
     temp_folder = file.path2(tempdir(), str_remove(basename(archive), "\\.zip"))
@@ -201,11 +197,8 @@ read_tm_all_xpt = function(directory, ..., format_file="procformat.sas",
     rtn$.lookup = extend_lookup(rtn$.lookup, datasets=rtn)
   }
   
-  if(!is.null(getOption("edc_lookup", NULL))){
-    cli_warn("Option {.val edc_lookup} has been overwritten.", 
-             class="edc_lookup_overwrite_warn")
-  }
-  options(edc_lookup=rtn$.lookup)
+  set_lookup(rtn$.lookup)
+  
   rtn
 }
 
