@@ -4,11 +4,14 @@
 \alias{data_example}
 \alias{edc_example_mixed}
 \alias{edc_example_plot}
+\alias{read_trialmaster_example}
 \title{Example databases}
 \usage{
 edc_example_mixed(N = 100)
 
 edc_example_plot(N = 50, seed = 42)
+
+read_trialmaster_example(N = 50, seed = 42)
 }
 \arguments{
 \item{N}{the number of patients}
@@ -19,5 +22,10 @@ edc_example_plot(N = 50, seed = 42)
 a list of tables
 }
 \description{
-List of tables used in EDCimport examples.
+List of tables used in EDCimport examples:
+\itemize{
+\item \code{read_trialmaster_example()} can be used as the result of \code{\link[=read_trialmaster]{read_trialmaster()}}
+\item \code{edc_example_plot()} can be used to test \code{\link[=edc_swimmerplot]{edc_swimmerplot()}}
+\item \code{edc_example_mixed()} can be used to test \code{\link[=split_mixed_datasets]{split_mixed_datasets()}}
+}
 }
