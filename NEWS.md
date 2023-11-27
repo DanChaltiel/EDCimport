@@ -37,7 +37,7 @@ tibble(subjid=c(1:10, 1)) %>% assert_no_duplicate() %>% nrow()
 
 #### Minor breaking changes
 
-- `read_trialmaster(use_cache=FALSE)` is now the default. Caching is not that useful after all so you should opt-in rather than opt-out.
+- `read_trialmaster(use_cache="write")` is now the default. Caching is not that useful after all so you should opt-in rather than opt-out.
 
 - `read_trialmaster(extend_lookup=TRUE)` is now the default.
 

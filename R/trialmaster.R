@@ -18,8 +18,8 @@
 #' @importFrom glue glue
 #' @importFrom rlang check_dots_empty
 #' @importFrom stringr str_remove
-read_trialmaster = function(archive, ..., use_cache=FALSE, 
 #' @importFrom utils object.size
+read_trialmaster = function(archive, ..., use_cache="write", 
                             clean_names_fun=NULL,
                             split_mixed=FALSE,
                             extend_lookup=TRUE,
