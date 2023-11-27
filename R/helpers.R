@@ -208,9 +208,11 @@ check_subjid = function(x, ref=getOption("edc_subjid_ref")){
     cli_abort("{.arg ref} cannot be NULL in {.fun check_subjid}. See {.help EDCimport::check_subjid} to see how to set it.")
   }
   m = setdiff(ref, x) %>% sort()
-  if(length(m)>0) cli_warn("Missing subject ID in {.arg {rlang::caller_arg(x)}}: {.val {m}}")
+  if(length(m)>0) cli_warn("Missing subject ID in {.arg {rlang::caller_arg(x)}}: {.val {m}}", 
+                           class="edc_check_subjid_miss")
   m = setdiff(x, ref) %>% sort()
-  if(length(m)>0) cli_warn("Additionnal subject ID {.arg {rlang::caller_arg(x)}}: {.val {m}}")
+  if(length(m)>0) cli_warn("Additional subject ID {.arg {rlang::caller_arg(x)}}: {.val {m}}", 
+                           class="edc_check_subjid_additional")
   invisible(NULL)
 }
 

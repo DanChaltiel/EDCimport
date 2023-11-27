@@ -4,11 +4,7 @@
 \alias{check_subjid}
 \title{Check completion of subject ID column}
 \usage{
-check_subjid(
-  x,
-  ref = getOption("edc_subjid_ref"),
-  lookup = getOption("edc_lookup")
-)
+check_subjid(x, ref = getOption("edc_subjid_ref"))
 }
 \arguments{
 \item{x}{the subject ID column to check}
@@ -30,7 +26,6 @@ options(edc_subjid_ref=db0$SUBJID)
 #usually, you set something like:
 #options(edc_subjid_ref=enrolres$subjid)
 check_subjid(db1$SUBJID)
-check_subjid(head(db1$SUBJID), -2)
-check_subjid(c(db1$SUBJID, 99)
-
+check_subjid(db1$SUBJID \%>\% setdiff(2))
+check_subjid(c(db1$SUBJID, 99))
 }

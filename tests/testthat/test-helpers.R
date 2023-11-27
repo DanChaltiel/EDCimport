@@ -18,3 +18,13 @@ test_that("assert_no_duplicate works", {
 
 
 test_that("check_subjid works", {
+  local_options(edc_subjid_ref = 1:50)
+  
+  check_subjid(1:50) %>% expect_silent()
+  check_subjid(rep(1:50, 3)) %>% expect_silent()
+  check_subjid(1:48, ref=1:48) %>% expect_silent()
+  
+  check_subjid(1:48) %>% expect_warning(class="edc_check_subjid_miss")
+  check_subjid(1:52) %>% expect_warning(class="edc_check_subjid_additional")
+})
+
