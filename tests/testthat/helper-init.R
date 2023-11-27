@@ -19,6 +19,8 @@ options(
   testthat.progress.max_fails = 50
 )
 
+# rlang::global_entrace()
+
 library(rlang, warn.conflicts=FALSE)
 
 options(trialmaster_pw="0")

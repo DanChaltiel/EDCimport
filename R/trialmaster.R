@@ -25,8 +25,7 @@ read_trialmaster = function(archive, ..., use_cache=FALSE,
                             pw=getOption("trialmaster_pw"), 
                             verbose=getOption("edc_verbose", 1),
                             key_columns="deprecated"){
-  directory = dirname(archive)
-  extract_datetime = parse_file_datetime(archive)
+  # checks ----
   check_dots_empty()
   if(!missing(use_cache) && !use_cache %in% list(TRUE, FALSE, "read", "write")){
     cli_abort("{.arg use_cache} should be one of {.val c(TRUE, FALSE, 'read', 'write')}.")
@@ -36,6 +35,9 @@ read_trialmaster = function(archive, ..., use_cache=FALSE,
     cli_abort("Archive {.val {archive}} does not exist.", 
              class="edc_tm_404")
   }
+  
+  # parse datetime ----
+  extract_datetime = parse_file_datetime(archive)
   if(is.na(extract_datetime)){
     cli_warn(c("Extraction datetime could not be read from archive's name.", 
                x="Archive's name should contain the datetime as {.code SAS_XPORT_yyyy_mm_dd_hh_MM}", 
@@ -43,6 +45,8 @@ read_trialmaster = function(archive, ..., use_cache=FALSE,
              class="edc_tm_bad_name")
   }
   
+  # read (+/-cache) ----
+  directory = dirname(archive)
   cache_file = glue("{directory}/trialmaster_export_{format_ymdhm(extract_datetime)}.rds")
   if(file.exists(cache_file) && (isTRUE(use_cache) || use_cache=="read")){
     if(verbose>0) cli_inform("Reading cache: {.file {cache_file}}", class="read_tm_cache")
@@ -76,9 +80,10 @@ read_trialmaster = function(archive, ..., use_cache=FALSE,
     }
   }
   
+  # out ----
   if(verbose>0){
     size = object.size(rtn) %>% format("auto")
-    cli_inform("Database loaded: {length(rtn)} tables, {size}")
+    cli_inform(c(v="Database loaded: {length(rtn)} tables, {size}"))
   }
   
   rtn
@@ -125,12 +130,12 @@ read_tm_all_xpt = function(directory, ..., format_file="procformat.sas",
   datasets_names = basename(datasets) %>% str_remove("\\.xpt")
   if(is.null(datetime_extraction)) datetime_extraction=get_folder_datetime(directory)
   
-  #reading
+  # reading ----
   rtn = datasets %>% 
     set_names(tolower(datasets_names)) %>% 
     imap(~tryCatch(read_xpt(.x), error=function(e) e))
   
-  #applying formats
+  # applying formats ----
   if(!is.null(format_file)){
     procformat = file.path2(directory, format_file)
     if(!file.exists(procformat)) procformat = format_file
@@ -144,14 +149,15 @@ read_tm_all_xpt = function(directory, ..., format_file="procformat.sas",
         if(is_error(.x)) return(.x)
         .x %>% 
           as_tibble() %>% 
-          mutate(across(where(~is.character(.x)), ~try(na_if(.x, y="")))) %>% 
+          mutate(across(where(~is.character(.x)), ~try(na_if(.x, y=""), silent=TRUE))) %>% 
+          flatten_error_columns() %>% 
           apply_sas_formats(sas_formats) %>%
           clean_names_fun() %>% 
           haven::as_factor()
       })
   }
   
-  #strip out non-UTF8 (and warn if needed)
+  # strip out non-UTF8 (and warn if needed) ----
   .lookup = get_lookup(rtn)
   bad_utf8 = check_invalid_utf8(.lookup, warn=verbose>0)
   bad_utf8 %>%
@@ -161,7 +167,7 @@ read_tm_all_xpt = function(directory, ..., format_file="procformat.sas",
     })
   .lookup = get_lookup(rtn)
   
-  #split mixed datasets (with short and long format)
+  # split mixed datasets (with short and long format) ----
   key_columns = get_key_cols(.lookup)
   patient_id = key_columns$patient_id
   id_found = map_lgl(rtn, ~any(tolower(patient_id) %in% tolower(names(.x))))
@@ -185,7 +191,7 @@ read_tm_all_xpt = function(directory, ..., format_file="procformat.sas",
     }
   }
   
-  #manage errors
+  # faulty tables ----
   errs = keep(rtn, is_error)
   if(length(errs)>0){
     cli_warn(c("SAS dataset{?s} {.val {names(errs)}} could not be read from 

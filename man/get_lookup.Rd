@@ -2,9 +2,12 @@
 % Please edit documentation in R/helpers.R
 \name{get_lookup}
 \alias{get_lookup}
+\alias{set_lookup}
 \title{Generate a lookup table}
 \usage{
 get_lookup(data_list)
+
+set_lookup(lookup)
 }
 \arguments{
 \item{data_list}{a list containing at least 1 dataframe}
