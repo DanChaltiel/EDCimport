@@ -75,6 +75,12 @@ read_trialmaster = function(archive, ..., use_cache=FALSE,
       saveRDS(rtn, cache_file)
     }
   }
+  
+  if(verbose>0){
+    size = object.size(rtn) %>% format("auto")
+    cli_inform("Database loaded: {length(rtn)} tables, {size}")
+  }
+  
   rtn
 }
 
