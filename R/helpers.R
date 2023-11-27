@@ -451,13 +451,15 @@ get_key_cols = function(lookup=getOption("edc_lookup", NULL)){
       patient_id=map_chr(names, ~.x[tolower(.x) %in% tolower(patient_id)] %0% NA), 
       crfname=map_chr(names, ~.x[tolower(.x) %in% tolower(crfname)] %0% NA)
     )
-  if(any(is.na(rtn$patient_id))){
+  
+  verbose = getOption("edc_get_key_cols_verbose", FALSE)
+  if(verbose && any(is.na(rtn$patient_id))){
     cli_warn(c("Default patient identificator could not be found in some datasets", 
                i='Dataset{?s} without identificator: {rtn[is.na(rtn$patient_id), "dataset"]}', 
                i='Use {.run options(edc_id=c("my_id_col", "my_other_id_col"))}'), 
              class="edcimport_get_key_cols_missing_id")
   }
-  if(any(is.na(rtn$crfname))){
+  if(verbose && any(is.na(rtn$crfname))){
     cli_warn(c("Default CRF form name could not be found in some datasets", 
                i='Dataset{?s} without identificator: {rtn[is.na(rtn$crfname), "dataset"]}', 
                i='Use {.run options(edc_crfname=c("my_crfname_col", "my_other_crfname_col"))}'), 
