@@ -19,7 +19,7 @@ If a procformat.sas file exists in the directory, formats will be applied."><!--
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">EDCimport</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0.9009</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0.9010</span>
       </span>
     </div>
 
@@ -64,8 +64,9 @@ If a <code>procformat.sas</code> file exists in the directory, formats will be a
 <span>  clean_names_fun <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  split_mixed <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  extend_lookup <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  key_columns <span class="op">=</span> <span class="fu"><a href="get_key_cols.html">get_key_cols</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  datetime_extraction <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  datetime_extraction <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"edc_verbose"</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  key_columns <span class="op">=</span> <span class="st">"deprecated"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -95,12 +96,12 @@ If a <code>procformat.sas</code> file exists in the directory, formats will be a
 <dd><p>[<code>character(1): FALSE</code>]<br> whether to enrich the lookup table. See <a href="extend_lookup.html">extend_lookup</a>.</p></dd>
 
 
-<dt>key_columns</dt>
-<dd><p>[<code>list</code>]<br> the result of <code><a href="get_key_cols.html">get_key_cols()</a></code>, containing the column name used for patient ID and CRF name. Important for <code>split_mixed</code> and <code>extend_lookup</code>.</p></dd>
-
-
 <dt>datetime_extraction</dt>
 <dd><p>[<code>POSIXt(1)</code>]<br> the datetime of the data extraction. Default to the most common date of last modification in <code>directory</code>.</p></dd>
+
+
+<dt>key_columns</dt>
+<dd><p>deprecated</p></dd>
 
 </dl></div>
     <div id="value">

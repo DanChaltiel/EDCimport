@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">EDCimport</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0.9009</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0.9010</span>
       </span>
     </div>
 
@@ -122,6 +122,7 @@
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">#tm = read_trialmaster("filename.zip", pw="xx")</span></span></span>
 <span class="r-in"><span><span class="va">tm</span> <span class="op">=</span> <span class="fu"><a href="data_example.html">edc_example_plot</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Option <span style="color: #0000BB;">"edc_lookup"</span> has been overwritten.</span>
 <span class="r-in"><span><span class="fu"><a href="load_list.html">load_list</a></span><span class="op">(</span><span class="va">tm</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">p</span> <span class="op">=</span> <span class="fu">edc_swimmerplot</span><span class="op">(</span><span class="va">.lookup</span>, id_lim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>,<span class="fl">45</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">p2</span> <span class="op">=</span> <span class="fu">edc_swimmerplot</span><span class="op">(</span><span class="va">.lookup</span>, origin<span class="op">=</span><span class="st">"db0$date_naissance"</span>, time_unit<span class="op">=</span><span class="st">"weeks"</span>, </span></span>

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">EDCimport</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0.9009</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0.9010</span>
       </span>
     </div>
 
@@ -55,7 +55,7 @@
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">split_mixed_datasets</span><span class="op">(</span></span>
 <span>  datasets <span class="op">=</span> <span class="fu"><a href="get_datasets.html">get_datasets</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  <span class="va">id</span>,</span>
+<span>  id <span class="op">=</span> <span class="fu"><a href="get_key_cols.html">get_key_cols</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span>,</span>
 <span>  ignore_cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"edc_crfname"</span>, <span class="st">"CRFNAME"</span><span class="op">)</span>,</span>
 <span>  output_code <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -78,7 +78,7 @@
 
 
 <dt>ignore_cols</dt>
-<dd><p>columns to ignore when considering a table as long. default to</p></dd>
+<dd><p>columns to ignore when considering a table as long. Default to <code>getOption("edc_crfname", "CRFNAME")</code></p></dd>
 
 
 <dt>output_code</dt>
@@ -100,24 +100,25 @@
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">#tm = read_trialmaster("filename.zip", pw="xx")</span></span></span>
 <span class="r-in"><span><span class="va">tm</span> <span class="op">=</span> <span class="fu"><a href="data_example.html">edc_example_mixed</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Option <span style="color: #0000BB;">"edc_lookup"</span> has been overwritten.</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">tm</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "short"               "long_pure"           "long_mixed"         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [4] "date_extraction"     "datetime_extraction" ".lookup"            </span>
 <span class="r-in"><span><span class="co">#load_list(tm)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">tm</span><span class="op">$</span><span class="va">long_mixed</span><span class="op">)</span> <span class="co">#`val1` and `val2` are long but `val3` is short</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 200 × 5</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    SUBJID crfname                    val1  val2 val3 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>      1 both short and long data -<span style="color: #BB0000;">0.242</span>  9.15 B    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      1 both short and long data  0.572 10.1  B    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      2 both short and long data  0.706  8.67 C    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>      2 both short and long data  0.205 12.4  C    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>      3 both short and long data  0.552  7.50 D    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      3 both short and long data -<span style="color: #BB0000;">0.569</span> 12.2  D    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>      4 both short and long data  0.193 10.6  E    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>      4 both short and long data  0.621  9.42 E    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      5 both short and long data -<span style="color: #BB0000;">0.107</span> 10.3  F    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>      5 both short and long data -<span style="color: #BB0000;">0.124</span>  9.95 F    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    SUBJID crfname      val1  val2 val3 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>      1 long_mixed -<span style="color: #BB0000;">0.242</span>  9.15 B    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      1 long_mixed  0.572 10.1  B    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      2 long_mixed  0.706  8.67 C    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>      2 long_mixed  0.205 12.4  C    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>      3 long_mixed  0.552  7.50 D    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      3 long_mixed -<span style="color: #BB0000;">0.569</span> 12.2  D    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>      4 long_mixed  0.193 10.6  E    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>      4 long_mixed  0.621  9.42 E    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      5 long_mixed -<span style="color: #BB0000;">0.107</span> 10.3  F    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>      5 long_mixed -<span style="color: #BB0000;">0.124</span>  9.95 F    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 190 more rows</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">mixed_data</span> <span class="op">=</span> <span class="fu">split_mixed_datasets</span><span class="op">(</span><span class="va">tm</span>, id<span class="op">=</span><span class="st">"SUBJID"</span>, verbose<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
@@ -132,18 +133,18 @@
 <span class="r-in"><span><span class="fu"><a href="load_list.html">load_list</a></span><span class="op">(</span><span class="va">mixed_data</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">long_mixed_short</span><span class="op">)</span> </span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 100 × 3</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    SUBJID crfname                  val3 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>      1 both short and long data B    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      2 both short and long data C    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      3 both short and long data D    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>      4 both short and long data E    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>      5 both short and long data F    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      6 both short and long data G    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>      7 both short and long data H    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>      8 both short and long data I    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      9 both short and long data J    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>     10 both short and long data K    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    SUBJID crfname    val3 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>      1 long_mixed B    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      2 long_mixed C    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      3 long_mixed D    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>      4 long_mixed E    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>      5 long_mixed F    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      6 long_mixed G    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>      7 long_mixed H    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>      8 long_mixed I    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      9 long_mixed J    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>     10 long_mixed K    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 90 more rows</span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">long_mixed_long</span><span class="op">)</span> </span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 200 × 3</span></span>
@@ -198,9 +199,9 @@
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB;">"short"</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> There were 2 mixed (short+long) tables:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB;">"long_pure"</span> and <span style="color: #0000BB;">"long_mixed"</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> → Copy the code from <span style="color: #0000BB;">/tmp/Rtmp3oEAya/mixed_code16642ade14a0.R</span> in your script to</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> → Copy the code from <span style="color: #0000BB;">/tmp/RtmpLjuHUa/mixed_code197b7b9045d4.R</span> in your script to</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   separate long and short data:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>   `utils::browseURL(/tmp/Rtmp3oEAya/mixed_code16642ade14a0.R)`</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   `utils::browseURL(/tmp/RtmpLjuHUa/mixed_code197b7b9045d4.R)`</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/readLines.html" class="external-link">readLines</a></span><span class="op">(</span><span class="va">filename</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "## `long_pure` (dim=300x4) ---- "                    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [2] ""                                                    </span>

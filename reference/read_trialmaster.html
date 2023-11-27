@@ -19,7 +19,7 @@ If 7zip is not installed or available, use read_tm_all_xpt() instead."><!-- math
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">EDCimport</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0.9009</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0.9010</span>
       </span>
     </div>
 
@@ -60,13 +60,13 @@ If <code>7zip</code> is not installed or available, use <code><a href="read_tm_a
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">read_trialmaster</span><span class="op">(</span></span>
 <span>  <span class="va">archive</span>,</span>
 <span>  <span class="va">...</span>,</span>
-<span>  use_cache <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  use_cache <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  clean_names_fun <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  split_mixed <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  extend_lookup <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  key_columns <span class="op">=</span> <span class="fu"><a href="get_key_cols.html">get_key_cols</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  extend_lookup <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  pw <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"trialmaster_pw"</span><span class="op">)</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"edc_verbose"</span>, <span class="fl">1</span><span class="op">)</span></span>
+<span>  verbose <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"edc_verbose"</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  key_columns <span class="op">=</span> <span class="st">"deprecated"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -96,16 +96,16 @@ If <code>7zip</code> is not installed or available, use <code><a href="read_tm_a
 <dd><p>[<code>character(1): FALSE</code>]<br> whether to enrich the lookup table. See <a href="extend_lookup.html">extend_lookup</a>.</p></dd>
 
 
-<dt>key_columns</dt>
-<dd><p>[<code>list</code>]<br> the result of <code><a href="get_key_cols.html">get_key_cols()</a></code>, containing the column name used for patient ID and CRF name. Important for <code>split_mixed</code> and <code>extend_lookup</code>.</p></dd>
-
-
 <dt>pw</dt>
 <dd><p>[<code>character(1)</code>]<br> The password if the archive is protected. To avoid writing passwords in plain text, it is probably better to use <code>options(trialmaster_pw="xxx")</code> instead though.</p></dd>
 
 
 <dt>verbose</dt>
 <dd><p>[<code>logical(1)</code>]<br> one of <code>c(0, 1, 2)</code>. The higher, the more information will be printed.</p></dd>
+
+
+<dt>key_columns</dt>
+<dd><p>deprecated</p></dd>
 
 </dl></div>
     <div id="value">

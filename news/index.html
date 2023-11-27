@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">EDCimport</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0.9009</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0.9010</span>
       </span>
     </div>
 
@@ -51,14 +51,31 @@
 <h2 class="page-header" data-toc-text="0.4.0" id="edcimport-040-2023xxxx">EDCimport 0.4.0 <sub><sup>2023/xx/xx</sup></sub><a class="anchor" aria-label="anchor" href="#edcimport-040-2023xxxx"></a></h2>
 <div class="section level5">
 <h5 id="new-features-0-4-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-4-0"></a></h5>
-<ul><li><p>New argument <code>edc_swimmerplot(id_lim)</code> to subset the swimmer plot to some patients only.</p></li>
+<ul><li>New function <code><a href="../reference/check_subjid.html">check_subjid()</a></code> to check if a vector is not missing some patients (<a href="https://github.com/DanChaltiel/EDCimport/issues/8" class="external-link">#8</a>).</li>
+</ul><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>edc_subjid_ref<span class="op">=</span><span class="va">enrolres</span><span class="op">$</span><span class="va">subjid</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/check_subjid.html">check_subjid</a></span><span class="op">(</span><span class="va">treatment</span><span class="op">$</span><span class="va">subjid</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/check_subjid.html">check_subjid</a></span><span class="op">(</span><span class="va">ae</span><span class="op">$</span><span class="va">subjid</span><span class="op">)</span></span></code></pre></div>
+<ul><li>New function <code><a href="../reference/assert_no_duplicate.html">assert_no_duplicate()</a></code> to abort if a table has duplicates in a subject ID column(<a href="https://github.com/DanChaltiel/EDCimport/issues/9" class="external-link">#9</a>).</li>
+</ul><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>subjid<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/assert_no_duplicate.html">assert_no_duplicate</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#Error in `assert_no_duplicate()`:</span></span>
+<span><span class="co">#! Duplicate on column "subjid" for value 1.</span></span></code></pre></div>
+<ul><li><p>New function <code><a href="../reference/manual_correction.html">manual_correction()</a></code> to safely hard-code a correction while waiting for the TrialMaster database to be updated.</p></li>
+<li><p>New argument <code>edc_swimmerplot(id_lim)</code> to subset the swimmer plot to some patients only.</p></li>
 <li><p>New option <code>read_trialmaster(use_cache="write")</code> to read from the zip again but still update the cache.</p></li>
-<li><p>New function <code><a href="../reference/manual_correction.html">manual_correction()</a></code> to safely hard-code a correction while waiting for the TrialMaster database to be updated.</p></li>
+<li><p>You can now use the syntax <code>read_trialmaster(split_mixed=c("col1", "col2"))</code> to split only the datasets you need to (<a href="https://github.com/DanChaltiel/EDCimport/issues/10" class="external-link">#10</a>).</p></li>
 </ul></div>
 <div class="section level5">
 <h5 id="bug-fixes-0-4-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-4-0"></a></h5>
-<ul><li>
-<code>read_trialmaster(extend_lookup=TRUE)</code> is now the default, as it shoudn’t cause any breaking change</li>
+<ul><li>Non-UTF8 characters in labels are now identified and corrected during reading (<a href="https://github.com/DanChaltiel/EDCimport/issues/5" class="external-link">#5</a>).</li>
+</ul></div>
+<div class="section level5">
+<h5 id="minor-breaking-changes-0-4-0">Minor breaking changes<a class="anchor" aria-label="anchor" href="#minor-breaking-changes-0-4-0"></a></h5>
+<ul><li><p><code>read_trialmaster(use_cache=FALSE)</code> is now the default. Caching is not that useful after all so you should opt-in rather than opt-out.</p></li>
+<li><p><code>read_trialmaster(extend_lookup=TRUE)</code> is now the default.</p></li>
 </ul></div>
 </div>
     <div class="section level2">

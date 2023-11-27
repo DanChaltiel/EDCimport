@@ -22,7 +22,7 @@ crfname the actual name of the dataset
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">EDCimport</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0.9009</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0.9010</span>
       </span>
     </div>
 
@@ -63,7 +63,7 @@ crfname the actual name of the dataset
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">extend_lookup</span><span class="op">(</span></span>
 <span>  <span class="va">lookup</span>,</span>
 <span>  <span class="va">...</span>,</span>
-<span>  key_columns <span class="op">=</span> <span class="fu"><a href="get_key_cols.html">get_key_cols</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  key_columns <span class="op">=</span> <span class="fu"><a href="get_key_cols.html">get_key_cols</a></span><span class="op">(</span><span class="va">lookup</span><span class="op">)</span>,</span>
 <span>  datasets <span class="op">=</span> <span class="fu"><a href="get_datasets.html">get_datasets</a></span><span class="op">(</span><span class="va">lookup</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -79,7 +79,7 @@ crfname the actual name of the dataset
 
 
 <dt>key_columns</dt>
-<dd><p>[<code>list</code>]<br> the result of <code><a href="get_key_cols.html">get_key_cols()</a></code>, containing the column name used for patient ID and CRF name. Important for <code>split_mixed</code> and <code>extend_lookup</code>.</p></dd>
+<dd><p>deprecated</p></dd>
 
 
 <dt>datasets</dt>
@@ -97,6 +97,7 @@ crfname the actual name of the dataset
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">#tm = read_trialmaster("filename.zip", pw="xx")</span></span></span>
 <span class="r-in"><span><span class="va">tm</span> <span class="op">=</span> <span class="fu"><a href="data_example.html">edc_example_mixed</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Option <span style="color: #0000BB;">"edc_lookup"</span> has been overwritten.</span>
 <span class="r-in"><span><span class="fu"><a href="load_list.html">load_list</a></span><span class="op">(</span><span class="va">tm</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">.lookup</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 5</span></span>
