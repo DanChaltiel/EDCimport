@@ -31,6 +31,8 @@ read_tm_all_xpt(
 
 \item{datetime_extraction}{[\code{POSIXt(1)}]\cr the datetime of the data extraction. Default to the most common date of last modification in \code{directory}.}
 
+\item{verbose}{[\code{logical(1)}]\cr one of \code{c(0, 1, 2)}. The higher, the more information will be printed.}
+
 \item{key_columns}{deprecated}
 }
 \value{

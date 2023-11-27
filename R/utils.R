@@ -108,14 +108,12 @@ is_invalid_utf8 = function(x){
 
 #' @noRd
 #' @keywords internal
-check_invalid_utf8 = function(lookup=.lookup, warn=FALSE){
+check_invalid_utf8 = function(lookup=getOption("edc_lookup"), warn=FALSE){
+  stopifnot(!is.null(lookup))
   x = lookup %>% 
     arrange(desc(nrow)) %>% 
     unnest(c(names, labels)) %>% 
-    mutate(
-      invalid=is_invalid_utf8(labels)
-    ) %>% 
-    filter(invalid) %>% 
+    filter(is_invalid_utf8(labels)) %>% 
     mutate(
       dataset, names, labels, 
       valid_labels=iconv(labels, to="UTF-8"),

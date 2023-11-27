@@ -7,7 +7,7 @@
 read_trialmaster(
   archive,
   ...,
-  use_cache = FALSE,
+  use_cache = "write",
   clean_names_fun = NULL,
   split_mixed = FALSE,
   extend_lookup = TRUE,
@@ -21,7 +21,7 @@ read_trialmaster(
 
 \item{...}{unused}
 
-\item{use_cache}{[\code{mixed(1)}: \sQuote{TRUE}]\cr controls the \code{.rds} cache. If \code{TRUE}, read the cache if any or extract the archive and create a cache. If \code{FALSE} extract the archive without creating a cache file. Can also be \code{"read"} or \code{"write"}}
+\item{use_cache}{[\code{mixed(1)}: "write"]\cr controls the \code{.rds} cache. If \code{TRUE}, read the cache if any or extract the archive and create a cache. If \code{FALSE} extract the archive without creating a cache file. Can also be \code{"read"} or \code{"write"}.}
 
 \item{clean_names_fun}{[\code{function}]\cr a function to clean column names, e.g. \code{\link[janitor:clean_names]{janitor::clean_names()}}}
 

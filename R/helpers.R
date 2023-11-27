@@ -123,6 +123,7 @@ load_list = function(x, env=parent.frame(), remove=TRUE){
 #' @param verbose whether to print informations (once)
 #'
 #' @return nothing, used for side effects
+#' @importFrom rlang enquo quo_name set_names
 #' @export
 #'
 #' @examples
@@ -172,7 +173,7 @@ manual_correction = function(data, col, rows, wrong, correct,
                                      i="New: {correct}"))
     data[[col]][rows] = correct
     assign(data_name, data, envir=parent.frame())
-    options(setNames(list(TRUE), opt_key))
+    options(set_names(list(TRUE), opt_key))
   } else if(all(is.na(val)) && !all(is.na(wrong))) {
     if(isTRUE(verbose)) cli_warn("Manual correction of {.val {label}}: nothing done (NA)")
     return(invisible(TRUE))
@@ -189,7 +190,6 @@ manual_correction = function(data, col, rows, wrong, correct,
 #'
 #' @param x the subject ID column to check
 #' @param ref the reference for subject ID. Should usually be set through `options(edc_subjid_ref=xxx)`. See example.
-#' @param lookup the lookup table, 
 #'
 #' @return nothing, called for warnings
 #' @export
@@ -226,6 +226,8 @@ check_subjid = function(x, ref=getOption("edc_subjid_ref")){
 #'
 #' @return the `df` dataset, unchanged
 #' @importFrom cli qty
+#' @importFrom rlang current_env
+#' @importFrom utils head
 #' @export
 #'
 #' @examples
@@ -238,8 +240,13 @@ assert_no_duplicate = function(df, id_col=get_key_cols()){
   if(is.list(id_col)) id_col = id_col$patient_id
   env = current_env()
   x = df %>% select(any_of2(id_col))
+  if(ncol(x)==0){
+    cli_abort("Cannot assert the absence of duplicates: no ID column ({.val {id_col}}).", 
+              call=env, class="edcimport_assert_no_duplicate_no_col")
+  }
+  
   y = x %>% map(duplicated) %>% head(1) #y is scalar
-  if(length(y)>0){
+  if(any(unlist(y))){
     dups = x[[1]][unlist(y)] %>% unique() %>% sort() 
     dups = head(dups, 10) #because of https://github.com/r-lib/cli/issues/617
     cli_abort("Duplicate on column {.val { names(y)}} for {qty(length(dups))} value{?s} {.val {dups}}.", 
@@ -301,6 +308,7 @@ get_lookup = function(data_list){
 
 
 #' @rdname get_lookup
+#' @usage NULL
 set_lookup = function(lookup){
   if(!is.null(getOption("edc_lookup", NULL))){
     cli_warn("Option {.val edc_lookup} has been overwritten.", 

@@ -6,8 +6,6 @@
 \title{Generate a lookup table}
 \usage{
 get_lookup(data_list)
-
-set_lookup(lookup)
 }
 \arguments{
 \item{data_list}{a list containing at least 1 dataframe}

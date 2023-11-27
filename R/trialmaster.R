@@ -6,19 +6,20 @@
 #' If `7zip` is not installed or available, use [read_tm_all_xpt()] instead.
 #'
 #' @param archive \[`character(1)`]\cr the path to the archive
-#' @param use_cache \[`mixed(1)`: \sQuote{TRUE}]\cr controls the `.rds` cache. If `TRUE`, read the cache if any or extract the archive and create a cache. If `FALSE` extract the archive without creating a cache file. Can also be `"read"` or `"write"`
+#' @param use_cache \[`mixed(1)`: "write"]\cr controls the `.rds` cache. If `TRUE`, read the cache if any or extract the archive and create a cache. If `FALSE` extract the archive without creating a cache file. Can also be `"read"` or `"write"`.
 #' @param pw \[`character(1)`]\cr The password if the archive is protected. To avoid writing passwords in plain text, it is probably better to use `options(trialmaster_pw="xxx")` instead though.
-#' @param verbose \[`logical(1)`]\cr one of `c(0, 1, 2)`. The higher, the more information will be printed.
 #' @param ... unused
 #'
 #' @inherit read_tm_all_xpt return
 #' @inheritParams read_tm_all_xpt
+#' 
 #' @export
 #' @importFrom cli cli_abort cli_inform cli_warn
 #' @importFrom glue glue
 #' @importFrom rlang check_dots_empty
 #' @importFrom stringr str_remove
 read_trialmaster = function(archive, ..., use_cache=FALSE, 
+#' @importFrom utils object.size
                             clean_names_fun=NULL,
                             split_mixed=FALSE,
                             extend_lookup=TRUE,
@@ -102,6 +103,7 @@ read_trialmaster = function(archive, ..., use_cache=FALSE,
 #' @param split_mixed \[`logical(1): FALSE`]\cr whether to split mixed datasets. See [split_mixed_datasets]. 
 #' @param extend_lookup \[`character(1): FALSE`]\cr whether to enrich the lookup table. See [extend_lookup].
 #' @param clean_names_fun \[`function`]\cr a function to clean column names, e.g. [janitor::clean_names()]
+#' @param verbose \[`logical(1)`]\cr one of `c(0, 1, 2)`. The higher, the more information will be printed.
 #' @param key_columns deprecated
 #'
 #' @return a list containing one dataframe for each `.xpt` file in the folder, the extraction date (`datetime_extraction`), and a summary of all imported tables (`.lookup`). If not set yet, option `edc_lookup` is automatically set to `.lookup`.
