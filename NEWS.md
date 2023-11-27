@@ -8,11 +8,18 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 #### New features
 
-- New function `check_subjid()` to check if a vector is not missing some patients (#8). for instance: 
+- New function `check_subjid()` to check if a vector is not missing some patients (#8). 
 ```r
 options(edc_subjid_ref=enrolres$subjid)
 check_subjid(treatment$subjid)
 check_subjid(ae$subjid)
+```
+
+- New function `assert_no_duplicate()` to abort if a table has duplicates in a subject ID column(#9). 
+```r
+tibble(subjid=c(1:10, 1)) %>% assert_no_duplicate() %>% nrow()
+#Error in `assert_no_duplicate()`:
+#! Duplicate on column "subjid" for value 1.
 ```
 
 - New function `manual_correction()` to safely hard-code a correction while waiting for the TrialMaster database to be updated.

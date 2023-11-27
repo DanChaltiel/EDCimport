@@ -62,8 +62,8 @@ find_keyword = function(keyword, data=getOption("edc_lookup", NULL), ignore_case
   if(isTRUE(ignore_case) && any(tmp$invalid)){
     cols = tmp %>% filter(invalid) %>% unite("x", c("dataset", "names"), sep="$") %>% pull(x)
     cli_warn(c("Some columns have labels containing non UTF8 characters. {.arg ignore_case} has been ignored for these.", 
-             i="Columns: {.code {cols}}.",
-             i='For instance, try to run: {.code attr({cols[1]}, "label")}.'), 
+               i="Columns: {.code {cols}}.",
+               i='For instance, try to run: {.code attr({cols[1]}, "label")}.'), 
              class="find_keyword_utf8_warning")
   }
   
@@ -212,6 +212,38 @@ check_subjid = function(x, ref=getOption("edc_subjid_ref")){
   m = setdiff(x, ref) %>% sort()
   if(length(m)>0) cli_warn("Additionnal subject ID {.arg {rlang::caller_arg(x)}}: {.val {m}}")
   invisible(NULL)
+}
+
+#' Assert that a dataset has one row per patient
+#' 
+#' Check that there is no duplicate on the column holding patient ID in a pipeable style. \cr
+#' Mostly useful after joining two datasets.
+#'
+#' @param df the dataset
+#' @param id_col *(optional)* the name of the columns holding patient ID
+#'
+#' @return the `df` dataset, unchanged
+#' @importFrom cli qty
+#' @export
+#'
+#' @examples
+#' #without duplicate => no error, continue the pipeline
+#' tibble(subjid=c(1:10)) %>% assert_no_duplicate() %>% nrow()
+#' 
+#' #with duplicate => throws an error
+#' #tibble(subjid=c(1:10, 1:2)) %>% assert_no_duplicate() %>% nrow()
+assert_no_duplicate = function(df, id_col=get_key_cols()){
+  if(is.list(id_col)) id_col = id_col$patient_id
+  env = current_env()
+  x = df %>% select(any_of2(id_col))
+  y = x %>% map(duplicated) %>% head(1) #y is scalar
+  if(length(y)>0){
+    dups = x[[1]][unlist(y)] %>% unique() %>% sort() 
+    dups = head(dups, 10) #because of https://github.com/r-lib/cli/issues/617
+    cli_abort("Duplicate on column {.val { names(y)}} for {qty(length(dups))} value{?s} {.val {dups}}.", 
+              call=env, class="edcimport_assert_no_duplicate")
+  }
+  df
 }
 
 # Internal helpers ----------------------------------------------------------------------------
