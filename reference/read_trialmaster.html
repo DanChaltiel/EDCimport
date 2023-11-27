@@ -19,7 +19,7 @@ If 7zip is not installed or available, use read_tm_all_xpt() instead."><!-- math
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">EDCimport</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0.9010</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0.9011</span>
       </span>
     </div>
 
@@ -60,7 +60,7 @@ If <code>7zip</code> is not installed or available, use <code><a href="read_tm_a
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">read_trialmaster</span><span class="op">(</span></span>
 <span>  <span class="va">archive</span>,</span>
 <span>  <span class="va">...</span>,</span>
-<span>  use_cache <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  use_cache <span class="op">=</span> <span class="st">"write"</span>,</span>
 <span>  clean_names_fun <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  split_mixed <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  extend_lookup <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -81,7 +81,7 @@ If <code>7zip</code> is not installed or available, use <code><a href="read_tm_a
 
 
 <dt>use_cache</dt>
-<dd><p>[<code>mixed(1)</code>: ‘TRUE’]<br> controls the <code>.rds</code> cache. If <code>TRUE</code>, read the cache if any or extract the archive and create a cache. If <code>FALSE</code> extract the archive without creating a cache file. Can also be <code>"read"</code> or <code>"write"</code></p></dd>
+<dd><p>[<code>mixed(1)</code>: "write"]<br> controls the <code>.rds</code> cache. If <code>TRUE</code>, read the cache if any or extract the archive and create a cache. If <code>FALSE</code> extract the archive without creating a cache file. Can also be <code>"read"</code> or <code>"write"</code>.</p></dd>
 
 
 <dt>clean_names_fun</dt>
