@@ -201,6 +201,25 @@ read_tm_all_xpt = function(directory, ..., format_file="procformat.sas",
              class="edc_tm_problem_warning")
   }
   
+  # faulty columns ----
+  rtn %>% 
+    purrr::iwalk(function(data, name){
+      a = data %>% 
+        select(where(~inherits(.x, "edc_error_col"))) %>% 
+        dplyr::distinct()
+      if(nrow(a)>1) cli_warn("Error 489 ({name}), please contact the developer.")
+      if(nrow(a)>0){
+        unlist(a) %>% unique() %>% 
+          purrr::walk(~{
+            columns = names(a)[a==.x]
+            cli_warn(c("Error when reading table {.val {name}} on {qty(columns)} column{?s} {.val {columns}}", 
+                       x=.x))
+            
+          })
+      }
+    })
+  
+  # out ----
   rtn$date_extraction = format_ymd(datetime_extraction)
   rtn$datetime_extraction = datetime_extraction
   rtn$.lookup = .lookup

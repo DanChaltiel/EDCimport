@@ -34,6 +34,17 @@ parse_file_datetime = function(x){
 }
 
 
+#' Change a `try-error` column to a simpler character column of class "edc_error_col"
+#' @noRd
+#' @keywords internal
+flatten_error_columns = function(df){
+  df %>% 
+    mutate(across(where(~inherits(.x, "try-error")), ~{
+      attr(.x, "condition")$message %>% `class<-`("edc_error_col")
+    }))
+}
+
+
 #' Get the date of data extraction from the modification time of all files
 #'
 #' @param folder a folder
