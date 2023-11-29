@@ -3,9 +3,9 @@
 #' 
 #' Split mixed tables, i.e. tables that hold both long data (N values per patient) and short data (one value per patient, duplicated on N lines), into one long table and one short table.
 #'
-#' @param datasets the datasets to consider. Use the helper [get_datasets()] if needed.
-#' @param id the patient identifier, probably "SUBJID". Should be shared by all datasets.
-#' @param ignore_cols columns to ignore when considering a table as long. Default to `getOption("edc_cols_crfname", "CRFNAME")`
+#' @param datasets a dataframe or a list of dataframes to split. Default to all the datasets from `.lookup`.
+#' @param id the patient identifier, probably "SUBJID". Should be shared by all datasets. Case-insensitive.
+#' @param ignore_cols columns to ignore when considering a table as long. Default to `getOption("edc_cols_crfname", "CRFNAME")`. Case-insensitive.
 #' @param output_code whether to print the code to explicitly write. Can also be a file path.
 #' @param verbose whether to print informations about the process.
 #' @param ... not used
@@ -20,7 +20,7 @@
 #' #load_list(tm)
 #' print(tm$long_mixed) #`val1` and `val2` are long but `val3` is short
 #' 
-#' mixed_data = split_mixed_datasets(tm, id="SUBJID", verbose=TRUE)
+#' mixed_data = split_mixed_datasets(tm, id="subjid", verbose=TRUE)
 #' load_list(mixed_data)
 #' print(long_mixed_short) 
 #' print(long_mixed_long) 
@@ -37,22 +37,23 @@
 #' @importFrom rlang check_dots_empty
 #' @importFrom tibble lst
 #' @importFrom tidyselect all_of everything
-split_mixed_datasets = function(datasets=get_datasets(), id=get_key_cols(), ..., 
+split_mixed_datasets = function(datasets=get_datasets(), id=get_key_cols()$patient_id, ..., 
                                 ignore_cols=getOption("edc_cols_crfname", "CRFNAME"), 
                                 output_code=FALSE,
                                 verbose=TRUE){
   check_dots_empty()
-  if(is.list(id)) id = id$patient_id
-  datasets = datasets %>% keep(~is.data.frame(.x))
+  if(is.data.frame(datasets)) datasets = list(datasets)
+  datasets = datasets %>% keep(~is.data.frame(.x)) %>% keep_at(~.x!=".lookup")
+  
   dataset_mean_nval = datasets %>% 
     imap(~{
-      if(!any(id %in% names(.x))) return(NULL)
+      if(!any(tolower(id) %in% tolower(names(.x)))) return(NULL)
       if(nrow(.x)==0 || ncol(.x)==0) return(NULL)
       .x %>% 
-        group_by(across(any_of(id))) %>% 
+        group_by(across(any_of2(id))) %>% 
         summarise_all(~length(unique(.x))) %>% 
         ungroup() %>% 
-        select(-any_of(id)) %>% 
+        select(-any_of2(id)) %>% 
         summarise_all(~mean(.x)) %>%
         unlist()
     })
@@ -62,6 +63,10 @@ split_mixed_datasets = function(datasets=get_datasets(), id=get_key_cols(), ...,
   #peut sans doute unifier quand même
   
   not_found = dataset_mean_nval %>% keep(is.null) %>% names()
+  if(length(not_found) == length(datasets)){
+    cli_warn("{.val {id}} was not found in any table. Returning {.val NULL}")
+    return(NULL)
+  }
   if(length(not_found)>0 && verbose){
     cli_bullets(c("!"="{.val {id}} was not found in {length(not_found)} table{?s}:", 
                   " "="{.val {not_found}}."))
@@ -79,7 +84,7 @@ split_mixed_datasets = function(datasets=get_datasets(), id=get_key_cols(), ...,
   long = dataset_mean_nval %>% 
     discard(is.null) %>% 
     discard(~all(.x==1))
-  f = function(x) length(unique(x[!tolower(names(x)) %in% ignore_cols]))
+  f = function(x) length(unique(x[!tolower(names(x)) %in% tolower(ignore_cols)]))
   pure_long = long %>% keep(~f(.x)==1)
   
   if(length(pure_long)>0 && verbose){
@@ -100,7 +105,7 @@ split_mixed_datasets = function(datasets=get_datasets(), id=get_key_cols(), ...,
       a = paste(names(.x[.x==1]), collapse=', ')
       b = paste(names(.x[.x!=1]), collapse=', ')
       dat = datasets[[.y]]
-      id = intersect(id, names(dat))[1]
+      id = dat %>% select(any_of2(id)) %>% names() %>% head(1)
       short = dat %>% 
         select(all_of(id), all_of(names(.x[.x==1]))) %>% 
         group_by(across(all_of(id))) %>% 
@@ -145,7 +150,7 @@ split_mixed_datasets = function(datasets=get_datasets(), id=get_key_cols(), ...,
     cli_bullets(c(">"="Copy the code from {.path {output_code}} in your script 
                        to separate long and short data: ", 
                   " "="{.run utils::browseURL({output_code})}"))
-    cat(code, file=output_code)
+    cat(code, file=output_code, append=TRUE)
   } else if(verbose){
     cli_bullets(c(">"="Use {.fun EDCimport::load_list} on the result to get separated long and short data."))
   }

@@ -33,9 +33,11 @@ tibble(subjid=c(1:10, 1)) %>% assert_no_duplicate() %>% nrow()
 - You can now use the syntax `read_trialmaster(split_mixed=c("col1", "col2"))` to split only the datasets you need to (#10).
 
 
-#### Bug fixes
+#### Bug fixes & Improvements
 
 - Reading with `read_trialmaster()` from cache will output an error if parameters (`split_mixed`, `clean_names_fun`) are different (#4).
+
+- `split_mixed_datasets()` is now fully case-insensitive.  
 
 - Non-UTF8 characters in labels are now identified and corrected during reading (#5).
 
