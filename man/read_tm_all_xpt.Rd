@@ -23,7 +23,7 @@ read_tm_all_xpt(
 
 \item{format_file}{[\code{character(1)}]\cr the path to the \code{procformat.sas} file that should be used to apply formats. Use \code{NULL} to not apply formats.}
 
-\item{clean_names_fun}{[\code{function}]\cr a function to clean column names, e.g. \code{\link[janitor:clean_names]{janitor::clean_names()}}}
+\item{clean_names_fun}{[\code{function}]\cr a function to clean column names, e.g. \link{tolower}, \code{\link[janitor:clean_names]{janitor::clean_names()}},...}
 
 \item{split_mixed}{[\code{logical(1): FALSE}]\cr whether to split mixed datasets. See \link{split_mixed_datasets}.}
 

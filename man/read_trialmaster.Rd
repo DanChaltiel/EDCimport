@@ -23,7 +23,7 @@ read_trialmaster(
 
 \item{use_cache}{[\code{mixed(1)}: "write"]\cr controls the \code{.rds} cache. If \code{TRUE}, read the cache if any or extract the archive and create a cache. If \code{FALSE} extract the archive without creating a cache file. Can also be \code{"read"} or \code{"write"}.}
 
-\item{clean_names_fun}{[\code{function}]\cr a function to clean column names, e.g. \code{\link[janitor:clean_names]{janitor::clean_names()}}}
+\item{clean_names_fun}{[\code{function}]\cr a function to clean column names, e.g. \link{tolower}, \code{\link[janitor:clean_names]{janitor::clean_names()}},...}
 
 \item{split_mixed}{[\code{logical(1): FALSE}]\cr whether to split mixed datasets. See \link{split_mixed_datasets}.}
 

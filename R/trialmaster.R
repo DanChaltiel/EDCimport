@@ -113,7 +113,7 @@ read_trialmaster = function(archive, ..., use_cache="write",
 #' @param ... unused
 #' @param split_mixed \[`logical(1): FALSE`]\cr whether to split mixed datasets. See [split_mixed_datasets]. 
 #' @param extend_lookup \[`character(1): FALSE`]\cr whether to enrich the lookup table. See [extend_lookup].
-#' @param clean_names_fun \[`function`]\cr a function to clean column names, e.g. [janitor::clean_names()]
+#' @param clean_names_fun \[`function`]\cr a function to clean column names, e.g. [tolower], [janitor::clean_names()],...
 #' @param verbose \[`logical(1)`]\cr one of `c(0, 1, 2)`. The higher, the more information will be printed.
 #' @param key_columns deprecated
 #'
