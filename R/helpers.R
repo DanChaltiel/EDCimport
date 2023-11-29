@@ -403,8 +403,7 @@ save_list = function(x, filename){
 #' library(tidyr)
 #' tl %>% unnest(everything())
 #' 
-#' @noRd
-#' @keywords internal
+#' @export
 #' @importFrom cli cli_abort
 #' @importFrom dplyr arrange mutate
 #' @importFrom labelled var_label
