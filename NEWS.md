@@ -24,6 +24,8 @@ tibble(subjid=c(1:10, 1)) %>% assert_no_duplicate() %>% nrow()
 
 - New function `manual_correction()` to safely hard-code a correction while waiting for the TrialMaster database to be updated.
 
+- New function `edc_options()` to manage `EDCimport` global parameterization.
+
 - New argument `edc_swimmerplot(id_lim)` to subset the swimmer plot to some patients only.
 
 - New option `read_trialmaster(use_cache="write")` to read from the zip again but still update the cache.
@@ -40,6 +42,8 @@ tibble(subjid=c(1:10, 1)) %>% assert_no_duplicate() %>% nrow()
 - `read_trialmaster(use_cache="write")` is now the default. Caching is not that useful after all so you should opt-in rather than opt-out.
 
 - `read_trialmaster(extend_lookup=TRUE)` is now the default.
+
+- Options `edc_id`, `edc_crfname`, and `edc_verbose` have been respectively renamed `edc_cols_id`, `edc_cols_crfname`, and `edc_read_verbose` for more clarity.
 
 
 # EDCimport 0.3.0 <sub><sup>2023/05/19</sup></sub>

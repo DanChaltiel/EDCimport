@@ -24,7 +24,7 @@ read_trialmaster = function(archive, ..., use_cache="write",
                             split_mixed=FALSE,
                             extend_lookup=TRUE,
                             pw=getOption("trialmaster_pw"), 
-                            verbose=getOption("edc_verbose", 1),
+                            verbose=getOption("edc_read_verbose", 1),
                             key_columns="deprecated"){
   # checks ----
   check_dots_empty()
@@ -122,7 +122,7 @@ read_tm_all_xpt = function(directory, ..., format_file="procformat.sas",
                            split_mixed=FALSE,
                            extend_lookup=TRUE,
                            datetime_extraction=NULL, 
-                           verbose=getOption("edc_verbose", 1),
+                           verbose=getOption("edc_read_verbose", 1),
                            key_columns="deprecated"){
   check_dots_empty()
   reset_manual_correction()

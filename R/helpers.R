@@ -207,6 +207,7 @@ check_subjid = function(x, ref=getOption("edc_subjid_ref")){
   if(is.null(ref)){
     cli_abort("{.arg ref} cannot be NULL in {.fun check_subjid}. See {.help EDCimport::check_subjid} to see how to set it.")
   }
+  ref = sort(unique(ref))
   m = setdiff(ref, x) %>% sort()
   if(length(m)>0) cli_warn("Missing subject ID in {.arg {rlang::caller_arg(x)}}: {.val {m}}", 
                            class="edc_check_subjid_miss")
@@ -449,8 +450,8 @@ get_datasets = function(lookup=getOption("edc_lookup", NULL), envir=parent.frame
 #' @importFrom purrr map map_chr
 #' @importFrom tibble lst
 get_key_cols = function(lookup=getOption("edc_lookup", NULL)){
-  patient_id = getOption("edc_id", c("PTNO", "SUBJID"))
-  crfname = getOption("edc_crfname", "CRFNAME")
+  patient_id = getOption("edc_cols_id", c("PTNO", "SUBJID"))
+  crfname = getOption("edc_cols_crfname", "CRFNAME")
   if(is.null(lookup)) return(lst(patient_id, crfname))
   
   rtn = lookup %>% 
@@ -464,13 +465,13 @@ get_key_cols = function(lookup=getOption("edc_lookup", NULL)){
   if(verbose && any(is.na(rtn$patient_id))){
     cli_warn(c("Default patient identificator could not be found in some datasets", 
                i='Dataset{?s} without identificator: {rtn[is.na(rtn$patient_id), "dataset"]}', 
-               i='Use {.run options(edc_id=c("my_id_col", "my_other_id_col"))}'), 
+               i='Use {.run options(edc_cols_id=c("my_id_col", "my_other_id_col"))}'), 
              class="edcimport_get_key_cols_missing_id")
   }
   if(verbose && any(is.na(rtn$crfname))){
     cli_warn(c("Default CRF form name could not be found in some datasets", 
                i='Dataset{?s} without identificator: {rtn[is.na(rtn$crfname), "dataset"]}', 
-               i='Use {.run options(edc_crfname=c("my_crfname_col", "my_other_crfname_col"))}'), 
+               i='Use {.run options(edc_cols_crfname=c("my_crfname_col", "my_other_crfname_col"))}'), 
              class="edcimport_get_key_cols_missing_crfname")
   }
   

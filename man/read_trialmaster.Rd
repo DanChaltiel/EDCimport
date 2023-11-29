@@ -12,7 +12,7 @@ read_trialmaster(
   split_mixed = FALSE,
   extend_lookup = TRUE,
   pw = getOption("trialmaster_pw"),
-  verbose = getOption("edc_verbose", 1),
+  verbose = getOption("edc_read_verbose", 1),
   key_columns = "deprecated"
 )
 }

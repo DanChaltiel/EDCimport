@@ -12,7 +12,7 @@ read_tm_all_xpt(
   split_mixed = FALSE,
   extend_lookup = TRUE,
   datetime_extraction = NULL,
-  verbose = getOption("edc_verbose", 1),
+  verbose = getOption("edc_read_verbose", 1),
   key_columns = "deprecated"
 )
 }

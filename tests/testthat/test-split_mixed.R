@@ -35,7 +35,7 @@ test_that("Split mixed outside read_trialmaster()", {
 
 test_that("Split mixed inside read_trialmaster()", {
   
-  local_options(edc_verbose=0, edc_lookup=NULL)
+  local_options(edc_read_verbose=0, edc_lookup=NULL)
   common = c("date_extraction", "datetime_extraction", ".lookup")
   f = test_path("edc_example_mixed_SAS_XPORT_2000_01_01_00_00.zip")
   tm1 = read_trialmaster(f, pw="foobar")
