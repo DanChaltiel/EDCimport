@@ -80,3 +80,12 @@ test_that("Read an archive with a bad name", {
   clean_cache()
 })
 
+
+test_that("Use cache only if permitted", {
+  edc_reset_options(except=c("trialmaster_pw", "path_7zip"), quiet=F)
+  w  = read_trialmaster(filename, use_cache="write", verbose=0)
+  w2 = read_trialmaster(filename, use_cache="read", verbose=0) %>% expect_silent()
+  w2 = read_trialmaster(filename, use_cache="read", verbose=0, clean_names_fun=tolower, split_mixed=TRUE) %>% 
+    expect_error(class="read_tm_cache_bad_param")
+})
+

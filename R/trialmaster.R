@@ -52,6 +52,17 @@ read_trialmaster = function(archive, ..., use_cache="write",
   if(file.exists(cache_file) && (isTRUE(use_cache) || use_cache=="read")){
     if(verbose>0) cli_inform("Reading cache: {.file {cache_file}}", class="read_tm_cache")
     rtn = readRDS(cache_file)
+    
+    a = rtn$.lookup %>% attr("split_mixed") %>% 
+      identical(split_mixed)
+    b = rtn$.lookup %>% attr("clean_names_fun") %>% 
+      identical(get_clean_names_fun(clean_names_fun), ignore.bytecode=TRUE)
+    if(!a || !b){
+      cli_abort(c("Cannot use cache with different parameters, set `use_cache=FALSE` to continue.", 
+                  i="Same parameter {.arg split_mixed}: {a}", 
+                  i="Same parameter {.arg clean_names_fun}: {b}"), 
+                class="read_tm_cache_bad_param")
+    }
     set_lookup(rtn$.lookup)
   } else {
     if(verbose>0) cli_inform("Unzipping {.file {archive}}", class="read_tm_zip")
@@ -161,13 +172,16 @@ read_tm_all_xpt = function(directory, ..., format_file="procformat.sas",
   
   # strip out non-UTF8 (and warn if needed) ----
   .lookup = get_lookup(rtn)
-  bad_utf8 = check_invalid_utf8(.lookup, warn=verbose>0)
+  bad_utf8 = check_invalid_utf8(.lookup, warn=verbose>1)
   bad_utf8 %>%
     purrr::pwalk(function(...) {
       x = tibble(...)
       attr(rtn[[x$dataset]][[x$names]], "label") <<- x$valid_labels
     })
   .lookup = get_lookup(rtn)
+  .lookup = .lookup %>% 
+    structure(clean_names_fun=clean_names_fun, 
+              split_mixed=split_mixed)
   
   # split mixed datasets (with short and long format) ----
   key_columns = get_key_cols(.lookup)

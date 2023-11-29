@@ -35,11 +35,13 @@ tibble(subjid=c(1:10, 1)) %>% assert_no_duplicate() %>% nrow()
 
 #### Bug fixes
 
+- Reading with `read_trialmaster()` from cache will output an error if parameters (`split_mixed`, `clean_names_fun`) are different (#4).
+
 - Non-UTF8 characters in labels are now identified and corrected during reading (#5).
 
 #### Minor breaking changes
 
-- `read_trialmaster(use_cache="write")` is now the default. Caching is not that useful after all so you should opt-in rather than opt-out.
+- `read_trialmaster(use_cache="write")` is now the default. Reading from cache is not stable yet, so you should opt-in rather than opt-out.
 
 - `read_trialmaster(extend_lookup=TRUE)` is now the default.
 
