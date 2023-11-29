@@ -38,7 +38,7 @@
 #' @importFrom tibble lst
 #' @importFrom tidyselect all_of everything
 split_mixed_datasets = function(datasets=get_datasets(), id=get_key_cols(), ..., 
-                                ignore_cols=getOption("edc_crfname", "CRFNAME"), 
+                                ignore_cols=getOption("edc_cols_crfname", "CRFNAME"), 
                                 output_code=FALSE,
                                 verbose=TRUE){
   check_dots_empty()

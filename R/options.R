@@ -15,7 +15,7 @@
 #' @param edc_read_verbose,edc_correction_verbose,edc_get_key_cols_verbose the verbosity of the output of functions [read_trialmaster] and [read_tm_all_xpt], [manual_correction], and [get_key_cols]. For example, set `edc_options(edc_read_verbose=0)` to silence the first 2.
 #' @param .local  if TRUE, the effect will only apply to the local frame (internally using `rlang::local_options()`)
 #'
-#' @return
+#' @return Nothing, called for its side effects
 #' @export
 edc_options = function(
     ...,
@@ -55,7 +55,6 @@ edc_options = function(
 #' @export
 edc_peek_options = function(keep_null=FALSE){
   x = formals(edc_options)
-  # names(x) = paste0("edc_", names(x))
   rtn = peek_options(names(x))
   if(!isTRUE(keep_null)) rtn = discard(rtn, is.null)
   rtn
@@ -63,6 +62,7 @@ edc_peek_options = function(keep_null=FALSE){
 
 #' Reset all `EDCimport` options.
 #'
+#' @param except options that are not reset by default
 #' @param quiet set to `TRUE` to remove the message.
 #'
 #' @return Nothing, called for its side effects
@@ -70,12 +70,13 @@ edc_peek_options = function(keep_null=FALSE){
 #' @importFrom purrr map
 #' @importFrom rlang set_names
 #' @export
-edc_reset_options = function(quiet=FALSE){
+edc_reset_options = function(except=c("edc_lookup", "trialmaster_pw", "path_7zip"), quiet=FALSE){
   args_ok = names(formals(edc_options)) %>% .[!. %in% c("...", "reset", ".local")]
+  args_ok = setdiff(args_ok, except)
+  if(length(except)==0) except="nothing"
   argg = args_ok %>% set_names() %>% map(~NULL)
-  names(argg) = paste0("edc_", names(argg))
   options(argg)
-  if(isFALSE(quiet)) cli_inform("All EDCimport options were set back to default.") #nocov
+  if(isFALSE(quiet)) cli_inform("All EDCimport options were set back to default (except {.val {except}}).") #nocov
   return(invisible())
 }
 

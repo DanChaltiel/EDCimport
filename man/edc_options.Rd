@@ -35,6 +35,9 @@ edc_options(
 
 \item{.local}{if TRUE, the effect will only apply to the local frame (internally using \code{rlang::local_options()})}
 }
+\value{
+Nothing, called for its side effects
+}
 \description{
 Use this function to manage your \code{EDCimport} parameters globally while taking advantage of autocompletion. \cr
 Use \code{\link[=edc_peek_options]{edc_peek_options()}} to see which option is currently set and \code{\link[=edc_reset_options]{edc_reset_options()}} to set all options back to default.
