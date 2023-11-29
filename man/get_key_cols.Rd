@@ -10,7 +10,7 @@ get_key_cols(lookup = getOption("edc_lookup", NULL))
 \item{lookup}{the lookup table}
 }
 \value{
-a list of characters
+a list(2) of characters with names \code{patient_id} and \code{crfname}
 }
 \description{
 Retreive names of \code{patient_id} (usually "SUBJID" and "PATNO") and \code{crfname} (usually "CRFNAME") from the actual names of the datasets

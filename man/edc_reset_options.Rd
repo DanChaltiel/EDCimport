@@ -4,9 +4,14 @@
 \alias{edc_reset_options}
 \title{Reset all \code{EDCimport} options.}
 \usage{
-edc_reset_options(quiet = FALSE)
+edc_reset_options(
+  except = c("edc_lookup", "trialmaster_pw", "path_7zip"),
+  quiet = FALSE
+)
 }
 \arguments{
+\item{except}{options that are not reset by default}
+
 \item{quiet}{set to \code{TRUE} to remove the message.}
 }
 \value{

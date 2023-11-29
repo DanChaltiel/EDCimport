@@ -47,6 +47,8 @@ tibble(subjid=c(1:10, 1)) %>% assert_no_duplicate() %>% nrow()
 
 - Options `edc_id`, `edc_crfname`, and `edc_verbose` have been respectively renamed `edc_cols_id`, `edc_cols_crfname`, and `edc_read_verbose` for more clarity.
 
+- Some internal functions were inappropriately exported and are no longer: 
+
 
 # EDCimport 0.3.0 <sub><sup>2023/05/19</sup></sub>
 

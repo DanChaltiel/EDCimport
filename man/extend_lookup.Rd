@@ -16,7 +16,7 @@ extend_lookup(
 
 \item{...}{unused}
 
-\item{key_columns}{deprecated}
+\item{key_columns}{[\code{list(n)}]\cr for experts only}
 
 \item{datasets}{[\code{data.frame(n)}]\cr for experts only}
 }
@@ -24,7 +24,7 @@ extend_lookup(
 the lookup, extended
 }
 \description{
-This utility extends the lookup table to include:\cr
+This utility extends the lookup table to include:
 \itemize{
 \item \code{n_id} the number of patients present in the dataset
 \item \code{rows_per_id} the mean number of row per patient

@@ -37,18 +37,23 @@ However, this manual correction should be undone as soon as the central database
 }
 }
 \examples{
-x = iris
+library(dplyr)
+x = iris \%>\% mutate(id=row_number(), .before=1) \%>\% as_tibble()
 x$Sepal.Length[c(1,3,5)]
+
+#1st correction is silent
 manual_correction(x, Sepal.Length, rows=c(1,3,5),
                   wrong=c(5.1, 4.7, 5.0), correct=c(5, 4, 3))
 x$Sepal.Length[c(1,3,5)]
+
+#further correction is silent
 manual_correction(x, Sepal.Length, rows=c(1,3,5),
-                  wrong=c(5.1, 4.7, 5.0), correct=c(5, 4, 3))
+                  wrong=c(5.1, 4.7, 5.0), correct=c(5, 4, 3)) 
                   
 #if the database is corrected, an error is thrown
 \dontrun{
 reset_manual_correction()
-x$Sepal.Length[c(1,3,5)] = c(5, 4, 3)
+x$Sepal.Length[c(1,3,5)] = c(5, 4, 3) #mimics db correction
 manual_correction(x, Sepal.Length, rows=c(1,3,5),
                   wrong=c(5.1, 4.7, 5.0), correct=c(5, 4, 3))
 }

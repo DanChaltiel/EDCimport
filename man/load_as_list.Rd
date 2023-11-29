@@ -16,7 +16,6 @@ a list
 Instead of loading a \code{.RData} file in the global environment, extract every object into a list.
 }
 \examples{
-
 x = list(a=1, b=mtcars)
 save_list(x, "test.RData")
 y = load_as_list("test.RData")
