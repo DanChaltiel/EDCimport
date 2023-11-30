@@ -6,7 +6,7 @@
 [![R-CMD-check](https://github.com/DanChaltiel/EDCimport/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/DanChaltiel/EDCimport/actions/workflows/check-standard.yaml)
 <!-- badges: end -->
 
-EDCimport is a package designed to easily import data from EDC software TrialMaster and Macro.
+EDCimport is a package designed to easily import data from EDC software TrialMaster.
 
 ## Installation
 
