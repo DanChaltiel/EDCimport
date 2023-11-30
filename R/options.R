@@ -7,11 +7,11 @@
 #' Use [edc_peek_options()] to see which option is currently set and [edc_reset_options()] to set all options back to default.
 #'
 #' @param ... unused
-#' @param trialmaster_pw the password of the trialmaster zip archive. For instance, you can use `edc_options(trialmaster_pw="my_pwd")` in the console once per session, so that you dont have to write the password in clear in your R code
+#' @param trialmaster_pw the password of the trialmaster zip archive. For instance, you can use `edc_options(trialmaster_pw="my_pwd")` in the console once per session, so that you don't have to write the password in clear in your R code
 #' @param path_7zip the path to the 7zip executable. Default to `"C:/Program Files/7-Zip/"`.
 #' @param edc_lookup **(Internal)** a reference to the lookup table (usually `.lookup`). Should usually not be changed manually.
 #' @param edc_subjid_ref **used in [check_subjid]** the vector of the reference subject IDs. You should usually write `edc_options(edc_subjid_ref=enrolres$subjid)`.
-#' @param edc_cols_id,edc_cols_crfname **used in [get_key_cols]** the name of the columns holding the subject id (default to `c("ptno", "subjid")`) and the crf form name (default to `c("crfname")`). It is case-insensitive.
+#' @param edc_cols_id,edc_cols_crfname **used in [get_key_cols]** the name of the columns holding the subject id (default to `c("ptno", "subjid")`) and the CRF form name (default to `c("crfname")`). It is case-insensitive.
 #' @param edc_read_verbose,edc_correction_verbose,edc_get_key_cols_verbose the verbosity of the output of functions [read_trialmaster] and [read_tm_all_xpt], [manual_correction], and [get_key_cols]. For example, set `edc_options(edc_read_verbose=0)` to silence the first 2.
 #' @param edc_lookup_overwrite_warn default to TRUE. Whether there should be warning when overwriting `.lookup` (like when reading 2 databases successively)
 #' @param .local  if TRUE, the effect will only apply to the local frame (internally using `rlang::local_options()`)

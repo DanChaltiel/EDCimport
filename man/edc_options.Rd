@@ -22,7 +22,7 @@ edc_options(
 \arguments{
 \item{...}{unused}
 
-\item{trialmaster_pw}{the password of the trialmaster zip archive. For instance, you can use \code{edc_options(trialmaster_pw="my_pwd")} in the console once per session, so that you dont have to write the password in clear in your R code}
+\item{trialmaster_pw}{the password of the trialmaster zip archive. For instance, you can use \code{edc_options(trialmaster_pw="my_pwd")} in the console once per session, so that you don't have to write the password in clear in your R code}
 
 \item{path_7zip}{the path to the 7zip executable. Default to \code{"C:/Program Files/7-Zip/"}.}
 
@@ -30,9 +30,9 @@ edc_options(
 
 \item{edc_subjid_ref}{\strong{used in \link{check_subjid}} the vector of the reference subject IDs. You should usually write \code{edc_options(edc_subjid_ref=enrolres$subjid)}.}
 
-\item{edc_cols_id, edc_cols_crfname}{\strong{used in \link{get_key_cols}} the name of the columns holding the subject id (default to \code{c("ptno", "subjid")}) and the crf form name (default to \code{c("crfname")}). It is case-insensitive.}
+\item{edc_cols_id, edc_cols_crfname}{\strong{used in \link{get_key_cols}} the name of the columns holding the subject id (default to \code{c("ptno", "subjid")}) and the CRF form name (default to \code{c("crfname")}). It is case-insensitive.}
 
-\item{edc_read_verbose, edc_correction_verbose, edc_get_key_cols_verbose}{the verbosity of the output of functions \link{read_trialmaster} and \link{read_tm_all_xpt}, \link{manual_correction}, \link{set_lookup}, and \link{get_key_cols}. For example, set \code{edc_options(edc_read_verbose=0)} to silence the first 2.}
+\item{edc_read_verbose, edc_correction_verbose, edc_get_key_cols_verbose}{the verbosity of the output of functions \link{read_trialmaster} and \link{read_tm_all_xpt}, \link{manual_correction}, and \link{get_key_cols}. For example, set \code{edc_options(edc_read_verbose=0)} to silence the first 2.}
 
 \item{edc_lookup_overwrite_warn}{default to TRUE. Whether there should be warning when overwriting \code{.lookup} (like when reading 2 databases successively)}
 

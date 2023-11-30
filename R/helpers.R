@@ -264,7 +264,7 @@ get_datasets = function(lookup=getOption("edc_lookup"), envir=parent.frame()){
 
 #' Important column names
 #' 
-#' Retreive names of `patient_id` (usually "SUBJID" and "PATNO") and `crfname` (usually "CRFNAME") from the actual names of the datasets
+#' Retrieve names of `patient_id` (usually "SUBJID" and "PATNO") and `crfname` (usually "CRFNAME") from the actual names of the datasets
 #'
 #' @param lookup the lookup table
 #'
