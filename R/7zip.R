@@ -4,8 +4,10 @@
 #' Retrieve the path to 7zip executable directory. Use `options(path_7zip="path/to/7zip")` to change its behavior.
 #'
 #' @return the path to 7zip executable directory
-#' @export
 #' @importFrom cli cli_abort
+#' 
+#' @noRd
+#' @keywords internal
 get_7z_dir = function(){
   #TODO multiple default depending on OS?
   default = "C:/Program Files/7-Zip/"
@@ -43,10 +45,11 @@ get_7z_dir = function(){
 #'
 #' @return the success/error message. Mainly used for its side effect of extracting the archive.
 #' @seealso https://info.nrao.edu/computing/guide/file-access-and-archiving/7zip/7z-7za-command-line-guide#section-17
-#' @export
 #' @importFrom cli cli_abort cli_warn
 #' @importFrom glue glue
 #' @importFrom stringr str_detect
+#' @noRd
+#' @keywords internal
 extract_7z = function(archive, target_dir, password=NULL, path_7zip=NULL){
   if(!file.exists(archive)){
     cli_abort("Archive file {.val {archive}} does not exist.")
