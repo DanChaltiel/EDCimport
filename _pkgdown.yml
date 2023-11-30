@@ -1,7 +1,8 @@
 url: https://danchaltiel.github.io/EDCimport/
 template:
   bootstrap: 5
-  bootswatch: flatly
+  params:
+    bootswatch: flatly
 
 
 navbar:
