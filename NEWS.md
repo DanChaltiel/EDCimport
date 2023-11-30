@@ -6,7 +6,7 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 # EDCimport 0.4.0 <sub><sup>2023/xx/xx</sup></sub>
 
-#### New features
+### New features
 
 - New function `check_subjid()` to check if a vector is not missing some patients (#8). 
 ```r
@@ -33,7 +33,7 @@ tibble(subjid=c(1:10, 1)) %>% assert_no_duplicate() %>% nrow()
 - You can now use the syntax `read_trialmaster(split_mixed=c("col1", "col2"))` to split only the datasets you need to (#10).
 
 
-#### Bug fixes & Improvements
+### Bug fixes & Improvements
 
 - Reading with `read_trialmaster()` from cache will output an error if parameters (`split_mixed`, `clean_names_fun`) are different (#4).
 
@@ -41,7 +41,7 @@ tibble(subjid=c(1:10, 1)) %>% assert_no_duplicate() %>% nrow()
 
 - Non-UTF8 characters in labels are now identified and corrected during reading (#5).
 
-#### Minor breaking changes
+### Minor breaking changes
 
 - `read_trialmaster(use_cache="write")` is now the default. Reading from cache is not stable yet, so you should opt-in rather than opt-out.
 
@@ -52,7 +52,7 @@ tibble(subjid=c(1:10, 1)) %>% assert_no_duplicate() %>% nrow()
 
 # EDCimport 0.3.0 <sub><sup>2023/05/19</sup></sub>
 
-#### New features
+### New features
 
 - New function `edc_swimmerplot()` to show a swimmer plot of all dates in the database and easily find outliers.
 
@@ -66,7 +66,7 @@ tibble(subjid=c(1:10, 1)) %>% assert_no_duplicate() %>% nrow()
 
 - New helper `unify()`, which turns a vector of duplicate values into a vector of length 1.
 
-#### Bug fixes
+### Bug fixes
 
 - Reading errors are now handled by `read_trialmaster()` instead of failing. If one XPT file is corrupted, the resulting object will contain the error message instead of the dataset.
 

@@ -4,7 +4,7 @@
 # User helpers --------------------------------------------------------------------------------
 
 
-#' Find a keyword
+#' Find a keyword in the whole database
 #' 
 #' Find a keyword in all names and labels of a list of datasets. 
 #'
@@ -73,7 +73,7 @@ find_keyword = function(keyword, data=getOption("edc_lookup"), ignore_case=TRUE)
 
 
 
-#' Check completion of subject ID column
+#' Check the completion of the subject ID column
 #' 
 #' Compare a subject ID vector to the study's reference subject ID (usually something like `enrolres$subjid`).
 #'

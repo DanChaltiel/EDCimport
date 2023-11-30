@@ -6,7 +6,7 @@
 [![R-CMD-check](https://github.com/DanChaltiel/EDCimport/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/DanChaltiel/EDCimport/actions/workflows/check-standard.yaml)
 <!-- badges: end -->
 
-EDCimport is a package designed to easily import data from EDC software TrialMaster.
+EDCimport is a package designed to easily import data from EDC software [TrialMaster](https://www.anjusoftware.com/trial-master/).
 
 ## Installation
 
@@ -20,15 +20,15 @@ devtools::install_github("DanChaltiel/EDCimport")
 
 You will also need [`7-zip`](https://www.7-zip.org/download.html) installed, and preferably added to the [`PATH`](https://www.java.com/en/download/help/path.html).
 
-### Windows-only
 
-This package was developed to work on Windows and is unlikely to work on any other OS. Feel free to submit a PR if you manage to get it to work on another OS.
+> [!WARNING]
+> This package was developed to work on Windows and is unlikely to work on any other OS. 
+> You are very welcome to submit a PR if you manage to get it to work on Mac or Linux.
 
-## TrialMaster
 
 ### Load the data
 
-First, you need to request an export of type `SAS Xport`, with the checkbox "Include Codelists" ticked. This export should generate a `.zip` archive.
+Inside TrialMaster, you should request an export of type `SAS Xport`, with the checkbox "Include Codelists" ticked. This export should generate a `.zip` archive.
 
 Then, simply use `read_trialmaster()` with the archive password (if any) to retrieve the data from the archive:
 
@@ -37,7 +37,7 @@ library(EDCimport)
 tm = read_trialmaster("path/to/my/archive.zip", pw="foobar")
 ```
 
-The resulting object `tm` is a list containing all the datasets, plus the date of extraction (`datetime_extraction`) and a dataset summary (`.lookup`).
+The resulting object `tm` is a list containing all the datasets, plus metadatas.
 
 You can now use `load_list()` to import the list in the global environment and use your tables:
 
@@ -46,23 +46,26 @@ load_list(tm) #this also removes `tm` to save memory
 mean(dataset1$column5)
 ```
 
-There are other options available, e.g. colnames cleaning & table splitting), see `?read_trialmaster` for more details.
+There are many other options available (e.g. colnames cleaning & table splitting), see `?read_trialmaster` for more details.
 
-## Utils
+### Database management tools
 
-`EDCimport` include a set of useful tools that help with using the imported database.
+`EDCimport` include a set of useful tools that help with using the imported database. See [References](https://danchaltiel.github.io/EDCimport/reference/index.html) for a complete list.
 
-### Search the whole database
+#### Database summary
 
-`.lookup` is a dataframe containing for each dataset all its column names and labels.
+Reading a database using `read_trialmaster()` generates the `.lookup` dataframe, which contains for each dataset the number of rows, columns, patients, and the CRF name.
 
-Its main use is to work with `find_keyword()`. For instance, say you do not remember in which dataset and column is located the "date of ECG". `find_keyword()` will search every column name and label and will give you the answer:
+`.lookup` is used by many other tools inside EDCimport, be careful not to modify or delete it.
+
+#### Search the whole database
+
+Using `find_keyword()`, you can run a global search of the database. 
+
+For instance, say you do not remember in which dataset and column is located the "date of ECG". `find_keyword()` will search every column name and label and will give you the answer:
 
 ``` r
 find_keyword("date")
-```
-
-``` r
 #> # A tibble: 10 x 3
 #>    dataset names   labels                      
 #>    <chr>   <chr>   <chr>                       
@@ -77,8 +80,6 @@ find_keyword("date")
 #>  9 vs      ECGDAT  Date of ECG                 
 #> 10 vs      VISITDT Visit Date
 ```
-
-Note that `find_keyword()` uses the `edc_lookup` option as its second argument, automatically set by `read_trialmaster()`.
 
 ### Swimmer Plot
 

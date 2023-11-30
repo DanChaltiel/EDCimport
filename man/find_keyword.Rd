@@ -2,7 +2,7 @@
 % Please edit documentation in R/helpers.R
 \name{find_keyword}
 \alias{find_keyword}
-\title{Find a keyword}
+\title{Find a keyword in the whole database}
 \usage{
 find_keyword(keyword, data = getOption("edc_lookup"), ignore_case = TRUE)
 }

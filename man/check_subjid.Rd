@@ -2,7 +2,7 @@
 % Please edit documentation in R/helpers.R
 \name{check_subjid}
 \alias{check_subjid}
-\title{Check completion of subject ID column}
+\title{Check the completion of the subject ID column}
 \usage{
 check_subjid(x, ref = getOption("edc_subjid_ref"))
 }

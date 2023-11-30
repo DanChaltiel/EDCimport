@@ -17,7 +17,7 @@ navbar:
 
 
 reference:
-- title: "Main function"
+- title: "Reading databases"
 - contents:
   - read_trialmaster
   - read_tm_all_xpt
@@ -31,15 +31,15 @@ reference:
   - edc_swimmerplot
 - title: "Helpers"
 - contents:
+  - find_keyword
   - assert_no_duplicate
   - check_subjid
   - unify
-  - extend_lookup
-  - find_keyword
-  - get_lookup
   - get_datasets
   - get_key_cols
   - split_mixed_datasets
+  - extend_lookup
+  - get_lookup
 - title: "List Utils"
 - contents:
   - load_list
