@@ -34,7 +34,7 @@ edc_swimmerplot(
 
 \item{time_unit}{if \code{origin!=NULL}, the unit to measure time. One of \code{c("days", "weeks", "months", "years")}.}
 
-\item{aes_color}{either \code{variable} ("{dataset} - {column}") or \code{label} (the column label)}
+\item{aes_color}{either \code{variable} ("\{dataset\} - \{column\}") or \code{label} (the column label)}
 
 \item{plotly}{whether to use \code{{plotly}} to get an interactive plot}
 }

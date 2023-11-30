@@ -8,7 +8,7 @@
   "codeRepository": "https://github.com/DanChaltiel/EDCimport",
   "issueTracker": "https://github.com/DanChaltiel/EDCimport/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "0.3.0.9013",
+  "version": "0.4.0",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -326,7 +326,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "1165.537KB",
+  "fileSize": "1165.792KB",
   "releaseNotes": "https://github.com/DanChaltiel/EDCimport/blob/master/NEWS.md",
   "readme": "https://github.com/DanChaltiel/EDCimport/blob/main/README.md",
   "contIntegration": "https://github.com/DanChaltiel/EDCimport/actions/workflows/check-standard.yaml",

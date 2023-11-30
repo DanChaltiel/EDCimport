@@ -14,7 +14,7 @@
 #' @param id_lim a numeric vector of length 2 providing the minimum and maximum `id` to subset on. 
 #' @param exclude a character vector of variables to exclude, in the form `dataset$column`. Can be a regex, but `$` symbols don't count. Case-insensitive.
 #' @param time_unit if `origin!=NULL`, the unit to measure time. One of `c("days", "weeks", "months", "years")`.
-#' @param aes_color either `variable` ("{dataset} - {column}") or `label` (the column label)
+#' @param aes_color either `variable` ("\{dataset\} - \{column\}") or `label` (the column label)
 #' @param plotly whether to use `{plotly}` to get an interactive plot
 #' @param ... not used
 #'
