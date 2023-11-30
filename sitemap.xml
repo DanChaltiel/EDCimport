@@ -1,90 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>/404.html</loc>
+    <loc>https://danchaltiel.github.io/EDCimport/404.html</loc>
   </url>
   <url>
-    <loc>/authors.html</loc>
+    <loc>https://danchaltiel.github.io/EDCimport/authors.html</loc>
   </url>
   <url>
-    <loc>/index.html</loc>
+    <loc>https://danchaltiel.github.io/EDCimport/index.html</loc>
   </url>
   <url>
-    <loc>/news/index.html</loc>
+    <loc>https://danchaltiel.github.io/EDCimport/news/index.html</loc>
   </url>
   <url>
-    <loc>/reference/EDCimport-package.html</loc>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/EDCimport-package.html</loc>
   </url>
   <url>
-    <loc>/reference/assert_no_duplicate.html</loc>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/assert_no_duplicate.html</loc>
   </url>
   <url>
-    <loc>/reference/check_subjid.html</loc>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/check_subjid.html</loc>
   </url>
   <url>
-    <loc>/reference/data_example.html</loc>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/data_example.html</loc>
   </url>
   <url>
-    <loc>/reference/edc_options.html</loc>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/edc_options.html</loc>
   </url>
   <url>
-    <loc>/reference/edc_peek_options.html</loc>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/edc_peek_options.html</loc>
   </url>
   <url>
-    <loc>/reference/edc_reset_options.html</loc>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/edc_reset_options.html</loc>
   </url>
   <url>
-    <loc>/reference/edc_swimmerplot.html</loc>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/edc_swimmerplot.html</loc>
   </url>
   <url>
-    <loc>/reference/extend_lookup.html</loc>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/extend_lookup.html</loc>
   </url>
   <url>
-    <loc>/reference/extract_7z.html</loc>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/find_keyword.html</loc>
   </url>
   <url>
-    <loc>/reference/find_keyword.html</loc>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/get_datasets.html</loc>
   </url>
   <url>
-    <loc>/reference/get_7z_dir.html</loc>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/get_key_cols.html</loc>
   </url>
   <url>
-    <loc>/reference/get_datasets.html</loc>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/get_lookup.html</loc>
   </url>
   <url>
-    <loc>/reference/get_key_cols.html</loc>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/index.html</loc>
   </url>
   <url>
-    <loc>/reference/get_lookup.html</loc>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/load_as_list.html</loc>
   </url>
   <url>
-    <loc>/reference/index.html</loc>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/load_list.html</loc>
   </url>
   <url>
-    <loc>/reference/load_as_list.html</loc>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/manual_correction.html</loc>
   </url>
   <url>
-    <loc>/reference/load_list.html</loc>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/read_tm_all_xpt.html</loc>
   </url>
   <url>
-    <loc>/reference/manual_correction.html</loc>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/read_trialmaster.html</loc>
   </url>
   <url>
-    <loc>/reference/read_tm_all_xpt.html</loc>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/reexports.html</loc>
   </url>
   <url>
-    <loc>/reference/read_trialmaster.html</loc>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/save_list.html</loc>
   </url>
   <url>
-    <loc>/reference/reexports.html</loc>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/split_mixed_datasets.html</loc>
   </url>
   <url>
-    <loc>/reference/save_list.html</loc>
-  </url>
-  <url>
-    <loc>/reference/split_mixed_datasets.html</loc>
-  </url>
-  <url>
-    <loc>/reference/unify.html</loc>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/unify.html</loc>
   </url>
 </urlset>
