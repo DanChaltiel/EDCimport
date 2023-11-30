@@ -11,7 +11,7 @@ filename_bad = test_path("CRF_Dan_Export.zip")
 
 test_that("Read an archive", {
   clean_cache()
-  
+  edc_options(edc_lookup_overwrite_warn=TRUE, .local=TRUE)
   w = read_trialmaster(filename) %>% 
     expect_classed_conditions(message_class="read_tm_zip")
   w = read_trialmaster(filename, use_cache=TRUE) %>% 
@@ -82,7 +82,6 @@ test_that("Read an archive with a bad name", {
 
 
 test_that("Use cache only if permitted", {
-  edc_reset_options(except=c("trialmaster_pw", "path_7zip"), quiet=F)
   w  = read_trialmaster(filename, use_cache="write", verbose=0)
   w2 = read_trialmaster(filename, use_cache="read", verbose=0) %>% expect_silent()
   w2 = read_trialmaster(filename, use_cache="read", verbose=0, clean_names_fun=tolower, split_mixed=TRUE) %>% 

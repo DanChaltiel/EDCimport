@@ -23,8 +23,12 @@ options(
 
 library(rlang, warn.conflicts=FALSE)
 
-options(trialmaster_pw="0")
-options(edc="TRNO")
+
+edc_options(
+  trialmaster_pw="0", 
+  edc_lookup_overwrite_warn=FALSE
+)
+
 # getOption("trialmaster_pw")
 
 # cachename="trialmaster_export_2022-08-25 15h16.rds"
@@ -126,4 +130,5 @@ expect_classed_conditions = function(expr, message_class=NULL, warning_class=NUL
 }
 
 clean_cache()
-message("Helper-init loaded")
+cli::cli_inform(c(v="Initializer {.file helper-init_dataset.R} loaded: 
+                     is_testing={is_testing()}, is_parallel={is_parallel()}"))

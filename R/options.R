@@ -13,9 +13,11 @@
 #' @param edc_subjid_ref **used in [check_subjid]** the vector of the reference subject IDs. You should usually write `edc_options(edc_subjid_ref=enrolres$subjid)`.
 #' @param edc_cols_id,edc_cols_crfname **used in [get_key_cols]** the name of the columns holding the subject id (default to `c("ptno", "subjid")`) and the crf form name (default to `c("crfname")`). It is case-insensitive.
 #' @param edc_read_verbose,edc_correction_verbose,edc_get_key_cols_verbose the verbosity of the output of functions [read_trialmaster] and [read_tm_all_xpt], [manual_correction], and [get_key_cols]. For example, set `edc_options(edc_read_verbose=0)` to silence the first 2.
+#' @param edc_lookup_overwrite_warn default to TRUE. Whether there should be warning when overwriting `.lookup` (like when reading 2 databases successively)
 #' @param .local  if TRUE, the effect will only apply to the local frame (internally using `rlang::local_options()`)
 #'
 #' @return Nothing, called for its side effects
+#' @importFrom rlang caller_env local_options
 #' @export
 edc_options = function(
     ...,
@@ -28,6 +30,7 @@ edc_options = function(
     edc_read_verbose,
     edc_correction_verbose,
     edc_get_key_cols_verbose,
+    edc_lookup_overwrite_warn,
     .local=FALSE){
   rlang::check_dots_empty()
   argg = as.list(match.call()) %>% discard(is.name)
@@ -81,6 +84,7 @@ edc_reset_options = function(except=c("edc_lookup", "trialmaster_pw", "path_7zip
 }
 
 
+#' @importFrom stringr str_extract str_extract_all str_remove_all str_subset
 #' @noRd
 #' @keywords internal
 missing_options_helper = function(){

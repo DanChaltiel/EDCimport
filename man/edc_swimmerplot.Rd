@@ -5,9 +5,9 @@
 \title{Swimmer plot of all dates columns}
 \usage{
 edc_swimmerplot(
-  .lookup = getOption("edc_lookup", NULL),
+  .lookup = getOption("edc_lookup"),
   ...,
-  id = c("SUBJID", "PATNO"),
+  id = get_key_cols()$patient_id,
   group = NULL,
   origin = NULL,
   id_lim = NULL,
@@ -18,7 +18,7 @@ edc_swimmerplot(
 )
 }
 \arguments{
-\item{.lookup}{the lookup table, loaded along with the database or result of \code{\link[=get_lookup]{get_lookup()}}}
+\item{.lookup}{the lookup table, default to \code{getOption("edc_lookup")}}
 
 \item{...}{not used}
 

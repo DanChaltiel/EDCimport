@@ -40,7 +40,6 @@ names(tm)
 print(tm$long_mixed) #`val1` and `val2` are long but `val3` is short
 
 mixed_data = split_mixed_datasets(tm, id="subjid", verbose=TRUE)
-mixed_data = split_mixed_datasets(tm, id="SUBJID", verbose=TRUE)
 load_list(mixed_data)
 print(long_mixed_short) 
 print(long_mixed_long) 

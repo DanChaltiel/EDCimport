@@ -4,7 +4,7 @@
 \alias{find_keyword}
 \title{Find a keyword}
 \usage{
-find_keyword(keyword, data = getOption("edc_lookup", NULL), ignore_case = TRUE)
+find_keyword(keyword, data = getOption("edc_lookup"), ignore_case = TRUE)
 }
 \arguments{
 \item{keyword}{the keyword to search for}

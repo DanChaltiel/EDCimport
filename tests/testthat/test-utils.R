@@ -82,9 +82,7 @@ test_that("find_keyword() works", {
 
 
 test_that("find_keyword() works with read_trialmaster()", {
-  clean_cache()
-  expect_message(w <- read_trialmaster(filename),
-                 class="read_tm_zip")
+  w = read_trialmaster(filename, use_cache=FALSE)
   local_options(edc_lookup=w$.lookup)
   x1=find_keyword("sex")
   expect_equal(x1$names, "SEX")
@@ -193,3 +191,4 @@ test_that("expect_classed_conditions()", {
                             error_class="error1") %>% 
     expect_error("message3.*xxxx")
 })
+

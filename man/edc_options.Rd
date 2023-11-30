@@ -15,6 +15,7 @@ edc_options(
   edc_read_verbose,
   edc_correction_verbose,
   edc_get_key_cols_verbose,
+  edc_lookup_overwrite_warn,
   .local = FALSE
 )
 }
@@ -31,7 +32,9 @@ edc_options(
 
 \item{edc_cols_id, edc_cols_crfname}{\strong{used in \link{get_key_cols}} the name of the columns holding the subject id (default to \code{c("ptno", "subjid")}) and the crf form name (default to \code{c("crfname")}). It is case-insensitive.}
 
-\item{edc_read_verbose, edc_correction_verbose, edc_get_key_cols_verbose}{the verbosity of the output of functions \link{read_trialmaster} and \link{read_tm_all_xpt}, \link{manual_correction}, and \link{get_key_cols}. For example, set \code{edc_options(edc_read_verbose=0)} to silence the first 2.}
+\item{edc_read_verbose, edc_correction_verbose, edc_get_key_cols_verbose}{the verbosity of the output of functions \link{read_trialmaster} and \link{read_tm_all_xpt}, \link{manual_correction}, \link{set_lookup}, and \link{get_key_cols}. For example, set \code{edc_options(edc_read_verbose=0)} to silence the first 2.}
+
+\item{edc_lookup_overwrite_warn}{default to TRUE. Whether there should be warning when overwriting \code{.lookup} (like when reading 2 databases successively)}
 
 \item{.local}{if TRUE, the effect will only apply to the local frame (internally using \code{rlang::local_options()})}
 }

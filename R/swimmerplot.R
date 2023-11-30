@@ -7,7 +7,7 @@
 #' 
 #' Join all tables from `.lookup$dataset` on `id` 
 #'
-#' @param .lookup the lookup table, loaded along with the database or result of [get_lookup()]
+#' @param .lookup the lookup table, default to `getOption("edc_lookup")`
 #' @param id the patient identifier. Will be coerced as numeric.
 #' @param group a grouping variable, given as "dataset$column"
 #' @param origin a variable to consider as time 0, given as "dataset$column"
@@ -44,8 +44,9 @@
 #' @importFrom stringr str_detect str_ends str_remove
 #' @importFrom tidyr pivot_longer
 #' @importFrom tidyselect where
-edc_swimmerplot = function(.lookup=getOption("edc_lookup", NULL), ..., 
-                           id=c("SUBJID", "PATNO"), group=NULL, origin=NULL, 
+edc_swimmerplot = function(.lookup=getOption("edc_lookup"), ..., 
+                           id=get_key_cols()$patient_id, 
+                           group=NULL, origin=NULL, 
                            id_lim=NULL,
                            exclude=NULL,
                            time_unit=c("days", "weeks", "months", "years"),

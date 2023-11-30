@@ -41,7 +41,7 @@
 #' @importFrom purrr map2_chr
 #' @importFrom stringr str_detect
 #' @importFrom tidyr unite unnest
-find_keyword = function(keyword, data=getOption("edc_lookup", NULL), ignore_case=TRUE){
+find_keyword = function(keyword, data=getOption("edc_lookup"), ignore_case=TRUE){
   stopifnot(!is.null(data))
   invalid=names2=labels2=x=NULL
   f = if(isTRUE(ignore_case)) tolower else identity
@@ -255,7 +255,7 @@ reset_manual_correction = function(){
 #' @export
 #' @importFrom purrr map
 #' @importFrom rlang set_names
-get_datasets = function(lookup=getOption("edc_lookup", NULL), envir=parent.frame()){
+get_datasets = function(lookup=getOption("edc_lookup"), envir=parent.frame()){
   lookup$dataset %>% 
     set_names() %>% 
     map(~get(.x, envir=envir))
@@ -274,7 +274,7 @@ get_datasets = function(lookup=getOption("edc_lookup", NULL), envir=parent.frame
 #' @importFrom dplyr mutate select
 #' @importFrom purrr map map_chr
 #' @importFrom tibble lst
-get_key_cols = function(lookup=getOption("edc_lookup", NULL)){
+get_key_cols = function(lookup=getOption("edc_lookup")){
   patient_id = getOption("edc_cols_id", c("PTNO", "SUBJID"))
   crfname = getOption("edc_cols_crfname", "CRFNAME")
   if(is.null(lookup)) return(lst(patient_id, crfname))
@@ -443,7 +443,8 @@ get_lookup = function(data_list){
 #' @noRd
 #' @keywords internal
 set_lookup = function(lookup){
-  if(!is.null(getOption("edc_lookup", NULL))){
+  verbose = getOption("edc_lookup_overwrite_warn", TRUE)
+  if(verbose && !is.null(getOption("edc_lookup"))){
     cli_warn("Option {.val edc_lookup} has been overwritten.", 
              class="edc_lookup_overwrite_warn")
   }
