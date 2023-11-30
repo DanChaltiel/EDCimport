@@ -19,7 +19,7 @@ If 7zip is not installed or available, use read_tm_all_xpt() instead."><!-- math
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">EDCimport</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0.9011</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0.9012</span>
       </span>
     </div>
 
@@ -65,7 +65,7 @@ If <code>7zip</code> is not installed or available, use <code><a href="read_tm_a
 <span>  split_mixed <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  extend_lookup <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  pw <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"trialmaster_pw"</span><span class="op">)</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"edc_verbose"</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"edc_read_verbose"</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>  key_columns <span class="op">=</span> <span class="st">"deprecated"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -85,7 +85,7 @@ If <code>7zip</code> is not installed or available, use <code><a href="read_tm_a
 
 
 <dt>clean_names_fun</dt>
-<dd><p>[<code>function</code>]<br> a function to clean column names, e.g. <code><a href="https://sfirke.github.io/janitor/reference/clean_names.html" class="external-link">janitor::clean_names()</a></code></p></dd>
+<dd><p>[<code>function</code>]<br> a function to clean column names, e.g. <a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower</a>, <code><a href="https://sfirke.github.io/janitor/reference/clean_names.html" class="external-link">janitor::clean_names()</a></code>,...</p></dd>
 
 
 <dt>split_mixed</dt>

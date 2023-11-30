@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">EDCimport</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0.9011</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0.9012</span>
       </span>
     </div>
 
@@ -64,18 +64,22 @@
 <span><span class="co">#Error in `assert_no_duplicate()`:</span></span>
 <span><span class="co">#! Duplicate on column "subjid" for value 1.</span></span></code></pre></div>
 <ul><li><p>New function <code><a href="../reference/manual_correction.html">manual_correction()</a></code> to safely hard-code a correction while waiting for the TrialMaster database to be updated.</p></li>
+<li><p>New function <code><a href="../reference/edc_options.html">edc_options()</a></code> to manage <code>EDCimport</code> global parameterization.</p></li>
 <li><p>New argument <code>edc_swimmerplot(id_lim)</code> to subset the swimmer plot to some patients only.</p></li>
 <li><p>New option <code>read_trialmaster(use_cache="write")</code> to read from the zip again but still update the cache.</p></li>
 <li><p>You can now use the syntax <code>read_trialmaster(split_mixed=c("col1", "col2"))</code> to split only the datasets you need to (<a href="https://github.com/DanChaltiel/EDCimport/issues/10" class="external-link">#10</a>).</p></li>
 </ul></div>
 <div class="section level5">
-<h5 id="bug-fixes-0-4-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-4-0"></a></h5>
-<ul><li>Non-UTF8 characters in labels are now identified and corrected during reading (<a href="https://github.com/DanChaltiel/EDCimport/issues/5" class="external-link">#5</a>).</li>
+<h5 id="bug-fixes--improvements-0-4-0">Bug fixes &amp; Improvements<a class="anchor" aria-label="anchor" href="#bug-fixes--improvements-0-4-0"></a></h5>
+<ul><li><p>Reading with <code><a href="../reference/read_trialmaster.html">read_trialmaster()</a></code> from cache will output an error if parameters (<code>split_mixed</code>, <code>clean_names_fun</code>) are different (<a href="https://github.com/DanChaltiel/EDCimport/issues/4" class="external-link">#4</a>).</p></li>
+<li><p><code><a href="../reference/split_mixed_datasets.html">split_mixed_datasets()</a></code> is now fully case-insensitive.</p></li>
+<li><p>Non-UTF8 characters in labels are now identified and corrected during reading (<a href="https://github.com/DanChaltiel/EDCimport/issues/5" class="external-link">#5</a>).</p></li>
 </ul></div>
 <div class="section level5">
 <h5 id="minor-breaking-changes-0-4-0">Minor breaking changes<a class="anchor" aria-label="anchor" href="#minor-breaking-changes-0-4-0"></a></h5>
-<ul><li><p><code>read_trialmaster(use_cache="write")</code> is now the default. Caching is not that useful after all so you should opt-in rather than opt-out.</p></li>
+<ul><li><p><code>read_trialmaster(use_cache="write")</code> is now the default. Reading from cache is not stable yet, so you should opt-in rather than opt-out.</p></li>
 <li><p><code>read_trialmaster(extend_lookup=TRUE)</code> is now the default.</p></li>
+<li><p>Options <code>edc_id</code>, <code>edc_crfname</code>, and <code>edc_verbose</code> have been respectively renamed <code>edc_cols_id</code>, <code>edc_cols_crfname</code>, and <code>edc_read_verbose</code> for more clarity.</p></li>
 </ul></div>
 </div>
     <div class="section level2">
@@ -110,7 +114,7 @@
 <ul><li><p>Import your data from TrialMaster using <code>tm = read_trialmaster("path/to/archive.zip")</code>.</p></li>
 <li><p>Search for a keyword in any column name or label using <code>find_keyword("date", data=tm$.lookup)</code>. You can also generate a lookup table for an arbitrary list of dataframe using <code>get_lookup(my_data)</code>.</p></li>
 <li><p>Load the datasets to the global environment using <code>load_list(tm)</code> to avoid typing <code>tm$</code> everywhere.</p></li>
-<li><p>Browse available global options using <code><a href="../reference/EDCimport_options.html">?EDCimport_options</a></code>.</p></li>
+<li><p>Browse available global options using <code>?EDCimport_options</code>.</p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.1.0" id="edcimport-010">EDCimport 0.1.0<a class="anchor" aria-label="anchor" href="#edcimport-010"></a></h2>

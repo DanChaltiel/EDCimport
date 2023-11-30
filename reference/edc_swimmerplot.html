@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">EDCimport</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0.9011</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0.9012</span>
       </span>
     </div>
 
@@ -54,9 +54,9 @@
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">edc_swimmerplot</span><span class="op">(</span></span>
-<span>  .lookup <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"edc_lookup"</span>, <span class="cn">NULL</span><span class="op">)</span>,</span>
+<span>  .lookup <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"edc_lookup"</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span>,</span>
-<span>  id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SUBJID"</span>, <span class="st">"PATNO"</span><span class="op">)</span>,</span>
+<span>  id <span class="op">=</span> <span class="fu"><a href="get_key_cols.html">get_key_cols</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">patient_id</span>,</span>
 <span>  group <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  origin <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  id_lim <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -70,7 +70,7 @@
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>.lookup</dt>
-<dd><p>the lookup table, loaded along with the database or result of <code><a href="get_lookup.html">get_lookup()</a></code></p></dd>
+<dd><p>the lookup table, default to <code>getOption("edc_lookup")</code></p></dd>
 
 
 <dt>...</dt>

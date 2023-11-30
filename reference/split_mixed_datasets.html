@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">EDCimport</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0.9011</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.0.9012</span>
       </span>
     </div>
 
@@ -55,9 +55,9 @@
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">split_mixed_datasets</span><span class="op">(</span></span>
 <span>  datasets <span class="op">=</span> <span class="fu"><a href="get_datasets.html">get_datasets</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  id <span class="op">=</span> <span class="fu"><a href="get_key_cols.html">get_key_cols</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  id <span class="op">=</span> <span class="fu"><a href="get_key_cols.html">get_key_cols</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">patient_id</span>,</span>
 <span>  <span class="va">...</span>,</span>
-<span>  ignore_cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"edc_crfname"</span>, <span class="st">"CRFNAME"</span><span class="op">)</span>,</span>
+<span>  ignore_cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"edc_cols_crfname"</span>, <span class="st">"CRFNAME"</span><span class="op">)</span>,</span>
 <span>  output_code <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -66,11 +66,11 @@
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>datasets</dt>
-<dd><p>the datasets to consider. Use the helper <code><a href="get_datasets.html">get_datasets()</a></code> if needed.</p></dd>
+<dd><p>a dataframe or a list of dataframes to split. Default to all the datasets from <code>.lookup</code>.</p></dd>
 
 
 <dt>id</dt>
-<dd><p>the patient identifier, probably "SUBJID". Should be shared by all datasets.</p></dd>
+<dd><p>the patient identifier, probably "SUBJID". Should be shared by all datasets. Case-insensitive.</p></dd>
 
 
 <dt>...</dt>
@@ -78,7 +78,7 @@
 
 
 <dt>ignore_cols</dt>
-<dd><p>columns to ignore when considering a table as long. Default to <code>getOption("edc_crfname", "CRFNAME")</code></p></dd>
+<dd><p>columns to ignore when considering a table as long. Default to <code>getOption("edc_cols_crfname", "CRFNAME")</code>. Case-insensitive.</p></dd>
 
 
 <dt>output_code</dt>
@@ -121,13 +121,13 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>      5 long_mixed -<span style="color: #BB0000;">0.124</span>  9.95 F    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 190 more rows</span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">mixed_data</span> <span class="op">=</span> <span class="fu">split_mixed_datasets</span><span class="op">(</span><span class="va">tm</span>, id<span class="op">=</span><span class="st">"SUBJID"</span>, verbose<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> <span style="color: #0000BB;">"SUBJID"</span> was not found in 1 table:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB;">".lookup"</span>.</span>
+<span class="r-in"><span><span class="va">mixed_data</span> <span class="op">=</span> <span class="fu">split_mixed_datasets</span><span class="op">(</span><span class="va">tm</span>, id<span class="op">=</span><span class="st">"subjid"</span>, verbose<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> There was 1 short table:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB;">"short"</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> There were 2 mixed (short+long) tables:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB;">"long_pure"</span> and <span style="color: #0000BB;">"long_mixed"</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> There was 1 pure long table:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB;">"long_pure"</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> There was 1 mixed (short+long) table:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB;">"long_mixed"</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> → Use `EDCimport::load_list()` on the result to get separated long and short</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   data.</span>
 <span class="r-in"><span><span class="fu"><a href="load_list.html">load_list</a></span><span class="op">(</span><span class="va">mixed_data</span><span class="op">)</span></span></span>
@@ -164,24 +164,13 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#alternatively, get the code and only use the datasets you need</span></span></span>
 <span class="r-in"><span><span class="fu">split_mixed_datasets</span><span class="op">(</span><span class="va">tm</span>, id<span class="op">=</span><span class="st">"SUBJID"</span>, output_code<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> <span style="color: #0000BB;">"SUBJID"</span> was not found in 1 table:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB;">".lookup"</span>.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> There was 1 short table:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB;">"short"</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> There were 2 mixed (short+long) tables:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB;">"long_pure"</span> and <span style="color: #0000BB;">"long_mixed"</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> There was 1 pure long table:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB;">"long_pure"</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> There was 1 mixed (short+long) table:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB;">"long_mixed"</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> → Copy the following code in your script to separate long and short data:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ## `long_pure` (dim=300x4) ---- </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> long_pure_short = long_pure %&gt;% </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   select(SUBJID, crfname) %&gt;% </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   group_by(SUBJID) %&gt;% </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   summarise(across(everything(), unify)) #dim=100x2 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  long_pure_long = long_pure %&gt;% </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   select(SUBJID, val1, val2) #dim=300x3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ## `long_mixed` (dim=200x5) ---- </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> long_mixed_short = long_mixed %&gt;% </span>
@@ -193,36 +182,25 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>   select(SUBJID, val1, val2) #dim=200x3 </span>
 <span class="r-in"><span><span class="va">filename</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"mixed_code"</span>, fileext<span class="op">=</span><span class="st">".R"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">split_mixed_datasets</span><span class="op">(</span><span class="va">tm</span>, id<span class="op">=</span><span class="st">"SUBJID"</span>, output_code<span class="op">=</span><span class="va">filename</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> <span style="color: #0000BB;">"SUBJID"</span> was not found in 1 table:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB;">".lookup"</span>.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> There was 1 short table:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB;">"short"</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> There were 2 mixed (short+long) tables:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB;">"long_pure"</span> and <span style="color: #0000BB;">"long_mixed"</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> → Copy the code from <span style="color: #0000BB;">/tmp/RtmpzC8Ez4/mixed_code18501dc450ee.R</span> in your script to</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> There was 1 pure long table:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB;">"long_pure"</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> There was 1 mixed (short+long) table:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB;">"long_mixed"</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> → Copy the code from <span style="color: #0000BB;">/tmp/RtmpqWP2oD/mixed_code17ef62500c1b.R</span> in your script to</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   separate long and short data:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>   `utils::browseURL(/tmp/RtmpzC8Ez4/mixed_code18501dc450ee.R)`</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   `utils::browseURL(/tmp/RtmpqWP2oD/mixed_code17ef62500c1b.R)`</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/readLines.html" class="external-link">readLines</a></span><span class="op">(</span><span class="va">filename</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "## `long_pure` (dim=300x4) ---- "                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [2] ""                                                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [3] "long_pure_short = long_pure %&gt;% "                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [4] "  select(SUBJID, crfname) %&gt;% "                      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "  group_by(SUBJID) %&gt;% "                             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [6] "  summarise(across(everything(), unify)) #dim=100x2 "</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] ""                                                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [8] " long_pure_long = long_pure %&gt;% "                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "  select(SUBJID, val1, val2) #dim=300x3"             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [10] ""                                                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [11] ""                                                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [12] "## `long_mixed` (dim=200x5) ---- "                   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [13] ""                                                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [14] "long_mixed_short = long_mixed %&gt;% "                  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [15] "  select(SUBJID, crfname, val3) %&gt;% "                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [16] "  group_by(SUBJID) %&gt;% "                             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "  summarise(across(everything(), unify)) #dim=100x3 "</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [18] ""                                                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [19] " long_mixed_long = long_mixed %&gt;% "                  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [20] "  select(SUBJID, val1, val2) #dim=200x3 "            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "## `long_mixed` (dim=200x5) ---- "                   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2] ""                                                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3] "long_mixed_short = long_mixed %&gt;% "                  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4] "  select(SUBJID, crfname, val3) %&gt;% "                </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "  group_by(SUBJID) %&gt;% "                             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6] "  summarise(across(everything(), unify)) #dim=100x3 "</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [7] ""                                                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [8] " long_mixed_long = long_mixed %&gt;% "                  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [9] "  select(SUBJID, val1, val2) #dim=200x3 "            </span>
 </code></pre></div>
     </div>
   </div>

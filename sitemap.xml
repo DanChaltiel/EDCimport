@@ -16,9 +16,6 @@
     <loc>/reference/EDCimport-package.html</loc>
   </url>
   <url>
-    <loc>/reference/EDCimport_options.html</loc>
-  </url>
-  <url>
     <loc>/reference/assert_no_duplicate.html</loc>
   </url>
   <url>
@@ -26,6 +23,15 @@
   </url>
   <url>
     <loc>/reference/data_example.html</loc>
+  </url>
+  <url>
+    <loc>/reference/edc_options.html</loc>
+  </url>
+  <url>
+    <loc>/reference/edc_peek_options.html</loc>
+  </url>
+  <url>
+    <loc>/reference/edc_reset_options.html</loc>
   </url>
   <url>
     <loc>/reference/edc_swimmerplot.html</loc>
