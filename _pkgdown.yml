@@ -13,3 +13,44 @@ navbar:
       icon: fa-twitter
       href: http://twitter.com/DanChaltiel
       aria-label: Twitter   
+
+
+reference:
+- title: "Main function"
+- contents:
+  - read_trialmaster
+  - read_tm_all_xpt
+- title: "Options"
+- contents:
+  - edc_options
+  - edc_peek_options
+  - edc_reset_options
+- title: "Graphics"
+- contents:
+  - edc_swimmerplot
+- title: "Helpers"
+- contents:
+  - assert_no_duplicate
+  - check_subjid
+  - unify
+  - extend_lookup
+  - find_keyword
+  - get_lookup
+  - get_datasets
+  - get_key_cols
+  - split_mixed_datasets
+- title: "List Utils"
+- contents:
+  - load_list
+  - load_as_list
+  - save_list
+- title: "Examples"
+- contents:
+  - edc_example_mixed
+  - edc_example_plot
+  - read_trialmaster_example
+- title: "Manual correction"
+- contents:
+  - manual_correction
+  - reset_manual_correction
+  
