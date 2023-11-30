@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9015</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9016</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,8 +52,8 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.0" id="edcimport-040-2023xxxx">EDCimport 0.4.0 <sub><sup>2023/xx/xx</sup></sub><a class="anchor" aria-label="anchor" href="#edcimport-040-2023xxxx"></a></h2>
-<div class="section level5">
-<h5 id="new-features-0-4-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-4-0"></a></h5>
+<div class="section level4">
+<h4 id="new-features-0-4-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-4-0"></a></h4>
 <ul><li>New function <code><a href="../reference/check_subjid.html">check_subjid()</a></code> to check if a vector is not missing some patients (<a href="https://github.com/DanChaltiel/EDCimport/issues/8" class="external-link">#8</a>).</li>
 </ul><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
@@ -72,14 +72,14 @@
 <li><p>New option <code>read_trialmaster(use_cache="write")</code> to read from the zip again but still update the cache.</p></li>
 <li><p>You can now use the syntax <code>read_trialmaster(split_mixed=c("col1", "col2"))</code> to split only the datasets you need to (<a href="https://github.com/DanChaltiel/EDCimport/issues/10" class="external-link">#10</a>).</p></li>
 </ul></div>
-<div class="section level5">
-<h5 id="bug-fixes--improvements-0-4-0">Bug fixes &amp; Improvements<a class="anchor" aria-label="anchor" href="#bug-fixes--improvements-0-4-0"></a></h5>
+<div class="section level4">
+<h4 id="bug-fixes--improvements-0-4-0">Bug fixes &amp; Improvements<a class="anchor" aria-label="anchor" href="#bug-fixes--improvements-0-4-0"></a></h4>
 <ul><li><p>Reading with <code><a href="../reference/read_trialmaster.html">read_trialmaster()</a></code> from cache will output an error if parameters (<code>split_mixed</code>, <code>clean_names_fun</code>) are different (<a href="https://github.com/DanChaltiel/EDCimport/issues/4" class="external-link">#4</a>).</p></li>
 <li><p><code><a href="../reference/split_mixed_datasets.html">split_mixed_datasets()</a></code> is now fully case-insensitive.</p></li>
 <li><p>Non-UTF8 characters in labels are now identified and corrected during reading (<a href="https://github.com/DanChaltiel/EDCimport/issues/5" class="external-link">#5</a>).</p></li>
 </ul></div>
-<div class="section level5">
-<h5 id="minor-breaking-changes-0-4-0">Minor breaking changes<a class="anchor" aria-label="anchor" href="#minor-breaking-changes-0-4-0"></a></h5>
+<div class="section level4">
+<h4 id="minor-breaking-changes-0-4-0">Minor breaking changes<a class="anchor" aria-label="anchor" href="#minor-breaking-changes-0-4-0"></a></h4>
 <ul><li><p><code>read_trialmaster(use_cache="write")</code> is now the default. Reading from cache is not stable yet, so you should opt-in rather than opt-out.</p></li>
 <li><p><code>read_trialmaster(extend_lookup=TRUE)</code> is now the default.</p></li>
 <li><p>Options <code>edc_id</code>, <code>edc_crfname</code>, and <code>edc_verbose</code> have been respectively renamed <code>edc_cols_id</code>, <code>edc_cols_crfname</code>, and <code>edc_read_verbose</code> for more clarity.</p></li>
@@ -87,8 +87,8 @@
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.0" id="edcimport-030-20230519">EDCimport 0.3.0 <sub><sup>2023/05/19</sup></sub><a class="anchor" aria-label="anchor" href="#edcimport-030-20230519"></a></h2><p class="text-muted">CRAN release: 2023-05-19</p>
-<div class="section level5">
-<h5 id="new-features-0-3-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-3-0"></a></h5>
+<div class="section level4">
+<h4 id="new-features-0-3-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-3-0"></a></h4>
 <ul><li><p>New function <code><a href="../reference/edc_swimmerplot.html">edc_swimmerplot()</a></code> to show a swimmer plot of all dates in the database and easily find outliers.</p></li>
 <li>
 <p>New features in <code><a href="../reference/read_trialmaster.html">read_trialmaster()</a></code>:</p>
@@ -104,8 +104,8 @@
 <li><p>Standalone functions <code><a href="../reference/extend_lookup.html">extend_lookup()</a></code> and <code><a href="../reference/split_mixed_datasets.html">split_mixed_datasets()</a></code>.</p></li>
 <li><p>New helper <code><a href="../reference/unify.html">unify()</a></code>, which turns a vector of duplicate values into a vector of length 1.</p></li>
 </ul></div>
-<div class="section level5">
-<h5 id="bug-fixes-0-3-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-3-0"></a></h5>
+<div class="section level4">
+<h4 id="bug-fixes-0-3-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-3-0"></a></h4>
 <ul><li><p>Reading errors are now handled by <code><a href="../reference/read_trialmaster.html">read_trialmaster()</a></code> instead of failing. If one XPT file is corrupted, the resulting object will contain the error message instead of the dataset.</p></li>
 <li><p><code><a href="../reference/find_keyword.html">find_keyword()</a></code> is now robust to non-UTF8 characters in labels.</p></li>
 <li><p>Option <code>edc_lookup</code> is now set even when reading from cache.</p></li>
