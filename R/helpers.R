@@ -282,8 +282,8 @@ get_key_cols = function(lookup=getOption("edc_lookup")){
   rtn = lookup %>% 
     select(dataset, names) %>% 
     mutate(
-      patient_id=map_chr(names, ~.x[tolower(.x) %in% tolower(patient_id)] %0% NA), 
-      crfname=map_chr(names, ~.x[tolower(.x) %in% tolower(crfname)] %0% NA)
+      patient_id=map_chr(names, ~.x[tolower(.x) %in% tolower(patient_id)][1] %0% NA), 
+      crfname=map_chr(names, ~.x[tolower(.x) %in% tolower(crfname)][1] %0% NA)
     )
   
   verbose = getOption("edc_get_key_cols_verbose", FALSE)
