@@ -14,7 +14,7 @@ edc_swimmerplot(
   exclude = NULL,
   time_unit = c("days", "weeks", "months", "years"),
   aes_color = c("variable", "label"),
-  plotly = TRUE
+  plotly = getOption("edc_plotly", FALSE)
 )
 }
 \arguments{

@@ -50,7 +50,8 @@ edc_swimmerplot = function(.lookup=getOption("edc_lookup"), ...,
                            id_lim=NULL,
                            exclude=NULL,
                            time_unit=c("days", "weeks", "months", "years"),
-                           aes_color=c("variable", "label"), plotly=TRUE){
+                           aes_color=c("variable", "label"), 
+                           plotly=getOption("edc_plotly", FALSE)){
   check_dots_empty()
   time_unit = match.arg(time_unit[1], c(time_unit, str_remove(time_unit, "s$")))
   if(!str_ends(time_unit, "s")) time_unit = paste0(time_unit, "s")

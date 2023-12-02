@@ -11,6 +11,7 @@
 #' @param path_7zip the path to the 7zip executable. Default to `"C:/Program Files/7-Zip/"`.
 #' @param edc_lookup **(Internal)** a reference to the lookup table (usually `.lookup`). Should usually not be changed manually.
 #' @param edc_subjid_ref **used in [check_subjid]** the vector of the reference subject IDs. You should usually write `edc_options(edc_subjid_ref=enrolres$subjid)`.
+#' @param edc_plotly **used in [edc_swimmerplot]** whether to use plotly to visualize the plot.
 #' @param edc_cols_id,edc_cols_crfname **used in [get_key_cols]** the name of the columns holding the subject id (default to `c("ptno", "subjid")`) and the CRF form name (default to `c("crfname")`). It is case-insensitive.
 #' @param edc_read_verbose,edc_correction_verbose,edc_get_key_cols_verbose the verbosity of the output of functions [read_trialmaster] and [read_tm_all_xpt], [manual_correction], and [get_key_cols]. For example, set `edc_options(edc_read_verbose=0)` to silence the first 2.
 #' @param edc_lookup_overwrite_warn default to TRUE. Whether there should be warning when overwriting `.lookup` (like when reading 2 databases successively)
@@ -25,11 +26,9 @@ edc_options = function(
     path_7zip,
     edc_lookup,
     edc_subjid_ref,
-    edc_cols_id,
-    edc_cols_crfname,
-    edc_read_verbose,
-    edc_correction_verbose,
-    edc_get_key_cols_verbose,
+    edc_plotly,
+    edc_cols_id, edc_cols_crfname,
+    edc_read_verbose, edc_correction_verbose, edc_get_key_cols_verbose,
     edc_lookup_overwrite_warn,
     .local=FALSE){
   rlang::check_dots_empty()

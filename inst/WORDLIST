@@ -16,6 +16,7 @@ edu
 https
 nrao
 pipeable
+plotly
 tibble
 tm
 tolower

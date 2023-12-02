@@ -10,6 +10,7 @@ edc_options(
   path_7zip,
   edc_lookup,
   edc_subjid_ref,
+  edc_plotly,
   edc_cols_id,
   edc_cols_crfname,
   edc_read_verbose,
@@ -29,6 +30,8 @@ edc_options(
 \item{edc_lookup}{\strong{(Internal)} a reference to the lookup table (usually \code{.lookup}). Should usually not be changed manually.}
 
 \item{edc_subjid_ref}{\strong{used in \link{check_subjid}} the vector of the reference subject IDs. You should usually write \code{edc_options(edc_subjid_ref=enrolres$subjid)}.}
+
+\item{edc_plotly}{\strong{used in \link{edc_swimmerplot}} whether to use plotly to visualize the plot.}
 
 \item{edc_cols_id, edc_cols_crfname}{\strong{used in \link{get_key_cols}} the name of the columns holding the subject id (default to \code{c("ptno", "subjid")}) and the CRF form name (default to \code{c("crfname")}). It is case-insensitive.}
 
