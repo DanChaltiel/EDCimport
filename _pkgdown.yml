@@ -49,7 +49,7 @@ reference:
 - contents:
   - edc_example_mixed
   - edc_example_plot
-  - read_trialmaster_example
+  - edc_example
 - title: "Manual correction"
 - contents:
   - manual_correction

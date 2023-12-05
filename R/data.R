@@ -5,7 +5,7 @@
 #' 
 #' List of tables used in EDCimport examples: 
 #' \itemize{
-#'   \item `read_trialmaster_example()` can be used as the result of [read_trialmaster()]
+#'   \item `edc_example()` can be used as the result of [read_trialmaster()]
 #'   \item `edc_example_plot()` can be used to test [edc_swimmerplot()] 
 #'   \item `edc_example_mixed()` can be used to test [split_mixed_datasets()]
 #' }
@@ -72,4 +72,4 @@ edc_example_plot = function(N=50, seed=42){
 
 #' @rdname data_example
 #' @export
-read_trialmaster_example = edc_example_plot
+edc_example = edc_example_plot

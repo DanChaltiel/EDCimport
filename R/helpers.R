@@ -81,7 +81,7 @@ find_keyword = function(keyword, data=getOption("edc_lookup"), ignore_case=TRUE)
 #' @export
 #'
 #' @examples
-#' tm = read_trialmaster_example()
+#' tm = edc_example()
 #' load_list(tm)
 #' options(edc_subjid_ref=db0$SUBJID)
 #' #usually, you set something like:

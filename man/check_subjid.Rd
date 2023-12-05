@@ -18,7 +18,7 @@ nothing, called for warnings
 Compare a subject ID vector to the study's reference subject ID (usually something like \code{enrolres$subjid}).
 }
 \examples{
-tm = read_trialmaster_example()
+tm = edc_example()
 load_list(tm)
 options(edc_subjid_ref=db0$SUBJID)
 #usually, you set something like:
