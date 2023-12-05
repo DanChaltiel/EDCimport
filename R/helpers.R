@@ -408,6 +408,7 @@ save_list = function(x, filename){
 #' @importFrom rlang is_named
 #' @importFrom tibble tibble
 get_lookup = function(data_list){
+  if(is.data.frame(data_list)) data_list = lst(!!caller_arg(data_list):=data_list)
   if(!is.list(data_list)){
     cli_abort(c("{.code data_list} should be a list.", 
                 i="{.code class(data_list)}: {.cls {class(data_list)}}"), 
