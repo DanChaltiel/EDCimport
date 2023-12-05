@@ -9,33 +9,21 @@ find_keyword(keyword, data = getOption("edc_lookup"), ignore_case = TRUE)
 \arguments{
 \item{keyword}{the keyword to search for}
 
-\item{data}{the dataframe where to search the keyword. Can be set using \code{options(edc_lookup=my_data)}, which is done automatically when calling \code{\link[=read_trialmaster]{read_trialmaster()}}.}
+\item{data}{the lookup dataframe where to search the keyword. Can be set using \code{edc_options(edc_lookup=my_data)}, which is done automatically when calling \code{\link[=read_trialmaster]{read_trialmaster()}}.}
 
-\item{ignore_case}{should case differences be ignored in the match?}
+\item{ignore_case}{should case differences be ignored in the match? Default to \code{TRUE}.}
 }
 \value{
-a filtered tibble
+a tibble
 }
 \description{
 Find a keyword in all names and labels of a list of datasets.
 }
 \examples{
-library(crosstable)
-library(dplyr)
-library(purrr)
-
-#Using a custom table list
-lookup = list(i=crosstable::iris2, m=crosstable::mtcars2) \%>\% get_lookup()
-find_keyword("hp", data=lookup)
-find_keyword("number|date", data=lookup)
-find_keyword("number|date", data=lookup, ignore_case=FALSE)
-
-#Using lookup from [read_trialmaster()]
 \dontrun{
 path = system.file("extdata/Example_Export_SAS_XPORT_2022_08_25_15_16.zip", 
                    package = "EDCimport", mustWork=TRUE)
 w = read_trialmaster(path, verbose=FALSE)
-options(edc_lookup=w$.lookup) #optional
 find_keyword("patient")
 }
 }

@@ -162,3 +162,11 @@ copy_label_from = function(x, from){
     .x
   }))
 }
+
+
+#' @noRd
+#' @keywords internal
+set_label = function(x, lab){
+  attr(x, "label") = lab
+  x
+}

@@ -48,21 +48,25 @@ edc_example_plot = function(N=50, seed=42){
   start = ISOdate(2010, 04, 13)
   day = 3600*24
   db = tibble(SUBJID=1:N, age=rnorm(N, 50, 10), date_naissance=start-age*day)
+  attr(db$SUBJID, "label") = "Subject ID"
+  attr(db$age, "label")    = "Age (years)"
+  attr(db$date_naissance, "label") = "Date of birth"
   
   for(i in 1:10){
-    db[[paste0("date",i)]] = start+rnorm(N, i*10, 10)*day 
+    db[[paste0("date",i)]] = (start+rnorm(N, i*10, 10)*day) %>% 
+      set_label(paste0("Date at visit ",i))
   }
   
-  db0=db %>% select(SUBJID, 1:3) %>% mutate(group=ifelse(runif(n())>0.5, "A", "B"))
-  db1=db %>% select(SUBJID, 4:6) %>% mutate(x=ifelse(runif(n())>0.5, "X", "Y"))
-  db1=bind_rows(db1, db1)
+  db0=db %>% select(SUBJID, 1:3) %>% mutate(group=ifelse(runif(n())>0.5, "A", "B") %>% set_label("Treatment"))
+  db1=db %>% select(SUBJID, 4:6) %>% mutate(x=ifelse(runif(n())>0.5, "X", "Y") %>% set_label("Covariate"))
+  db1=bind_rows(db1, db1) %>% copy_label_from(db1)
   db2=db %>% select(SUBJID, 7:9)
   db3=db %>% select(SUBJID, 10:13)
   
   .lookup = tibble(dataset=paste0("db", 0:3))
   # rtn$.lookup=get_lookup(rtn) %>% extend_lookup()
   rtn = lst(db0, db1, db2, db3) %>% 
-    imap(~.x %>% mutate(crfname=.y))
+    imap(~.x %>% mutate(crfname=.y %>% set_label("Form name")))
   # rtn$.lookup = get_lookup(rtn) %>% extend_lookup()
   rtn$.lookup=get_lookup(rtn)
   set_lookup(rtn$.lookup)

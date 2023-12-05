@@ -16,9 +16,10 @@ a dataframe summarizing column names and labels
 Generate a lookup table
 }
 \examples{
-tl = list(r=crosstable::iris2, x=mtcars) \%>\% get_lookup()
-tl
-library(tidyr)
-tl \%>\% unnest(everything())
+x = edc_example()
+x$.lookup=NULL
+lk = get_lookup(x)
+lk
+lk \%>\% tidyr::unnest(c(names, labels))
 
 }

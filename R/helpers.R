@@ -9,28 +9,16 @@
 #' Find a keyword in all names and labels of a list of datasets. 
 #'
 #' @param keyword the keyword to search for
-#' @param data the dataframe where to search the keyword. Can be set using `options(edc_lookup=my_data)`, which is done automatically when calling [read_trialmaster()].
-#' @param ignore_case should case differences be ignored in the match?
+#' @param data the lookup dataframe where to search the keyword. Can be set using `edc_options(edc_lookup=my_data)`, which is done automatically when calling [read_trialmaster()].
+#' @param ignore_case should case differences be ignored in the match? Default to `TRUE`.
 #'
-#' @return a filtered tibble
+#' @return a tibble
 #' @export
 #' @examples 
-#' library(crosstable)
-#' library(dplyr)
-#' library(purrr)
-#' 
-#' #Using a custom table list
-#' lookup = list(i=crosstable::iris2, m=crosstable::mtcars2) %>% get_lookup()
-#' find_keyword("hp", data=lookup)
-#' find_keyword("number|date", data=lookup)
-#' find_keyword("number|date", data=lookup, ignore_case=FALSE)
-#' 
-#' #Using lookup from [read_trialmaster()]
 #' \dontrun{
 #' path = system.file("extdata/Example_Export_SAS_XPORT_2022_08_25_15_16.zip", 
 #'                    package = "EDCimport", mustWork=TRUE)
 #' w = read_trialmaster(path, verbose=FALSE)
-#' options(edc_lookup=w$.lookup) #optional
 #' find_keyword("patient")
 #' }
 #' @importFrom cli cli_warn
@@ -395,10 +383,11 @@ save_list = function(x, filename){
 #' @param data_list a list containing at least 1 dataframe
 #' @return a dataframe summarizing column names and labels 
 #' @examples
-#' tl = list(r=crosstable::iris2, x=mtcars) %>% get_lookup()
-#' tl
-#' library(tidyr)
-#' tl %>% unnest(everything())
+#' x = edc_example()
+#' x$.lookup=NULL
+#' lk = get_lookup(x)
+#' lk
+#' lk %>% tidyr::unnest(c(names, labels))
 #' 
 #' @export
 #' @importFrom cli cli_abort
