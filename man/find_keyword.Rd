@@ -19,11 +19,6 @@ a filtered tibble
 \description{
 Find a keyword in all names and labels of a list of datasets.
 }
-\section{EDCimport}{
-
-Usually,
-}
-
 \examples{
 library(crosstable)
 library(dplyr)

@@ -12,9 +12,6 @@
 #' @param data the dataframe where to search the keyword. Can be set using `options(edc_lookup=my_data)`, which is done automatically when calling [read_trialmaster()].
 #' @param ignore_case should case differences be ignored in the match?
 #'
-#' @section EDCimport:
-#' Usually, 
-#'
 #' @return a filtered tibble
 #' @export
 #' @examples 
