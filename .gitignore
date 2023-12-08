@@ -13,3 +13,4 @@ DEV\.R
 .Rprofile
 
 docs
+tests/testthat/test-real.R

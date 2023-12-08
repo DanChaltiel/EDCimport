@@ -4,6 +4,8 @@
 #' @importFrom readr read_file
 #' @importFrom rlang set_names
 #' @importFrom stringr regex str_match str_remove_all str_split str_starts str_trim
+#' @noRd
+#' @keywords internal
 read_sas_format = function(file){
   if(!file.exists(file)){
     cli_abort("File {file} does not exist.")
@@ -46,6 +48,8 @@ read_sas_format = function(file){
 
 
 #' @importFrom purrr map_df
+#' @noRd
+#' @keywords internal
 apply_sas_formats = function(df, formats){
   df %>% map_df(~{
     fname = attr(.x, "format.sas")

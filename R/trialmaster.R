@@ -229,7 +229,8 @@ read_tm_all_xpt = function(directory, ..., format_file="procformat.sas",
           purrr::walk(~{
             columns = names(a)[a==.x]
             cli_warn(c("Error when reading table {.val {name}} on {qty(columns)} column{?s} {.val {columns}}", 
-                       x=.x))
+                       x=.x),
+                     class="edc_read_column_error_warning")
             
           })
       }

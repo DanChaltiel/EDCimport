@@ -179,6 +179,8 @@ edc_swimmerplot = function(.lookup=getOption("edc_lookup"), ...,
 #' @importFrom dplyr select
 #' @importFrom rlang caller_arg
 #' @importFrom stringr str_detect str_split
+#' @noRd
+#' @keywords internal
 parse_var = function(input, id, env){
   input_name = rlang::caller_arg(input)
   

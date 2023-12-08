@@ -26,7 +26,7 @@ reset_manual_correction()
 \item{verbose}{whether to print informations (once)}
 }
 \value{
-nothing, used for side effects
+Nothing, used for side effects
 }
 \description{
 When finding wrong or unexpected values in an exported table, it can be useful to temporarily correct them by hard-coding a value.

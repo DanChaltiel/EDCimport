@@ -150,7 +150,7 @@ assert_no_duplicate = function(df, id_col=get_key_cols()){
 #' @param correct the temporary correction value
 #' @param verbose whether to print informations (once)
 #'
-#' @return nothing, used for side effects
+#' @return Nothing, used for side effects
 #' @importFrom rlang as_name enquo set_names
 #' @export
 #'
@@ -217,6 +217,7 @@ manual_correction = function(data, col, rows, wrong, correct,
 
 
 #' @name manual_correction
+#' @return NULL
 #' @export
 reset_manual_correction = function(){
   x=options()
