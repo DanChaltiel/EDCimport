@@ -8,7 +8,7 @@
 #' 
 #' Find a keyword in all names and labels of a list of datasets. 
 #'
-#' @param keyword the keyword to search for
+#' @param keyword the keyword to search for. Can handle regular expressions (see examples).
 #' @param data the lookup dataframe where to search the keyword. Can be set using `edc_options(edc_lookup=my_data)`, which is done automatically when calling [read_trialmaster()].
 #' @param ignore_case should case differences be ignored in the match? Default to `TRUE`.
 #'
@@ -17,9 +17,16 @@
 #' @examples 
 #' \dontrun{
 #' path = system.file("extdata/Example_Export_SAS_XPORT_2022_08_25_15_16.zip", 
-#'                    package = "EDCimport", mustWork=TRUE)
+#'                    package="EDCimport", mustWork=TRUE)
 #' w = read_trialmaster(path, verbose=FALSE)
+#' 
 #' find_keyword("patient")
+#' 
+#' #with regex
+#' find_keyword("patient$")
+#' find_keyword("\\d")
+#' find_keyword("(Trial|Form) Name")
+#' find_keyword("\\(") #you need to escape special characters
 #' }
 #' @importFrom cli cli_warn
 #' @importFrom dplyr filter mutate pull select

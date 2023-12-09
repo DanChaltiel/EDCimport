@@ -31,7 +31,6 @@ Imports:
     utils
 Suggests: 
     callr,
-    crosstable,
     gtools,
     janitor,
     knitr,

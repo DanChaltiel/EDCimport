@@ -7,7 +7,7 @@
 find_keyword(keyword, data = getOption("edc_lookup"), ignore_case = TRUE)
 }
 \arguments{
-\item{keyword}{the keyword to search for}
+\item{keyword}{the keyword to search for. Can handle regular expressions (see examples).}
 
 \item{data}{the lookup dataframe where to search the keyword. Can be set using \code{edc_options(edc_lookup=my_data)}, which is done automatically when calling \code{\link[=read_trialmaster]{read_trialmaster()}}.}
 
@@ -22,8 +22,15 @@ Find a keyword in all names and labels of a list of datasets.
 \examples{
 \dontrun{
 path = system.file("extdata/Example_Export_SAS_XPORT_2022_08_25_15_16.zip", 
-                   package = "EDCimport", mustWork=TRUE)
+                   package="EDCimport", mustWork=TRUE)
 w = read_trialmaster(path, verbose=FALSE)
+
 find_keyword("patient")
+
+#with regex
+find_keyword("patient$")
+find_keyword("\\\\d")
+find_keyword("(Trial|Form) Name")
+find_keyword("\\\\(") #you need to escape special characters
 }
 }
