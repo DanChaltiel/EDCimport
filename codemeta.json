@@ -4,17 +4,23 @@
   "identifier": "EDCimport",
   "description": "A convenient toolbox to import data exported from Electronic Data Capture (EDC) software 'TrialMaster'.",
   "name": "EDCimport: Import Data from EDC Software",
-  "relatedLink": "https://danchaltiel.github.io/EDCimport/",
+  "relatedLink": ["https://danchaltiel.github.io/EDCimport/", "https://CRAN.R-project.org/package=EDCimport"],
   "codeRepository": "https://github.com/DanChaltiel/EDCimport",
   "issueTracker": "https://github.com/DanChaltiel/EDCimport/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
     "url": "https://r-project.org"
   },
   "runtimePlatform": "R version 4.3.1 (2023-06-16 ucrt)",
+  "provider": {
+    "@id": "https://cran.r-project.org",
+    "@type": "Organization",
+    "name": "Comprehensive R Archive Network (CRAN)",
+    "url": "https://cran.r-project.org"
+  },
   "author": [
     {
       "@type": "Person",
@@ -314,7 +320,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "1168.264KB",
+  "fileSize": "1152.631KB",
   "releaseNotes": "https://github.com/DanChaltiel/EDCimport/blob/master/NEWS.md",
   "readme": "https://github.com/DanChaltiel/EDCimport/blob/main/README.md",
   "contIntegration": "https://github.com/DanChaltiel/EDCimport/actions/workflows/check-standard.yaml",
