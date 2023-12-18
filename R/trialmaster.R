@@ -153,7 +153,7 @@ read_tm_all_xpt = function(directory, ..., format_file="procformat.sas",
     procformat = file.path2(directory, format_file)
     if(!file.exists(procformat)) procformat = format_file
     if(!file.exists(procformat)) {
-      cli_abort("File {.file {format_file}} does not exist.", 
+      cli_abort("File {.file {format_file}} does not exist. Set {.arg format_file=NULL} to override.", 
                 class="edc_tm_no_procformat_error")
     }
     sas_formats = read_sas_format(procformat)
@@ -220,6 +220,7 @@ read_tm_all_xpt = function(directory, ..., format_file="procformat.sas",
   # faulty columns ----
   rtn %>% 
     purrr::iwalk(function(data, name){
+      if(is_error(data)) return(data)
       a = data %>% 
         select(where(~inherits(.x, "edc_error_col"))) %>% 
         dplyr::distinct()

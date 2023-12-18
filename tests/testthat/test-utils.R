@@ -86,7 +86,7 @@ test_that("find_keyword() works", {
 
 test_that("find_keyword() works with read_trialmaster()", {
   clean_cache()
-  expect_message(w <- read_trialmaster(filename),
+  expect_message(w <- read_trialmaster(filename, use_cache=FALSE),
                  class="read_tm_zip")
   local_options(edc_lookup=w$.lookup)
   x1=find_keyword("sex")

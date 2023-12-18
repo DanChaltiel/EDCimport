@@ -142,6 +142,7 @@ any_of2 = function(x, ignore.case=TRUE, ...){
 #' @importFrom cli cli_warn
 #' @importFrom dplyr select
 get_data_name = function(df, crfname=getOption("edc_cols_crfname", "crfname")){
+  if(is_error(df)) return(NA)
   sel = select(df, any_of2(crfname))
   if(!is.null(attr(df, "data_name"))){
     attr(df, "data_name")
