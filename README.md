@@ -18,7 +18,7 @@ install.packages("EDCimport")
 devtools::install_github("DanChaltiel/EDCimport")
 ```
 
-You will also need [`7-zip`](https://www.7-zip.org/download.html) installed, and preferably added to the [`PATH`](https://www.java.com/en/download/help/path.html).
+You will also need [`7-zip`](https://www.7-zip.org/download.html) installed, and preferably added to the [`PATH`](https://superuser.com/q/284342/532861).
 
 
 > [!WARNING]
