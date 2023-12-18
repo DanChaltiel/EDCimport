@@ -6,7 +6,6 @@ skip_on_cran()
 cachename = test_path("trialmaster_export_2022-08-25 15h16.rds")
 filename = test_path("CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16.zip")
 filename_noformat = test_path("CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16_noformat.zip")
-filename_nopw = test_path("CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16_nopw.zip")
 filename_bad = test_path("CRF_Dan_Export.zip")
 
 test_that("Read an archive", {
