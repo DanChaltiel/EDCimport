@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9017</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -63,79 +63,38 @@
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>keyword</dt>
-<dd><p>the keyword to search for</p></dd>
+<dd><p>the keyword to search for. Can handle regular expressions (see examples).</p></dd>
 
 
 <dt>data</dt>
-<dd><p>the dataframe where to search the keyword. Can be set using <code>options(edc_lookup=my_data)</code>, which is done automatically when calling <code><a href="read_trialmaster.html">read_trialmaster()</a></code>.</p></dd>
+<dd><p>the lookup dataframe where to search the keyword. Can be set using <code>edc_options(edc_lookup=my_data)</code>, which is done automatically when calling <code><a href="read_trialmaster.html">read_trialmaster()</a></code>.</p></dd>
 
 
 <dt>ignore_case</dt>
-<dd><p>should case differences be ignored in the match?</p></dd>
+<dd><p>should case differences be ignored in the match? Default to <code>TRUE</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>a filtered tibble</p>
-    </div>
-    <div class="section level2">
-    <h2 id="edcimport">EDCimport<a class="anchor" aria-label="anchor" href="#edcimport"></a></h2>
-    
-
-<p>Usually,</p>
+<p>a tibble</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://danchaltiel.github.io/crosstable/" class="external-link">crosstable</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘dplyr’</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:stats’:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>     filter, lag</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:base’:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>     intersect, setdiff, setequal, union</span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://purrr.tidyverse.org/" class="external-link">purrr</a></span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘purrr’</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> The following object is masked from ‘package:crosstable’:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>     compact</span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">#Using a custom table list</span></span></span>
-<span class="r-in"><span><span class="va">lookup</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>i<span class="op">=</span><span class="fu">crosstable</span><span class="fu">::</span><span class="va"><a href="https://danchaltiel.github.io/crosstable/reference/iris2.html" class="external-link">iris2</a></span>, m<span class="op">=</span><span class="fu">crosstable</span><span class="fu">::</span><span class="va"><a href="https://danchaltiel.github.io/crosstable/reference/mtcars2.html" class="external-link">mtcars2</a></span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="get_lookup.html">get_lookup</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">find_keyword</span><span class="op">(</span><span class="st">"hp"</span>, data<span class="op">=</span><span class="va">lookup</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 5</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   dataset  nrow  ncol names   labels            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> m          32    14 hp      Gross horsepower  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> m          32    14 hp_date Some nonsense date</span>
-<span class="r-in"><span><span class="fu">find_keyword</span><span class="op">(</span><span class="st">"number|date"</span>, data<span class="op">=</span><span class="va">lookup</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 5 × 5</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   dataset  nrow  ncol names      labels                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> m          32    14 cyl        Number of cylinders    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> m          32    14 gear       Number of forward gears</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> m          32    14 carb       Number of carburetors  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> m          32    14 hp_date    Some nonsense date     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> m          32    14 qsec_posix Date+time              </span>
-<span class="r-in"><span><span class="fu">find_keyword</span><span class="op">(</span><span class="st">"number|date"</span>, data<span class="op">=</span><span class="va">lookup</span>, ignore_case<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 5</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   dataset  nrow  ncol names   labels            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> m          32    14 hp_date Some nonsense date</span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">#Using lookup from [read_trialmaster()]</span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span><span class="va">path</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/Example_Export_SAS_XPORT_2022_08_25_15_16.zip"</span>, </span></span>
-<span class="r-in"><span>                   package <span class="op">=</span> <span class="st">"EDCimport"</span>, mustWork<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span>                   package<span class="op">=</span><span class="st">"EDCimport"</span>, mustWork<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">w</span> <span class="op">=</span> <span class="fu"><a href="read_trialmaster.html">read_trialmaster</a></span><span class="op">(</span><span class="va">path</span>, verbose<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>edc_lookup<span class="op">=</span><span class="va">w</span><span class="op">$</span><span class="va">.lookup</span><span class="op">)</span> <span class="co">#optional</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">find_keyword</span><span class="op">(</span><span class="st">"patient"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#with regex</span></span></span>
+<span class="r-in"><span><span class="fu">find_keyword</span><span class="op">(</span><span class="st">"patient$"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">find_keyword</span><span class="op">(</span><span class="st">"\\d"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">find_keyword</span><span class="op">(</span><span class="st">"(Trial|Form) Name"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">find_keyword</span><span class="op">(</span><span class="st">"\\("</span><span class="op">)</span> <span class="co">#you need to escape special characters</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>

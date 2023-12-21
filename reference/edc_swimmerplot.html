@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9017</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,7 +67,7 @@
 <span>  exclude <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  time_unit <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"days"</span>, <span class="st">"weeks"</span>, <span class="st">"months"</span>, <span class="st">"years"</span><span class="op">)</span>,</span>
 <span>  aes_color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"variable"</span>, <span class="st">"label"</span><span class="op">)</span>,</span>
-<span>  plotly <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  plotly <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"edc_plotly"</span>, <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -106,7 +106,7 @@
 
 
 <dt>aes_color</dt>
-<dd><p>either <code>variable</code> ("dataset - column") or <code>label</code> (the column label)</p></dd>
+<dd><p>either <code>variable</code> ("{dataset} - {column}") or <code>label</code> (the column label)</p></dd>
 
 
 <dt>plotly</dt>
