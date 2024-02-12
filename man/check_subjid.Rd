@@ -9,7 +9,7 @@ check_subjid(x, ref = getOption("edc_subjid_ref"))
 \arguments{
 \item{x}{the subject ID column to check}
 
-\item{ref}{the reference for subject ID. Should usually be set through \code{options(edc_subjid_ref=xxx)}. See example.}
+\item{ref}{the reference for subject ID. Should usually be set through \code{edc_options(edc_subjid_ref=xxx)}. See example.}
 }
 \value{
 nothing, called for warnings

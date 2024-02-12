@@ -70,7 +70,7 @@ find_keyword = function(keyword, data=getOption("edc_lookup"), ignore_case=TRUE)
 #' Compare a subject ID vector to the study's reference subject ID (usually something like `enrolres$subjid`).
 #'
 #' @param x the subject ID column to check
-#' @param ref the reference for subject ID. Should usually be set through `options(edc_subjid_ref=xxx)`. See example.
+#' @param ref the reference for subject ID. Should usually be set through `edc_options(edc_subjid_ref=xxx)`. See example.
 #'
 #' @return nothing, called for warnings
 #' @export
