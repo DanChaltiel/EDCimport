@@ -187,18 +187,21 @@ read_tm_all_xpt = function(directory, ..., format_file="procformat.sas",
   key_columns = get_key_cols(.lookup)
   patient_id = key_columns$patient_id
   id_found = map_lgl(rtn, ~any(tolower(patient_id) %in% tolower(names(.x))))
+  
+  if(!isFALSE(split_mixed) & !isTRUE(split_mixed) & !is.character(split_mixed)){
+    cli_abort("{.arg split_mixed} should be either FALSE, TRUE, 
+                or a character vector of column names.")
+  }
   if(!isFALSE(split_mixed)){
     split_mixed_names = split_mixed
     if(isTRUE(split_mixed)) split_mixed_names = names(rtn)
-    if(!is.character(split_mixed)){
-      cli_abort("{.arg split_mixed} should be either FALSE, TRUE, or a character vector of column names.")
-    }
     if(any(id_found)){
       mixed = rtn %>% 
         keep_at(split_mixed_names) %>% 
         split_mixed_datasets(id=patient_id, verbose=FALSE)
       if(!isTRUE(split_mixed) && length(mixed)==0){
-        cli_warn("Dataset{?s} {.val {split_mixed_names}} are not mixed (either short or long) and cannot be split", 
+        cli_warn("Dataset{?s} {.val {split_mixed_names}} are not mixed 
+                 (either short or long) and cannot be split", 
                  class="edc_read_cannot_split_mixed_warn")
       }
       rtn = c(rtn, mixed)
