@@ -20,7 +20,7 @@ crfname the actual name of the dataset
     
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1.9001</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -116,11 +116,8 @@ crfname the actual name of the dataset
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> long_mixed   200     5 <span style="color: #949494;">&lt;chr [5]&gt;</span>    <span style="color: #949494;">&lt;chr [5]&gt;</span>   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> long_pure    300     4 <span style="color: #949494;">&lt;chr [4]&gt;</span>    <span style="color: #949494;">&lt;chr [4]&gt;</span>   </span>
 <span class="r-in"><span><span class="va">.lookup</span> <span class="op">=</span> <span class="fu">extend_lookup</span><span class="op">(</span><span class="va">.lookup</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in mutate(., n_id = map_int(dataset, ~f(.x, key_columns$patient_id)),     rows_per_id = round(nrow/n_id, 1), crfname = map_chr(dataset,         ~get_data_name(datasets[[.x]]), crfname = key_columns$crfname)):</span> <span style="color: #00BBBB;">ℹ</span> In argument: `n_id = map_int(dataset, ~f(.x,</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span>   key_columns$patient_id))`.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `map_int()`:</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> In index: 1.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `map()`:</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in filter(., map_lgl(dataset, ~!inherits(datasets[[.x]], "error"))):</span> <span style="color: #00BBBB;">ℹ</span> In argument: `map_lgl(dataset, ~!inherits(datasets[[.x]], "error"))`.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `map_lgl()`:</span></span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> In index: 1.</span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `map()`:</span></span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> In index: 1.</span>
