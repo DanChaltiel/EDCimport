@@ -489,6 +489,7 @@ extend_lookup = function(lookup, ...,
     length(unique(rtn[[1]][[1]]))
   }
   rtn = lookup %>% 
+    filter(map_lgl(dataset, ~!inherits(datasets[[.x]], "error"))) %>% 
     mutate(
       n_id = map_int(dataset, ~f(.x, key_columns$patient_id)),
       rows_per_id = round(nrow/n_id, 1),
