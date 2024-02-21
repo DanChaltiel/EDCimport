@@ -7,12 +7,12 @@
 check_subjid(x, ref = getOption("edc_subjid_ref"))
 }
 \arguments{
-\item{x}{the subject ID column to check}
+\item{x}{the subject ID column to check, or a dataframe which ID column will be guessed}
 
 \item{ref}{the reference for subject ID. Should usually be set through \code{edc_options(edc_subjid_ref=xxx)}. See example.}
 }
 \value{
-nothing, called for warnings
+nothing, called for errors/warnings
 }
 \description{
 Compare a subject ID vector to the study's reference subject ID (usually something like \code{enrolres$subjid}).

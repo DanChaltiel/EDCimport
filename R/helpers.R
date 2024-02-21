@@ -69,10 +69,12 @@ find_keyword = function(keyword, data=getOption("edc_lookup"), ignore_case=TRUE)
 #' 
 #' Compare a subject ID vector to the study's reference subject ID (usually something like `enrolres$subjid`).
 #'
-#' @param x the subject ID column to check
+#' @param x the subject ID column to check, or a dataframe which ID column will be guessed
 #' @param ref the reference for subject ID. Should usually be set through `edc_options(edc_subjid_ref=xxx)`. See example.
 #'
-#' @return nothing, called for warnings
+#' @return nothing, called for errors/warnings
+#' @importFrom dplyr any_of select
+#' @importFrom cli cli_abort cli_warn
 #' @export
 #'
 #' @examples
@@ -87,6 +89,9 @@ find_keyword = function(keyword, data=getOption("edc_lookup"), ignore_case=TRUE)
 check_subjid = function(x, ref=getOption("edc_subjid_ref")){
   if(is.null(ref)){
     cli_abort("{.arg ref} cannot be NULL in {.fun check_subjid}. See {.help EDCimport::check_subjid} to see how to set it.")
+  }
+  if(is.data.frame(x)){
+    x = x %>% select(any_of(get_key_cols()$patient_id)) %>% pull()
   }
   ref = sort(unique(ref))
   m = setdiff(ref, x) %>% sort()
