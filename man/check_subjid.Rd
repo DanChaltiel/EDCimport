@@ -23,7 +23,7 @@ load_list(tm)
 options(edc_subjid_ref=db0$SUBJID)
 #usually, you set something like:
 #options(edc_subjid_ref=enrolres$subjid)
-check_subjid(db1$SUBJID)
-check_subjid(db1$SUBJID \%>\% setdiff(2))
-check_subjid(c(db1$SUBJID, 99))
+check_subjid(db1)
+db1 \%>\% dplyr::filter(SUBJID>1) \%>\% check_subjid()
+check_subjid(c(db1$SUBJID, 99, 999))
 }

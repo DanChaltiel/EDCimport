@@ -83,23 +83,28 @@ find_keyword = function(keyword, data=getOption("edc_lookup"), ignore_case=TRUE)
 #' options(edc_subjid_ref=db0$SUBJID)
 #' #usually, you set something like:
 #' #options(edc_subjid_ref=enrolres$subjid)
-#' check_subjid(db1$SUBJID)
-#' check_subjid(db1$SUBJID %>% setdiff(2))
-#' check_subjid(c(db1$SUBJID, 99))
+#' check_subjid(db1)
+#' db1 %>% dplyr::filter(SUBJID>1) %>% check_subjid()
+#' check_subjid(c(db1$SUBJID, 99, 999))
 check_subjid = function(x, ref=getOption("edc_subjid_ref")){
   if(is.null(ref)){
     cli_abort("{.arg ref} cannot be NULL in {.fun check_subjid}. See {.help EDCimport::check_subjid} to see how to set it.")
   }
+  x_name = rlang::caller_arg(x)
   if(is.data.frame(x)){
     x = x %>% select(any_of(get_key_cols()$patient_id)) %>% pull()
   }
   ref = sort(unique(ref))
   m = setdiff(ref, x) %>% sort()
-  if(length(m)>0) cli_warn("Missing subject ID in {.arg {rlang::caller_arg(x)}}: {.val {m}}", 
-                           class="edc_check_subjid_miss")
+  if(length(m) > 0){
+    cli_warn("Missing {length(m)} subject{?s} ID in {.arg {x_name}}: {.val {m}}",
+             class = "edc_check_subjid_miss")
+  }
   m = setdiff(x, ref) %>% sort()
-  if(length(m)>0) cli_warn("Additional subject ID {.arg {rlang::caller_arg(x)}}: {.val {m}}", 
-                           class="edc_check_subjid_additional")
+  if(length(m)>0){
+    cli_warn("Additional {length(m)} subject{?s} ID in {.arg {x_name}}: {.val {m}}",
+             class="edc_check_subjid_additional")
+  }
   invisible(NULL)
 }
 
