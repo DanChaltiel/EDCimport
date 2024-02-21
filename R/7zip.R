@@ -88,13 +88,14 @@ extract_7z = function(archive, target_dir, password=NULL, path_7zip=NULL){
   #                              "7"="Command line error",
   #                              "8"="Not enough memory for operation",
   #                              "255"="User stopped the process")
-  if((!is.null(status) && status!=0)){
+  if(!is.null(status) && status!=0){
     if(status==1){
       cli_warn(msg, class="edc_7z_warn")
     } else {
-      if(any(str_detect(tolower(msg), "wrong password"))){
+      if(any(str_detect(tolower(msg), "password"))){
         cli_abort(c("Wrong password, archive could not be extracted.",
-                    i="Did you forget to run {.code options(trialmaster_pw=xxx)}?"), 
+                    i="Did you forget the {.code read_trialmaster(pw=xxx)} 
+                    argument or the option {.code options(trialmaster_pw=xxx)}?"), 
                   class="edc_7z_bad_password_error")
       }
       cli_abort(msg, class="edc_7z_error")
