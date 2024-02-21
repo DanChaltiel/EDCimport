@@ -31,7 +31,7 @@
 #' p3 = edc_swimmerplot(.lookup, group="db0$group", aes_color="label")
 #' \dontrun{
 #' #save the plotly plot as HTML to share it
-#' htmlwidgets::saveWidget(p, "edc_swimmerplot.html", selfcontained=TRUE)
+#' save_plotly(p, "edc_swimmerplot.html")
 #' }
 #' @importFrom cli cli_abort cli_warn
 #' @importFrom dplyr between left_join mutate rename select slice
@@ -174,6 +174,34 @@ edc_swimmerplot = function(.lookup=getOption("edc_lookup"), ...,
 }
 
 
+# Helper ------------------------------------------------------------------
+
+#' Save a plotly to an HTML file
+#'
+#' @param p a plot object (`plotly` or `ggplot`)
+#' @param filename a file path to save the HTML file
+#' @param ... passed on to [htmlwidgets::saveWidget]
+#'
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' tm = edc_example_plot()
+#' p = edc_swimmerplot(tm$.lookup, id_lim=c(5,45))
+#' save_plotly(p, "graph/swimplots/edc_swimmerplot.html", title="My Swimmerplot")
+#' }
+save_plotly = function(p, file, ...){
+  check_installed("plotly", reason="for `save_plotly()` to work.")
+  check_installed("htmlwidgets", reason="for `save_plotly()` to work.")
+  if(inherits(p, "ggplot")) p = plotly::ggplotly(p)
+  dir.create(dirname(file), showWarnings=FALSE, recursive=TRUE)
+  wd = setwd(dirname(file))
+  on.exit(setwd(wd))
+  htmlwidgets::saveWidget(p, file=basename(file), ...)
+}
+
+
+# Utils -------------------------------------------------------------------
 
 #' @importFrom cli cli_abort
 #' @importFrom dplyr select

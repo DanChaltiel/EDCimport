@@ -54,6 +54,6 @@ p2 = edc_swimmerplot(.lookup, origin="db0$date_naissance", time_unit="weeks",
 p3 = edc_swimmerplot(.lookup, group="db0$group", aes_color="label")
 \dontrun{
 #save the plotly plot as HTML to share it
-htmlwidgets::saveWidget(p, "edc_swimmerplot.html", selfcontained=TRUE)
+save_plotly(p, "edc_swimmerplot.html")
 }
 }
