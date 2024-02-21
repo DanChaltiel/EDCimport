@@ -502,6 +502,21 @@ extend_lookup = function(lookup, ...,
 
 
 
+# Methods -----------------------------------------------------------------
+
+#' @export
+#' @importFrom cli cat_rule cli_vec cli_bullets
+#' @importFrom purrr discard_at keep
+print.tm_database = function(x){
+  x = x %>% keep(is.data.frame) %>% discard_at(".lookup")
+  cat_rule("Trialmaster database", col = "violet")
+  nms = cli_vec(names(x), list("vec-trunc"=3))
+  cli_bullets(c(
+    "{length(x)} tables: {.arg {nms}}",
+    i="Use {.code EDCimport::load_list(tm)} to load the tables in the global environment",
+    i="Use {.code print(tm$.lookup)} to see the summary table"
+  ))
+}
 
 
 

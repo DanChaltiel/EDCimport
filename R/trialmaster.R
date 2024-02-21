@@ -251,6 +251,7 @@ read_tm_all_xpt = function(directory, ..., format_file="procformat.sas",
   
   set_lookup(rtn$.lookup)
   
+  class(rtn) = "tm_database"
   rtn
 }
 
