@@ -19,7 +19,8 @@
 #' @rdname data_example
 #' @importFrom stats rnorm
 #' @importFrom tibble lst tibble
-edc_example_mixed = function(N=100){
+edc_example_mixed = function(N=100, seed=42){
+  set.seed(seed)
   
   short = tibble(SUBJID=1:N, crfname="short data", val1=rnorm(N), val2=rnorm(N)+10)
   

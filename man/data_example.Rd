@@ -7,7 +7,7 @@
 \alias{edc_example}
 \title{Example databases}
 \usage{
-edc_example_mixed(N = 100)
+edc_example_mixed(N = 100, seed = 42)
 
 edc_example_plot(N = 50, seed = 42)
 
