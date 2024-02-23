@@ -309,6 +309,64 @@ get_key_cols = function(lookup=get_lookup()){
 }
 
 
+#' Get columns that are common to multiple datasets
+#'
+#' `r lifecycle::badge("experimental")`
+#' Attempt to list all columns in the database and group the ones that are 
+#' common to some datasets.
+#' Useful to find keys to pivot or summarise data.
+#'
+#' @param lookup the lookup table, default to [get_lookup()]
+#' @param min_datasets the minimal number of datasets to be considered
+#'
+#' @return a tibble of class "common_cols"
+#' @export
+#' 
+#' @importFrom dplyr rowwise
+#'
+#' @examples
+#' tm = edc_example()
+#' load_list(tm)
+#' x = get_common_cols(min_datasets=1)
+#' x
+#' summary(x)
+get_common_cols = function(lookup=get_lookup(), min_datasets=3){
+  all_names = .lookup$names %>% unlist() %>% unique() %>% sort()
+  rtn = tibble(column=all_names) %>%
+    rowwise() %>% 
+    mutate(
+      name_in = .lookup$names %>% map_lgl(~column %in% .x) %>% list(),
+      datasets = list(names(name_in[name_in])),
+      n_datasets = length(datasets),
+      pct_datasets = mean(name_in),
+      datasets_in = toString(names(name_in[name_in])),
+      datasets_out = toString(names(name_in[!name_in])),
+      # aaa = browser(),
+    ) %>% 
+    ungroup() %>% 
+    arrange(desc(pct_datasets)) %>% 
+    filter(n_datasets>=min_datasets) 
+  class(rtn) = c("common_cols", class(rtn))
+  rtn
+}
+
+
+#' @name get_common_cols
+#' @export
+summary.common_cols = function(x){
+  x %>% 
+    summarise(
+      n_distinct_datasets = length(unique(datasets)), 
+      n_columns = n(),
+      columns = list(column), 
+      datasets = list(datasets),
+      columns_str = toString(column), 
+      .by=c(pct_datasets, n_datasets)
+    ) %>% 
+    mutate(
+      pct_datasets = sprintf("%0.0f%%", pct_datasets * 100),
+    )
+}
 
 # Manage lists --------------------------------------------------------------------------------
 
@@ -407,9 +465,11 @@ save_list = function(x, filename){
 #' x$.lookup=NULL
 #' lk = build_lookup(x)
 #' lk
-#' lk %>% tidyr::unnest(c(names, labels))
+#' lk %>% tidyr::unnest(c(names, labels))  
 #' 
 #' @export
+#' @seealso [extend_lookup()], [get_lookup()]
+#' 
 #' @importFrom cli cli_abort
 #' @importFrom dplyr arrange mutate
 #' @importFrom labelled var_label
@@ -451,6 +511,7 @@ build_lookup = function(data_list){
 #' @return the lookup dataframe summarizing column names and labels 
 #' 
 #' @export
+#' @seealso [build_lookup()], [extend_lookup()]
 get_lookup = function(){
   getOption("edc_lookup")
 }
@@ -468,7 +529,6 @@ set_lookup = function(lookup){
 }
 
 
-
 #' Extend the lookup table
 #' 
 #' This utility extends the lookup table to include: 
@@ -483,6 +543,8 @@ set_lookup = function(lookup){
 #'
 #' @return the lookup, extended
 #' @export
+#' @seealso [build_lookup()], [get_lookup()]
+#' 
 #' @importFrom cli cli_abort
 #' @importFrom dplyr arrange desc mutate relocate select
 #' @importFrom purrr map_chr map_int

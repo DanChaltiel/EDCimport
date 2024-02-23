@@ -39,3 +39,6 @@ load_list(tm)
 .lookup = extend_lookup(.lookup)
 .lookup
 }
+\seealso{
+\code{\link[=build_lookup]{build_lookup()}}, \code{\link[=get_lookup]{get_lookup()}}
+}

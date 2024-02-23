@@ -20,6 +20,9 @@ x = edc_example()
 x$.lookup=NULL
 lk = build_lookup(x)
 lk
-lk \%>\% tidyr::unnest(c(names, labels))
+lk \%>\% tidyr::unnest(c(names, labels))  
 
+}
+\seealso{
+\code{\link[=extend_lookup]{extend_lookup()}}, \code{\link[=get_lookup]{get_lookup()}}
 }

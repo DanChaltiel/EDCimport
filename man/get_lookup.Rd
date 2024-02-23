@@ -12,3 +12,6 @@ the lookup dataframe summarizing column names and labels
 \description{
 Retrieve the lookup table from options
 }
+\seealso{
+\code{\link[=build_lookup]{build_lookup()}}, \code{\link[=extend_lookup]{extend_lookup()}}
+}
