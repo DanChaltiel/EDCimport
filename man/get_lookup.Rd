@@ -2,24 +2,13 @@
 % Please edit documentation in R/helpers.R
 \name{get_lookup}
 \alias{get_lookup}
-\title{Generate a lookup table}
+\title{Retrieve the lookup table from options}
 \usage{
-get_lookup(data_list)
-}
-\arguments{
-\item{data_list}{a list containing at least 1 dataframe}
+get_lookup()
 }
 \value{
-a dataframe summarizing column names and labels
+the lookup dataframe summarizing column names and labels
 }
 \description{
-Generate a lookup table
-}
-\examples{
-x = edc_example()
-x$.lookup=NULL
-lk = get_lookup(x)
-lk
-lk \%>\% tidyr::unnest(c(names, labels))
-
+Retrieve the lookup table from options
 }

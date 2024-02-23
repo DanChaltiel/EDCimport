@@ -33,7 +33,7 @@
 #' @importFrom purrr map2_chr
 #' @importFrom stringr str_detect
 #' @importFrom tidyr unite unnest
-find_keyword = function(keyword, data=getOption("edc_lookup"), ignore_case=TRUE){
+find_keyword = function(keyword, data=get_lookup(), ignore_case=TRUE){
   stopifnot(!is.null(data))
   invalid=names2=labels2=x=NULL
   f = if(isTRUE(ignore_case)) tolower else identity
@@ -258,7 +258,7 @@ reset_manual_correction = function(){
 #' @export
 #' @importFrom purrr map
 #' @importFrom rlang set_names
-get_datasets = function(lookup=getOption("edc_lookup"), envir=parent.frame()){
+get_datasets = function(lookup=get_lookup(), envir=parent.frame()){
   lookup$dataset %>% 
     set_names() %>% 
     map(~get(.x, envir=envir))
@@ -277,7 +277,7 @@ get_datasets = function(lookup=getOption("edc_lookup"), envir=parent.frame()){
 #' @importFrom dplyr mutate select
 #' @importFrom purrr map map_chr
 #' @importFrom tibble lst
-get_key_cols = function(lookup=getOption("edc_lookup")){
+get_key_cols = function(lookup=get_lookup()){
   patient_id = getOption("edc_cols_id", c("PTNO", "SUBJID"))
   crfname = getOption("edc_cols_crfname", "CRFNAME")
   if(is.null(lookup)) return(lst(patient_id, crfname))
@@ -398,12 +398,14 @@ save_list = function(x, filename){
 
 
 #' Generate a lookup table
+#' 
 #' @param data_list a list containing at least 1 dataframe
 #' @return a dataframe summarizing column names and labels 
+#' 
 #' @examples
 #' x = edc_example()
 #' x$.lookup=NULL
-#' lk = get_lookup(x)
+#' lk = build_lookup(x)
 #' lk
 #' lk %>% tidyr::unnest(c(names, labels))
 #' 
@@ -414,7 +416,7 @@ save_list = function(x, filename){
 #' @importFrom purrr map map_dbl
 #' @importFrom rlang is_named
 #' @importFrom tibble tibble
-get_lookup = function(data_list){
+build_lookup = function(data_list){
   if(is.data.frame(data_list)) data_list = lst(!!caller_arg(data_list):=data_list)
   if(!is.list(data_list)){
     cli_abort(c("{.code data_list} should be a list.", 
@@ -444,12 +446,21 @@ get_lookup = function(data_list){
     arrange(nrow)
 }
 
+#' Retrieve the lookup table from options
+#' 
+#' @return the lookup dataframe summarizing column names and labels 
+#' 
+#' @export
+get_lookup = function(){
+  getOption("edc_lookup")
+}
+
 
 #' @noRd
 #' @keywords internal
 set_lookup = function(lookup){
   verbose = getOption("edc_lookup_overwrite_warn", TRUE)
-  if(verbose && !is.null(getOption("edc_lookup"))){
+  if(verbose && !is.null(get_lookup())){
     cli_warn("Option {.val edc_lookup} has been overwritten.", 
              class="edc_lookup_overwrite_warn")
   }

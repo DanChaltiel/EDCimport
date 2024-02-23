@@ -32,7 +32,7 @@ edc_example_mixed = function(N=100){
     imap(~.x %>% mutate(crfname=.y))
   rtn$date_extraction = "2022-08-25"
   rtn$datetime_extraction = as.POSIXct("2022-08-25 15:16:00 CEST")
-  rtn$.lookup=get_lookup(rtn)
+  rtn$.lookup=build_lookup(rtn)
   set_lookup(rtn$.lookup)
   rtn
 }
@@ -64,11 +64,11 @@ edc_example_plot = function(N=50, seed=42){
   db3=db %>% select(SUBJID, 10:13)
   
   .lookup = tibble(dataset=paste0("db", 0:3))
-  # rtn$.lookup=get_lookup(rtn) %>% extend_lookup()
+  # rtn$.lookup=build_lookup(rtn) %>% extend_lookup()
   rtn = lst(db0, db1, db2, db3) %>% 
     imap(~.x %>% mutate(crfname=.y %>% set_label("Form name")))
-  # rtn$.lookup = get_lookup(rtn) %>% extend_lookup()
-  rtn$.lookup=get_lookup(rtn)
+  # rtn$.lookup = build_lookup(rtn) %>% extend_lookup()
+  rtn$.lookup=build_lookup(rtn)
   set_lookup(rtn$.lookup)
   rtn
 }

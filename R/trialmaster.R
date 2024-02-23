@@ -171,14 +171,14 @@ read_tm_all_xpt = function(directory, ..., format_file="procformat.sas",
   }
   
   # strip out non-UTF8 (and warn if needed) ----
-  .lookup = get_lookup(rtn)
+  .lookup = build_lookup(rtn)
   bad_utf8 = check_invalid_utf8(.lookup, warn=verbose>1)
   bad_utf8 %>%
     purrr::pwalk(function(...) {
       x = tibble(...)
       attr(rtn[[x$dataset]][[x$names]], "label") <<- x$valid_labels
     })
-  .lookup = get_lookup(rtn)
+  .lookup = build_lookup(rtn)
   .lookup = .lookup %>% 
     structure(clean_names_fun=clean_names_fun, 
               split_mixed=split_mixed)

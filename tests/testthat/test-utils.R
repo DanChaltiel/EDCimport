@@ -52,23 +52,23 @@ test_that("get_folder_datetime() works", {
 })
 
 
-# get_lookup() & find_keyword() ---------------------------------------------------------------
+# build_lookup() & find_keyword() ---------------------------------------------------------------
 
-test_that("get_lookup() works", {
+test_that("build_lookup() works", {
   
   x = edc_example()
   x$.lookup=NULL
-  lookup = get_lookup(x)
+  lookup = build_lookup(x)
   expect_equal(lengths(lookup$names), c(db0=5,db2=5,db3=6,db1=6))
   expect_true(all(nzchar(lookup$labels$i)))
   expect_false(any(nzchar(lookup$labels$m)))
   # lookup %>% unnest(everything())
   
   x = list(i=iris, mtcars)
-  get_lookup(x) %>% 
+  build_lookup(x) %>% 
     expect_error(class="edc_lookup_unnamed")
   x = list(date_extraction=1, datetime_extraction=1, .lookup=mtcars)
-  get_lookup(x) %>% 
+  build_lookup(x) %>% 
     expect_error(class="edc_lookup_empty")
 })
 

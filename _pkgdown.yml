@@ -38,8 +38,9 @@ reference:
   - get_datasets
   - get_key_cols
   - split_mixed_datasets
-  - extend_lookup
   - get_lookup
+  - extend_lookup
+  - build_lookup
 - title: "List Utils"
 - contents:
   - load_list

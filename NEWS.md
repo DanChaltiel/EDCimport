@@ -89,7 +89,7 @@ tibble(subjid=c(1:10, 1)) %>% assert_no_duplicate() %>% nrow()
 
 - Import your data from TrialMaster using `tm = read_trialmaster("path/to/archive.zip")`.
 
-- Search for a keyword in any column name or label using `find_keyword("date", data=tm$.lookup)`. You can also generate a lookup table for an arbitrary list of dataframe using `get_lookup(my_data)`.
+- Search for a keyword in any column name or label using `find_keyword("date", data=tm$.lookup)`. You can also generate a lookup table for an arbitrary list of dataframe using `build_lookup(my_data)`.
 
 - Load the datasets to the global environment using `load_list(tm)` to avoid typing `tm$` everywhere.
 

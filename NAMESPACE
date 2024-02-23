@@ -3,6 +3,7 @@
 S3method(print,tm_database)
 export("%>%")
 export(assert_no_duplicate)
+export(build_lookup)
 export(check_subjid)
 export(edc_example)
 export(edc_example_mixed)

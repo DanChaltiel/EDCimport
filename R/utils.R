@@ -108,7 +108,7 @@ is_invalid_utf8 = function(x){
 
 #' @noRd
 #' @keywords internal
-check_invalid_utf8 = function(lookup=getOption("edc_lookup"), warn=FALSE){
+check_invalid_utf8 = function(lookup=get_lookup(), warn=FALSE){
   stopifnot(!is.null(lookup))
   x = lookup %>% 
     arrange(desc(nrow)) %>% 
