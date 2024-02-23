@@ -4,6 +4,27 @@
 EDCimport is a package designed to easily import data from EDC software TrialMaster. Browse code at <https://github.com/DanChaltiel/EDCimport> and read the doc at <https://danchaltiel.github.io/EDCimport/>.
 
 
+# EDCimport 0.5.0
+
+### New features
+
+- New function `save_plotly()`, to save a `plotly` to an HTML file
+
+- New experimental function `get_common_cols()` that might become useful to find keys to pivot or summarise data.
+
+### Bug fixes & Improvements
+
+- `read_trialmaster(split_mixed="TRUE")` will work as intended.
+
+- `extend_lookup()` will not fail anymore when the database has a faulty table
+
+- `read_trialmaster()` will output a readable error when no password is entered although one is needed
+
+- `check_subjid()` can either take a vector or a dataframe as input, and the message is more informative
+
+- `get_lookup()` will now retreive the lookup table. Use `build_lookup()` to build is from a table list.
+
+
 # EDCimport 0.4.1
 
 ### Bug fixes & Improvements
@@ -11,6 +32,7 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 - Changes in testing environment so that the package can be installed from CRAN despite firewall policies forbidding password-protected archive downloading.
 
 - Fixed a bug where a corrupted XPT file can prevent the whole import to fail.
+
 
 # EDCimport 0.4.0
 
@@ -39,7 +61,6 @@ tibble(subjid=c(1:10, 1)) %>% assert_no_duplicate() %>% nrow()
 - New option `read_trialmaster(use_cache="write")` to read from the zip again but still update the cache.
 
 - You can now use the syntax `read_trialmaster(split_mixed=c("col1", "col2"))` to split only the datasets you need to (#10).
-
 
 ### Bug fixes & Improvements
 
