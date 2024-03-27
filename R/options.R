@@ -32,15 +32,16 @@ edc_options = function(
     edc_lookup_overwrite_warn,
     .local=FALSE){
   rlang::check_dots_empty()
-  argg = as.list(match.call()) %>% discard(is.name)
   
+  argg = as.list(match.call())
+  argg = argg[have_name(argg)]
   
   if(.local){
     argg = c(argg, .frame = caller_env())
-    do.call(local_options, argg)
+    do.call(local_options, argg, envir=parent.frame())
   }
   else {
-    do.call(options, argg)
+    do.call(options, argg, envir=parent.frame())
   }
   
   invisible()
