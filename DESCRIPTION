@@ -33,6 +33,7 @@ Imports:
 Suggests: 
     callr,
     gtools,
+    htmlwidgets,
     janitor,
     knitr,
     plotly,
