@@ -157,6 +157,12 @@ get_data_name = function(df, crfname=getOption("edc_cols_crfname", "crfname")){
 #' @noRd
 #' @keywords internal
 copy_label_from = function(x, from){
+  if(!is.list(x)){
+    from_label = attr(from, "label")
+    if(is.null(from_label)) return(x)
+    attr(x, "label") = from_label
+    return(x)
+  }
   from_labs = map_chr(from, ~attr(.x, "label") %||% NA)
   mutate(x, across(everything(), ~{
     attr(.x, "label") = from_labs[dplyr::cur_column()]
