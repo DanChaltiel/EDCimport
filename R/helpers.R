@@ -136,21 +136,28 @@ check_subjid = function(x, ref=getOption("edc_subjid_ref")){
 #' tibble(subjid=c(1:10)) %>% assert_no_duplicate() %>% nrow()
 #' 
 #' #with duplicate => throws an error
-#' #tibble(subjid=c(1:10, 1:2)) %>% assert_no_duplicate() %>% nrow()
-assert_no_duplicate = function(df, id_col=get_key_cols()){
-  if(is.list(id_col)) id_col = id_col$patient_id
+#' tibble(subjid=c(1:10, 1:2)) %>% assert_no_duplicate() %>% nrow()
+assert_no_duplicate = function(df, by=NULL, id_col=get_subjid_cols()){
   env = current_env()
-  x = df %>% select(any_of2(id_col))
-  if(ncol(x)==0){
-    cli_abort("Cannot assert the absence of duplicates: no ID column ({.val {id_col}}).", 
-              call=env, class="edcimport_assert_no_duplicate_no_col")
+  id_col_selected = id_col[tolower(id_col) %in% tolower(names(df))]
+  
+  if(length(id_col_selected) == 0){
+    cli_abort("Cannot assert the absence of duplicates: no ID column ({.val {id_col}}) in `names(df)`.", 
+              class="edcimport_assert_no_duplicate_no_col")
+  }
+  if(length(id_col_selected) > 1){
+    cli_abort("Cannot assert the absence of duplicates: too many ID column ({.val {id_col_selected}}) in `names(df)`.", 
+              class="edcimport_assert_no_duplicate_many_col")
   }
   
-  y = x %>% map(duplicated) %>% head(1) #y is scalar
-  if(any(unlist(y))){
-    dups = x[[1]][unlist(y)] %>% unique() %>% sort() 
-    dups = head(dups, 10) #because of https://github.com/r-lib/cli/issues/617
-    cli_abort("Duplicate on column {.val { names(y)}} for {qty(length(dups))} value{?s} {.val {dups}}.", 
+  x = df %>% 
+    select(any_of2(id_col_selected), {{by}}) %>% 
+    count(across(everything())) %>% 
+    filter(n>1)
+  
+  if(nrow(x)>0){
+    dups = head(x[[1]], 10) #because of https://github.com/r-lib/cli/issues/617
+    cli_abort("Duplicate on column {.val { names(x[1])}} for {qty(length(x[[1]]))} value{?s} {.val {dups}}.", 
               call=env, class="edcimport_assert_no_duplicate")
   }
   df
