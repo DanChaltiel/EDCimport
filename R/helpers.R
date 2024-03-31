@@ -147,6 +147,64 @@ assert_no_duplicate = function(df, id_col=get_key_cols()){
   df
 }
 
+#' Format factor levels as Yes/No
+#'
+#' Format factor levels as arbitrary values of Yes/No (with Yes always first) while leaving untouched all vectors that contain other information. 
+#' Default level values can be set through options, which is best done before calling [read_trialmaster()].
+#' Helper `get_yesno_lvl()` is a helper to provide default TM levels.
+#'
+#' @param x a vector of any type/class
+#' @param lvl list of values to be considered as Yes/No values. See example.
+#' @param mutate_character whether to turn characters into factor
+#'
+#' @return a factor, or `x` untouched
+#' @export
+#'
+#' @examples 
+#' set.seed(42)
+#' x = tibble(a=sample(c("Yes", "No"), size=20, replace=T),
+#'            b=sample(c("1-Yes", "0-No"), size=20, replace=T),
+#'            c=sample(c("Oui", "Non"), size=20, replace=T),
+#'            x=sample(0:1, size=20, replace=T),
+#'            y=1:20)
+#' 
+#' # leave untouched unhandled vectors (c,x, and y)
+#' x %>% purrr::iwalk(~{
+#'   cat("--- Levels of ", .y, " ---\n")
+#'   print(.x %>% factor() %>% levels())
+#'   print(.x %>% fct_yesno() %>% levels())
+#' })
+#' 
+#' #add other levels
+#' supp_levels = list(c("Oui", "Non"), c("Ja", "Nein"))
+#' options(edc_fct_yesno = get_yesno_lvl(supp_levels))
+#' x %>% purrr::iwalk(~{
+#'   cat("--- Levels of ", .y, " ---\n")
+#'   print(.x %>% factor() %>% levels())
+#'   print(.x %>% fct_yesno() %>% levels())
+#' })
+fct_yesno = function(x, lvl=getOption("edc_fct_yesno", get_yesno_lvl()), 
+                     mutate_character=TRUE){
+  if(!is.factor(x) && !is.character(x)) return(x)
+  if(is.character(x) && isFALSE(mutate_character)) return(x)
+  lvls = lvl %>% keep(~all(x %in% union(.x, NA)))
+  if(length(lvls)>1) cli_abort("Duplicated Yes/No levels")
+  if(length(lvls)==0) return(x)
+  factor(x, levels=lvls[[1]]) %>% copy_label_from(x)
+}
+
+
+#' @describeIn fct_yesno
+#' @export
+get_yesno_lvl = function(add, keep_default=TRUE) {
+  default = list(c("Yes", "No"), c("1-Yes", "0-No"))
+  if(missing(add)) return(default)
+  if(isFALSE(keep_default)) return(add)
+  if(!is.list(add)) add = list(add)
+  c(default, add)
+}
+
+
 
 
 # Manual correction ---------------------------------------------------------------------------

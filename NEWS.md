@@ -8,6 +8,8 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 ### New features
 
+- New function `fct_yesno()`, to easily format Yes/No columns. 
+
 - New function `save_plotly()`, to save a `plotly` to an HTML file
 
 - New experimental function `get_common_cols()` that might become useful to find keys to pivot or summarise data.
