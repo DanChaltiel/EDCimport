@@ -42,7 +42,7 @@ find_keyword = function(keyword, data=get_lookup(), ignore_case=TRUE){
   f2 = function(x,y) map2_chr(x, y, ~if(.y) {.x} else {f(.x)})
   keyword = f(str_trim(keyword))
   tmp = data %>% 
-    select(-c(nrow, ncol, n_id, rows_per_id)) %>% 
+    select(-any_of(c("nrow", "ncol", "n_id", "rows_per_id"))) %>% 
     unnest(c(names, labels)) %>% 
     mutate(
       labels=unlist(labels), 
@@ -52,8 +52,13 @@ find_keyword = function(keyword, data=get_lookup(), ignore_case=TRUE){
     ) %>% 
     filter(str_detect(names2, keyword) | str_detect(labels2, keyword)) %>% 
     select(-names2, -labels2) %>% 
-    mutate(prop_na = map2_dbl(dataset, names, ~{x=get(.x)[[.y]];mean(is.na(x))}))
-    
+    mutate(prop_na = map2_dbl(dataset, names, ~{
+      if(!exists(.x)) return(NA)
+      x=get(.x)[[.y]]
+      mean(is.na(x))
+    })) %>% 
+    select(-where(~all(is.na(.x))))
+  
   if(isTRUE(ignore_case) && any(tmp$invalid)){
     cols = tmp %>% filter(invalid) %>% unite("x", c("dataset", "names"), sep="$") %>% pull(x)
     cli_warn(c("Some columns have labels containing non UTF8 characters. {.arg ignore_case} has been ignored for these.", 

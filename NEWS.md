@@ -20,6 +20,8 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 - `extend_lookup()` will not fail anymore when the database has a faulty table
 
+- `find_keyword()` is more robust and inform on the proportion of missing if possible
+
 - `read_trialmaster()` will output a readable error when no password is entered although one is needed
 
 - `check_subjid()` can either take a vector or a dataframe as input, and the message is more informative
