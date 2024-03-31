@@ -25,7 +25,7 @@ a factor, or \code{x} untouched
 }
 \description{
 Format factor levels as arbitrary values of Yes/No (with Yes always first) while leaving untouched all vectors that contain other information.
-Default level values can be set through options, which is best done before calling \link{read_trialmaster}.
+Default level values can be set through options, which is best done before calling \code{\link[=read_trialmaster]{read_trialmaster()}}.
 Helper \code{get_yesno_lvl()} is a helper to provide default TM levels.
 }
 \examples{

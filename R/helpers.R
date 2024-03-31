@@ -30,16 +30,19 @@
 #' }
 #' @importFrom cli cli_warn
 #' @importFrom dplyr filter mutate pull select
-#' @importFrom purrr map2_chr
+#' @importFrom purrr map2_chr map2_dbl
 #' @importFrom stringr str_detect
 #' @importFrom tidyr unite unnest
 find_keyword = function(keyword, data=get_lookup(), ignore_case=TRUE){
-  stopifnot(!is.null(data))
+  if(is.null(data)){
+    cli_abort("Lookup is NULL. Did you forget to call `load_list(tm)`?")
+  }
   invalid=names2=labels2=x=NULL
   f = if(isTRUE(ignore_case)) tolower else identity
-  keyword = f(keyword)
   f2 = function(x,y) map2_chr(x, y, ~if(.y) {.x} else {f(.x)})
+  keyword = f(str_trim(keyword))
   tmp = data %>% 
+    select(-c(nrow, ncol, n_id, rows_per_id)) %>% 
     unnest(c(names, labels)) %>% 
     mutate(
       labels=unlist(labels), 
@@ -48,8 +51,9 @@ find_keyword = function(keyword, data=get_lookup(), ignore_case=TRUE){
       labels2=f2(labels, invalid),
     ) %>% 
     filter(str_detect(names2, keyword) | str_detect(labels2, keyword)) %>% 
-    select(-names2, -labels2)
-  
+    select(-names2, -labels2) %>% 
+    mutate(prop_na = map2_dbl(dataset, names, ~{x=get(.x)[[.y]];mean(is.na(x))}))
+    
   if(isTRUE(ignore_case) && any(tmp$invalid)){
     cols = tmp %>% filter(invalid) %>% unite("x", c("dataset", "names"), sep="$") %>% pull(x)
     cli_warn(c("Some columns have labels containing non UTF8 characters. {.arg ignore_case} has been ignored for these.", 
@@ -194,7 +198,7 @@ fct_yesno = function(x, lvl=getOption("edc_fct_yesno", get_yesno_lvl()),
 }
 
 
-#' @describeIn fct_yesno
+#' @rdname fct_yesno
 #' @export
 get_yesno_lvl = function(add, keep_default=TRUE) {
   default = list(c("Yes", "No"), c("1-Yes", "0-No"))
