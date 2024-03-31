@@ -415,8 +415,8 @@ get_common_cols = function(lookup=get_lookup(), min_datasets=3){
 
 #' @name get_common_cols
 #' @export
-summary.common_cols = function(x){
-  x %>% 
+summary.common_cols = function(object, ...){
+  object %>% 
     summarise(
       n_distinct_datasets = length(unique(datasets)), 
       n_columns = n(),
@@ -652,7 +652,7 @@ extend_lookup = function(lookup, ...,
 #' @export
 #' @importFrom cli cat_rule cli_vec cli_bullets
 #' @importFrom purrr discard_at keep
-print.tm_database = function(x){
+print.tm_database = function(x, ...){
   x = x %>% keep(is.data.frame) %>% discard_at(".lookup")
   cat_rule("Trialmaster database", col = "violet")
   nms = cli_vec(names(x), list("vec-trunc"=3))
