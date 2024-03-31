@@ -342,13 +342,15 @@ get_datasets = function(lookup=get_lookup(), envir=parent.frame()){
 get_key_cols = function(lookup=get_lookup()){
   patient_id = getOption("edc_cols_id", c("PTNO", "SUBJID"))
   crfname = getOption("edc_cols_crfname", "CRFNAME")
+  lifecycle::deprecate_warn("1.0.0", "get_key_cols()")
   if(is.null(lookup)) return(lst(patient_id, crfname))
   
+  f = function(x, y) x[tolower(x) %in% tolower(y)][1] %0% NA 
   rtn = lookup %>% 
     select(dataset, names) %>% 
     mutate(
-      patient_id=map_chr(names, ~.x[tolower(.x) %in% tolower(patient_id)][1] %0% NA), 
-      crfname=map_chr(names, ~.x[tolower(.x) %in% tolower(crfname)][1] %0% NA)
+      patient_id = map_chr(names, ~f(.x, patient_id)), 
+      crfname =    map_chr(names, ~f(.x, crfname))
     )
   
   verbose = getOption("edc_get_key_cols_verbose", FALSE)
@@ -365,10 +367,54 @@ get_key_cols = function(lookup=get_lookup()){
              class="edcimport_get_key_cols_missing_crfname")
   }
   
-  rtn %>% 
-    select(patient_id, crfname) %>% 
+  rtn = rtn %>% 
     map(~unique(na.omit(.x)), na.rm=TRUE)
+  
+  if(length(rtn)==1) return(rtn[[1]])
+  rtn
 }
+
+
+#' Get key column names
+#' 
+#' Retrieve names of patient ID (usually "SUBJID" and "PATNO") and CRF name (usually "CRFNAME") from the actual names of the datasets, without respect of the case. Default values can (and should) be set through options.
+#'
+#' @param subjid_cols,crfname_cols the possible column names that can hold key data. Case-insensitive.
+#' @param lookup the lookup table
+#'
+#' @return a character vector
+#' @export
+#'
+#' @examples
+#' get_subjid_cols()
+#' get_crfname_cols()
+get_subjid_cols = function(subjid_cols=getOption("edc_cols_subjid", c("PTNO", "SUBJID")), 
+                           lookup=get_lookup()){
+  .get_key_cols(subjid_cols, id_name="patient", lookup)
+}
+
+#' @rdname get_subjid_cols
+get_crfname_cols = function(crfname_cols=getOption("edc_cols_crfname", "CRFNAME"), 
+                            lookup=get_lookup()){
+  .get_key_cols(crfname_cols, id_name="CRF", lookup)
+}
+.get_key_cols = function(x, id_name, lookup){
+  if(is.null(lookup)) return(x)
+  
+  f = function(x, y) x[tolower(x) %in% tolower(y)][1] %0% NA 
+  
+  x = map_chr(lookup$names, ~f(.x, x))
+  
+  verbose = getOption("edc_get_key_cols_verbose", FALSE)
+  if(verbose && any(is.na(x))){
+    cli_warn(c("Default {id_name} identificator could not be found in some datasets", 
+               i='Dataset{?s} without identificator: {rtn[is.na(x), "dataset"]}', 
+               i='Use {.run options(edc_cols_id=c("my_id_col", "my_other_id_col"))}'), 
+             class="edcimport_get_key_cols_missing")
+  }
+  x %>% na.omit() %>% unique() 
+}
+
 
 
 #' Get columns that are common to multiple datasets

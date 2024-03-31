@@ -26,6 +26,9 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 - `get_lookup()` will now retreive the lookup table. Use `build_lookup()` to build is from a table list.
 
+- `get_subjid_cols()` and `get_crfname_cols()` replace the now deprecated `get_key_cols()`
+
+
 
 # EDCimport 0.4.1
 
