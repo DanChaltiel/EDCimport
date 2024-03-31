@@ -7,7 +7,7 @@
 \usage{
 get_common_cols(lookup = get_lookup(), min_datasets = 3)
 
-\method{summary}{common_cols}(x)
+\method{summary}{common_cols}(object, ...)
 }
 \arguments{
 \item{lookup}{the lookup table, default to \code{\link[=get_lookup]{get_lookup()}}}

@@ -4,7 +4,7 @@
 \alias{assert_no_duplicate}
 \title{Assert that a dataset has one row per patient}
 \usage{
-assert_no_duplicate(df, id_col = get_key_cols())
+assert_no_duplicate(df, by = NULL, id_col = get_subjid_cols())
 }
 \arguments{
 \item{df}{the dataset}
@@ -23,5 +23,5 @@ Mostly useful after joining two datasets.
 tibble(subjid=c(1:10)) \%>\% assert_no_duplicate() \%>\% nrow()
 
 #with duplicate => throws an error
-#tibble(subjid=c(1:10, 1:2)) \%>\% assert_no_duplicate() \%>\% nrow()
+tibble(subjid=c(1:10, 1:2)) \%>\% assert_no_duplicate() \%>\% nrow()
 }
