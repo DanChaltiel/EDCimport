@@ -9,7 +9,9 @@ assert_no_duplicate(df, by = NULL, id_col = get_subjid_cols())
 \arguments{
 \item{df}{the dataset}
 
-\item{id_col}{\emph{(optional)} the name of the columns holding patient ID}
+\item{by}{\emph{(optional)} grouping columns}
+
+\item{id_col}{the name of the columns holding patient ID}
 }
 \value{
 the \code{df} dataset, unchanged
@@ -19,9 +21,17 @@ Check that there is no duplicate on the column holding patient ID in a pipeable 
 Mostly useful after joining two datasets.
 }
 \examples{
+\dontrun{
 #without duplicate => no error, continue the pipeline
 tibble(subjid=c(1:10)) \%>\% assert_no_duplicate() \%>\% nrow()
 
 #with duplicate => throws an error
 tibble(subjid=c(1:10, 1:2)) \%>\% assert_no_duplicate() \%>\% nrow()
+
+#By groups
+df = tibble(subjid=rep(1:10, 4), visit=rep(c("V1", "V2"), 2, each=10), 
+            group=rep(c("A", "B"), each=20))
+df \%>\% assert_no_duplicate() #error
+df \%>\% assert_no_duplicate(by=c(visit, group)) #no error
+}
 }

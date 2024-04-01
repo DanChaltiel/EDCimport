@@ -1,5 +1,6 @@
 
 skip_on_cran()
+edc_options(edc_lookup_overwrite_warn=FALSE)
 
 
 # Zip generation ------------------------------------------------------------------------------
@@ -29,8 +30,8 @@ test_that("Split mixed outside read_trialmaster()", {
   tm = edc_example_mixed()
   mixed_data = split_mixed_datasets(tm, id="SUBJID", verbose=FALSE)
   mixed_data %>% names() %>% expect_equal(c("long_mixed_short", "long_mixed_long" ))
-  mixed_data %>% map_dbl(nrow) %>% unname() %>% expect_equal(c(100, 200))
-  mixed_data %>% map_dbl(ncol) %>% unname() %>% expect_equal(c(3, 3))
+  mixed_data %>% map_dbl(nrow) %>% expect_equal(c(long_mixed_short=100, long_mixed_long=200))
+  mixed_data %>% map_dbl(ncol) %>% expect_equal(c(long_mixed_short=3, long_mixed_long=3))
 })
 
 

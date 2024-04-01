@@ -45,7 +45,7 @@
 #' @importFrom tidyr pivot_longer
 #' @importFrom tidyselect where
 edc_swimmerplot = function(.lookup=get_lookup(), ..., 
-                           id=get_key_cols()$patient_id, 
+                           id=get_subjid_cols(), 
                            group=NULL, origin=NULL, 
                            id_lim=NULL,
                            exclude=NULL,
@@ -179,7 +179,7 @@ edc_swimmerplot = function(.lookup=get_lookup(), ...,
 #' Save a plotly to an HTML file
 #'
 #' @param p a plot object (`plotly` or `ggplot`)
-#' @param filename a file path to save the HTML file
+#' @param file a file path to save the HTML file
 #' @param ... passed on to [htmlwidgets::saveWidget]
 #'
 #' @export

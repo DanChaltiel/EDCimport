@@ -6,7 +6,7 @@
 \usage{
 split_mixed_datasets(
   datasets = get_datasets(),
-  id = get_key_cols()$patient_id,
+  id = get_subjid_cols(),
   ...,
   ignore_cols = getOption("edc_cols_crfname", "CRFNAME"),
   output_code = FALSE,

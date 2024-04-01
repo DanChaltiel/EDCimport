@@ -184,8 +184,7 @@ read_tm_all_xpt = function(directory, ..., format_file="procformat.sas",
               split_mixed=split_mixed)
   
   # split mixed datasets (with short and long format) ----
-  key_columns = get_key_cols(.lookup)
-  patient_id = key_columns$patient_id
+  patient_id = get_subjid_cols(lookup=.lookup)
   id_found = map_lgl(rtn, ~any(tolower(patient_id) %in% tolower(names(.x))))
   
   if(!isFALSE(split_mixed) & !isTRUE(split_mixed) & !is.character(split_mixed)){

@@ -12,5 +12,7 @@ DEV\.R
 .Rhistory
 .Rprofile
 
+*nogit*
+
 docs
 tests/testthat/test-real.R

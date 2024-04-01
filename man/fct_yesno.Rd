@@ -16,9 +16,13 @@ get_yesno_lvl(add, keep_default = TRUE)
 \arguments{
 \item{x}{a vector of any type/class}
 
-\item{lvl}{list of values to be considered as Yes/No values. See example.}
+\item{lvl}{list of values to be considered as Yes/No values. Defaults to \code{get_yesno_lvl()}. See example.}
 
 \item{mutate_character}{whether to turn characters into factor}
+
+\item{add}{levels to add to \code{list(c("Yes", "No"), c("1-Yes", "0-No"))}}
+
+\item{keep_default}{whether to keep the default}
 }
 \value{
 a factor, or \code{x} untouched
@@ -30,10 +34,10 @@ Helper \code{get_yesno_lvl()} is a helper to provide default TM levels.
 }
 \examples{
 set.seed(42)
-x = tibble(a=sample(c("Yes", "No"), size=20, replace=T),
-           b=sample(c("1-Yes", "0-No"), size=20, replace=T),
-           c=sample(c("Oui", "Non"), size=20, replace=T),
-           x=sample(0:1, size=20, replace=T),
+x = tibble(a=sample(c("Yes", "No"), size=20, replace=TRUE),
+           b=sample(c("1-Yes", "0-No"), size=20, replace=TRUE),
+           c=sample(c("Oui", "Non"), size=20, replace=TRUE),
+           x=sample(0:1, size=20, replace=TRUE),
            y=1:20)
 
 # leave untouched unhandled vectors (c,x, and y)

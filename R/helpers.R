@@ -123,7 +123,8 @@ check_subjid = function(x, ref=getOption("edc_subjid_ref")){
 #' Mostly useful after joining two datasets.
 #'
 #' @param df the dataset
-#' @param id_col *(optional)* the name of the columns holding patient ID
+#' @param by *(optional)* grouping columns
+#' @param id_col the name of the columns holding patient ID
 #'
 #' @return the `df` dataset, unchanged
 #' @importFrom cli qty
@@ -132,11 +133,19 @@ check_subjid = function(x, ref=getOption("edc_subjid_ref")){
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' #without duplicate => no error, continue the pipeline
 #' tibble(subjid=c(1:10)) %>% assert_no_duplicate() %>% nrow()
 #' 
 #' #with duplicate => throws an error
 #' tibble(subjid=c(1:10, 1:2)) %>% assert_no_duplicate() %>% nrow()
+#' 
+#' #By groups
+#' df = tibble(subjid=rep(1:10, 4), visit=rep(c("V1", "V2"), 2, each=10), 
+#'             group=rep(c("A", "B"), each=20))
+#' df %>% assert_no_duplicate() #error
+#' df %>% assert_no_duplicate(by=c(visit, group)) #no error
+#' }
 assert_no_duplicate = function(df, by=NULL, id_col=get_subjid_cols()){
   env = current_env()
   id_col_selected = id_col[tolower(id_col) %in% tolower(names(df))]
@@ -170,18 +179,20 @@ assert_no_duplicate = function(df, by=NULL, id_col=get_subjid_cols()){
 #' Helper `get_yesno_lvl()` is a helper to provide default TM levels.
 #'
 #' @param x a vector of any type/class
-#' @param lvl list of values to be considered as Yes/No values. See example.
+#' @param lvl list of values to be considered as Yes/No values. Defaults to `get_yesno_lvl()`. See example.
 #' @param mutate_character whether to turn characters into factor
+#' @param add levels to add to `list(c("Yes", "No"), c("1-Yes", "0-No"))`
+#' @param keep_default whether to keep the default
 #'
 #' @return a factor, or `x` untouched
 #' @export
 #'
 #' @examples 
 #' set.seed(42)
-#' x = tibble(a=sample(c("Yes", "No"), size=20, replace=T),
-#'            b=sample(c("1-Yes", "0-No"), size=20, replace=T),
-#'            c=sample(c("Oui", "Non"), size=20, replace=T),
-#'            x=sample(0:1, size=20, replace=T),
+#' x = tibble(a=sample(c("Yes", "No"), size=20, replace=TRUE),
+#'            b=sample(c("1-Yes", "0-No"), size=20, replace=TRUE),
+#'            c=sample(c("Oui", "Non"), size=20, replace=TRUE),
+#'            x=sample(0:1, size=20, replace=TRUE),
 #'            y=1:20)
 #' 
 #' # leave untouched unhandled vectors (c,x, and y)
@@ -406,10 +417,14 @@ get_subjid_cols = function(subjid_cols=getOption("edc_cols_subjid", c("PTNO", "S
 }
 
 #' @rdname get_subjid_cols
+#' @export
 get_crfname_cols = function(crfname_cols=getOption("edc_cols_crfname", "CRFNAME"), 
                             lookup=get_lookup()){
   .get_key_cols(crfname_cols, id_name="CRF", lookup)
 }
+
+#' @noRd
+#' @keywords internal
 .get_key_cols = function(x, id_name, lookup){
   if(is.null(lookup)) return(x)
   
@@ -438,6 +453,8 @@ get_crfname_cols = function(crfname_cols=getOption("edc_cols_crfname", "CRFNAME"
 #'
 #' @param lookup the lookup table, default to [get_lookup()]
 #' @param min_datasets the minimal number of datasets to be considered
+#' @param object an object of class "common_cols"
+#' @param ... unused
 #'
 #' @return a tibble of class "common_cols"
 #' @export
@@ -451,21 +468,21 @@ get_crfname_cols = function(crfname_cols=getOption("edc_cols_crfname", "CRFNAME"
 #' x
 #' summary(x)
 get_common_cols = function(lookup=get_lookup(), min_datasets=3){
-  all_names = .lookup$names %>% unlist() %>% unique() %>% sort()
+  all_names = lookup$names %>% unlist() %>% unique() %>% sort()
   rtn = tibble(column=all_names) %>%
     rowwise() %>% 
     mutate(
-      name_in = .lookup$names %>% map_lgl(~column %in% .x) %>% list(),
-      datasets = list(names(name_in[name_in])),
-      n_datasets = length(datasets),
-      pct_datasets = mean(name_in),
-      datasets_in = toString(names(name_in[name_in])),
-      datasets_out = toString(names(name_in[!name_in])),
+      name_in = lookup$names %>% map_lgl(~column %in% .x) %>% list(),
+      datasets = list(names(.data$name_in[.data$name_in])),
+      n_datasets = length(.data$datasets),
+      pct_datasets = mean(.data$name_in),
+      datasets_in = toString(names(.data$name_in[.data$name_in])),
+      datasets_out = toString(names(.data$name_in[!.data$name_in])),
       # aaa = browser(),
     ) %>% 
     ungroup() %>% 
-    arrange(desc(pct_datasets)) %>% 
-    filter(n_datasets>=min_datasets) 
+    arrange(desc(.data$pct_datasets)) %>% 
+    filter(.data$n_datasets>=min_datasets) 
   class(rtn) = c("common_cols", class(rtn))
   rtn
 }
@@ -476,15 +493,15 @@ get_common_cols = function(lookup=get_lookup(), min_datasets=3){
 summary.common_cols = function(object, ...){
   object %>% 
     summarise(
-      n_distinct_datasets = length(unique(datasets)), 
+      n_distinct_datasets = length(unique(.data$datasets)), 
       n_columns = n(),
-      columns = list(column), 
-      datasets = list(datasets),
-      columns_str = toString(column), 
-      .by=c(pct_datasets, n_datasets)
+      columns = list(.data$column), 
+      datasets = list(.data$datasets),
+      columns_str = toString(.data$column), 
+      .by=c(.data$pct_datasets, .data$n_datasets)
     ) %>% 
     mutate(
-      pct_datasets = sprintf("%0.0f%%", pct_datasets * 100),
+      pct_datasets = sprintf("%0.0f%%", .data$pct_datasets * 100),
     )
 }
 
@@ -657,7 +674,7 @@ set_lookup = function(lookup){
 #'   * `crfname` the actual name of the dataset
 #'
 #' @param lookup \[`data.frame(1)`]\cr the lookup table
-#' @param key_columns \[`list(n)`]\cr for experts only
+#' @param id_cols,crf_cols \[`character(n)`]\cr for experts only
 #' @param datasets \[`data.frame(n)`]\cr for experts only
 #' @inheritParams read_tm_all_xpt
 #'
@@ -678,7 +695,8 @@ set_lookup = function(lookup){
 #' .lookup = extend_lookup(.lookup)
 #' .lookup
 extend_lookup = function(lookup, ..., 
-                         key_columns = get_key_cols(lookup),
+                         id_cols = get_subjid_cols(), 
+                         crf_cols = get_crfname_cols(), 
                          datasets = get_datasets(lookup)){
   check_dots_empty()
   #case-insensitive column selection (cf. `any_of2`)
@@ -694,9 +712,9 @@ extend_lookup = function(lookup, ...,
   rtn = lookup %>% 
     filter(map_lgl(dataset, ~!inherits(datasets[[.x]], "error"))) %>% 
     mutate(
-      n_id = map_int(dataset, ~f(.x, key_columns$patient_id)),
+      n_id = map_int(dataset, ~f(.x, id_cols)),
       rows_per_id = round(nrow/n_id, 1),
-      crfname = map_chr(dataset, ~get_data_name(datasets[[.x]]), crfname=key_columns$crfname)
+      crfname = map_chr(dataset, ~get_data_name(datasets[[.x]]), crfname=crf_cols)
     ) %>% 
     arrange(n_id, desc(nrow)) %>% 
     relocate(c(names, labels), .after=last_col())

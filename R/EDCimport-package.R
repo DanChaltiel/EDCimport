@@ -17,4 +17,4 @@ NULL
 #' @export
 dplyr::`%>%`
 
-globalVariables(c(".", ":=", "!!", "SUBJID", "age", "dataset", "n_id", "name", "value"))
+utils::globalVariables(c(".", ":=", "!!", ".data", ".env", "SUBJID", "age", "dataset", "n_id", "name", "value"))

@@ -37,7 +37,7 @@
 #' @importFrom rlang check_dots_empty
 #' @importFrom tibble lst
 #' @importFrom tidyselect all_of everything
-split_mixed_datasets = function(datasets=get_datasets(), id=get_key_cols()$patient_id, ..., 
+split_mixed_datasets = function(datasets=get_datasets(), id=get_subjid_cols(), ..., 
                                 ignore_cols=getOption("edc_cols_crfname", "CRFNAME"), 
                                 output_code=FALSE,
                                 verbose=TRUE){

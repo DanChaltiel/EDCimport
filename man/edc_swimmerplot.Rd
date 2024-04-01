@@ -7,7 +7,7 @@
 edc_swimmerplot(
   .lookup = get_lookup(),
   ...,
-  id = get_key_cols()$patient_id,
+  id = get_subjid_cols(),
   group = NULL,
   origin = NULL,
   id_lim = NULL,

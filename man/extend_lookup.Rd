@@ -7,7 +7,8 @@
 extend_lookup(
   lookup,
   ...,
-  key_columns = get_key_cols(lookup),
+  id_cols = get_subjid_cols(),
+  crf_cols = get_crfname_cols(),
   datasets = get_datasets(lookup)
 )
 }
@@ -16,7 +17,7 @@ extend_lookup(
 
 \item{...}{unused}
 
-\item{key_columns}{[\code{list(n)}]\cr for experts only}
+\item{id_cols, crf_cols}{[\code{character(n)}]\cr for experts only}
 
 \item{datasets}{[\code{data.frame(n)}]\cr for experts only}
 }

@@ -5,17 +5,29 @@
 
 test_that("assert_no_duplicate works", {
   
-  tibble(not_subjid=c(1:10)) %>% assert_no_duplicate() %>% 
-    expect_error(class="edcimport_assert_no_duplicate_no_col")
   
   tibble(subjid=c(1:10)) %>% assert_no_duplicate() %>% expect_silent()
+  
   tibble(subjid=c(1:10, 1)) %>% assert_no_duplicate() %>% 
     expect_error(class="edcimport_assert_no_duplicate")
-
   tibble(ptno=c(1:10, 1:3)) %>% assert_no_duplicate() %>% 
     expect_error(class="edcimport_assert_no_duplicate")
+  tibble(not_subjid=c(1:10)) %>% assert_no_duplicate() %>% 
+    expect_error(class="edcimport_assert_no_duplicate_no_col")
   tibble(subjid=c(1:10, 4), ptno=c(1:10, 3)) %>% assert_no_duplicate() %>% 
+    expect_error(class="edcimport_assert_no_duplicate_many_col")
+  
+  #By groups
+  df = tibble(subjid=rep(1:10, 2), visit=rep(c("V1", "V2"), each=10))
+  df %>% assert_no_duplicate() %>% 
     expect_error(class="edcimport_assert_no_duplicate")
+  df %>% assert_no_duplicate(by=visit) %>% 
+    expect_silent()
+  df = tibble(subjid=rep(1:10, 4), visit=rep(c("V1", "V2"), 2, each=10), group=rep(c("A", "B"), each=20))
+  df %>% assert_no_duplicate() %>% 
+    expect_error(class="edcimport_assert_no_duplicate")
+  df %>% assert_no_duplicate(by=c(visit, group)) %>% 
+    expect_silent()
 })
 
 

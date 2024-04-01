@@ -9,9 +9,9 @@ save_plotly(p, file, ...)
 \arguments{
 \item{p}{a plot object (\code{plotly} or \code{ggplot})}
 
-\item{...}{passed on to \link[htmlwidgets:saveWidget]{htmlwidgets::saveWidget}}
+\item{file}{a file path to save the HTML file}
 
-\item{filename}{a file path to save the HTML file}
+\item{...}{passed on to \link[htmlwidgets:saveWidget]{htmlwidgets::saveWidget}}
 }
 \description{
 Save a plotly to an HTML file

@@ -13,6 +13,10 @@ get_common_cols(lookup = get_lookup(), min_datasets = 3)
 \item{lookup}{the lookup table, default to \code{\link[=get_lookup]{get_lookup()}}}
 
 \item{min_datasets}{the minimal number of datasets to be considered}
+
+\item{object}{an object of class "common_cols"}
+
+\item{...}{unused}
 }
 \value{
 a tibble of class "common_cols"
