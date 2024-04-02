@@ -35,12 +35,20 @@ reference:
   - assert_no_duplicate
   - check_subjid
   - unify
+  - fct_yesno
+  - get_common_cols
+  - save_plotly
   - get_datasets
-  - get_key_cols
+  - get_subjid_cols
   - split_mixed_datasets
+- title: "Lookup Utils"
+- contents:
   - get_lookup
   - extend_lookup
   - build_lookup
+- title: "List Utils"
+- contents:
+  - load_list
 - title: "List Utils"
 - contents:
   - load_list
