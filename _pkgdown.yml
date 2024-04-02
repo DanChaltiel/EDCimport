@@ -46,9 +46,13 @@ reference:
   - get_lookup
   - extend_lookup
   - build_lookup
-- title: "List Utils"
+- title: "Clinical Utils"
 - contents:
-  - load_list
+  - ae_table_grade_max
+  - ae_plot_grade_max
+  - ae_table_grade_n
+  - ae_table_soc
+  - ae_table_grade_max
 - title: "List Utils"
 - contents:
   - load_list

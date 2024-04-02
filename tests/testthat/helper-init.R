@@ -1,6 +1,7 @@
 Sys.setenv(LANGUAGE = "en")
 Sys.setenv(TZ="Europe/Paris")
 
+Sys.setenv("TESTTHAT_CPUS" = 5)
 
 options(
   encoding="UTF-8",

@@ -177,3 +177,9 @@ set_label = function(x, lab){
   attr(x, "label") = lab
   x
 }
+
+
+
+max_narm = function(x, na.rm=TRUE) if(all(is.na(x))) NA else max(x, na.rm=na.rm)
+min_narm = function(x, na.rm=TRUE) if(all(is.na(x))) NA else min(x, na.rm=na.rm)
+
