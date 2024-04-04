@@ -94,20 +94,17 @@ edc_example_ae = function(N=50, seed=42){
   set.seed(seed)
   
   enrolres = tibble(subjid=1:N, arm=sample(c("Trt", "Ctl"), size=N, replace=TRUE))
+  
   ae = tibble(subjid=1:N, n_ae=rbinom(n=N, size=15, prob=0.2)) %>% 
     mutate(x = map(n_ae, ~seq_len(.x))) %>% 
     unnest(x) %>% 
     mutate(aegr = sample(1:5, size=n(), replace=TRUE, prob=c(0.3,0.25,0.2,0.1,0.05)),
-           aesoc = sample(sample_soc, size=n(), replace=TRUE))
+           aesoc = sample(sample_soc, size=n(), replace=TRUE)) %>% 
+    select(subjid, aesoc, aegr, n_ae)
   
-  
-  
-  # .lookup = tibble(dataset=paste0("db", 0:3))
-  # rtn$.lookup=build_lookup(rtn) %>% extend_lookup()
   rtn = lst(enrolres, ae) %>% 
     imap(~.x %>% mutate(crfname=.y %>% set_label("Form name")))
-  # rtn$.lookup = build_lookup(rtn) %>% extend_lookup()
-  rtn$.lookup=build_lookup(rtn)
+  rtn$.lookup = build_lookup(rtn)
   set_lookup(rtn$.lookup)
   rtn
 }
