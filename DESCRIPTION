@@ -33,11 +33,13 @@ Imports:
 Suggests: 
     callr,
     crosstable,
+    flextable,
     gtools,
     htmlwidgets,
     janitor,
     knitr,
     plotly,
+    rmarkdown,
     testthat (>= 3.1.8),
     vdiffr,
     withr
@@ -46,3 +48,4 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
 Config/testthat/edition: 3
 Config/testthat/parallel: true
+VignetteBuilder: knitr

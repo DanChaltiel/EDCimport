@@ -129,8 +129,8 @@ ae_plot_grade_max = function(
 #' \dontrun{
 #' library(flextable)
 #' tm = edc_example_ae()
-#' load_list(tm)
-#' ae_table_grade_n(df_ae=ae, df_enrol=enrolres) %>% 
+#' 
+#' ae_table_grade_n(df_ae=tm$ae, df_enrol=tm$enrolres) %>% 
 #'   as_flextable() %>% 
 #'   add_footer_lines("¹ Percentages are given as the proportion of patients presenting at least one AE of given grade")
 #' 
@@ -148,17 +148,19 @@ ae_table_grade_n = function(
 ){
   df_ae = df_ae %>% rename_with(tolower) %>%
     select(subjid=tolower(subjid), soc=tolower(soc), grade=tolower(grade))
-  df = df_enrol %>% rename_with(tolower) %>%
-    select(subjid=tolower(subjid), arm=tolower(arm)) %>%
+  df_enrol = df_enrol %>% rename_with(tolower) %>%
+    select(subjid=tolower(subjid), arm=tolower(arm))
+  df = df_enrol %>%
     full_join(df_ae, by=tolower(subjid)) %>% 
     arrange(subjid) %>% 
     filter(!is.na(soc)) 
   
   default_arm = "All patients" 
   # `:=` = rlang::`:=`
+  # browser()
   npat = rlang::int(!!default_arm:=nrow(df_enrol)) 
   if(!is.null(arm)){
-    npat = deframe(count(df_enrol, !!ensym(arm)))
+    npat = deframe(count(df_enrol, arm))
     npat["Total"] = sum(npat)
   }
   total = if(total) "row" else FALSE 
@@ -179,9 +181,3 @@ ae_table_grade_n = function(
   attr(rtn, "by_table")[] = npat[names(npat)!="Total"]
   rtn
 }
-
-# ae_table_grade_n(ae, df_enrol=enrolres)
-# ae_table_grade_n(ae, df_enrol=enrolres, total=TRUE)
-# ae_table_grade_n(ae, df_enrol=enrolres, arm=NULL)
-# ae_table_grade_n(ae, df_enrol=enrolres, arm=NULL, total=TRUE)
-# ae %>% filter(AESER=="1-Yes") %>% ae_table_grade_n(df_enrol=enrolres, total=TRUE) %>% af

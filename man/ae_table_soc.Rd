@@ -19,10 +19,7 @@ ae_table_soc(
   warn_miss = FALSE
 )
 
-as_flextable.ae_table_soc(
-  x,
-  arm_colors = c("#f2dcdb", "#dbe5f1", "#ebf1dd", "#e5e0ec")
-)
+\method{as_flextable}{ae_table_soc}(x, arm_colors = c("#f2dcdb", "#dbe5f1", "#ebf1dd", "#e5e0ec"))
 }
 \arguments{
 \item{df_ae}{adverse event table, one row per AE, containing subjid, soc, and grade}

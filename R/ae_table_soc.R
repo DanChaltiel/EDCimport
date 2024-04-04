@@ -54,8 +54,9 @@ ae_table_soc = function(
   null_term = is.null(term)
   null_arm = is.null(arm)
   
-  not_found1 = lst(term, soc, grade, subjid) %>% discard(is.null) %>% discard(~.x %in% names(df_ae))
-  not_found2 = lst(arm, subjid) %>% discard(is.null) %>% discard(~.x %in% names(df_enrol))
+  # browser()
+  not_found1 = lst(term, soc, grade, subjid) %>% discard(is.null) %>% discard(~tolower(.x) %in% tolower(names(df_ae)))
+  not_found2 = lst(arm, subjid) %>% discard(is.null) %>% discard(~tolower(.x) %in% tolower(names(df_enrol)))
   not_found = c(not_found1, not_found2)
   if(length(not_found)>0){
     a = paste0(names(not_found), "='", not_found, "'")
@@ -65,15 +66,18 @@ ae_table_soc = function(
   
   df_ae = df_ae %>% rename_with(tolower) %>%
     select(subjid=tolower(subjid), soc=tolower(soc), term=tolower(term), grade=tolower(grade))
-  df = df_enrol %>% rename_with(tolower) %>%
-    select(subjid=tolower(subjid), arm=tolower(arm)) %>%
+  df_enrol = df_enrol %>% rename_with(tolower) %>%
+    select(subjid=tolower(subjid), arm=tolower(arm)) 
+  df = df_enrol %>%
     full_join(df_ae, by=tolower(subjid)) %>% 
     filter(!is.na(soc))  %>% 
     arrange(subjid)
   
   #check missing data
   if(warn_miss){
-    miss = names(df) %>% set_names() %>% map(~df %>% filter(is.na(!!ensym(.x))) %>% pull(subjid) %>% unique() %>% sort()) %>% keep(~!is_empty(.x))
+    miss = names(df) %>% set_names() %>% map(~{
+      df %>% filter(is.na(!!ensym(.x))) %>% pull(subjid) %>% unique() %>% sort()
+    }) %>% keep(~!is_empty(.x))
     miss %>% iwalk(~{
       cli_warn("{.fn ae_table_soc}: Missing values in column {.val {.y}} for patients {.val {.x}}.",
                class="edc_ae_missing_values_warning")
@@ -95,15 +99,15 @@ ae_table_soc = function(
   }
   
   if(!null_arm){
-    n_patients = count(df, arm, name="n_arm")
+    n_patients = count(df_enrol, arm, name="n_arm")
     rtn = rtn %>% left_join(n_patients, by="arm")
     header = n_patients %>% 
       transmute(name=janitor::make_clean_names(arm),
                 value=glue("{arm} (N={n_arm})") %>% as.character()) %>% 
       deframe()
   } else {
-    n_patients = as.numeric(n_patients)
-    rtn = rtn %>% mutate(arm="all", n_arm=nrow(df_enrol))
+    n_patients = nrow(df_enrol)
+    rtn = rtn %>% mutate(arm="all", n_arm=n_patients)
     header = glue("All patients (N={n_patients})") %>% set_names("all")
   }
   
@@ -195,19 +199,3 @@ as_flextable.ae_table_soc = function(x, arm_colors=c("#f2dcdb", "#dbe5f1", "#ebf
   rtn
 }
 
-#TESTS
-if(FALSE){
-  library(testthat)
-  ae_desc %>% 
-    ae_table_soc(n_patients=table(enrolres$ARM), 
-                 arm="ARsM", term="AETEeRM", soc="AEtSOC", grade="AEGeR", subjid="SUBaJID") %>% 
-    expect_error()
-  
-}
-
-
-
-# ae_table_soc(ae, enrolres, arm=NULL) %>% as_flextable()
-# ae_table_soc(ae, enrolres, term=NULL) %>% as_flextable()
-# ae_table_soc(ae, enrolres, arm=NULL) %>% print()
-# ae_table_soc(ae, enrolres, term=NULL) %>% print()

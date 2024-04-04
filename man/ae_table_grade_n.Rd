@@ -40,8 +40,8 @@ Title
 \dontrun{
 library(flextable)
 tm = edc_example_ae()
-load_list(tm)
-ae_table_grade_n(df_ae=ae, df_enrol=enrolres) \%>\% 
+
+ae_table_grade_n(df_ae=tm$ae, df_enrol=tm$enrolres) \%>\% 
   as_flextable() \%>\% 
   add_footer_lines("¹ Percentages are given as the proportion of patients presenting at least one AE of given grade")
 
