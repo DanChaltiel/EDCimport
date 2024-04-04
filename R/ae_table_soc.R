@@ -35,6 +35,16 @@
 #' ae_table_soc(ae, enrolres, arm=NULL) %>% 
 #'   as_flextable()
 #' }
+#' @importFrom cli cli_abort cli_warn
+#' @importFrom dplyr any_of arrange bind_rows count desc filter full_join if_else lag left_join mutate pull rename_with select summarise transmute
+#' @importFrom forcats fct_relabel
+#' @importFrom glue glue
+#' @importFrom janitor make_clean_names
+#' @importFrom purrr discard iwalk keep map
+#' @importFrom rlang ensym is_empty set_names
+#' @importFrom stringr str_replace
+#' @importFrom tibble deframe lst
+#' @importFrom tidyr pivot_wider
 ae_table_soc = function(
     df_ae, df_enrol, 
     arm="ARM", term="AETERM", soc="AESOC", grade="AEGR", subjid="SUBJID",
@@ -146,7 +156,13 @@ ae_table_soc = function(
 #'
 #' @return a formatted flextable
 #' @rdname ae_table_soc
-#' @export
+#' @exportS3Method flextable::as_flextable
+
+#' @importFrom dplyr lag
+#' @importFrom flextable add_header_row align autofit bg bold flextable fontsize padding set_header_labels
+#' @importFrom purrr map map_int
+#' @importFrom rlang set_names
+#' @importFrom stringr str_detect str_replace_all str_starts
 as_flextable.ae_table_soc = function(x, arm_colors=c("#f2dcdb", "#dbe5f1", "#ebf1dd", "#e5e0ec")
 ){
   table_ae_header = attr(x, "header")

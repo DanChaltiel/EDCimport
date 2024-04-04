@@ -120,13 +120,13 @@ read_trialmaster = function(archive, ..., use_cache="write",
 #' @return a list containing one dataframe for each `.xpt` file in the folder, the extraction date (`datetime_extraction`), and a summary of all imported tables (`.lookup`). If not set yet, option `edc_lookup` is automatically set to `.lookup`.
 #' @export
 #' @importFrom cli cli_abort cli_warn
-#' @importFrom dplyr across mutate na_if
+#' @importFrom dplyr across distinct mutate na_if select
 #' @importFrom forcats as_factor
 #' @importFrom haven read_xpt
-#' @importFrom purrr imap keep keep_at map_lgl
+#' @importFrom purrr imap iwalk keep keep_at map_lgl pwalk walk
 #' @importFrom rlang check_dots_empty is_error set_names
 #' @importFrom stringr str_remove
-#' @importFrom tibble as_tibble
+#' @importFrom tibble as_tibble tibble
 #' @importFrom tidyselect where
 read_tm_all_xpt = function(directory, ..., format_file="procformat.sas", 
                            clean_names_fun=NULL, 

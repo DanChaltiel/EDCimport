@@ -28,11 +28,12 @@
 #' find_keyword("(Trial|Form) Name")
 #' find_keyword("\\(") #you need to escape special characters
 #' }
-#' @importFrom cli cli_warn
-#' @importFrom dplyr filter mutate pull select
+#' @importFrom cli cli_abort cli_warn
+#' @importFrom dplyr any_of filter mutate pull select
 #' @importFrom purrr map2_chr map2_dbl
-#' @importFrom stringr str_detect
+#' @importFrom stringr str_detect str_trim
 #' @importFrom tidyr unite unnest
+#' @importFrom tidyselect where
 find_keyword = function(keyword, data=get_lookup(), ignore_case=TRUE){
   if(is.null(data)){
     cli_abort("Lookup is NULL. Did you forget to call `load_list(tm)`?")
@@ -82,8 +83,10 @@ find_keyword = function(keyword, data=get_lookup(), ignore_case=TRUE){
 #' @param ref the reference for subject ID. Should usually be set through `edc_options(edc_subjid_ref=xxx)`. See example.
 #'
 #' @return nothing, called for errors/warnings
-#' @importFrom dplyr any_of select
 #' @importFrom cli cli_abort cli_warn
+#' @importFrom dplyr any_of pull select
+#' @importFrom generics setdiff
+#' @importFrom rlang caller_arg
 #' @export
 #'
 #' @examples
@@ -127,8 +130,10 @@ check_subjid = function(x, ref=getOption("edc_subjid_ref")){
 #' @param id_col the name of the columns holding patient ID
 #'
 #' @return the `df` dataset, unchanged
-#' @importFrom cli qty
+#' @importFrom cli cli_abort
+#' @importFrom dplyr across count filter select
 #' @importFrom rlang current_env
+#' @importFrom tidyselect everything
 #' @importFrom utils head
 #' @export
 #'
@@ -210,6 +215,9 @@ assert_no_duplicate = function(df, by=NULL, id_col=get_subjid_cols()){
 #'   print(.x %>% factor() %>% levels())
 #'   print(.x %>% fct_yesno() %>% levels())
 #' })
+#' @importFrom cli cli_abort
+#' @importFrom generics union
+#' @importFrom purrr keep
 fct_yesno = function(x, lvl=getOption("edc_fct_yesno", get_yesno_lvl()), 
                      mutate_character=TRUE){
   if(!is.factor(x) && !is.character(x)) return(x)
@@ -253,7 +261,9 @@ get_yesno_lvl = function(add, keep_default=TRUE) {
 #' @param verbose whether to print informations (once)
 #'
 #' @return Nothing, used for side effects
-#' @importFrom rlang as_name enquo set_names
+#' @importFrom cli cli_abort cli_inform cli_warn
+#' @importFrom glue glue
+#' @importFrom rlang as_name caller_arg enquo set_names
 #' @export
 #'
 #' @examples
@@ -321,6 +331,8 @@ manual_correction = function(data, col, rows, wrong, correct,
 #' @name manual_correction
 #' @return NULL
 #' @export
+#' @importFrom purrr map
+#' @importFrom stringr str_starts
 reset_manual_correction = function(){
   x=options()
   x=x[str_starts(names(x), "edc_correction_done_")] %>% map(~NULL)
@@ -359,8 +371,11 @@ get_datasets = function(lookup=get_lookup(), envir=parent.frame()){
 #' @return a list(2) of characters with names `patient_id` and `crfname`
 #' 
 #' @export
+#' @importFrom cli cli_warn
 #' @importFrom dplyr mutate select
+#' @importFrom lifecycle deprecate_warn
 #' @importFrom purrr map map_chr
+#' @importFrom stats na.omit
 #' @importFrom tibble lst
 get_key_cols = function(lookup=get_lookup()){
   patient_id = getOption("edc_cols_id", c("PTNO", "SUBJID"))
@@ -425,6 +440,9 @@ get_crfname_cols = function(crfname_cols=getOption("edc_cols_crfname", "CRFNAME"
 
 #' @noRd
 #' @keywords internal
+#' @importFrom cli cli_warn
+#' @importFrom purrr map_chr
+#' @importFrom stats na.omit
 .get_key_cols = function(x, id_name, lookup){
   if(is.null(lookup)) return(x)
   
@@ -459,7 +477,9 @@ get_crfname_cols = function(crfname_cols=getOption("edc_cols_crfname", "CRFNAME"
 #' @return a tibble of class "common_cols"
 #' @export
 #' 
-#' @importFrom dplyr rowwise
+#' @importFrom dplyr arrange desc filter mutate rowwise ungroup
+#' @importFrom purrr map_lgl
+#' @importFrom tibble tibble
 #'
 #' @examples
 #' tm = edc_example()
@@ -490,6 +510,7 @@ get_common_cols = function(lookup=get_lookup(), min_datasets=3){
 
 #' @name get_common_cols
 #' @export
+#' @importFrom dplyr mutate n summarise
 summary.common_cols = function(object, ...){
   object %>% 
     summarise(
@@ -611,8 +632,8 @@ save_list = function(x, filename){
 #' @importFrom dplyr arrange mutate
 #' @importFrom labelled var_label
 #' @importFrom purrr map map_dbl
-#' @importFrom rlang is_named
-#' @importFrom tibble tibble
+#' @importFrom rlang caller_arg is_named
+#' @importFrom tibble lst tibble
 build_lookup = function(data_list){
   if(is.data.frame(data_list)) data_list = lst(!!caller_arg(data_list):=data_list)
   if(!is.list(data_list)){
@@ -656,6 +677,7 @@ get_lookup = function(){
 
 #' @noRd
 #' @keywords internal
+#' @importFrom cli cli_warn
 set_lookup = function(lookup){
   verbose = getOption("edc_lookup_overwrite_warn", TRUE)
   if(verbose && !is.null(get_lookup())){
@@ -682,11 +704,11 @@ set_lookup = function(lookup){
 #' @export
 #' @seealso [build_lookup()], [get_lookup()]
 #' 
-#' @importFrom cli cli_abort
-#' @importFrom dplyr arrange desc mutate relocate select
-#' @importFrom purrr map_chr map_int
+#' @importFrom cli cli_abort cli_warn
+#' @importFrom dplyr arrange desc filter mutate relocate select
+#' @importFrom purrr keep map map_chr map_dbl map_int map_lgl
 #' @importFrom rlang check_dots_empty
-#' @importFrom tidyselect last_col matches
+#' @importFrom tidyselect last_col
 #' @examples
 #' #tm = read_trialmaster("filename.zip", pw="xx")
 #' tm = edc_example_mixed()
@@ -726,7 +748,7 @@ extend_lookup = function(lookup, ...,
 # Methods -----------------------------------------------------------------
 
 #' @export
-#' @importFrom cli cat_rule cli_vec cli_bullets
+#' @importFrom cli cat_rule cli_bullets cli_vec
 #' @importFrom purrr discard_at keep
 print.tm_database = function(x, ...){
   x = x %>% keep(is.data.frame) %>% discard_at(".lookup")
@@ -738,9 +760,3 @@ print.tm_database = function(x, ...){
     i="Use {.code print(tm$.lookup)} to see the summary table"
   ))
 }
-
-
-
-
-
-

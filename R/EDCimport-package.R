@@ -1,6 +1,7 @@
 #' @keywords internal
 #' @importFrom dplyr %>% 
 #' @importFrom rlang %||% := 
+#' @importFrom cli qty
 "_PACKAGE"
 
 ## usethis namespace: start

@@ -17,6 +17,8 @@
 #' @export
 #' @name data_example
 #' @rdname data_example
+#' @importFrom dplyr mutate
+#' @importFrom purrr imap
 #' @importFrom stats rnorm
 #' @importFrom tibble lst tibble
 edc_example_mixed = function(N=100, seed=42){
@@ -42,6 +44,7 @@ edc_example_mixed = function(N=100, seed=42){
 #' @rdname data_example
 #' @export
 #' @importFrom dplyr bind_rows mutate n select
+#' @importFrom purrr imap
 #' @importFrom stats rnorm runif
 #' @importFrom tibble lst tibble
 edc_example_plot = function(N=50, seed=42){
@@ -82,9 +85,11 @@ edc_example = edc_example_plot
 
 #' @rdname data_example
 #' @export
-#' @importFrom dplyr bind_rows mutate n select
-#' @importFrom stats rnorm runif
+#' @importFrom dplyr mutate n
+#' @importFrom purrr imap map
+#' @importFrom stats rbinom
 #' @importFrom tibble lst tibble
+#' @importFrom tidyr unnest
 edc_example_ae = function(N=50, seed=42){
   set.seed(seed)
   
@@ -117,4 +122,3 @@ sample_soc = c("Gastrointestinal disorders", "General disorders and administrati
         "Immune system disorders", "Injury, poisoning and procedural complications", 
         "Eye disorders", "Neoplasms benign, malignant and unspecified (incl cysts and polyps)", 
         "Surgical and medical procedures")
-

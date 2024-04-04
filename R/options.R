@@ -18,7 +18,7 @@
 #' @param .local  if TRUE, the effect will only apply to the local frame (internally using `rlang::local_options()`)
 #'
 #' @return Nothing, called for its side effects
-#' @importFrom rlang caller_env local_options have_name
+#' @importFrom rlang caller_env check_dots_empty have_name local_options
 #' @export
 edc_options = function(
     ...,
@@ -38,7 +38,7 @@ edc_options = function(
   
   if(.local){
     argg = c(argg, .frame = caller_env())
-    do.call(local_options, argg, envir=parent.frame())
+    do.call(rlang::local_options, argg, envir=parent.frame())
   }
   else {
     do.call(options, argg, envir=parent.frame())
@@ -70,6 +70,7 @@ edc_peek_options = function(keep_null=FALSE){
 #'
 #' @return Nothing, called for its side effects
 #' @importFrom cli cli_inform
+#' @importFrom generics setdiff
 #' @importFrom purrr map
 #' @importFrom rlang set_names
 #' @export
@@ -84,6 +85,8 @@ edc_reset_options = function(except=c("edc_lookup", "trialmaster_pw", "path_7zip
 }
 
 
+#' @importFrom generics setdiff
+#' @importFrom purrr keep map
 #' @importFrom stringr str_extract str_extract_all str_remove_all str_subset
 #' @noRd
 #' @keywords internal

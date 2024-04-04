@@ -10,7 +10,7 @@
 #' @param arm 
 #' @param warn_missing 
 #'
-#' @return
+#' @return a ggplot
 #' @export
 #'
 #' @examples
@@ -19,6 +19,11 @@
 #'   left_join(arm, by="SUBJID") %>%
 #'   waterfall_plot(rc_date=RCDT, rc_sum=RCTLSUM, rc_resp=RCRESP, arm=ARM) +
 #'   NULL
+#' @importFrom dplyr any_of distinct filter first last mutate select summarise
+#' @importFrom forcats fct_reorder
+#' @importFrom ggplot2 aes facet_wrap geom_col geom_hline ggplot labs scale_x_discrete scale_y_continuous
+#' @importFrom rlang as_label enquo sym
+#' @importFrom scales label_percent
 waterfall_plot = function(data_recist, rc_date, rc_sum, rc_resp, arm=NULL, warn_missing=TRUE) {
   subjid = get_key_cols()$patient_id
   armname =  as_label(enquo(arm))

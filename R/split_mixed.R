@@ -30,13 +30,14 @@
 #' filename = tempfile("mixed_code", fileext=".R")
 #' split_mixed_datasets(tm, id="SUBJID", output_code=filename)
 #' readLines(filename)
-#' @importFrom cli cli_bullets
+#' @importFrom cli cli_bullets cli_warn
 #' @importFrom dplyr across group_by select summarise summarise_all ungroup
 #' @importFrom glue glue
-#' @importFrom purrr discard imap keep list_flatten map_chr
+#' @importFrom purrr discard imap keep keep_at list_flatten map_chr
 #' @importFrom rlang check_dots_empty
 #' @importFrom tibble lst
 #' @importFrom tidyselect all_of everything
+#' @importFrom utils head
 split_mixed_datasets = function(datasets=get_datasets(), id=get_subjid_cols(), ..., 
                                 ignore_cols=getOption("edc_cols_crfname", "CRFNAME"), 
                                 output_code=FALSE,

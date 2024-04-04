@@ -37,6 +37,8 @@ parse_file_datetime = function(x){
 #' Change a `try-error` column to a simpler character column of class "edc_error_col"
 #' @noRd
 #' @keywords internal
+#' @importFrom dplyr across mutate
+#' @importFrom tidyselect where
 flatten_error_columns = function(df){
   df %>% 
     mutate(across(where(~inherits(.x, "try-error")), ~{
@@ -108,6 +110,11 @@ is_invalid_utf8 = function(x){
 
 #' @noRd
 #' @keywords internal
+#' @importFrom cli cli_warn
+#' @importFrom dplyr arrange desc filter mutate
+#' @importFrom glue glue
+#' @importFrom rlang set_names
+#' @importFrom tidyr unnest
 check_invalid_utf8 = function(lookup=get_lookup(), warn=FALSE){
   stopifnot(!is.null(lookup))
   x = lookup %>% 
@@ -141,6 +148,7 @@ any_of2 = function(x, ignore.case=TRUE, ...){
 #' @keywords internal
 #' @importFrom cli cli_warn
 #' @importFrom dplyr select
+#' @importFrom rlang is_error
 get_data_name = function(df, crfname=getOption("edc_cols_crfname", "crfname")){
   if(is_error(df)) return(NA)
   sel = select(df, any_of2(crfname))
@@ -156,6 +164,9 @@ get_data_name = function(df, crfname=getOption("edc_cols_crfname", "crfname")){
 
 #' @noRd
 #' @keywords internal
+#' @importFrom dplyr across cur_column mutate
+#' @importFrom purrr map_chr
+#' @importFrom tidyselect everything
 copy_label_from = function(x, from){
   if(!is.list(x)){
     from_label = attr(from, "label")
@@ -182,4 +193,3 @@ set_label = function(x, lab){
 
 max_narm = function(x, na.rm=TRUE) if(all(is.na(x))) NA else max(x, na.rm=na.rm)
 min_narm = function(x, na.rm=TRUE) if(all(is.na(x))) NA else min(x, na.rm=na.rm)
-

@@ -34,16 +34,17 @@
 #' save_plotly(p, "edc_swimmerplot.html")
 #' }
 #' @importFrom cli cli_abort cli_warn
-#' @importFrom dplyr between left_join mutate rename select slice
+#' @importFrom dplyr between filter left_join mutate rename select slice
 #' @importFrom forcats as_factor
 #' @importFrom ggplot2 aes facet_wrap geom_line geom_point ggplot labs
 #' @importFrom glue glue
 #' @importFrom labelled var_label
+#' @importFrom plotly ggplotly
 #' @importFrom purrr discard imap list_rbind map
 #' @importFrom rlang check_dots_empty check_installed is_installed set_names sym
-#' @importFrom stringr str_detect str_ends str_remove
+#' @importFrom stringr str_detect str_ends str_remove str_replace_all
 #' @importFrom tidyr pivot_longer
-#' @importFrom tidyselect where
+#' @importFrom tidyselect matches where
 edc_swimmerplot = function(.lookup=get_lookup(), ..., 
                            id=get_subjid_cols(), 
                            group=NULL, origin=NULL, 
@@ -190,6 +191,9 @@ edc_swimmerplot = function(.lookup=get_lookup(), ...,
 #' p = edc_swimmerplot(tm$.lookup, id_lim=c(5,45))
 #' save_plotly(p, "graph/swimplots/edc_swimmerplot.html", title="My Swimmerplot")
 #' }
+#' @importFrom htmlwidgets saveWidget
+#' @importFrom plotly ggplotly
+#' @importFrom rlang check_installed
 save_plotly = function(p, file, ...){
   check_installed("plotly", reason="for `save_plotly()` to work.")
   check_installed("htmlwidgets", reason="for `save_plotly()` to work.")
@@ -204,9 +208,10 @@ save_plotly = function(p, file, ...){
 # Utils -------------------------------------------------------------------
 
 #' @importFrom cli cli_abort
-#' @importFrom dplyr select
+#' @importFrom dplyr rename select
 #' @importFrom rlang caller_arg
 #' @importFrom stringr str_detect str_split
+#' @importFrom tidyselect matches
 #' @noRd
 #' @keywords internal
 parse_var = function(input, id, env){

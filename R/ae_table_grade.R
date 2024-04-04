@@ -44,6 +44,8 @@
 #' ae_plot_grade_max(df_ae=ae, df_enrol=enrolres, type=c("dodge", "fill"))
 #' ae_plot_grade_max(df_ae=ae, df_enrol=enrolres, arm=NULL) + coord_flip()
 #' }
+#' @importFrom crosstable apply_labels crosstable
+#' @importFrom dplyr arrange full_join mutate rename_with select summarise
 ae_table_grade_max = function(
     df_ae, df_enrol, 
     arm="ARM", subjid="SUBJID", soc="AESOC", grade="AEGR", total=TRUE, digits=0
@@ -67,7 +69,11 @@ ae_table_grade_max = function(
 
 #' @rdname ae_table_grade_max
 #' @return a patchwork of ggplots
+#' @importFrom dplyr arrange full_join mutate rename_with select summarise
 #' @importFrom ggplot2 aes geom_bar ggplot labs scale_x_continuous theme waiver
+#' @importFrom patchwork plot_layout wrap_plots
+#' @importFrom purrr map
+#' @importFrom rlang set_names
 #' @export
 ae_plot_grade_max = function(
     df_ae, df_enrol, type = c("stack", "dodge", "fill"),
@@ -113,7 +119,9 @@ ae_plot_grade_max = function(
 #' @inheritParams ae_table_grade_max
 #'
 #' @return a crosstable
-#' @importFrom dplyr arrange count filter full_join rename_with select
+#' @importFrom crosstable crosstable format_fixed get_percent_pattern
+#' @importFrom dplyr across arrange count cur_column distinct filter full_join mutate rename_with select
+#' @importFrom rlang int
 #' @importFrom tibble deframe
 #' @export
 #'

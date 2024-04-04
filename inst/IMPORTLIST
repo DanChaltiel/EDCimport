@@ -1,9 +1,17 @@
+align = flextable
 attr = base
+bold = flextable
 check_dots_empty = rlang
 desc = dplyr
 discard = purrr
 filter = dplyr
+first = dplyr
 is_formula = rlang
+isFALSE = base
+lag = dplyr
+last = dplyr
 matches = tidyselect
 regex = stringr
 set_names = rlang
+setdiff = generics
+union = generics
