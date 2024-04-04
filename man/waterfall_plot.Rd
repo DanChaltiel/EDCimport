@@ -26,6 +26,9 @@ waterfall_plot(
 
 \item{warn_missing}{}
 }
+\value{
+a ggplot
+}
 \description{
 Generate a waterfall plot
 }
