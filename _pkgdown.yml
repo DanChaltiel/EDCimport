@@ -40,6 +40,7 @@ reference:
   - save_plotly
   - get_datasets
   - get_subjid_cols
+  - get_key_cols
   - split_mixed_datasets
 - title: "Lookup Utils"
 - contents:
@@ -53,6 +54,7 @@ reference:
   - ae_table_grade_n
   - ae_table_soc
   - ae_table_grade_max
+  - waterfall_plot
 - title: "List Utils"
 - contents:
   - load_list

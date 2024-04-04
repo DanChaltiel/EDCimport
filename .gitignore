@@ -16,3 +16,6 @@ DEV\.R
 
 docs
 tests/testthat/test-real.R
+inst/doc
+/doc/
+/Meta/
