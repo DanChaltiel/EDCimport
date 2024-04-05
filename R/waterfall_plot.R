@@ -25,12 +25,12 @@
 #' @importFrom rlang as_label enquo sym
 #' @importFrom scales label_percent
 waterfall_plot = function(data_recist, rc_date, rc_sum, rc_resp, arm=NULL, warn_missing=TRUE) {
-  subjid = get_key_cols()$patient_id
+  subjid = get_subjid_cols()
   armname =  as_label(enquo(arm))
   
   data_recist = data_recist %>% 
-    select(subjid=!!sym(subjid), date={{rc_date}}, sum={{rc_sum}}, resp={{rc_resp}}, 
-           arm=any_of(armname))
+    select(subjid=any_of2(subjid), date={{rc_date}}, sum={{rc_sum}}, resp={{rc_resp}}, 
+           arm=any_of2(armname))
   
   db_wf = data_recist %>%
     filter(!is.na(sum)) %>%
