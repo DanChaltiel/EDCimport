@@ -38,18 +38,17 @@ Title
 }
 \examples{
 \dontrun{
-library(flextable)
 tm = edc_example_ae()
 
 ae_table_grade_n(df_ae=tm$ae, df_enrol=tm$enrolres) \%>\% 
   as_flextable() \%>\% 
-  add_footer_lines("¹ Percentages are given as the proportion of patients presenting at least one AE of given grade")
+  flextable::add_footer_lines("Percentages are given as the proportion of patients presenting at least one AE of given grade")
 
-ae_table_grade_n(df_ae=ae, df_enrol=enrolres, arm=NULL) \%>\% 
-  af(by_header=F) \%>\% 
-  set_header_labels(values=c("","N (\%)")) 
+ae_table_grade_n(df_ae=tm$ae, df_enrol=tm$enrolres, arm=NULL) \%>\% 
+  as_flextable(by_header=F) \%>\% 
+  flextable::set_header_labels(values=c("","","N (\%)")) 
   
 #To get SAE only, filter df_ae first
-ae \%>\% filter(AESER=="1-Yes") \%>\% ae_table_grade_n(df_enrol=enrolres, arm=NULL)
+tm$ae \%>\% filter(sae==TRUE) \%>\% ae_table_grade_n(df_enrol=tm$enrolres, arm=NULL)
 }
 }
