@@ -98,9 +98,12 @@ edc_example_ae = function(N=50, seed=42){
   ae = tibble(subjid=1:N, n_ae=rbinom(n=N, size=15, prob=0.2)) %>% 
     mutate(x = map(n_ae, ~seq_len(.x))) %>% 
     unnest(x) %>% 
-    mutate(aegr = sample(1:5, size=n(), replace=TRUE, prob=c(0.3,0.25,0.2,0.1,0.05)),
-           aesoc = sample(sample_soc, size=n(), replace=TRUE)) %>% 
-    select(subjid, aesoc, aegr, n_ae)
+    mutate(
+      aegr = sample(1:5, size=n(), replace=TRUE, prob=c(0.3,0.25,0.2,0.1,0.05)) %>% set_label("AE grade"),
+      aesoc = sample(sample_soc, size=n(), replace=TRUE) %>% set_label("AE SOC"),
+      sae = (runif(n())<0.1) %>% set_label("Serious AE"),
+    ) %>% 
+    select(subjid, aesoc, aegr, n_ae, sae)
   
   rtn = lst(enrolres, ae) %>% 
     imap(~.x %>% mutate(crfname=.y %>% set_label("Form name")))
@@ -119,3 +122,4 @@ sample_soc = c("Gastrointestinal disorders", "General disorders and administrati
         "Immune system disorders", "Injury, poisoning and procedural complications", 
         "Eye disorders", "Neoplasms benign, malignant and unspecified (incl cysts and polyps)", 
         "Surgical and medical procedures")
+
