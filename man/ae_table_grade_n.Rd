@@ -2,7 +2,7 @@
 % Please edit documentation in R/ae_table_grade.R
 \name{ae_table_grade_n}
 \alias{ae_table_grade_n}
-\title{Title}
+\title{Summary tables for AE}
 \usage{
 ae_table_grade_n(
   df_ae,
@@ -20,21 +20,23 @@ ae_table_grade_n(
 
 \item{df_enrol}{enrollment table, one row per patient, containing subjid (and arm if needed)}
 
-\item{arm}{name of the treatment column in \code{df}. Case-insensitive. Can be set to \code{NULL} to not group.}
+\item{arm}{name of the treatment column in \code{df_enrol}. Case-insensitive. Can be set to \code{NULL} to not group.}
 
-\item{subjid, grade}{names of the other relevant columns in \code{df}. Case-insensitive.}
+\item{grade}{name of the AE grade column in \code{df_ae}. Case-insensitive.}
 
-\item{soc}{name of the SOC column in \code{df}. Case-insensitive. Grade will be considered 0 is missing.}
+\item{subjid}{name of the patient ID in both \code{df_ae} and \code{df_enrol}. Case-insensitive.}
 
-\item{total}{whether to add totals}
+\item{soc}{name of the SOC column in \code{df_ae}. Case-insensitive. Grade will be considered 0 if missing(e.g. if patient if absent from \code{df_ae}).}
 
-\item{digits}{number of signigicant digits for percentages}
+\item{total}{whether to add a \code{total} column for each arm}
+
+\item{digits}{significant digits for percentages}
 }
 \value{
 a crosstable
 }
 \description{
-Title
+Summary tables for AE
 }
 \examples{
 \dontrun{
@@ -51,4 +53,7 @@ ae_table_grade_n(df_ae=tm$ae, df_enrol=tm$enrolres, arm=NULL) \%>\%
 #To get SAE only, filter df_ae first
 tm$ae \%>\% filter(sae==TRUE) \%>\% ae_table_grade_n(df_enrol=tm$enrolres, arm=NULL)
 }
+}
+\seealso{
+\code{\link[=ae_table_grade_max]{ae_table_grade_max()}}, \code{\link[=ae_table_grade_n]{ae_table_grade_n()}}, \code{\link[=ae_table_soc]{ae_table_soc()}}, \code{\link[=ae_plot_grade_max]{ae_plot_grade_max()}}, \code{\link[=ae_plot_grade_n]{ae_plot_grade_n()}}
 }

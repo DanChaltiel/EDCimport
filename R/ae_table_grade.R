@@ -180,3 +180,63 @@ ae_table_grade_n = function(
   attr(rtn, "by_table")[] = npat[names(npat)!="Total"]
   rtn
 }
+
+
+#' Graphic representation of AEs
+#' 
+#' Produce a graphic representation of AE, counting AE as bars for each patient, colored by grade. Can be faceted by treatment arm.
+#'
+#' @param low the color of Grade 1 AE
+#' @param high the color of Grade 5 AE
+#' @inheritParams ae_table_soc 
+#' @inherit ae_table_soc seealso
+#'
+#' @return a ggplot
+#' @export
+#'
+#' @examples
+#' tm = edc_example_ae()
+#' ae_plot_grade_n(df_ae=tm$ae, df_enrol=tm$enrolres)
+#' ae_plot_grade_n(df_ae=tm$ae, df_enrol=tm$enrolres, arm=NULL)
+ae_plot_grade_n = function(
+    df_ae, df_enrol, low="#ffc425", high="#d11141", 
+    arm="ARM", grade="AEGR", subjid="SUBJID"
+){
+  df_ae = df_ae %>% rename_with(tolower) %>%
+    select(subjid=tolower(subjid), grade=tolower(grade)) 
+    
+  df_enrol = df_enrol %>% rename_with(tolower) %>%
+    select(subjid=tolower(subjid), arm=tolower(arm))
+  df = df_enrol %>%
+    full_join(df_ae, by=tolower(subjid)) %>% 
+    arrange(subjid)
+  
+  default_arm = "All patients"
+  npat = rlang::int(!!default_arm:=nrow(df_enrol)) 
+  if(!is.null(arm)){
+    npat = deframe(count(df_enrol, arm))
+    npat["Total"] = sum(npat)
+  }
+
+  # if(!any(names(df)=="arm")) df$arm=default_arm %>% set_label("Treatment arm")
+  
+  # browser()
+  
+  rtn =
+    df %>% 
+    mutate(subjid = forcats::fct_infreq(factor(subjid))) %>% 
+    count(across(c(subjid, grade, any_of("arm")))) %>% 
+      mutate(n = ifelse(is.na(grade), 0.1, n)) %>% 
+    # ggplot(aes(x=subjid, y=n, fill=fct_rev(factor(grade)))) + geom_col() +
+    ggplot(aes(x=subjid, y=n, fill=grade)) + geom_col() + 
+    scale_fill_steps(low=low, high=high) +
+    theme(axis.text.x=element_blank(),
+          axis.ticks.x=element_blank()) +
+    labs(x="Patient", y="Count", fill="AE grade")
+    
+    
+  if(!is.null(arm)) rtn = rtn + facet_grid(cols=vars(arm), scales="free_x")
+  
+  rtn
+}
+
