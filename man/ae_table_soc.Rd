@@ -26,13 +26,19 @@ ae_table_soc(
 
 \item{df_enrol}{enrollment table, one row per patient, containing subjid (and arm if needed)}
 
-\item{arm, term}{name of the treatment and term columns in \code{df}. Case-insensitive. Can be set to \code{NULL}.}
+\item{arm}{name of the treatment column in \code{df_enrol}. Case-insensitive. Can be set to \code{NULL} to not group.}
 
-\item{subjid, soc, grade}{names of the other relevant columns in \code{df}. Case-insensitive.}
+\item{term}{name of the the CTCAE term column in \code{df_ae}. Case-insensitive. Can be set to \code{NULL}.}
+
+\item{soc}{name of the SOC column in \code{df_ae}. Case-insensitive. Grade will be considered 0 if missing(e.g. if patient if absent from \code{df_ae}).}
+
+\item{grade}{name of the AE grade column in \code{df_ae}. Case-insensitive.}
+
+\item{subjid}{name of the patient ID in both \code{df_ae} and \code{df_enrol}. Case-insensitive.}
 
 \item{sort_by_ae}{should the table be sorted by number or alphabetically}
 
-\item{total}{should there be a \code{total} column for each arm}
+\item{total}{whether to add a \code{total} column for each arm}
 
 \item{digits}{significant digits for percentages}
 
@@ -64,4 +70,7 @@ ae_table_soc(ae, enrolres, term=NULL, sort_by_ae=FALSE) \%>\%
 ae_table_soc(ae, enrolres, arm=NULL) \%>\% 
   as_flextable()
 }
+}
+\seealso{
+\code{\link[=ae_table_grade_max]{ae_table_grade_max()}}, \code{\link[=ae_table_grade_n]{ae_table_grade_n()}}, \code{\link[=ae_table_soc]{ae_table_soc()}}, \code{\link[=ae_plot_grade_max]{ae_plot_grade_max()}}, \code{\link[=ae_plot_grade_n]{ae_plot_grade_n()}}
 }

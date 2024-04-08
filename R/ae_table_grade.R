@@ -8,15 +8,8 @@
 #' The function `ae_table_grade_max()` creates a summary table of the maximum AE grade experienced per each patient. 
 #' The resulting crosstable can be piped to `as_flextable()` to get a nicely formatted flextable.
 #' 
-#' The function `ae_plot_grade_max()` creates summary plots of maximum AE grades in up to 3 different ways. 
-#'
-#'
-#' @param df input data, one row per event
-#' @param arm name of the treatment column in `df`. Case-insensitive. Can be set to `NULL` to not group.
-#' @param soc name of the SOC column in `df`. Case-insensitive. Grade will be considered 0 is missing.
-#' @param subjid,grade names of the other relevant columns in `df`. Case-insensitive. 
-#' @param total whether to add totals
-#' @param digits number of signigicant digits for percentages
+#' @inheritParams ae_table_soc
+#' @inherit ae_table_soc seealso
 #'
 #' @return a crosstable (dataframe)
 #' @export
@@ -50,7 +43,7 @@ ae_table_grade_max = function(
     df_ae, df_enrol, 
     arm="ARM", subjid="SUBJID", soc="AESOC", grade="AEGR", total=TRUE, digits=0
 ){
-  
+  check_installed("crosstable", "for `ae_table_grade_max()` to work")
   
   df_ae = df_ae %>% rename_with(tolower) %>%
     select(subjid=tolower(subjid), soc=tolower(soc), grade=tolower(grade))
@@ -67,7 +60,14 @@ ae_table_grade_max = function(
     crosstable::crosstable(grade_max, by=arm, total=total, percent_digits=digits, margin="col") 
 }
 
-#' @rdname ae_table_grade_max
+#' Graphic representation of AEs by grade max
+#'
+#' Produces a graphic representation of AE, counting the maximum grade each patient experienced, colored by treatment arm. Returns up to 3 representations if `arm!=NULL`.
+#' 
+#' @inheritParams ae_table_soc 
+#' @inherit ae_table_soc seealso
+#' @param type the plots to be included. One of `c("stack", "dodge", "fill")`.
+#'
 #' @return a patchwork of ggplots
 #' @importFrom dplyr arrange full_join mutate rename_with select summarise
 #' @importFrom ggplot2 aes geom_bar ggplot labs scale_x_continuous theme waiver
@@ -75,6 +75,13 @@ ae_table_grade_max = function(
 #' @importFrom purrr map
 #' @importFrom rlang set_names
 #' @export
+#' 
+#' @examples
+#' #you can use modificators from the patchwork package, like "&"
+#' tm = edc_example_ae()
+#' ae_plot_grade_max(df_ae=tm$ae, df_enrol=tm$enrolres) & labs(fill="Group")
+#' ae_plot_grade_max(df_ae=tm$ae, df_enrol=tm$enrolres, type=c("dodge", "fill"))
+#' ae_plot_grade_max(df_ae=tm$ae, df_enrol=tm$enrolres, arm=NULL) + coord_flip()
 ae_plot_grade_max = function(
     df_ae, df_enrol, type = c("stack", "dodge", "fill"),
     arm="ARM", subjid="SUBJID", soc="AESOC", grade="AEGR"
@@ -112,11 +119,10 @@ ae_plot_grade_max = function(
 # Nb of grades --------------------------------------------------------------------------------
 
 
-#' Title
+#' Summary tables for AE
 #' 
-#' @param df_ae adverse event table, one row per AE, containing subjid, soc, and grade
-#' @param df_enrol enrollment table, one row per patient, containing subjid (and arm if needed)
-#' @inheritParams ae_table_grade_max
+#' @inheritParams ae_table_soc
+#' @inherit ae_table_soc seealso
 #'
 #' @return a crosstable
 #' @importFrom crosstable crosstable format_fixed get_percent_pattern
@@ -145,6 +151,8 @@ ae_table_grade_n = function(
     arm="ARM", grade="AEGR", subjid="SUBJID", soc="AESOC",
     total=FALSE, digits=0
 ){
+  check_installed("crosstable", "for `ae_table_grade_n()` to work")
+  
   df_ae = df_ae %>% rename_with(tolower) %>%
     select(subjid=tolower(subjid), soc=tolower(soc), grade=tolower(grade))
   df_enrol = df_enrol %>% rename_with(tolower) %>%

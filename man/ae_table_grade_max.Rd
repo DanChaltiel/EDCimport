@@ -2,7 +2,6 @@
 % Please edit documentation in R/ae_table_grade.R
 \name{ae_table_grade_max}
 \alias{ae_table_grade_max}
-\alias{ae_plot_grade_max}
 \title{Summary tables for AE by grade max}
 \usage{
 ae_table_grade_max(
@@ -15,41 +14,30 @@ ae_table_grade_max(
   total = TRUE,
   digits = 0
 )
-
-ae_plot_grade_max(
-  df_ae,
-  df_enrol,
-  type = c("stack", "dodge", "fill"),
-  arm = "ARM",
-  subjid = "SUBJID",
-  soc = "AESOC",
-  grade = "AEGR"
-)
 }
 \arguments{
-\item{arm}{name of the treatment column in \code{df}. Case-insensitive. Can be set to \code{NULL} to not group.}
+\item{df_ae}{adverse event table, one row per AE, containing subjid, soc, and grade}
 
-\item{subjid, grade}{names of the other relevant columns in \code{df}. Case-insensitive.}
+\item{df_enrol}{enrollment table, one row per patient, containing subjid (and arm if needed)}
 
-\item{soc}{name of the SOC column in \code{df}. Case-insensitive. Grade will be considered 0 is missing.}
+\item{arm}{name of the treatment column in \code{df_enrol}. Case-insensitive. Can be set to \code{NULL} to not group.}
 
-\item{total}{whether to add totals}
+\item{subjid}{name of the patient ID in both \code{df_ae} and \code{df_enrol}. Case-insensitive.}
 
-\item{digits}{number of signigicant digits for percentages}
+\item{soc}{name of the SOC column in \code{df_ae}. Case-insensitive. Grade will be considered 0 if missing(e.g. if patient if absent from \code{df_ae}).}
 
-\item{df}{input data, one row per event}
+\item{grade}{name of the AE grade column in \code{df_ae}. Case-insensitive.}
+
+\item{total}{whether to add a \code{total} column for each arm}
+
+\item{digits}{significant digits for percentages}
 }
 \value{
 a crosstable (dataframe)
-
-a patchwork of ggplots
 }
 \description{
 The function \code{ae_table_grade_max()} creates a summary table of the maximum AE grade experienced per each patient.
 The resulting crosstable can be piped to \code{as_flextable()} to get a nicely formatted flextable.
-}
-\details{
-The function \code{ae_plot_grade_max()} creates summary plots of maximum AE grades in up to 3 different ways.
 }
 \examples{
 \dontrun{
@@ -74,4 +62,7 @@ ae_plot_grade_max(df_ae=ae, df_enrol=enrolres) & labs(fill="Group")
 ae_plot_grade_max(df_ae=ae, df_enrol=enrolres, type=c("dodge", "fill"))
 ae_plot_grade_max(df_ae=ae, df_enrol=enrolres, arm=NULL) + coord_flip()
 }
+}
+\seealso{
+\code{\link[=ae_table_grade_max]{ae_table_grade_max()}}, \code{\link[=ae_table_grade_n]{ae_table_grade_n()}}, \code{\link[=ae_table_soc]{ae_table_soc()}}, \code{\link[=ae_plot_grade_max]{ae_plot_grade_max()}}, \code{\link[=ae_plot_grade_n]{ae_plot_grade_n()}}
 }
