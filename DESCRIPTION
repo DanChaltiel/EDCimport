@@ -24,6 +24,7 @@ Imports:
     purrr,
     readr,
     rlang,
+    scales,
     stringr,
     tibble,
     tidyr,

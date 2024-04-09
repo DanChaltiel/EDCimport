@@ -6,9 +6,11 @@
 \usage{
 waterfall_plot(
   data_recist,
-  rc_date,
-  rc_sum,
-  rc_resp,
+  rc_date = "RCDT",
+  rc_sum = "RCTLSUM",
+  rc_resp = "RCRESP",
+  rc_new = "RCNEW",
+  rc_new_needle = "yes",
   arm = NULL,
   warn_missing = TRUE
 )
