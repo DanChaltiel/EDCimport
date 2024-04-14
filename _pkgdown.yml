@@ -50,10 +50,10 @@ reference:
 - title: "Clinical Utils"
 - contents:
   - ae_table_grade_max
-  - ae_plot_grade_max
   - ae_table_grade_n
   - ae_table_soc
-  - ae_table_grade_max
+  - ae_plot_grade_max
+  - ae_plot_grade_n
   - waterfall_plot
 - title: "List Utils"
 - contents:

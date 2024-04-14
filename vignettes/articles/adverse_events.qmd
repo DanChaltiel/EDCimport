@@ -1,0 +1,184 @@
+---
+title: "Adverse Events"
+vignette: >
+  %\VignetteIndexEntry{Adverse Events}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r}
+#| include = FALSE
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+<script src="https://cdn.jsdelivr.net/npm/@xiee/utils/js/tabsets.min.js" defer data-external="1"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xiee/utils/css/tabsets.min.css">
+
+On commence par charger la base TrialMaster comme on fait d'habitude. 
+Ici j'utilise la fonction `edc_example_ae()` pour ne pas dépendre de données réelles privées.
+
+```{r}
+#| label = "setup",
+#| message = FALSE,
+#| warning = FALSE
+library(EDCimport)
+library(tidyverse)
+library(flextable)
+# tm = read_trialmaster("path/to/file.zip")
+tm = edc_example_ae()
+load_list(tm)
+
+head(ae)
+head(enrolres)
+```
+
+## Macro `AE_grades`
+
+La macro `AE_grades` est traduite en deux fonctions : `ae_table_grade_max()` et `ae_table_grade_n()`. Ces fonctions retournent des objets de classe `crosstable`. 
+Ils ont une méthode `as_flextable` qui les transforme en table HTML de classe `flextable`. 
+
+EDCimport comprend aussi la fonction `ae_plot_grade_max()`
+
+Voir la description du package `{crosstable}` pour plus d'informations: [documentation](https://danchaltiel.github.io/crosstable/reference/as_flextable.html). <br>
+Voir la description du package `{flextable}` pour la liste des modificateurs (comme `add_footer_lines()`) : [documentation](https://davidgohel.github.io/flextable/reference/index.html).
+
+### Tableaux
+
+::: {.panel-tabset}
+
+#### `AE_grades1`
+
+Table des grades maximum par patient
+
+```{r}
+ae_table_grade_max(df_ae=ae, df_enrol=enrolres, arm=NULL) %>% 
+  as_flextable() %>% 
+  add_footer_lines("Percentages are given as the proportion of patients presenting at most one 
+                   AE of given grade")
+```
+
+#### `AE_grades2`
+
+Table des grades maximum par patient stratifié sur le bras
+
+On pourrait retrouver exactement la sortie SAS en mettant `total=FALSE`.
+
+```{r}
+ae_table_grade_max(df_ae=ae, df_enrol=enrolres, arm="arm") %>% 
+  as_flextable() %>% 
+  add_footer_lines("Percentages are given as the proportion of patients presenting at most one AE of given grade")
+```
+
+#### `AE_grades3`
+
+Table de tous les grades pour chaque patient
+
+```{r}
+ae_table_grade_n(df_ae=ae, df_enrol=enrolres, arm=NULL) %>% 
+  as_flextable() %>% 
+  add_footer_lines("Percentages are given as the proportion of patients presenting at least one AE of given grade")
+```
+
+On pourrait retrouver exactement la sortie SAS en mettant `total=FALSE`.
+
+```{r}
+ae_table_grade_n(df_ae=ae, df_enrol=enrolres, arm="arm") %>% 
+  as_flextable() %>% 
+  add_footer_lines("Percentages are given as the proportion of patients presenting at least one AE of given grade")
+```
+
+
+#### `AE_grades4`
+
+Table des grades maximum par patient, filtrée sur les SAE
+
+La fonction ne prend pas en charge les SAE directement, il suffit de filtrer la table AE en amont.
+
+```{r}
+ae %>% 
+  filter(sae==TRUE) %>% 
+  ae_table_grade_max(df_enrol=enrolres, arm=NULL) %>% 
+  as_flextable() %>% 
+  add_footer_lines("Percentages are given as the proportion of patients presenting at most one SAE of given grade")
+```
+
+:::
+
+### Sorties Plots
+
+::: {.panel-tabset}
+
+#### `AE max`
+
+```{r}
+#| fig.asp = 0.5,
+#| fig.width = 7,
+#| out.width = "100%"
+ae_plot_grade_max(df_ae=ae, df_enrol=enrolres, 
+                  type = c("stack", "dodge", "fill")) & 
+  labs(fill="Arm")
+```
+
+#### `AE N`
+
+
+```{r}
+#| fig.asp = 0.5,
+#| fig.width = 7,
+#| out.width = "100%"
+ae_plot_grade_n(df_ae=ae, df_enrol=enrolres)
+```
+
+:::
+
+## Macro `AE_SOC` 
+
+
+La macro `AE_SOC` est traduite en la fonctions : `ae_table_soc()`. Cette fonction retourne des objets de classe `ae_table_soc`. Ils ont également une méthode `as_flextable` qui les transforme en table HTML de classe `flextable`, mais différente de celle de crosstable. 
+
+Voir la description du package flextable pour la liste des modificateurs (comme `add_footer_lines()`) : [documentation](https://davidgohel.github.io/flextable/reference/index.html).
+
+Pour les sorties sur `{officer}`, comme ces tables sont très larges, pensez bien à basculer en format paysage en utilisant `officer::body_end_section_continuous()`, puis `officer::body_end_section_landscape()` pour revenir au format portrait.
+
+### Sortie *AE_SOC1*: Table des grades par soc et termes
+
+On peut ajouter `total=FALSE` pour retirer la colonne "Tot".
+
+```{r}
+ae_table_soc(df_ae=ae, df_enrol=enrolres, term=NULL, arm=NULL, sort_by_ae=FALSE) %>% 
+  as_flextable() %>% 
+  add_footer_lines("In the header, N represents the number of patients.") %>% 
+  add_footer_lines("Percentages are given as the proportion of patients presenting at least one AE of given grade")
+```
+
+### Sortie *AE_SOC2*: Table des grades par soc et termes
+
+```{r}
+##TODO exemple avec des TERMS
+``` 
+
+### Sortie *AE_SOC3*: Table des grades par termes uniquement, filtrée sur les SAE
+
+```{r}
+##TODO ajouter vrais SAE
+```
+
+### Sortie *AE_SOC4*: Table des grades stratifiée sur le bras (sans colonne total)
+
+On peut ajouter `total=FALSE` pour retirer la colonne "Tot" et obtenir la sortie *AE_SOC5*.
+
+```{r}
+ae_table_soc(df_ae=ae, df_enrol=enrolres, term=NULL, arm="arm", sort_by_ae=FALSE) %>% 
+  as_flextable() %>% 
+  add_footer_lines("In the header, N represents the number of patients.") %>% 
+  add_footer_lines("Percentages are given as the proportion of patients presenting at least one AE of given grade")
+```
+
+### Sortie *AE_SOC6*: Table des soc et termes tous grades confondus stratifiée sur le bras
+
+```{r}
+##TODO
+```
