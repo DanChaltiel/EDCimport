@@ -135,7 +135,7 @@ ae_table_soc = function(
     ) %>% 
     mutate(
       soc = as.character(soc),
-      grade2 = paste0(fct_relabel(arm, janitor::make_clean_names), "_G", grade),
+      grade2 = paste0(fct_relabel(arm, edc_make_clean_name), "_G", grade),
       grade2 = grade2 %>% str_replace("_GNA", "_NA") %>% str_replace("_GTot", "_Tot")
     ) %>% 
     arrange(grade2) %>%
