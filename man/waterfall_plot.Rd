@@ -6,27 +6,34 @@
 \usage{
 waterfall_plot(
   data_recist,
-  rc_date = "RCDT",
   rc_sum = "RCTLSUM",
   rc_resp = "RCRESP",
-  rc_new = "RCNEW",
-  rc_new_needle = "yes",
+  rc_date = "RCDT",
+  type = c("best_resp", "worst_resp", "timepoint"),
+  timepoint = NULL,
+  rc_star = NULL,
   arm = NULL,
   warn_missing = TRUE
 )
 }
 \arguments{
-\item{data_recist}{}
+\item{data_recist}{recist table, one row}
 
-\item{rc_date}{}
+\item{rc_sum}{name of the target lesions length sum column in \code{data_recist}, usually "RCTLSUM".}
 
-\item{rc_sum}{}
+\item{rc_resp}{name of the response column in \code{data_recist}, usually "RCRESP".}
 
-\item{rc_resp}{}
+\item{rc_date}{unused for now}
 
-\item{arm}{}
+\item{type}{one of \code{c("best_resp", "worst_resp")}}
 
-\item{warn_missing}{}
+\item{timepoint}{unused for now}
+
+\item{rc_star}{name of the logical column in \code{data_recist} that triggers the .  Can be set to \code{NULL}.}
+
+\item{arm}{name of the treatment column in \code{data_recist}. Can be set to \code{NULL} to not group.}
+
+\item{warn_missing}{whether to warn about missing values}
 }
 \value{
 a ggplot
@@ -35,9 +42,13 @@ a ggplot
 Generate a waterfall plot
 }
 \examples{
+
+\dontrun{
 waterfall_plot(rc, rc_date=RCDT, rc_sum=RCTLSUM, rc_resp=RCRESP)
+waterfall_plot(rc_date=RCDT, rc_sum=RCTLSUM, rc_resp=RCRESP, rc_star="RCNEW")
 rc \%>\% 
   left_join(arm, by="SUBJID") \%>\%
   waterfall_plot(rc_date=RCDT, rc_sum=RCTLSUM, rc_resp=RCRESP, arm=ARM) +
   NULL
+}
 }
