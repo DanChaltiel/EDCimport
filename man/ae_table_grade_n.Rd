@@ -44,7 +44,8 @@ tm = edc_example_ae()
 
 ae_table_grade_n(df_ae=tm$ae, df_enrol=tm$enrolres) \%>\% 
   as_flextable() \%>\% 
-  flextable::add_footer_lines("Percentages are given as the proportion of patients presenting at least one AE of given grade")
+  flextable::add_footer_lines("Percentages are given as the proportion of patients 
+                               presenting at least one AE of given grade")
 
 ae_table_grade_n(df_ae=tm$ae, df_enrol=tm$enrolres, arm=NULL) \%>\% 
   as_flextable(by_header=F) \%>\% 

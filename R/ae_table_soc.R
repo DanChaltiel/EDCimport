@@ -18,6 +18,7 @@
 #' @param sort_by_ae should the table be sorted by number or alphabetically
 #' @param total whether to add a `total` column for each arm
 #' @param digits significant digits for percentages
+#' @param warn_miss whether to warn for missing values
 #'
 #' @return a dataframe (`ae_table_soc()`) or a flextable (`as_flextable()`).
 #' 
@@ -26,25 +27,26 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' # 1) Create data
-#' #enrolres = enrollment table, with one row per patient
-#' #ae = adverse event table, with one row per AE
 #' 
-#' # 2) Apply functions
+#' tm = edc_example_ae()
+#' ae_table_soc(df_ae=tm$ae, df_enrol=tm$enrolres, term=NULL)
+#' 
+#' \dontrun{
 #' #the resulting flextable can be customized using the flextable package
-#' ae_table_soc(ae, enrolres, total=FALSE) %>% 
-#'   as_flextable() %>% flextable::hline(i=~soc=="" & soc!=lead(soc))
-#' ae_table_soc(ae, enrolres, term=NULL, sort_by_ae=FALSE) %>% 
-#'   as_flextable() %>% flextable::hline()
-#' ae_table_soc(ae, enrolres, arm=NULL) %>% 
+#' library(flextable)
+#' ae_table_soc(tm$ae, df_enrol=tm$enrolres, total=FALSE) %>% 
+#'   as_flextable() %>% 
+#'   hline(i=~soc=="" & soc!=dplyr::lead(soc))
+#' ae_table_soc(tm$ae, df_enrol=tm$enrolres, term=NULL, sort_by_ae=FALSE) %>% 
+#'   as_flextable() %>% 
+#'   hline()
+#' ae_table_soc(tm$ae, df_enrol=tm$enrolres, term=NULL, arm=NULL) %>% 
 #'   as_flextable()
 #' }
 #' @importFrom cli cli_abort cli_warn
 #' @importFrom dplyr any_of arrange bind_rows count desc filter full_join if_else lag left_join mutate pull rename_with select summarise transmute
 #' @importFrom forcats fct_relabel
 #' @importFrom glue glue
-#' @importFrom janitor make_clean_names
 #' @importFrom purrr discard iwalk keep map
 #' @importFrom rlang ensym is_empty set_names
 #' @importFrom stringr str_replace
@@ -107,7 +109,7 @@ ae_table_soc = function(
     n_patients = count(df_enrol, arm, name="n_arm")
     rtn = rtn %>% left_join(n_patients, by="arm")
     header = n_patients %>% 
-      transmute(name=janitor::make_clean_names(arm),
+      transmute(name=edc_make_clean_name(arm),
                 value=glue("{arm} (N={n_arm})") %>% as.character()) %>% 
       deframe()
   } else {
@@ -128,7 +130,7 @@ ae_table_soc = function(
       .by=term
     ) %>% 
     mutate(
-      n2 = glue("{n} ({format_fixed(100*n/n_arm,digits)}%)"),
+      n2 = glue("{n} ({round(100*n/n_arm,digits)}%)"),
       .by=arm,
     ) %>% 
     mutate(
@@ -168,7 +170,6 @@ ae_table_soc = function(
 #' @exportS3Method flextable::as_flextable
 
 #' @importFrom dplyr lag
-#' @importFrom flextable add_header_row align autofit bg bold flextable fontsize padding set_header_labels
 #' @importFrom purrr map map_int
 #' @importFrom rlang set_names
 #' @importFrom stringr str_detect str_replace_all str_starts
@@ -184,21 +185,21 @@ as_flextable.ae_table_soc = function(x, arm_colors=c("#f2dcdb", "#dbe5f1", "#ebf
   header_labels$term = "CTCAE v4.0 Term"
   
   rtn = x %>%
-    flextable() %>%
-    set_header_labels(values=header_labels) %>%
-    add_header_row(values=c(" ", table_ae_header), colwidths = colwidths) %>%
-    align(i=1, part="header", align="center") %>%
-    align(j=seq(col1), part="all", align="right") %>%
-    padding(padding.top=0, padding.bottom=0) %>%
-    autofit() %>% 
-    fontsize(size=8, part="all") %>%
-    bold(part="header")
+    flextable::flextable() %>%
+    flextable::set_header_labels(values=header_labels) %>%
+    flextable::add_header_row(values=c(" ", table_ae_header), colwidths = colwidths) %>%
+    flextable::align(i=1, part="header", align="center") %>%
+    flextable::align(j=seq(col1), part="all", align="right") %>%
+    flextable::padding(padding.top=0, padding.bottom=0) %>%
+    flextable::autofit() %>% 
+    flextable::fontsize(size=8, part="all") %>%
+    flextable::bold(part="header")
   
   a = cumsum(colwidths)[-1]
   for(i in seq_along(a)){
     from = lag(a, default=col1)[i] + 1
     to = a[i]
-    rtn = rtn %>% bg(j=seq(from, to), bg = arm_colors[i], part="all")
+    rtn = rtn %>% flextable::bg(j=seq(from, to), bg = arm_colors[i], part="all")
   }
   
   rtn

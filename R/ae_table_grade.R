@@ -13,32 +13,25 @@
 #'
 #' @return a crosstable (dataframe)
 #' @export
+#' @importFrom dplyr arrange full_join mutate rename_with select summarise
 #'
 #' @examples
-#' \dontrun{
 #' 
 #' tm = edc_example_ae()
 #' ae_table_grade_max(df_ae=tm$ae, df_enrol=tm$enrolres)
-#' ae_plot_grade_max(df_ae=tm$ae, df_enrol=tm$enrolres)
 #' 
-#' # 1) Apply table functions
+#' \dontrun{
 #' #you can use as_flextable() to get an HTML flextable
 #' #you can use modificators modificators from the flextable package
-#' ae_table_grade_max(df_ae=ae, df_enrol=enrolres, arm=NULL) %>% 
-#'   add_footer_lines("Percentages are given as the proportion of patients presenting at most one AE of given grade")
-#' ae_table_grade_max(df_ae=ae, df_enrol=enrolres) %>%
+#' library(flextable)
+#' ae_table_grade_max(df_ae=tm$ae, df_enrol=tm$enrolres, arm=NULL) %>% 
+#'   as_flextable() %>% 
+#'   add_footer_lines("Percentages are given as the proportion of patients 
+#'                     presenting at most one AE of given grade")
+#' ae_table_grade_max(df_ae=tm$ae, df_enrol=tm$enrolres) %>%
 #'   as_flextable(by_header="Both arms") %>% 
 #'   highlight(i=~variable=="Grade 5", j=-1)
-#'   
-#' # 2) Apply plot functions
-#' #you can choose the type
-#' #you can use modificators from the patchwork package, like "&"
-#' ae_plot_grade_max(df_ae=ae, df_enrol=enrolres) & labs(fill="Group")
-#' ae_plot_grade_max(df_ae=ae, df_enrol=enrolres, type=c("dodge", "fill"))
-#' ae_plot_grade_max(df_ae=ae, df_enrol=enrolres, arm=NULL) + coord_flip()
 #' }
-#' @importFrom crosstable apply_labels crosstable
-#' @importFrom dplyr arrange full_join mutate rename_with select summarise
 ae_table_grade_max = function(
     df_ae, df_enrol, 
     arm="ARM", subjid="SUBJID", soc="AESOC", grade="AEGR", total=TRUE, digits=0
@@ -71,21 +64,26 @@ ae_table_grade_max = function(
 #' @return a patchwork of ggplots
 #' @importFrom dplyr arrange full_join mutate rename_with select summarise
 #' @importFrom ggplot2 aes geom_bar ggplot labs scale_x_continuous theme waiver
-#' @importFrom patchwork plot_layout wrap_plots
 #' @importFrom purrr map
 #' @importFrom rlang set_names
 #' @export
 #' 
 #' @examples
-#' #you can use modificators from the patchwork package, like "&"
 #' tm = edc_example_ae()
-#' ae_plot_grade_max(df_ae=tm$ae, df_enrol=tm$enrolres) & labs(fill="Group")
 #' ae_plot_grade_max(df_ae=tm$ae, df_enrol=tm$enrolres, type=c("dodge", "fill"))
-#' ae_plot_grade_max(df_ae=tm$ae, df_enrol=tm$enrolres, arm=NULL) + coord_flip()
+#' ae_plot_grade_max(df_ae=tm$ae, df_enrol=tm$enrolres, arm=NULL) + ggplot2::coord_flip()
+#' 
+#' #you can use modificators from the patchwork package, like "&"
+#' \dontrun{
+#' library(patchwork)
+#' ae_plot_grade_max(df_ae=tm$ae, df_enrol=tm$enrolres) & labs(fill="Group")
+#' }
 ae_plot_grade_max = function(
     df_ae, df_enrol, type = c("stack", "dodge", "fill"),
     arm="ARM", subjid="SUBJID", soc="AESOC", grade="AEGR"
 ){
+  
+  check_installed("patchwork", "for `ae_plot_grade_max()` to work")
   
   df_ae = df_ae %>% rename_with(tolower) %>%
     select(subjid=tolower(subjid), soc=tolower(soc), grade=tolower(grade)) 
@@ -125,7 +123,6 @@ ae_plot_grade_max = function(
 #' @inherit ae_table_soc seealso
 #'
 #' @return a crosstable
-#' @importFrom crosstable crosstable format_fixed get_percent_pattern
 #' @importFrom dplyr across arrange count cur_column distinct filter full_join mutate rename_with select
 #' @importFrom rlang int
 #' @importFrom tibble deframe
@@ -137,7 +134,8 @@ ae_plot_grade_max = function(
 #' 
 #' ae_table_grade_n(df_ae=tm$ae, df_enrol=tm$enrolres) %>% 
 #'   as_flextable() %>% 
-#'   flextable::add_footer_lines("Percentages are given as the proportion of patients presenting at least one AE of given grade")
+#'   flextable::add_footer_lines("Percentages are given as the proportion of patients 
+#'                                presenting at least one AE of given grade")
 #' 
 #' ae_table_grade_n(df_ae=tm$ae, df_enrol=tm$enrolres, arm=NULL) %>% 
 #'   as_flextable(by_header=F) %>% 
@@ -182,7 +180,7 @@ ae_table_grade_n = function(
     mutate(across(-(.id:variable), function(x){
       x = as.numeric(x)
       tot = npat[cur_column()]
-      p = format_fixed(x/tot, digits, percent=TRUE)
+      p = crosstable::format_fixed(x/tot, digits, percent=TRUE)
       paste0(x, " (", p, ")")
     }))
   attr(rtn, "by_table")[] = npat[names(npat)!="Total"]
@@ -201,6 +199,7 @@ ae_table_grade_n = function(
 #'
 #' @return a ggplot
 #' @export
+#' @importFrom ggplot2 scale_fill_steps theme element_blank geom_col labs facet_grid vars 
 #'
 #' @examples
 #' tm = edc_example_ae()
@@ -229,7 +228,6 @@ ae_plot_grade_n = function(
   # if(!any(names(df)=="arm")) df$arm=default_arm %>% set_label("Treatment arm")
   
   # browser()
-  
   rtn =
     df %>% 
     mutate(subjid = forcats::fct_infreq(factor(subjid))) %>% 

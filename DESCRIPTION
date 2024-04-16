@@ -39,6 +39,7 @@ Suggests:
     htmlwidgets,
     janitor,
     knitr,
+    patchwork,
     plotly,
     quarto,
     rmarkdown,

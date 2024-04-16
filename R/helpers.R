@@ -84,8 +84,7 @@ find_keyword = function(keyword, data=get_lookup(), ignore_case=TRUE){
 #'
 #' @return nothing, called for errors/warnings
 #' @importFrom cli cli_abort cli_warn
-#' @importFrom dplyr any_of pull select
-#' @importFrom generics setdiff
+#' @importFrom dplyr any_of pull select setdiff
 #' @importFrom rlang caller_arg
 #' @export
 #'
@@ -216,7 +215,7 @@ assert_no_duplicate = function(df, by=NULL, id_col=get_subjid_cols()){
 #'   print(.x %>% fct_yesno() %>% levels())
 #' })
 #' @importFrom cli cli_abort
-#' @importFrom generics union
+#' @importFrom dplyr union
 #' @importFrom purrr keep
 fct_yesno = function(x, lvl=getOption("edc_fct_yesno", get_yesno_lvl()), 
                      mutate_character=TRUE){

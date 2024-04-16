@@ -36,11 +36,15 @@ a patchwork of ggplots
 Produces a graphic representation of AE, counting the maximum grade each patient experienced, colored by treatment arm. Returns up to 3 representations if \code{arm!=NULL}.
 }
 \examples{
-#you can use modificators from the patchwork package, like "&"
 tm = edc_example_ae()
-ae_plot_grade_max(df_ae=tm$ae, df_enrol=tm$enrolres) & labs(fill="Group")
 ae_plot_grade_max(df_ae=tm$ae, df_enrol=tm$enrolres, type=c("dodge", "fill"))
-ae_plot_grade_max(df_ae=tm$ae, df_enrol=tm$enrolres, arm=NULL) + coord_flip()
+ae_plot_grade_max(df_ae=tm$ae, df_enrol=tm$enrolres, arm=NULL) + ggplot2::coord_flip()
+
+#you can use modificators from the patchwork package, like "&"
+\dontrun{
+library(patchwork)
+ae_plot_grade_max(df_ae=tm$ae, df_enrol=tm$enrolres) & labs(fill="Group")
+}
 }
 \seealso{
 \code{\link[=ae_table_grade_max]{ae_table_grade_max()}}, \code{\link[=ae_table_grade_n]{ae_table_grade_n()}}, \code{\link[=ae_table_soc]{ae_table_soc()}}, \code{\link[=ae_plot_grade_max]{ae_plot_grade_max()}}, \code{\link[=ae_plot_grade_n]{ae_plot_grade_n()}}

@@ -42,6 +42,8 @@ ae_table_soc(
 
 \item{digits}{significant digits for percentages}
 
+\item{warn_miss}{whether to warn for missing values}
+
 \item{x}{a dataframe, resulting of \code{ae_table_soc()}}
 
 \item{arm_colors}{colors for the arm groups}
@@ -56,18 +58,20 @@ The function \code{ae_table_soc()} creates a summary table of maximum AE grades 
 The resulting dataframe can be piped to \code{as_flextable()} to get a nicely formatted flextable.
 }
 \examples{
-\dontrun{
-# 1) Create data
-#enrolres = enrollment table, with one row per patient
-#ae = adverse event table, with one row per AE
 
-# 2) Apply functions
+tm = edc_example_ae()
+ae_table_soc(df_ae=tm$ae, df_enrol=tm$enrolres, term=NULL)
+
+\dontrun{
 #the resulting flextable can be customized using the flextable package
-ae_table_soc(ae, enrolres, total=FALSE) \%>\% 
-  as_flextable() \%>\% flextable::hline(i=~soc=="" & soc!=lead(soc))
-ae_table_soc(ae, enrolres, term=NULL, sort_by_ae=FALSE) \%>\% 
-  as_flextable() \%>\% flextable::hline()
-ae_table_soc(ae, enrolres, arm=NULL) \%>\% 
+library(flextable)
+ae_table_soc(tm$ae, df_enrol=tm$enrolres, total=FALSE) \%>\% 
+  as_flextable() \%>\% 
+  hline(i=~soc=="" & soc!=dplyr::lead(soc))
+ae_table_soc(tm$ae, df_enrol=tm$enrolres, term=NULL, sort_by_ae=FALSE) \%>\% 
+  as_flextable() \%>\% 
+  hline()
+ae_table_soc(tm$ae, df_enrol=tm$enrolres, term=NULL, arm=NULL) \%>\% 
   as_flextable()
 }
 }

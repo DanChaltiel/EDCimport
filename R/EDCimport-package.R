@@ -16,11 +16,9 @@ NULL
 #' @export
 dplyr::`%>%`
 
-#' @importFrom flextable as_flextable
-#' @export
-flextable::as_flextable
-
-
 # Global settings -----------------------------------------------------------------------------
 
-utils::globalVariables(c(".", ":=", "!!", ".data", ".env", "SUBJID", "age", "dataset", "n_id", "name", "value"))
+utils::globalVariables(c(".", ":=", "!!", ".data", ".env", "SUBJID", "age", "dataset", "n_id", "name", "value", ".id", "aegr", "aesoc", "best_resp", "case_when", "diff_first", "element_blank", "facet_grid", "first_sum", "grade2", "grade_max", "last_sum", "min_sum", "n_ae", "n_arm", "n_soc", "n_term", "replace_na", "resp", "resp_num", "sae", "scale_fill_steps", "star", "star_txt", "subjid", "variable", "vars", "x"))
+
+
+

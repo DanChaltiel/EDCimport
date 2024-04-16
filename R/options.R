@@ -70,7 +70,7 @@ edc_peek_options = function(keep_null=FALSE){
 #'
 #' @return Nothing, called for its side effects
 #' @importFrom cli cli_inform
-#' @importFrom generics setdiff
+#' @importFrom dplyr setdiff
 #' @importFrom purrr map
 #' @importFrom rlang set_names
 #' @export
@@ -85,7 +85,7 @@ edc_reset_options = function(except=c("edc_lookup", "trialmaster_pw", "path_7zip
 }
 
 
-#' @importFrom generics setdiff
+#' @importFrom dplyr setdiff
 #' @importFrom purrr keep map
 #' @importFrom stringr str_extract str_extract_all str_remove_all str_subset
 #' @noRd

@@ -40,27 +40,21 @@ The function \code{ae_table_grade_max()} creates a summary table of the maximum 
 The resulting crosstable can be piped to \code{as_flextable()} to get a nicely formatted flextable.
 }
 \examples{
-\dontrun{
 
 tm = edc_example_ae()
 ae_table_grade_max(df_ae=tm$ae, df_enrol=tm$enrolres)
-ae_plot_grade_max(df_ae=tm$ae, df_enrol=tm$enrolres)
 
-# 1) Apply table functions
+\dontrun{
 #you can use as_flextable() to get an HTML flextable
 #you can use modificators modificators from the flextable package
-ae_table_grade_max(df_ae=ae, df_enrol=enrolres, arm=NULL) \%>\% 
-  add_footer_lines("Percentages are given as the proportion of patients presenting at most one AE of given grade")
-ae_table_grade_max(df_ae=ae, df_enrol=enrolres) \%>\%
+library(flextable)
+ae_table_grade_max(df_ae=tm$ae, df_enrol=tm$enrolres, arm=NULL) \%>\% 
+  as_flextable() \%>\% 
+  add_footer_lines("Percentages are given as the proportion of patients 
+                    presenting at most one AE of given grade")
+ae_table_grade_max(df_ae=tm$ae, df_enrol=tm$enrolres) \%>\%
   as_flextable(by_header="Both arms") \%>\% 
   highlight(i=~variable=="Grade 5", j=-1)
-  
-# 2) Apply plot functions
-#you can choose the type
-#you can use modificators from the patchwork package, like "&"
-ae_plot_grade_max(df_ae=ae, df_enrol=enrolres) & labs(fill="Group")
-ae_plot_grade_max(df_ae=ae, df_enrol=enrolres, type=c("dodge", "fill"))
-ae_plot_grade_max(df_ae=ae, df_enrol=enrolres, arm=NULL) + coord_flip()
 }
 }
 \seealso{
