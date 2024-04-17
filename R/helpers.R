@@ -119,12 +119,12 @@ check_subjid = function(x, ref=getOption("edc_subjid_ref")){
   invisible(NULL)
 }
 
-#' Assert that a dataset has one row per patient
+#' Assert that a dataframe has one row per patient
 #' 
 #' Check that there is no duplicate on the column holding patient ID in a pipeable style. \cr
 #' Mostly useful after joining two datasets.
 #'
-#' @param df the dataset
+#' @param df a dataframe
 #' @param by *(optional)* grouping columns
 #' @param id_col the name of the columns holding patient ID
 #'
@@ -175,6 +175,31 @@ assert_no_duplicate = function(df, by=NULL, id_col=get_subjid_cols()){
   }
   df
 }
+
+
+#' Assert that a dataframe has no rows
+#' 
+#' Check that a dataframe is empty in a pipeable style. \cr
+#' Mostly useful for sanity checks.
+#'
+#' @param df a dataframe
+#' @param msg (optional) a custom message to be output (e.g. with the underlying reason)
+#'
+#' @return `df` unchanged
+#' @export
+#' @importFrom cli cli_abort
+#'
+#' @examples
+#' tm = edc_example()
+#' tm$db0 %>% filter(age>100) %>% assert_no_rows()
+assert_no_rows = function(df, msg=NULL){
+  if(nrow(df)>0){
+    if(is.null(msg)) msg = "Dataframe should have no rows but has {nrow(df)}."
+    cli_abort(msg)
+  }
+  invisible(df)
+} 
+
 
 #' Format factor levels as Yes/No
 #'
@@ -366,6 +391,7 @@ edc_data_warn = function(df, message, issue_n=NULL){
     cli_warn("Issue #{col_green(issue_n)}: {message} (Patient{?s} {subj})")
   }
 }
+
 
 
 # Getters -------------------------------------------------------------------------------------

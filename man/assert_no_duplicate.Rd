@@ -2,12 +2,12 @@
 % Please edit documentation in R/helpers.R
 \name{assert_no_duplicate}
 \alias{assert_no_duplicate}
-\title{Assert that a dataset has one row per patient}
+\title{Assert that a dataframe has one row per patient}
 \usage{
 assert_no_duplicate(df, by = NULL, id_col = get_subjid_cols())
 }
 \arguments{
-\item{df}{the dataset}
+\item{df}{a dataframe}
 
 \item{by}{\emph{(optional)} grouping columns}
 
