@@ -339,6 +339,34 @@ reset_manual_correction = function(){
 }
 
 
+#' Standardized warning system
+#' 
+#' Database issues should be traced in a separate table file, with an identifying row number
+#'
+#' @param df the filtered dataframe
+#' @param message the message. Can use {cli} formats.
+#' @param issue_n (optional) identifying row number
+#'
+#' @return nothing
+#' @export
+#' @importFrom stringr str_pad
+#' @importFrom cli cli_warn format_inline col_green
+#' @importFrom dplyr pull
+#'
+#' @examples
+#' tm = edc_example_mixed()
+#' a = tm$long_pure %>% filter(val1>2)
+#' edc_data_warn(a, "{.val val1} should be lesser than 2", issue_n=1)
+edc_data_warn = function(df, message, issue_n=NULL){
+  if(nrow(df)>0){
+    if(is.null(issue_n)) issue_n = "xx"
+    else if(is.numeric(issue_n)) issue_n = str_pad(issue_n, width=2, pad="0")
+    subj = df %>% pull(any_of2(get_subjid_cols())) %>% unique() %>% sort()
+    message = format_inline(message)
+    cli_warn("Issue #{col_green(issue_n)}: {message} (Patient{?s} {subj})")
+  }
+}
+
 
 # Getters -------------------------------------------------------------------------------------
 
