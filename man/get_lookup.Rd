@@ -4,7 +4,10 @@
 \alias{get_lookup}
 \title{Retrieve the lookup table from options}
 \usage{
-get_lookup()
+get_lookup(check_null = TRUE)
+}
+\arguments{
+\item{check_null}{whether to stop if lookup is NULL}
 }
 \value{
 the lookup dataframe summarizing column names and labels

@@ -109,18 +109,24 @@ split_mixed_datasets = function(datasets=get_datasets(), id=get_subjid_cols(), .
   if(is.data.frame(datasets)) datasets = list(datasets)
   datasets = datasets %>% keep(is.data.frame) %>% discard_at(".lookup")
   
-  dataset_mean_nval = datasets %>% 
-    imap(~{
-      if(!any(tolower(id) %in% tolower(names(.x)))) return(NULL)
-      if(nrow(.x)==0 || ncol(.x)==0) return(NULL)
-      .x %>% 
-        group_by(across(any_of2(id))) %>% 
-        summarise_all(~length(unique(.x))) %>% 
-        ungroup() %>% 
-        select(-any_of2(id)) %>% 
-        summarise_all(~mean(.x)) %>%
+  dataset_mean_nval = datasets %>%
+    imap( ~ {
+      if (!any(tolower(id) %in% tolower(names(.x))))
+        return(NULL)
+      if (nrow(.x) == 0 || ncol(.x) == 0)
+        return(NULL)
+      .x %>%
+        group_by(across(any_of2(id))) %>%
+        summarise_all( ~ length(unique(.x))) %>%
+        ungroup() %>%
+        select(-any_of2(id)) %>%
+        summarise_all( ~ mean(.x)) %>%
         unlist()
     })
+  
+  #TODO pas possible car il faut laisser les ignore_cols dans les tables wide!
+  # dataset_mean_nval = datasets %>% 
+  #   map(~.table_format(df=.x, id=id, ignore_cols=ignore_cols, na_rm=F, warn=warn))
   
   #TODO option pour faire plutôt length(unique(na.omit(.x))) ?
   #si c'est manquant sur une ligne et pas sur une autre on 

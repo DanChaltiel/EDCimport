@@ -12,7 +12,7 @@ assert_no_rows(df, msg = NULL)
 \item{msg}{(optional) a custom message to be output (e.g. with the underlying reason)}
 }
 \value{
-\code{df} unchanged
+nothing
 }
 \description{
 Check that a dataframe is empty in a pipeable style. \cr
@@ -20,5 +20,5 @@ Mostly useful for sanity checks.
 }
 \examples{
 tm = edc_example()
-tm$db0 \%>\% filter(age>100) \%>\% assert_no_rows()
+tm$db0 \%>\% dplyr::filter(age>100) \%>\% assert_no_rows()
 }

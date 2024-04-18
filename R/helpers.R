@@ -183,19 +183,19 @@ assert_no_duplicate = function(df, by=NULL, id_col=get_subjid_cols()){
 #' @param df a dataframe
 #' @param msg (optional) a custom message to be output (e.g. with the underlying reason)
 #'
-#' @return `df` unchanged
+#' @return nothing
 #' @export
 #' @importFrom cli cli_abort
 #'
 #' @examples
 #' tm = edc_example()
-#' tm$db0 %>% filter(age>100) %>% assert_no_rows()
+#' tm$db0 %>% dplyr::filter(age>100) %>% assert_no_rows()
 assert_no_rows = function(df, msg=NULL){
   if(nrow(df)>0){
     if(is.null(msg)) msg = "Dataframe should have no rows but has {nrow(df)}."
     cli_abort(msg)
   }
-  invisible(df)
+  invisible(NULL)
 } 
 
 
@@ -803,13 +803,15 @@ build_lookup = function(data_list){
 
 #' Retrieve the lookup table from options
 #' 
+#' @param check_null whether to stop if lookup is NULL
+#'
 #' @return the lookup dataframe summarizing column names and labels 
 #' 
 #' @export
 #' @seealso [build_lookup()], [extend_lookup()]
-get_lookup = function(){
+get_lookup = function(check_null=TRUE){
   lookup = getOption("edc_lookup")
-  if(is.null(lookup)){
+  if(is.null(lookup) & isTRUE(check_null)){
     cli_abort("Lookup is NULL. Did you forget to import your data?")
   }
   lookup
@@ -821,7 +823,7 @@ get_lookup = function(){
 #' @importFrom cli cli_warn
 set_lookup = function(lookup){
   verbose = getOption("edc_lookup_overwrite_warn", TRUE)
-  if(verbose && !is.null(get_lookup())){
+  if(verbose && !is.null(get_lookup(check_null=FALSE))){
     cli_warn("Option {.val edc_lookup} has been overwritten.", 
              class="edc_lookup_overwrite_warn")
   }
