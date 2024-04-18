@@ -59,8 +59,9 @@ find_keyword = function(keyword, data=get_lookup(), ignore_case=TRUE){
       mean(is.na(x))
     })) %>% 
     select(-where(~all(is.na(.x))))
+  if(nrow(tmp)==0) return(NULL)
   
-  if(isTRUE(ignore_case) && any(tmp$invalid)){
+  if(isTRUE(ignore_case) && any(tmp[["invalid"]])){
     cols = tmp %>% filter(invalid) %>% unite("x", c("dataset", "names"), sep="$") %>% pull(x)
     cli_warn(c("Some columns have labels containing non UTF8 characters. {.arg ignore_case} has been ignored for these.", 
                i="Columns: {.code {cols}}.",
