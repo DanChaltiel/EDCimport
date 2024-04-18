@@ -213,6 +213,9 @@ assert_no_rows = function(df, msg=NULL){
 #'
 #' @return a factor, or `x` untouched
 #' @export
+#' @importFrom cli cli_abort
+#' @importFrom dplyr union
+#' @importFrom purrr keep
 #'
 #' @examples 
 #' set.seed(42)
@@ -237,11 +240,10 @@ assert_no_rows = function(df, msg=NULL){
 #'   print(.x %>% factor() %>% levels())
 #'   print(.x %>% fct_yesno() %>% levels())
 #' })
-#' @importFrom cli cli_abort
-#' @importFrom dplyr union
-#' @importFrom purrr keep
 fct_yesno = function(x, lvl=getOption("edc_fct_yesno", get_yesno_lvl()), 
                      mutate_character=TRUE){
+  stopifnot(is.list(lvl))
+  if(all(x %in% c(1,0))) return(factor(x, levels=c(1,0), labels=lvl[[1]]))
   if(!is.factor(x) && !is.character(x)) return(x)
   if(is.character(x) && isFALSE(mutate_character)) return(x)
   lvls = lvl %>% keep(~all(x %in% union(.x, NA)))
