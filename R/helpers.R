@@ -409,9 +409,24 @@ edc_data_warn = function(df, message, issue_n=NULL){
 #' @importFrom purrr map
 #' @importFrom rlang set_names
 get_datasets = function(lookup=get_lookup(), envir=parent.frame()){
-  lookup$dataset %>% 
-    set_names() %>% 
-    map(~get(.x, envir=envir))
+  if(is.null(lookup)){
+    cli_abort("lookup cannot be NULL, did you forgot to import your database?")
+  }
+  rtn = lookup$dataset %>% 
+    # set_names() %>% 
+    mget(envir=envir, ifnotfound=list(NULL))
+  a = rtn %>% keep(is.null) %>% names()
+  if(length(a) > 5){
+    cli_warn("Could not find multiple datasets from the lookup, did you forget to call {.fn load_list} on your import?")
+  }
+  
+  rtn
+  # lookup$dataset %>% 
+  #   set_names() %>% 
+  #   map(~{
+  #     x = try(get(.x, envir=envir))
+  #     
+  #   })
 }
 
 
