@@ -107,6 +107,8 @@ split_mixed_datasets = function(datasets=get_datasets(), id=get_subjid_cols(), .
                                 verbose=TRUE){
   check_dots_empty()
   if(is.data.frame(datasets)) datasets = list(datasets)
+  override_ignore_cols = options("edc_override_ignore_cols")[[1]]
+  if(!is.null(override_ignore_cols)) ignore_cols = override_ignore_cols
   datasets = datasets %>% keep(is.data.frame) %>% discard_at(".lookup")
   
   dataset_mean_nval = datasets %>%

@@ -48,7 +48,8 @@ test_that("Split mixed inside read_trialmaster()", {
     expect_classed_conditions(warning_class="edc_read_cannot_split_mixed_warn")#no effect
   # names(tm2) %>% dput()
   expect_equal(names(tm2), c("long_mixed", "long_pure", "short", common))
-  
+
+  local_options("edc_override_ignore_cols" = "crfname")
   tm3 = read_trialmaster(f, pw="foobar", split_mixed=c("long_pure", "long_mixed"))
   # names(tm3) %>% dput()
   expect_equal(names(tm3), c("long_mixed", "long_pure", "short", "long_mixed_short", 
