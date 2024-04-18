@@ -265,6 +265,50 @@ get_yesno_lvl = function(add, keep_default=TRUE) {
 
 
 
+#' Get a table with the latest date for each patient
+#' 
+#' This function search for date columns in every tables and returns the latest date 
+#' for each patient with the variable it comes from. 
+#' 
+#'
+#' @param except the datasets that should not be searched
+#' @param with_ties in case of tie, whether to return the first `origin` (FALSE) or all the origins that share this tie (TRUE).
+#'
+#' @return a dataframe
+#' @export
+#'
+#' @examples
+#' tm = edc_example_plot()
+#' load_list(tm)
+#' followup_table()
+#' followup_table(except="db3")
+#' followup_table(except="db3$date9")
+followup_table = function(except=NULL, with_ties=FALSE) {
+  subjid_cols = get_subjid_cols()
+  a = get_datasets(envir=parent.frame()) %>% 
+    discard_at(as.character(except)) %>% 
+    imap(~{
+      if(!is.data.frame(.x) || !subjid_cols %in% names(.x)) return(NULL)
+      a = .x %>% select(subjid=any_of2(subjid_cols), where(is.Date)) %>% 
+        mutate(subjid = as.character(subjid))
+      if(ncol(a)<=1) return(NULL) #only subjid
+      a %>% 
+        pivot_longer(-subjid) %>% 
+        filter(!is.na(value)) %>% 
+        mutate(name=paste0(.y,"$",name))
+    }) %>% 
+    discard(is.null) %>% 
+    list_rbind()  %>% 
+    rename(origin=name, last_date=value)
+  if(nrow(a)==0){
+    cli_abort("No data with dates could be found.")
+  }
+  a %>% 
+    filter(!origin %in% except) %>% 
+    slice_max(last_date, by=subjid, with_ties=with_ties) %>% 
+    arrange(mixedorder(subjid))
+}
+
 
 # Manual correction ---------------------------------------------------------------------------
 

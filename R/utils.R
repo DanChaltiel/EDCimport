@@ -216,6 +216,95 @@ set_label = function(x, lab){
 }
 
 
+#' @source gtools::mixedsort
+#' @noRd
+#' @keywords internal 
+function (x, decreasing = FALSE, na.last = TRUE, blank.last = FALSE, 
+          numeric.type = c("decimal", "roman"), roman.case = c("upper", 
+                                                               "lower", "both"), scientific = TRUE) 
+{
+  ord <- mixedorder(x, decreasing = decreasing, na.last = na.last, 
+                    blank.last = blank.last, numeric.type = numeric.type, 
+                    roman.case = roman.case, scientific = scientific)
+  x[ord]
+}
+#' @source gtools::mixedorder
+#' @noRd
+#' @keywords internal
+mixedorder = function (x, decreasing = FALSE, na.last = TRUE, blank.last = FALSE, 
+                       roman.case = c("upper", "lower", "both"), scientific = TRUE) 
+{
+  roman.case <- match.arg(roman.case)
+  if (length(x) == 0) 
+    return(NULL)
+  if (length(x) == 1) 
+    return(x)
+  if (!is.character(x)) {
+    return(x[order(x, decreasing = decreasing, na.last = na.last)])
+  }
+  delim <- "\\$\\@\\$"
+  if (scientific) {
+    regex <- "((?:(?i)(?:[-+]?)(?:(?=[.]?[0123456789])(?:[0123456789]*)(?:(?:[.])(?:[0123456789]{0,}))?)(?:(?:[eE])(?:(?:[-+]?)(?:[0123456789]+))|)))"
+  }
+  else {
+    regex <- "((?:(?i)(?:[-+]?)(?:(?=[.]?[0123456789])(?:[0123456789]*)(?:(?:[.])(?:[0123456789]{0,}))?)))"
+  }
+  numeric <- function(x) as.numeric(x)
+  nonnumeric <- function(x) ifelse(is.na(numeric(x)), toupper(x), 
+                                   NA)
+  x <- as.character(x)
+  which.nas <- which(is.na(x))
+  which.blanks <- which(x == "")
+  delimited <- gsub(regex, paste(delim, "\\1", delim, sep = ""), 
+                    x, perl = TRUE)
+  step1 <- strsplit(delimited, delim)
+  step1 <- lapply(step1, function(x) x[x > ""])
+  step1.numeric <- suppressWarnings(lapply(step1, numeric))
+  step1.character <- suppressWarnings(lapply(step1, nonnumeric))
+  maxelem <- max(sapply(step1, length))
+  step1.numeric.t <- lapply(1:maxelem, function(i) {
+    sapply(step1.numeric, function(x) x[i])
+  })
+  step1.character.t <- lapply(1:maxelem, function(i) {
+    sapply(step1.character, function(x) x[i])
+  })
+  rank.numeric <- sapply(step1.numeric.t, rank)
+  rank.character <- sapply(step1.character.t, function(x) as.numeric(factor(x)))
+  rank.numeric[!is.na(rank.character)] <- 0
+  rank.character <- t(t(rank.character) + apply(matrix(rank.numeric), 
+                                                2, max, na.rm = TRUE))
+  rank.overall <- ifelse(is.na(rank.character), rank.numeric, 
+                         rank.character)
+  order.frame <- as.data.frame(rank.overall)
+  if (length(which.nas) > 0) {
+    if (is.na(na.last)) {
+      order.frame[which.nas, ] <- NA
+    }
+    else if (na.last) {
+      order.frame[which.nas, ] <- Inf
+    }
+    else {
+      order.frame[which.nas, ] <- -Inf
+    }
+  }
+  if (length(which.blanks) > 0) {
+    if (is.na(blank.last)) {
+      order.frame[which.blanks, ] <- NA
+    }
+    else if (blank.last) {
+      order.frame[which.blanks, ] <- 1e+99
+    }
+    else {
+      order.frame[which.blanks, ] <- -1e+99
+    }
+  }
+  order.frame <- as.list(order.frame)
+  order.frame$decreasing <- decreasing
+  order.frame$na.last <- NA
+  retval <- do.call("order", order.frame)
+  return(retval)
+}
+
 
 max_narm = function(x, na.rm=TRUE) if(all(is.na(x))) NA else max(x, na.rm=na.rm)
 min_narm = function(x, na.rm=TRUE) if(all(is.na(x))) NA else min(x, na.rm=na.rm)
