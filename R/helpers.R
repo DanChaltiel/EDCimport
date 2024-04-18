@@ -35,9 +35,6 @@
 #' @importFrom tidyr unite unnest
 #' @importFrom tidyselect where
 find_keyword = function(keyword, data=get_lookup(), ignore_case=TRUE){
-  if(is.null(data)){
-    cli_abort("Lookup is NULL. Did you forget to call `load_list(tm)`?")
-  }
   invalid=names2=labels2=x=NULL
   f = if(isTRUE(ignore_case)) tolower else identity
   f2 = function(x,y) map2_chr(x, y, ~if(.y) {.x} else {f(.x)})
@@ -491,7 +488,8 @@ get_datasets = function(lookup=get_lookup(), envir=parent.frame()){
 #' @importFrom stats na.omit
 #' @importFrom tibble lst
 get_key_cols = function(lookup=get_lookup()){
-  patient_id = getOption("edc_cols_id", c("PTNO", "SUBJID"))
+  patient_id = get_subjid_cols()
+  
   crfname = getOption("edc_cols_crfname", "CRFNAME")
   lifecycle::deprecate_warn("1.0.0", "get_key_cols()")
   if(is.null(lookup)) return(lst(patient_id, crfname))
@@ -528,9 +526,13 @@ get_key_cols = function(lookup=get_lookup()){
 
 #' Get key column names
 #' 
-#' Retrieve names of patient ID (usually "SUBJID" and "PATNO") and CRF name (usually "CRFNAME") from the actual names of the datasets, without respect of the case. Default values can (and should) be set through options.
+#' Retrieve names of patient ID and CRF name from the actual names of the datasets, without respect of the case. Default values should be set through options.
+#' 
+#' @section options:
+#' Use `edc_options()` to set default values:
+#' * `edc_cols_subjid` defaults to `c("PTNO", "SUBJID")`  
+#' * `edc_cols_crfname` defaults to `c("CRFNAME")`
 #'
-#' @param subjid_cols,crfname_cols the possible column names that can hold key data. Case-insensitive.
 #' @param lookup the lookup table
 #'
 #' @return a character vector
@@ -539,15 +541,15 @@ get_key_cols = function(lookup=get_lookup()){
 #' @examples
 #' get_subjid_cols()
 #' get_crfname_cols()
-get_subjid_cols = function(subjid_cols=getOption("edc_cols_subjid", c("PTNO", "SUBJID")), 
-                           lookup=get_lookup()){
+get_subjid_cols = function(lookup=get_lookup()){
+  subjid_cols=getOption("edc_cols_subjid", c("PTNO", "SUBJID"))
   .get_key_cols(subjid_cols, id_name="patient", lookup)
 }
 
 #' @rdname get_subjid_cols
 #' @export
-get_crfname_cols = function(crfname_cols=getOption("edc_cols_crfname", "CRFNAME"), 
-                            lookup=get_lookup()){
+get_crfname_cols = function(lookup=get_lookup()){
+  crfname_cols=getOption("edc_cols_crfname", "CRFNAME")
   .get_key_cols(crfname_cols, id_name="CRF", lookup)
 }
 
@@ -784,7 +786,11 @@ build_lookup = function(data_list){
 #' @export
 #' @seealso [build_lookup()], [extend_lookup()]
 get_lookup = function(){
-  getOption("edc_lookup")
+  lookup = getOption("edc_lookup")
+  if(is.null(lookup)){
+    cli_abort("Lookup is NULL. Did you forget to import your data?")
+  }
+  lookup
 }
 
 
@@ -830,8 +836,8 @@ set_lookup = function(lookup){
 #' .lookup = extend_lookup(.lookup)
 #' .lookup
 extend_lookup = function(lookup, ..., 
-                         id_cols = get_subjid_cols(), 
-                         crf_cols = get_crfname_cols(), 
+                         id_cols = get_subjid_cols(lookup), 
+                         crf_cols = get_crfname_cols(lookup), 
                          datasets = get_datasets(lookup)){
   check_dots_empty()
   #case-insensitive column selection (cf. `any_of2`)

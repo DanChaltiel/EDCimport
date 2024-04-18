@@ -5,27 +5,28 @@
 \alias{get_crfname_cols}
 \title{Get key column names}
 \usage{
-get_subjid_cols(
-  subjid_cols = getOption("edc_cols_subjid", c("PTNO", "SUBJID")),
-  lookup = get_lookup()
-)
+get_subjid_cols(lookup = get_lookup())
 
-get_crfname_cols(
-  crfname_cols = getOption("edc_cols_crfname", "CRFNAME"),
-  lookup = get_lookup()
-)
+get_crfname_cols(lookup = get_lookup())
 }
 \arguments{
-\item{subjid_cols, crfname_cols}{the possible column names that can hold key data. Case-insensitive.}
-
 \item{lookup}{the lookup table}
 }
 \value{
 a character vector
 }
 \description{
-Retrieve names of patient ID (usually "SUBJID" and "PATNO") and CRF name (usually "CRFNAME") from the actual names of the datasets, without respect of the case. Default values can (and should) be set through options.
+Retrieve names of patient ID and CRF name from the actual names of the datasets, without respect of the case. Default values should be set through options.
 }
+\section{options}{
+
+Use \code{edc_options()} to set default values:
+\itemize{
+\item \code{edc_cols_subjid} defaults to \code{c("PTNO", "SUBJID")}
+\item \code{edc_cols_crfname} defaults to \code{c("CRFNAME")}
+}
+}
+
 \examples{
 get_subjid_cols()
 get_crfname_cols()
