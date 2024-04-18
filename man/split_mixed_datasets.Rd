@@ -8,7 +8,7 @@ split_mixed_datasets(
   datasets = get_datasets(),
   id = get_subjid_cols(),
   ...,
-  ignore_cols = getOption("edc_cols_crfname", "CRFNAME"),
+  ignore_cols = get_meta_cols(0.95),
   output_code = FALSE,
   verbose = TRUE
 )

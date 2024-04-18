@@ -577,6 +577,28 @@ get_crfname_cols = function(lookup=get_lookup()){
 
 
 
+#' Get columns shared by most datasets
+#' 
+#' In most trialmaster exports, many datasets share a certain amount of columns containing 
+#' meta-data that are often irrelevant to the point. This function identifies the columns 
+#' that are present in at least 95% of datasets (by default)
+#'
+#' @param min_pct Default=`0.95`. The minimal proportion of datasets a column has to reach. Subject ID is always excluded.
+#'
+#' @return a character vector
+#' @export
+#'
+#' @examples
+#' tm = edc_example_mixed()
+#' load_list(tm)
+#' meta_cols = get_meta_cols()
+#' long_mixed %>% dplyr::select(-dplyr::any_of(meta_cols))
+get_meta_cols = function(min_pct = getOption("edc_meta_cols_pct", 0.95)){
+  a = get_common_cols(min_datasets=0)
+  subjid_cols = get_subjid_cols()
+  a %>% filter(pct_datasets>min_pct) %>% pull(column) %>% setdiff(subjid_cols)
+}
+
 #' Get columns that are common to multiple datasets
 #'
 #' `r lifecycle::badge("experimental")`

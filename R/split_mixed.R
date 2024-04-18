@@ -10,7 +10,7 @@
 #' @param df a dataframe
 #' @param id the identifying subject ID
 #' @param ... not used
-#' @param ignore_cols columns to ignore
+#' @param ignore_cols columns to ignore. Usually meta columns (see [get_meta_cols]).
 #' @param na_rm whether to consider missing values
 #' @param warn whether to warn if ID is not found
 #'
@@ -21,7 +21,7 @@
 #' tm = edc_example_mixed()
 #' sapply(tm, table_format, warn=FALSE) 
 table_format = function(df, id=get_subjid_cols(), ..., 
-                        ignore_cols=getOption("edc_cols_crfname", "CRFNAME"), 
+                        ignore_cols=get_meta_cols(0.95), 
                         na_rm=FALSE,
                         warn=TRUE){
   mean_nval = .table_format(df=df, id=id, ignore_cols=ignore_cols, na_rm=na_rm, warn=warn)
@@ -35,7 +35,7 @@ table_format = function(df, id=get_subjid_cols(), ...,
 #' @noRd
 #' @keywords internal
 .table_format = function(df, id=get_subjid_cols(), ..., 
-                         ignore_cols=getOption("edc_cols_crfname", "CRFNAME"), 
+                         ignore_cols=get_meta_cols(0.95), 
                          na_rm=FALSE,
                          warn=TRUE){
   check_dots_empty()
@@ -75,6 +75,14 @@ table_format = function(df, id=get_subjid_cols(), ...,
 #'
 #' @return a list of the new long and short tables. Use [load_list()] to load them into the global environment.
 #' @export
+#' @importFrom cli cli_bullets cli_warn
+#' @importFrom dplyr across group_by select summarise summarise_all ungroup
+#' @importFrom glue glue
+#' @importFrom purrr discard discard_at imap keep keep_at list_flatten map_chr
+#' @importFrom rlang check_dots_empty
+#' @importFrom tibble lst
+#' @importFrom tidyselect all_of everything
+#' @importFrom utils head
 #'
 #' @examples
 #' #tm = read_trialmaster("filename.zip", pw="xx")
@@ -93,16 +101,8 @@ table_format = function(df, id=get_subjid_cols(), ...,
 #' filename = tempfile("mixed_code", fileext=".R")
 #' split_mixed_datasets(tm, id="SUBJID", output_code=filename)
 #' readLines(filename)
-#' @importFrom cli cli_bullets cli_warn
-#' @importFrom dplyr across group_by select summarise summarise_all ungroup
-#' @importFrom glue glue
-#' @importFrom purrr discard discard_at imap keep keep_at list_flatten map_chr
-#' @importFrom rlang check_dots_empty
-#' @importFrom tibble lst
-#' @importFrom tidyselect all_of everything
-#' @importFrom utils head
 split_mixed_datasets = function(datasets=get_datasets(), id=get_subjid_cols(), ..., 
-                                ignore_cols=getOption("edc_cols_crfname", "CRFNAME"), 
+                                ignore_cols=get_meta_cols(0.95), 
                                 output_code=FALSE,
                                 verbose=TRUE){
   check_dots_empty()

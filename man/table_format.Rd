@@ -8,7 +8,7 @@ table_format(
   df,
   id = get_subjid_cols(),
   ...,
-  ignore_cols = getOption("edc_cols_crfname", "CRFNAME"),
+  ignore_cols = get_meta_cols(0.95),
   na_rm = FALSE,
   warn = TRUE
 )
@@ -20,7 +20,7 @@ table_format(
 
 \item{...}{not used}
 
-\item{ignore_cols}{columns to ignore}
+\item{ignore_cols}{columns to ignore. Usually meta columns (see \link{get_meta_cols}).}
 
 \item{na_rm}{whether to consider missing values}
 
