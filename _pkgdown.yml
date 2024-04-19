@@ -21,6 +21,25 @@ reference:
 - contents:
   - read_trialmaster
   - read_tm_all_xpt
+- title: "Checking databases"
+- contents:
+  - edc_data_warn
+  - assert_no_duplicate
+  - assert_no_rows
+  - check_subjid
+- title: "Searching databases"
+- contents:
+  - find_keyword
+  - followup_table
+  - get_common_cols
+- title: "Clinical Utils"
+- contents:
+  - ae_table_grade_max
+  - ae_table_grade_n
+  - ae_table_soc
+  - ae_plot_grade_max
+  - ae_plot_grade_n
+  - waterfall_plot
 - title: "Options"
 - contents:
   - edc_options
@@ -31,14 +50,12 @@ reference:
   - edc_swimmerplot
 - title: "Helpers"
 - contents:
-  - find_keyword
-  - assert_no_duplicate
-  - check_subjid
   - unify
   - fct_yesno
-  - get_common_cols
+  - table_format
   - save_plotly
   - get_datasets
+  - get_meta_cols
   - get_subjid_cols
   - get_key_cols
   - split_mixed_datasets
@@ -47,14 +64,6 @@ reference:
   - get_lookup
   - extend_lookup
   - build_lookup
-- title: "Clinical Utils"
-- contents:
-  - ae_table_grade_max
-  - ae_table_grade_n
-  - ae_table_soc
-  - ae_plot_grade_max
-  - ae_plot_grade_n
-  - waterfall_plot
 - title: "List Utils"
 - contents:
   - load_list
