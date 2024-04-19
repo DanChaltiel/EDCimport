@@ -150,7 +150,7 @@ tryCatch2 = function(expr){
   x = c(errors, warnings, messages) %>% unique()
   attr(rtn, "overview") = tibble(type = map_chr(x, ~ifelse(inherits(.x, 
                                                                     "error"), "Error", ifelse(inherits(.x, "warning"), "Warning", 
-                                                                                              "Message"))), class = map_chr(x, ~class(.x) %>% glue_collapse("/")), 
+                                                                                              "Message"))), class = map_chr(x, ~class(.x) %>% glue::glue_collapse("/")), 
                                  message = map_chr(x, ~conditionMessage(.x)))
   rtn
 }

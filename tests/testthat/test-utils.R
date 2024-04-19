@@ -1,6 +1,8 @@
 
 
 skip_on_cran()
+edc_options(edc_lookup_overwrite_warn=FALSE)
+
 
 # load_list() ---------------------------------------------------------------------------------
 
@@ -122,15 +124,6 @@ test_that("7zip not in the path", {
   expect_true("procformat.sas" %in% dir(target))
 })
 
-
-
-# Options -------------------------------------------------------------------------------------
-
-
-test_that("No missing options", {
-  missing_options = missing_options_helper()
-  expect_identical(missing_options, character(0))
-})
 
 # Expect --------------------------------------------------------------------------------------
 

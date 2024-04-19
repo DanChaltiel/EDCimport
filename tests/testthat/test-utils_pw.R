@@ -1,5 +1,6 @@
 
 skip_on_cran()
+edc_options(edc_lookup_overwrite_warn=FALSE)
 filename_pw = test_path("CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16_pw.zip")
 
 

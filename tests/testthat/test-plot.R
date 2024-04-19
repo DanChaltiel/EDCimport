@@ -1,5 +1,7 @@
 
 skip("SVG is painful")
+edc_options(edc_lookup_overwrite_warn=FALSE)
+
 # edc_swimmerplot ---------------------------------------------------------------------------------
 
 test_that("edc_swimmerplot", {

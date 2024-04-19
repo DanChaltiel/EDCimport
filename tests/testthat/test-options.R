@@ -1,3 +1,9 @@
+edc_options(edc_lookup_overwrite_warn=FALSE)
+
+test_that("No missing options", {
+  missing_options = missing_options_helper()
+  expect_identical(missing_options, character(0))
+})
 
 
 test_that("Options works", {
