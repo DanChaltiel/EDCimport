@@ -21,6 +21,6 @@ Database issues should be traced in a separate table file, with an identifying r
 }
 \examples{
 tm = edc_example_mixed()
-a = tm$long_pure \%>\% filter(val1>2)
+a = tm$long_pure \%>\% dplyr::filter(val1a>2)
 edc_data_warn(a, "{.val val1} should be lesser than 2", issue_n=1)
 }

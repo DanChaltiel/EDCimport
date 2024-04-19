@@ -9,7 +9,7 @@ extend_lookup(
   ...,
   id_cols = get_subjid_cols(lookup),
   crf_cols = get_crfname_cols(lookup),
-  datasets = get_datasets(lookup)
+  datasets = get_datasets(lookup, envir = parent.frame())
 )
 }
 \arguments{

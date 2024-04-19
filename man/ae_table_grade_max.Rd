@@ -43,6 +43,7 @@ The resulting crosstable can be piped to \code{as_flextable()} to get a nicely f
 
 tm = edc_example_ae()
 ae_table_grade_max(df_ae=tm$ae, df_enrol=tm$enrolres)
+ae_table_grade_max(df_ae=tm$ae, df_enrol=tm$enrolres, arm=NULL)
 
 \dontrun{
 #you can use as_flextable() to get an HTML flextable

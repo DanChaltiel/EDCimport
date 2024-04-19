@@ -61,6 +61,7 @@ The resulting dataframe can be piped to \code{as_flextable()} to get a nicely fo
 
 tm = edc_example_ae()
 ae_table_soc(df_ae=tm$ae, df_enrol=tm$enrolres, term=NULL)
+ae_table_soc(df_ae=tm$ae, df_enrol=tm$enrolres, term=NULL, arm=NULL)
 
 \dontrun{
 #the resulting flextable can be customized using the flextable package

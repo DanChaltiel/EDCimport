@@ -424,7 +424,7 @@ reset_manual_correction = function(){
 #'
 #' @examples
 #' tm = edc_example_mixed()
-#' a = tm$long_pure %>% filter(val1>2)
+#' a = tm$long_pure %>% dplyr::filter(val1a>2)
 #' edc_data_warn(a, "{.val val1} should be lesser than 2", issue_n=1)
 edc_data_warn = function(df, message, issue_n=NULL){
   if(nrow(df)>0){
@@ -864,7 +864,7 @@ set_lookup = function(lookup){
 extend_lookup = function(lookup, ..., 
                          id_cols = get_subjid_cols(lookup), 
                          crf_cols = get_crfname_cols(lookup), 
-                         datasets = get_datasets(lookup)){
+                         datasets = get_datasets(lookup, envir=parent.frame())){
   check_dots_empty()
   #case-insensitive column selection (cf. `any_of2`)
   f = function(x, colname){

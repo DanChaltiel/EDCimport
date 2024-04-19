@@ -26,10 +26,10 @@ edc_example_mixed = function(N=100, seed=42){
   
   short = tibble(SUBJID=1:N, crfname="short data", val1=rnorm(N), val2=rnorm(N)+10)
   
-  long_pure = tibble(SUBJID=rep(1:N, each=3), crfname="long data", val1=rnorm(3*N), val2=rnorm(3*N)+10)
+  long_pure = tibble(SUBJID=rep(1:N, each=3), crfname="long data", val1a=rnorm(3*N), val2a=rnorm(3*N)+10)
   
-  long_mixed = tibble(SUBJID=rep(1:N, each=2), crfname="both short and long data", val1=rnorm(2*N), val2=rnorm(2*N)+10, 
-                      val3=LETTERS[SUBJID%%26+1])
+  long_mixed = tibble(SUBJID=rep(1:N, each=2), crfname="both short and long data", val1b=rnorm(2*N), 
+                      val2b=rnorm(2*N)+10, val3b=LETTERS[SUBJID%%26+1])
   
   rtn = lst(short, long_pure, long_mixed) %>% 
     imap(~.x %>% mutate(crfname=.y))
