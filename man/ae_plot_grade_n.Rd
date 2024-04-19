@@ -6,6 +6,7 @@
 \usage{
 ae_plot_grade_n(
   df_ae,
+  ...,
   df_enrol,
   low = "#ffc425",
   high = "#d11141",
@@ -16,6 +17,8 @@ ae_plot_grade_n(
 }
 \arguments{
 \item{df_ae}{adverse event table, one row per AE, containing subjid, soc, and grade}
+
+\item{...}{unused}
 
 \item{df_enrol}{enrollment table, one row per patient, containing subjid (and arm if needed)}
 

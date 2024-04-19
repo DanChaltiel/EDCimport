@@ -34,10 +34,11 @@
 #'   highlight(i=~variable=="Grade 5", j=-1)
 #' }
 ae_table_grade_max = function(
-    df_ae, df_enrol, 
+    df_ae, ..., df_enrol, 
     arm="ARM", subjid="SUBJID", soc="AESOC", grade="AEGR", total=TRUE, digits=0
 ){
   check_installed("crosstable", "for `ae_table_grade_max()` to work")
+  check_dots_empty()
   null_arm = is.null(arm)
   
   df_ae = df_ae %>% 
@@ -82,11 +83,12 @@ ae_table_grade_max = function(
 #' ae_plot_grade_max(df_ae=tm$ae, df_enrol=tm$enrolres) & labs(fill="Group")
 #' }
 ae_plot_grade_max = function(
-    df_ae, df_enrol, type = c("stack", "dodge", "fill"),
+    df_ae, ..., df_enrol, 
+    type = c("stack", "dodge", "fill"),
     arm="ARM", subjid="SUBJID", soc="AESOC", grade="AEGR"
 ){
-  
   check_installed("patchwork", "for `ae_plot_grade_max()` to work")
+  check_dots_empty()
   
   df_ae = df_ae %>% 
     select(subjid=any_of2(subjid), soc=any_of2(soc), grade=any_of2(grade)) 
@@ -157,11 +159,12 @@ ae_plot_grade_max = function(
 #' tm$ae %>% filter(sae==TRUE) %>% ae_table_grade_n(df_enrol=tm$enrolres, arm=NULL)
 #' }
 ae_table_grade_n = function(
-    df_ae, df_enrol, 
+    df_ae, ..., df_enrol, 
     arm="ARM", grade="AEGR", subjid="SUBJID", soc="AESOC",
     total=FALSE, digits=0
 ){
   check_installed("crosstable", "for `ae_table_grade_n()` to work")
+  check_dots_empty()
   
   df_ae = df_ae %>% rename_with(tolower) %>%
     select(subjid=tolower(subjid), soc=tolower(soc), grade=tolower(grade))
@@ -218,9 +221,11 @@ ae_table_grade_n = function(
 #' ae_plot_grade_n(df_ae=tm$ae, df_enrol=tm$enrolres)
 #' ae_plot_grade_n(df_ae=tm$ae, df_enrol=tm$enrolres, arm=NULL)
 ae_plot_grade_n = function(
-    df_ae, df_enrol, low="#ffc425", high="#d11141", 
+    df_ae, ..., df_enrol, 
+    low="#ffc425", high="#d11141", 
     arm="ARM", grade="AEGR", subjid="SUBJID"
 ){
+  check_dots_empty()
   df_ae = df_ae %>% rename_with(tolower) %>%
     select(subjid=tolower(subjid), grade=tolower(grade)) 
     

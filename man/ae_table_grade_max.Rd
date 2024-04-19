@@ -6,6 +6,7 @@
 \usage{
 ae_table_grade_max(
   df_ae,
+  ...,
   df_enrol,
   arm = "ARM",
   subjid = "SUBJID",
@@ -17,6 +18,8 @@ ae_table_grade_max(
 }
 \arguments{
 \item{df_ae}{adverse event table, one row per AE, containing subjid, soc, and grade}
+
+\item{...}{unused}
 
 \item{df_enrol}{enrollment table, one row per patient, containing subjid (and arm if needed)}
 

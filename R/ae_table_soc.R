@@ -19,6 +19,7 @@
 #' @param total whether to add a `total` column for each arm
 #' @param digits significant digits for percentages
 #' @param warn_miss whether to warn for missing values
+#' @param ... unused
 #'
 #' @return a dataframe (`ae_table_soc()`) or a flextable (`as_flextable()`).
 #' 
@@ -54,11 +55,11 @@
 #' @importFrom tibble deframe lst
 #' @importFrom tidyr pivot_wider
 ae_table_soc = function(
-    df_ae, df_enrol, 
+    df_ae, ..., df_enrol, 
     arm="ARM", term="AETERM", soc="AESOC", grade="AEGR", subjid="SUBJID",
     sort_by_ae=TRUE, total=TRUE, digits=0, warn_miss=FALSE
 ){
-  
+  check_dots_empty()
   null_term = is.null(term)
   null_arm = is.null(arm)
   
