@@ -280,10 +280,10 @@ get_yesno_lvl = function(add, keep_default=TRUE) {
 #' @examples
 #' tm = edc_example_plot()
 #' load_list(tm)
-#' followup_table()
-#' followup_table(except="db3")
-#' followup_table(except="db3$date9")
-followup_table = function(except=NULL, with_ties=FALSE) {
+#' lastnews_table()
+#' lastnews_table(except="db3")
+#' lastnews_table(except="db3$date9")
+lastnews_table = function(except=NULL, with_ties=FALSE) {
   subjid_cols = get_subjid_cols()
   a = get_datasets(envir=parent.frame()) %>% 
     discard_at(as.character(except)) %>% 
