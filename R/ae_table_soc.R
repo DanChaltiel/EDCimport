@@ -30,6 +30,7 @@
 #' 
 #' tm = edc_example_ae()
 #' ae_table_soc(df_ae=tm$ae, df_enrol=tm$enrolres, term=NULL)
+#' ae_table_soc(df_ae=tm$ae, df_enrol=tm$enrolres, term=NULL, arm=NULL)
 #' 
 #' \dontrun{
 #' #the resulting flextable can be customized using the flextable package
@@ -61,9 +62,10 @@ ae_table_soc = function(
   null_term = is.null(term)
   null_arm = is.null(arm)
   
-  # browser()
-  not_found1 = lst(term, soc, grade, subjid) %>% discard(is.null) %>% discard(~tolower(.x) %in% tolower(names(df_ae)))
-  not_found2 = lst(arm, subjid) %>% discard(is.null) %>% discard(~tolower(.x) %in% tolower(names(df_enrol)))
+  not_found1 = lst(term, soc, grade, subjid) %>% discard(is.null) %>%
+    discard(~tolower(.x) %in% tolower(names(df_ae)))
+  not_found2 = lst(arm, subjid) %>% discard(is.null) %>% 
+    discard(~tolower(.x) %in% tolower(names(df_enrol)))
   not_found = c(not_found1, not_found2)
   if(length(not_found)>0){
     a = paste0(names(not_found), "='", not_found, "'")
@@ -71,19 +73,20 @@ ae_table_soc = function(
               class="edc_ae_cols_notfound_error")
   }
   
-  df_ae = df_ae %>% rename_with(tolower) %>%
-    select(subjid=tolower(subjid), soc=tolower(soc), term=tolower(term), grade=tolower(grade))
-  df_enrol = df_enrol %>% rename_with(tolower) %>%
-    select(subjid=tolower(subjid), arm=tolower(arm)) 
+  df_ae = df_ae %>% 
+    select(subjid_=any_of2(subjid), soc_=any_of2(soc), 
+           term_=any_of2(term), grade_=any_of2(grade))
+  df_enrol = df_enrol %>% 
+    select(subjid_=any_of2(subjid), arm_=any_of2(arm)) 
   df = df_enrol %>%
-    full_join(df_ae, by=tolower(subjid)) %>% 
-    filter(!is.na(soc))  %>% 
-    arrange(subjid)
+    full_join(df_ae, by="subjid_") %>% 
+    filter(!is.na(soc_))  %>% 
+    arrange(subjid_)
   
   #check missing data
   if(warn_miss){
     miss = names(df) %>% set_names() %>% map(~{
-      df %>% filter(is.na(!!ensym(.x))) %>% pull(subjid) %>% unique() %>% sort()
+      df %>% filter(is.na(!!ensym(.x))) %>% pull(subjid_) %>% unique() %>% sort()
     }) %>% keep(~!is_empty(.x))
     miss %>% iwalk(~{
       cli_warn("{.fn ae_table_soc}: Missing values in column {.val {.y}} for patients {.val {.x}}.",
@@ -93,56 +96,58 @@ ae_table_soc = function(
   
   max_na = function(x, na.rm=TRUE) if(all(is.na(x))) NA else max(x, na.rm=na.rm)
   df = df %>% 
-    summarise(grade=max_na(grade), 
-              .by=c(subjid, arm, soc, term))
+    summarise(grade_=max_na(grade_) %>% as.character(), 
+              .by=any_of(c("subjid_", "arm_", "soc_", "term_")))
   
-  rtn = df %>% count(arm, soc, term, grade=as.character(grade))
+  rtn = df %>% count(across(any_of(c("arm_", "soc_", "term_", "grade_"))))
+  # rtn = df %>% count(arm_, soc_, if(!null_term) term_, grade_=as.character(grade_))
   
   if(total){
     rtn = rtn %>% 
       bind_rows(
-        count(df, arm, soc, term, grade="Tot")
+        count(df, across(any_of(c("arm_", "soc_", "term_"))), grade_="Tot")
+        # count(df, arm_, soc_, if(!null_term) term_, grade_="Tot")
       )
   }
   
   if(!null_arm){
-    n_patients = count(df_enrol, arm, name="n_arm")
-    rtn = rtn %>% left_join(n_patients, by="arm")
+    n_patients = count(df_enrol, arm_, name="n_arm")
+    rtn = rtn %>% left_join(n_patients, by="arm_")
     header = n_patients %>% 
-      transmute(name=edc_make_clean_name(arm),
-                value=glue("{arm} (N={n_arm})") %>% as.character()) %>% 
+      transmute(name=edc_make_clean_name(arm_),
+                value=glue("{arm_} (N={n_arm})") %>% as.character()) %>% 
       deframe()
   } else {
     n_patients = nrow(df_enrol)
-    rtn = rtn %>% mutate(arm="all", n_arm=n_patients)
+    rtn = rtn %>% mutate(arm_="all", n_arm=n_patients)
     header = glue("All patients (N={n_patients})") %>% set_names("all")
   }
   
   rtn =
     rtn %>% 
-    arrange(arm, soc, term, grade) %>% 
+    arrange(arm_, soc_, if(!null_term) term_, grade_) %>% 
     mutate(
-      n_soc=sum(n[grade!="Tot"], na.rm=TRUE),
-      .by=soc
+      n_soc=sum(n[grade_!="Tot"], na.rm=TRUE),
+      .by=soc_
     ) %>% 
     mutate(
-      n_term=sum(n[grade!="Tot"], na.rm=TRUE),
-      .by=term
+      n_term=sum(n[grade_!="Tot"], na.rm=TRUE),
+      .by=any_of("term_")
     ) %>% 
     mutate(
       n2 = glue("{n} ({round(100*n/n_arm,digits)}%)"),
-      .by=arm,
+      .by=any_of("arm_"),
     ) %>% 
     mutate(
-      soc = as.character(soc),
-      grade2 = paste0(fct_relabel(arm, edc_make_clean_name), "_G", grade),
+      soc_ = as.character(soc_),
+      grade2 = paste0(fct_relabel(arm_, edc_make_clean_name), "_G", grade_),
       grade2 = grade2 %>% str_replace("_GNA", "_NA") %>% str_replace("_GTot", "_Tot")
     ) %>% 
     arrange(grade2) %>%
-    select(-arm, -grade, -n, -n_arm) %>% 
-    pivot_wider(id_cols=c("soc", if(!null_term) c("term", "n_term"), "n_soc"), 
+    select(-arm_, -grade_, -n, -n_arm) %>% 
+    pivot_wider(id_cols=c("soc_", if(!null_term) c("term", "n_term"), "n_soc"), 
                 names_from="grade2", values_from="n2") %>% 
-    arrange(soc)
+    arrange(soc_)
   # browser()
   
   if(sort_by_ae){
@@ -150,6 +155,7 @@ ae_table_soc = function(
   }
   rtn = rtn %>% 
     select(-n_soc, -any_of("n_term")) %>% 
+    rename(soc=soc_) %>% 
     mutate(
       soc=if_else(!is.na(lag(soc)) & soc==lag(soc), "", soc),
     )

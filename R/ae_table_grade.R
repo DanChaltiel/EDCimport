@@ -19,6 +19,7 @@
 #' 
 #' tm = edc_example_ae()
 #' ae_table_grade_max(df_ae=tm$ae, df_enrol=tm$enrolres)
+#' ae_table_grade_max(df_ae=tm$ae, df_enrol=tm$enrolres, arm=NULL)
 #' 
 #' \dontrun{
 #' #you can use as_flextable() to get an HTML flextable
@@ -37,20 +38,22 @@ ae_table_grade_max = function(
     arm="ARM", subjid="SUBJID", soc="AESOC", grade="AEGR", total=TRUE, digits=0
 ){
   check_installed("crosstable", "for `ae_table_grade_max()` to work")
+  null_arm = is.null(arm)
   
-  df_ae = df_ae %>% rename_with(tolower) %>%
-    select(subjid=tolower(subjid), soc=tolower(soc), grade=tolower(grade))
-  df = df_enrol %>% rename_with(tolower) %>%
-    select(subjid=tolower(subjid), arm=tolower(arm)) %>%
-    full_join(df_ae, by=tolower(subjid)) %>% 
-    arrange(subjid) %>% 
-    mutate(grade = ifelse(is.na(soc), 0, grade))
+  df_ae = df_ae %>% 
+    select(subjid_=any_of2(subjid), soc_=any_of2(soc), grade_=any_of2(grade))
+  df = df_enrol %>% 
+    select(subjid_=any_of2(subjid), arm_=any_of2(arm)) %>%
+    full_join(df_ae, by="subjid_") %>% 
+    arrange(subjid_) %>% 
+    mutate(grade_ = ifelse(is.na(soc_), 0, grade_)) %>% 
+    summarise(grade_max = max_narm(grade_), .by=any_of(c("subjid_", "arm_")))
   
   df %>% 
-    summarise(grade_max = max_narm(grade), .by=c(subjid, arm)) %>% 
     mutate(grade_max = ifelse(is.na(grade_max), "NA", paste("Grade", grade_max))) %>% 
     crosstable::apply_labels(grade_max = "Max grade") %>% 
-    crosstable::crosstable(grade_max, by=arm, total=total, percent_digits=digits, margin="col") 
+    crosstable::crosstable(grade_max, by=any_of("arm_"), total=total, 
+                           percent_digits=digits, margin="col") 
 }
 
 #' Graphic representation of AEs by grade max
@@ -85,15 +88,24 @@ ae_plot_grade_max = function(
   
   check_installed("patchwork", "for `ae_plot_grade_max()` to work")
   
-  df_ae = df_ae %>% rename_with(tolower) %>%
-    select(subjid=tolower(subjid), soc=tolower(soc), grade=tolower(grade)) 
-  x = df_enrol %>% rename_with(tolower) %>%
-    select(subjid=tolower(subjid), arm=tolower(arm)) %>%
-    full_join(df_ae, by=tolower(subjid)) %>% 
+  df_ae = df_ae %>% 
+    select(subjid=any_of2(subjid), soc=any_of2(soc), grade=any_of2(grade)) 
+  a = df_enrol %>% 
+    select(subjid=any_of2(subjid), arm=any_of2(arm)) %>%
+    full_join(df_ae, by="subjid") %>% 
     arrange(subjid) %>% 
-    mutate(grade = ifelse(is.na(soc), 0, grade)) %>% 
-    summarise(grade_max = max_narm(grade), .by=c(subjid, arm)) %>% 
-    mutate(grade_max = ifelse(is.na(grade_max), "NA", paste("Grade", grade_max)))
+    mutate(grade = ifelse(is.na(soc), 0, grade))
+  
+  if(is.null(arm)){
+    x = a %>% 
+      summarise(grade_max = max_narm(grade), .by=c(subjid)) %>% 
+      mutate(grade_max = ifelse(is.na(grade_max), "NA", paste("Grade", grade_max)))
+  } else {
+    x = a %>% 
+      summarise(grade_max = max_narm(grade), .by=c(subjid, arm)) %>% 
+      mutate(grade_max = ifelse(is.na(grade_max), "NA", paste("Grade", grade_max)))
+  }
+  
   if(is.null(arm)) type="stack"
   p_list = type %>% set_names() %>% 
     map(~{
