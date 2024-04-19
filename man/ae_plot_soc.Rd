@@ -2,7 +2,7 @@
 % Please edit documentation in R/ae_table_soc.R
 \name{ae_plot_soc}
 \alias{ae_plot_soc}
-\title{Graphic representation of AEs by soc}
+\title{Graphic representation of AEs by soc (Butterfly plot)}
 \usage{
 ae_plot_soc(
   df_ae,

@@ -213,7 +213,7 @@ as_flextable.ae_table_soc = function(x, arm_colors=c("#f2dcdb", "#dbe5f1", "#ebf
 }
 
 
-#' Graphic representation of AEs by soc
+#' Graphic representation of AEs by soc (Butterfly plot)
 #' 
 #' Produces a graphic representation of AE, counting the maximum grade each patient experienced, colored by treatment arm. Returns up to 3 representations if `arm!=NULL`.
 #' 
