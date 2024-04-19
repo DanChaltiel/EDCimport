@@ -288,7 +288,7 @@ lastnews_table = function(except=NULL, with_ties=FALSE) {
   a = get_datasets(envir=parent.frame()) %>% 
     discard_at(as.character(except)) %>% 
     imap(~{
-      if(!is.data.frame(.x) || !subjid_cols %in% names(.x)) return(NULL)
+      if(!is.data.frame(.x) || !any(subjid_cols %in% names(.x))) return(NULL)
       a = .x %>% select(subjid=any_of2(subjid_cols), where(is.Date)) %>% 
         mutate(subjid = as.character(subjid))
       if(ncol(a)<=1) return(NULL) #only subjid
