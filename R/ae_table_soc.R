@@ -212,3 +212,84 @@ as_flextable.ae_table_soc = function(x, arm_colors=c("#f2dcdb", "#dbe5f1", "#ebf
   rtn
 }
 
+
+#' Graphic representation of AEs by soc
+#' 
+#' Produces a graphic representation of AE, counting the maximum grade each patient experienced, colored by treatment arm. Returns up to 3 representations if `arm!=NULL`.
+#' 
+#' The function `ae_plot_soc()` creates a summary table of the maximum AE grade experienced per each patient. 
+#' The resulting crosstable can be piped to `as_flextable()` to get a nicely formatted flextable.
+#' 
+#' @inheritParams ae_table_soc
+#' @inherit ae_table_soc seealso
+#'
+#' @return a crosstable (dataframe)
+#' @export
+#' @importFrom dplyr arrange full_join mutate rename_with select summarise
+#'
+#' @examples
+#' 
+#' tm = edc_example_ae()
+#' tm$ae %>% 
+#'   #mutate(severe = aeser=="Yes") %>% 
+#'   mutate(severe = aegr>=3) %>% 
+#'   ae_plot_soc(df_enrol=tm$enrolres)
+ae_plot_soc = function(
+    df_ae, ..., df_enrol, 
+    arm="ARM", subjid="SUBJID", soc="AESOC", severe="SEVERE"
+){
+  check_dots_empty()
+  df_ae = df_ae %>% 
+    select(subjid_=any_of2(subjid), soc_=any_of2(soc), severe_=any_of2(severe))
+  df_enrol = df_enrol %>% 
+    select(subjid_=any_of2(subjid), arm_=any_of2(arm)) 
+  df = df_enrol %>%
+    full_join(df_ae, by="subjid_") %>% 
+    filter(!is.na(soc_))  %>% 
+    arrange(subjid_)
+  
+  arms = df$arm_ %>% unique() %>% na.omit()
+  if(length(arms)!=2){
+    cli_abort(c("{.fn EDCimport::ae_plot_soc} needs exactly 2 arms.", 
+                i="Arms: {.val {arms}}"))
+  }
+  if(!is.logical(df_ae$severe_)){
+    cli_abort(c("{.arg severe} should be a logical column, not a {.type {df_ae$severe_}}. Did you forget to mutate it with `==`?"))
+  }
+  
+  df_arm = df_enrol %>% 
+    count(arm_, name="n_arm") %>% 
+    mutate(label=glue("{arm_} (N={n_arm})"))
+  
+  # left_arm = df_arm %>% dplyr::slice_min(n_arm, n=1) %>% pull(arm_)
+  left_arm = df_enrol %>% pull(arm_) %>% factor() %>% levels() %>% head(1)
+  
+  a = df %>% 
+    summarise(any_ae = TRUE, 
+              any_severe = any(severe_, na.rm=TRUE),
+              .by=any_of(c("subjid_", "arm_", "soc_"))) %>% 
+    summarise(n_ae = sum(any_ae, na.rm=TRUE), 
+              n_severe = sum(any_severe, na.rm=TRUE),
+              .by=any_of(c("arm_", "soc_"))) %>%  
+    left_join(df_arm, by="arm_") %>% 
+    mutate(
+      soc_ = forcats::fct_reorder(soc_, n_ae),
+      n_ae = n_ae * ifelse(arm_==left_arm, -1, 1),
+      n_severe = n_severe * ifelse(arm_==left_arm, -1, 1),
+      pct_ae = n_ae/n_arm,
+      pct_severe = n_severe/n_arm,
+    )
+  
+  a %>% 
+    ggplot(aes(y=soc_, fill=arm_)) +
+    geom_col(aes(x=pct_ae), alpha=0.6) +
+    geom_col(aes(x=pct_severe), color="grey40", width=0.6) +
+    # scale_x_continuous(labels=label_percent_positive, limit=c(-1,1)) +
+    scale_x_continuous(labels=label_percent_positive) +
+    facet_grid(cols=vars(label), scales="free_x") +
+    labs(y=NULL, fill=NULL, x="Proportion of patients presenting at least 1 adverse event") +
+    theme(
+      legend.position="bottom",
+      panel.spacing.x=unit(1, "mm")
+    )
+}
