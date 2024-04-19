@@ -8,11 +8,15 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 ### New features
 
+- New function `lastnews_table()` to find the last date an information has been entered for each patient. 
+
+- New functions `edc_data_warn()` and `assert_no_rows()` to help performing data sanity checks. 
+
 - New function `fct_yesno()`, to easily format Yes/No columns. 
 
 - New function `save_plotly()`, to save a `plotly` to an HTML file
 
-- New experimental function `get_common_cols()` that might become useful to find keys to pivot or summarise data.
+- New experimental functions `table_format()`, `get_common_cols()` and `get_meta_cols()` that might become useful to find keys to pivot or summarise data.
 
 ### Bug fixes & Improvements
 
