@@ -4,6 +4,12 @@
     <loc>https://danchaltiel.github.io/EDCimport/404.html</loc>
   </url>
   <url>
+    <loc>https://danchaltiel.github.io/EDCimport/articles/adverse_events.html</loc>
+  </url>
+  <url>
+    <loc>https://danchaltiel.github.io/EDCimport/articles/index.html</loc>
+  </url>
+  <url>
     <loc>https://danchaltiel.github.io/EDCimport/authors.html</loc>
   </url>
   <url>
@@ -16,13 +22,40 @@
     <loc>https://danchaltiel.github.io/EDCimport/reference/EDCimport-package.html</loc>
   </url>
   <url>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/ae_plot_grade_max.html</loc>
+  </url>
+  <url>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/ae_plot_grade_n.html</loc>
+  </url>
+  <url>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/ae_plot_soc.html</loc>
+  </url>
+  <url>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/ae_table_grade_max.html</loc>
+  </url>
+  <url>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/ae_table_grade_n.html</loc>
+  </url>
+  <url>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/ae_table_soc.html</loc>
+  </url>
+  <url>
     <loc>https://danchaltiel.github.io/EDCimport/reference/assert_no_duplicate.html</loc>
+  </url>
+  <url>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/assert_no_rows.html</loc>
+  </url>
+  <url>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/build_lookup.html</loc>
   </url>
   <url>
     <loc>https://danchaltiel.github.io/EDCimport/reference/check_subjid.html</loc>
   </url>
   <url>
     <loc>https://danchaltiel.github.io/EDCimport/reference/data_example.html</loc>
+  </url>
+  <url>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/edc_data_warn.html</loc>
   </url>
   <url>
     <loc>https://danchaltiel.github.io/EDCimport/reference/edc_options.html</loc>
@@ -40,7 +73,13 @@
     <loc>https://danchaltiel.github.io/EDCimport/reference/extend_lookup.html</loc>
   </url>
   <url>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/fct_yesno.html</loc>
+  </url>
+  <url>
     <loc>https://danchaltiel.github.io/EDCimport/reference/find_keyword.html</loc>
+  </url>
+  <url>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/get_common_cols.html</loc>
   </url>
   <url>
     <loc>https://danchaltiel.github.io/EDCimport/reference/get_datasets.html</loc>
@@ -52,7 +91,16 @@
     <loc>https://danchaltiel.github.io/EDCimport/reference/get_lookup.html</loc>
   </url>
   <url>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/get_meta_cols.html</loc>
+  </url>
+  <url>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/get_subjid_cols.html</loc>
+  </url>
+  <url>
     <loc>https://danchaltiel.github.io/EDCimport/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/lastnews_table.html</loc>
   </url>
   <url>
     <loc>https://danchaltiel.github.io/EDCimport/reference/load_as_list.html</loc>
@@ -76,9 +124,18 @@
     <loc>https://danchaltiel.github.io/EDCimport/reference/save_list.html</loc>
   </url>
   <url>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/save_plotly.html</loc>
+  </url>
+  <url>
     <loc>https://danchaltiel.github.io/EDCimport/reference/split_mixed_datasets.html</loc>
   </url>
   <url>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/table_format.html</loc>
+  </url>
+  <url>
     <loc>https://danchaltiel.github.io/EDCimport/reference/unify.html</loc>
+  </url>
+  <url>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/waterfall_plot.html</loc>
   </url>
 </urlset>
