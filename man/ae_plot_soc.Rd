@@ -26,6 +26,8 @@ ae_plot_soc(
 \item{subjid}{name of the patient ID in both \code{df_ae} and \code{df_enrol}. Case-insensitive.}
 
 \item{soc}{name of the SOC column in \code{df_ae}. Case-insensitive. Grade will be considered 0 if missing(e.g. if patient if absent from \code{df_ae}).}
+
+\item{severe}{name of the logical column in \code{df_ae} telling wheter an AE is severe. Case-insensitive.}
 }
 \value{
 a crosstable (dataframe)
@@ -41,8 +43,8 @@ The resulting crosstable can be piped to \code{as_flextable()} to get a nicely f
 
 tm = edc_example_ae()
 tm$ae \%>\% 
-  #mutate(severe = aeser=="Yes") \%>\% 
-  mutate(severe = aegr>=3) \%>\% 
+  #dplyr::mutate(severe = aeser=="Yes") \%>\% 
+  dplyr::mutate(severe = aegr>=3) \%>\% 
   ae_plot_soc(df_enrol=tm$enrolres)
 }
 \seealso{

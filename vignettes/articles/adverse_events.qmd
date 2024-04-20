@@ -25,7 +25,6 @@ Ici j'utilise la fonction `edc_example_ae()` pour ne pas dépendre de données r
 #| message = FALSE,
 #| warning = FALSE
 library(EDCimport)
-library(tidyverse)
 library(flextable)
 # tm = read_trialmaster("path/to/file.zip")
 tm = edc_example_ae()
@@ -99,7 +98,7 @@ La fonction ne prend pas en charge les SAE directement, il suffit de filtrer la 
 
 ```{r}
 ae %>% 
-  filter(sae==TRUE) %>% 
+  dplyr::filter(sae==TRUE) %>% 
   ae_table_grade_max(df_enrol=enrolres, arm=NULL) %>% 
   as_flextable() %>% 
   add_footer_lines("Percentages are given as the proportion of patients presenting at most one SAE of given grade")
@@ -119,7 +118,7 @@ ae %>%
 #| out.width = "100%"
 ae_plot_grade_max(df_ae=ae, df_enrol=enrolres, 
                   type = c("stack", "dodge", "fill")) & 
-  labs(fill="Arm")
+  ggplot2::labs(fill="Arm")
 ```
 
 #### `AE N`
@@ -143,7 +142,13 @@ Voir la description du package flextable pour la liste des modificateurs (comme 
 
 Pour les sorties sur `{officer}`, comme ces tables sont très larges, pensez bien à basculer en format paysage en utilisant `officer::body_end_section_continuous()`, puis `officer::body_end_section_landscape()` pour revenir au format portrait.
 
-### Sortie *AE_SOC1*: Table des grades par soc et termes
+### Tableaux
+
+::: {.panel-tabset}
+
+#### `AE_SOC1`
+
+Table des grades par soc et termes
 
 On peut ajouter `total=FALSE` pour retirer la colonne "Tot".
 
@@ -154,19 +159,25 @@ ae_table_soc(df_ae=ae, df_enrol=enrolres, term=NULL, arm=NULL, sort_by_ae=FALSE)
   add_footer_lines("Percentages are given as the proportion of patients presenting at least one AE of given grade")
 ```
 
-### Sortie *AE_SOC2*: Table des grades par soc et termes
+#### `AE_SOC2`
+
+Table des grades par soc et termes
 
 ```{r}
 ##TODO exemple avec des TERMS
 ``` 
 
-### Sortie *AE_SOC3*: Table des grades par termes uniquement, filtrée sur les SAE
+#### `AE_SOC3`
+
+able des grades par termes uniquement, filtrée sur les SAE
 
 ```{r}
 ##TODO ajouter vrais SAE
 ```
 
-### Sortie *AE_SOC4*: Table des grades stratifiée sur le bras (sans colonne total)
+#### `AE_SOC4/5`
+
+Table des grades stratifiée sur le bras (sans colonne total)
 
 On peut ajouter `total=FALSE` pour retirer la colonne "Tot" et obtenir la sortie *AE_SOC5*.
 
@@ -177,8 +188,30 @@ ae_table_soc(df_ae=ae, df_enrol=enrolres, term=NULL, arm="arm", sort_by_ae=FALSE
   add_footer_lines("Percentages are given as the proportion of patients presenting at least one AE of given grade")
 ```
 
-### Sortie *AE_SOC6*: Table des soc et termes tous grades confondus stratifiée sur le bras
+#### `AE_SOC6`
+
+Table des soc et termes tous grades confondus stratifiée sur le bras
 
 ```{r}
 ##TODO
 ```
+
+:::
+
+### Sortie Plots
+
+::: {.panel-tabset}
+
+#### Butterfly plot
+Ici, on considère comme sévères les AE de grade >= 3 :
+
+```{r}
+#| fig.asp = 0.5,
+#| fig.width = 7,
+#| out.width = "100%"
+ae %>% 
+  dplyr::mutate(severe = aegr>=3) %>% 
+  ae_plot_soc(df_enrol=enrolres)
+```
+
+:::

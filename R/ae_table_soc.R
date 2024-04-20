@@ -222,17 +222,21 @@ as_flextable.ae_table_soc = function(x, arm_colors=c("#f2dcdb", "#dbe5f1", "#ebf
 #' 
 #' @inheritParams ae_table_soc
 #' @inherit ae_table_soc seealso
+#' @param severe name of the logical column in `df_ae` telling wheter an AE is severe. Case-insensitive. 
 #'
 #' @return a crosstable (dataframe)
 #' @export
 #' @importFrom dplyr arrange full_join mutate rename_with select summarise
+#' @importFrom ggplot2 aes geom_col ggplot labs unit
+#' @importFrom scales label_percent
+#' @importFrom stringr str_remove
 #'
 #' @examples
 #' 
 #' tm = edc_example_ae()
 #' tm$ae %>% 
-#'   #mutate(severe = aeser=="Yes") %>% 
-#'   mutate(severe = aegr>=3) %>% 
+#'   #dplyr::mutate(severe = aeser=="Yes") %>% 
+#'   dplyr::mutate(severe = aegr>=3) %>% 
 #'   ae_plot_soc(df_enrol=tm$enrolres)
 ae_plot_soc = function(
     df_ae, ..., df_enrol, 
@@ -279,6 +283,8 @@ ae_plot_soc = function(
       pct_ae = n_ae/n_arm,
       pct_severe = n_severe/n_arm,
     )
+  
+  label_percent_positive = \(x) label_percent()(x) %>% str_remove("-")
   
   a %>% 
     ggplot(aes(y=soc_, fill=arm_)) +
