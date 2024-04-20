@@ -10,7 +10,7 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 -   New functions to describe adverse events:
 
-    -   `ae_table_grade_max()`, `ae_table_grade_n()`, and `ae_table_soc()` to generate standardized tables. They all can be turned to flextable using `as_flextable()`.
+    -   `ae_table_grade_max()`, `ae_table_grade_n()`, and `ae_table_soc()` to generate standardized tables. They all can be turned to flextables using `as_flextable()`.
     -   `ae_plot_grade_max()`, `ae_plot_grade_n()`, and `ae_plot_soc()` to generate standardized plots.
 
 -   New functions `edc_data_warn()` and `assert_no_rows()` to help performing data sanity checks.
@@ -23,7 +23,7 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 -   New function `fct_yesno()`, to easily format Yes/No columns.
 
--   New function `save_plotly()`, to save a `plotly` to an HTML file
+-   New function `save_plotly()`, to save a `plotly` to an HTML file.
 
 -   New experimental functions `table_format()`, `get_common_cols()` and `get_meta_cols()` that might become useful to find keys to pivot or summarise data.
 
