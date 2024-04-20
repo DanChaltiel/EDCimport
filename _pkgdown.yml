@@ -30,7 +30,7 @@ reference:
 - title: "Searching databases"
 - contents:
   - find_keyword
-  - followup_table
+  - lastnews_table
   - get_common_cols
 - title: "Clinical Utils"
 - contents:
@@ -39,6 +39,7 @@ reference:
   - ae_table_soc
   - ae_plot_grade_max
   - ae_plot_grade_n
+  - ae_plot_soc
   - waterfall_plot
 - title: "Options"
 - contents:
