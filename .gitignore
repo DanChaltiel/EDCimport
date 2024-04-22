@@ -15,8 +15,8 @@ DEV\.R
 *nogit*
 
 docs
-tests/testthat/test-real.R
 inst/doc
 /doc/
 /Meta/
-tests/testthat/_snaps/real.md
+tests/testthat/test-local.R
+tests/testthat/_snaps/local.md
