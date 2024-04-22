@@ -51,5 +51,5 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
 Config/testthat/edition: 3
 Config/testthat/parallel: true
-Config/testthat/start-first: ae, trialmaster,utils
+Config/testthat/start-first: local, ae, trialmaster, utils
 VignetteBuilder: knitr, rmarkdown, quarto
