@@ -53,7 +53,8 @@ ae_table_grade_max = function(
     summarise(grade_max = max_narm(grade_), .by=any_of(c("subjid_", "arm_")))
   
   df %>% 
-    mutate(grade_max = ifelse(is.na(grade_max), "NA", paste("Grade", grade_max))) %>% 
+    mutate(grade_max = ifelse(is.na(grade_max), "NA", paste("Grade", grade_max)),
+           grade_max = recode(grade_max, "Grade 0"="No AE")) %>% 
     crosstable::apply_labels(grade_max = "Max grade") %>% 
     crosstable::crosstable(grade_max, by=any_of("arm_"), total=total, 
                            percent_digits=digits, margin="col") 
@@ -98,7 +99,7 @@ ae_plot_grade_max = function(
     select(subjid=any_of2(subjid), arm=any_of2(arm)) %>%
     full_join(df_ae, by="subjid") %>% 
     arrange(subjid) %>% 
-    mutate(grade = ifelse(is.na(soc), 0, fix_grade(grade)))
+    mutate(grade = ifelse(is.na(soc), 0, fix_grade(grade)) %>% recode("Grade 0"="No AE"))
   
   if(is.null(arm)){
     x = a %>% 
