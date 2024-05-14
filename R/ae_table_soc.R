@@ -146,7 +146,7 @@ ae_table_soc = function(
     ) %>% 
     arrange(grade2) %>%
     select(-arm_, -grade_, -n, -n_arm) %>% 
-    pivot_wider(id_cols=c("soc_", if(!null_term) c("term", "n_term"), "n_soc"), 
+    pivot_wider(id_cols=c("soc_", if(!null_term) c("term_", "n_term"), "n_soc"), 
                 names_from="grade2", values_from="n2") %>% 
     arrange(soc_)
   # browser()
