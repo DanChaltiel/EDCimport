@@ -183,7 +183,11 @@ ae_table_soc = function(
 as_flextable.ae_table_soc = function(x, arm_colors=c("#f2dcdb", "#dbe5f1", "#ebf1dd", "#e5e0ec")
 ){
   table_ae_header = attr(x, "header")
-  arm_cols = names(table_ae_header) %>% set_names() %>% map_int(~sum(str_starts(names(x), .x)))
+  arm_cols = names(table_ae_header) %>% set_names() %>% 
+    map_int(~{
+      pattern = paste0("^", .x, "_(G\\d|Tot)$")
+      sum(str_detect(names(x), pattern))
+    })
   
   col1 = min(which(str_detect(names(x), "G1"))) - 1 #moche mais marche...
   colwidths = c(col1, arm_cols)
