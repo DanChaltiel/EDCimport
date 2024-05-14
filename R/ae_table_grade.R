@@ -272,5 +272,5 @@ ae_plot_grade_n = function(
 # Utils ---------------------------------------------------------------------------------------
 
 fix_grade = function(x){
-  as.numeric(as.character(na_if(x, "NA")))
+  as.numeric(na_if(as.character(x), "NA"))
 }
