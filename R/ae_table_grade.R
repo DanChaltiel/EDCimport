@@ -47,7 +47,9 @@ ae_table_grade_max = function(
     select(subjid_=any_of2(subjid), arm_=any_of2(arm)) %>%
     full_join(df_ae, by="subjid_") %>% 
     arrange(subjid_) %>% 
-    mutate(grade_ = ifelse(is.na(soc_), 0, grade_)) %>% 
+    mutate(
+      grade_ = if_else(is.na(soc_), 0, fix_grade(grade_)),
+    ) %>% 
     summarise(grade_max = max_narm(grade_), .by=any_of(c("subjid_", "arm_")))
   
   df %>% 
@@ -96,7 +98,7 @@ ae_plot_grade_max = function(
     select(subjid=any_of2(subjid), arm=any_of2(arm)) %>%
     full_join(df_ae, by="subjid") %>% 
     arrange(subjid) %>% 
-    mutate(grade = ifelse(is.na(soc), 0, grade))
+    mutate(grade = ifelse(is.na(soc), 0, fix_grade(grade)))
   
   if(is.null(arm)){
     x = a %>% 
@@ -173,6 +175,7 @@ ae_table_grade_n = function(
   df = df_enrol %>%
     full_join(df_ae, by=tolower(subjid)) %>% 
     arrange(subjid) %>% 
+    mutate(grade = fix_grade(grade)) %>% 
     filter(!is.na(soc)) 
   
   default_arm = "All patients" 
@@ -233,6 +236,7 @@ ae_plot_grade_n = function(
     select(subjid=tolower(subjid), arm=tolower(arm))
   df = df_enrol %>%
     full_join(df_ae, by=tolower(subjid)) %>% 
+    mutate(grade = fix_grade(grade)) %>% 
     arrange(subjid)
   
   default_arm = "All patients"
@@ -263,3 +267,10 @@ ae_plot_grade_n = function(
   rtn
 }
 
+
+
+# Utils ---------------------------------------------------------------------------------------
+
+fix_grade = function(x){
+  as.numeric(as.character(na_if(x, "NA")))
+}
