@@ -188,6 +188,8 @@ as_flextable.ae_table_soc = function(x, arm_colors=c("#f2dcdb", "#dbe5f1", "#ebf
       pattern = paste0("^", .x, "_(G\\d|Tot)$")
       sum(str_detect(names(x), pattern))
     })
+  table_ae_header = table_ae_header[arm_cols>0]
+  arm_cols = arm_cols[arm_cols>0]
   
   col1 = min(which(str_detect(names(x), "G1"))) - 1 #moche mais marche...
   colwidths = c(col1, arm_cols)
