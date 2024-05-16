@@ -156,7 +156,7 @@ ae_table_soc = function(
   }
   rtn = rtn %>% 
     select(-n_soc, -any_of("n_term")) %>% 
-    rename(soc=soc_) %>% 
+    rename_with(~str_remove(.x, "_$")) %>% 
     mutate(
       soc=if_else(!is.na(lag(soc)) & soc==lag(soc), "", soc),
     )
@@ -191,7 +191,7 @@ as_flextable.ae_table_soc = function(x, arm_colors=c("#f2dcdb", "#dbe5f1", "#ebf
   table_ae_header = table_ae_header[arm_cols>0]
   arm_cols = arm_cols[arm_cols>0]
   
-  col1 = min(which(str_detect(names(x), "G1"))) - 1 #moche mais marche...
+  col1 = names(x) %>% str_detect(names(table_ae_header)[1]) %>% which() %>% min() - 1
   colwidths = c(col1, arm_cols)
   header_labels = set_names(names(x)) %>% map(~str_replace_all(.x, ".*_", ""))
   header_labels$soc = "CTCAE SOC"
