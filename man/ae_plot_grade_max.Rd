@@ -9,6 +9,7 @@ ae_plot_grade_max(
   ...,
   df_enrol,
   type = c("stack", "dodge", "fill"),
+  drop_levels = FALSE,
   arm = "ARM",
   subjid = "SUBJID",
   soc = "AESOC",
@@ -23,6 +24,8 @@ ae_plot_grade_max(
 \item{df_enrol}{enrollment table, one row per patient, containing subjid (and arm if needed)}
 
 \item{type}{the plots to be included. One of \code{c("stack", "dodge", "fill")}.}
+
+\item{drop_levels}{whether to drop unused grade levels.}
 
 \item{arm}{name of the treatment column in \code{df_enrol}. Case-insensitive. Can be set to \code{NULL} to not group.}
 

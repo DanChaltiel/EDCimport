@@ -67,10 +67,11 @@ ae_table_grade_max = function(
 #' @inheritParams ae_table_soc 
 #' @inherit ae_table_soc seealso
 #' @param type the plots to be included. One of `c("stack", "dodge", "fill")`.
+#' @param drop_levels whether to drop unused grade levels.
 #'
 #' @return a patchwork of ggplots
 #' @importFrom dplyr arrange full_join mutate rename_with select summarise
-#' @importFrom ggplot2 aes geom_bar ggplot labs scale_x_continuous theme waiver
+#' @importFrom ggplot2 aes geom_bar ggplot labs scale_x_continuous scale_y_discrete theme waiver
 #' @importFrom purrr map
 #' @importFrom rlang set_names
 #' @export
@@ -88,6 +89,7 @@ ae_table_grade_max = function(
 ae_plot_grade_max = function(
     df_ae, ..., df_enrol, 
     type = c("stack", "dodge", "fill"),
+    drop_levels = FALSE,
     arm="ARM", subjid="SUBJID", soc="AESOC", grade="AEGR"
 ){
   check_installed("patchwork", "for `ae_plot_grade_max()` to work")
@@ -99,25 +101,21 @@ ae_plot_grade_max = function(
     select(subjid=any_of2(subjid), arm=any_of2(arm)) %>%
     full_join(df_ae, by="subjid") %>% 
     arrange(subjid) %>% 
-    mutate(grade = ifelse(is.na(soc), 0, fix_grade(grade)) %>% recode("Grade 0"="No AE"))
+    mutate(grade = ifelse(is.na(soc), 0, fix_grade(grade)))
   
-  if(is.null(arm)){
-    x = a %>% 
-      summarise(grade_max = max_narm(grade), .by=c(subjid)) %>% 
-      mutate(grade_max = ifelse(is.na(grade_max), "NA", paste("Grade", grade_max)))
-  } else {
-    x = a %>% 
-      summarise(grade_max = max_narm(grade), .by=c(subjid, arm)) %>% 
-      mutate(grade_max = ifelse(is.na(grade_max), "NA", paste("Grade", grade_max)))
-  }
+  by_cols = if(is.null(arm)) "subjid" else c("subjid", "arm")
+  x = a %>% 
+    summarise(grade_max = max_narm(grade), .by=any_of(by_cols)) %>%  
+    mutate(grade_max = factor(grade_max, levels=0:5, labels=c("No AE", paste("Grade", 1:5))))
   
   if(is.null(arm)) type="stack"
   p_list = type %>% set_names() %>% 
     map(~{
       y_lab = if(.x=="fill") "Proportion" else "Count"
       p = x %>% 
-        ggplot(aes(y=grade_max, fill=arm, by=factor(grade_max))) +
+        ggplot(aes(y=grade_max, fill=arm, by=grade_max)) +
         geom_bar(position=.x) +
+        scale_y_discrete(drop=drop_levels) +
         scale_x_continuous(labels = if(.x=="fill") scales::percent else waiver()) +
         labs(y="Max AE grade experienced", x=y_lab, fill="Treatment")
       # StatProp = ggstats:::StatProp
@@ -202,7 +200,7 @@ ae_table_grade_n = function(
       p = crosstable::format_fixed(x/tot, digits, percent=TRUE)
       paste0(x, " (", p, ")")
     }))
-  attr(rtn, "by_table")[] = npat[names(npat)!="Total"]
+  attr(rtn, "by_table")[] = npat[!is.na(names(npat)) & names(npat)!="Total"] #zarb que crosstable oublie les NA dans by_table non?
   rtn
 }
 
