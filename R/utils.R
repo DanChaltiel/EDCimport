@@ -308,3 +308,22 @@ mixedorder = function (x, decreasing = FALSE, na.last = TRUE, blank.last = FALSE
 
 max_narm = function(x, na.rm=TRUE) if(all(is.na(x))) NA else max(x, na.rm=na.rm)
 min_narm = function(x, na.rm=TRUE) if(all(is.na(x))) NA else min(x, na.rm=na.rm)
+
+
+# path = "F:/Nextcloud GR/04 - Comite Pediatrie/NIVOGLIO/Analyses/Analyse DRM"
+init_project = function(path){
+  w = setwd(path)
+  on.exit(setwd(w))
+  
+  dir.create("data")
+  dir.create("R")
+  dir.create("report")
+  dir.create("graph")
+  
+  #TODO copy RProj
+  writeLines(con="R/init.R", "#init")
+  writeLines(con="R/read.R", "#read")
+  writeLines(con="R/report.R", "#report")
+  writeLines(con="R/description.R", "#description")
+}
+
