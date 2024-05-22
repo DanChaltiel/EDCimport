@@ -9,6 +9,7 @@ ae_plot_grade_max(
   ...,
   df_enrol,
   type = c("stack", "dodge", "fill"),
+  proportion = TRUE,
   drop_levels = FALSE,
   arm = "ARM",
   subjid = "SUBJID",
@@ -43,7 +44,8 @@ Produces a graphic representation of AE, counting the maximum grade each patient
 }
 \examples{
 tm = edc_example_ae()
-ae_plot_grade_max(df_ae=tm$ae, df_enrol=tm$enrolres, type=c("dodge", "fill"))
+ae_plot_grade_max(df_ae=tm$ae, df_enrol=tm$enrolres)
+ae_plot_grade_max(df_ae=tm$ae, df_enrol=tm$enrolres, type=c("dodge", "fill"), proportion=FALSE)
 ae_plot_grade_max(df_ae=tm$ae, df_enrol=tm$enrolres, arm=NULL) + ggplot2::coord_flip()
 
 #you can use modificators from the patchwork package, like "&"

@@ -13,7 +13,7 @@
 #'
 #' @return a crosstable (dataframe)
 #' @export
-#' @importFrom dplyr arrange full_join mutate rename_with select summarise
+#' @importFrom dplyr arrange full_join mutate recode rename_with select summarise
 #'
 #' @examples
 #' 
@@ -71,7 +71,7 @@ ae_table_grade_max = function(
 #'
 #' @return a patchwork of ggplots
 #' @importFrom dplyr arrange full_join mutate rename_with select summarise
-#' @importFrom ggplot2 aes geom_bar ggplot labs scale_x_continuous scale_y_discrete theme waiver
+#' @importFrom ggplot2 aes geom_bar ggplot labs position_dodge scale_x_continuous scale_y_discrete theme waiver
 #' @importFrom purrr map
 #' @importFrom rlang set_names
 #' @export
