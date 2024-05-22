@@ -415,24 +415,33 @@ reset_manual_correction = function(){
 #' @param df the filtered dataframe
 #' @param message the message. Can use {cli} formats.
 #' @param issue_n (optional) identifying row number
+#' @param max_subjid max number of subjid to show in the 
+#' @param ... unused 
 #'
 #' @return nothing
 #' @export
 #' @importFrom stringr str_pad
-#' @importFrom cli cli_warn format_inline col_green
+#' @importFrom cli cli_vec cli_warn format_inline col_green
 #' @importFrom dplyr pull
 #'
 #' @examples
 #' tm = edc_example_mixed()
 #' a = tm$long_pure %>% dplyr::filter(val1a>2)
 #' edc_data_warn(a, "{.val val1} should be lesser than 2", issue_n=1)
-edc_data_warn = function(df, message, issue_n=NULL){
+edc_data_warn = function(df, message, ..., issue_n=NULL, max_subjid=5){
+  check_dots_empty()
   if(nrow(df)>0){
     if(is.null(issue_n)) issue_n = "xx"
     else if(is.numeric(issue_n)) issue_n = str_pad(issue_n, width=2, pad="0")
     subj = df %>% pull(any_of2(get_subjid_cols())) %>% unique() %>% sort()
+    subj = paste0("#", subj)
+    n_subj = length(subj)
+    if(n_subj > max_subjid){
+      subj = c(subj[seq(max_subjid)], "...")
+      subj = cli_vec(subj, style=list("vec-last"=", "))
+    }
     message = format_inline(message)
-    cli_warn("Issue #{col_green(issue_n)}: {message} (Patient{?s} {subj})")
+    cli_warn("Issue #{col_green(issue_n)}: {message} ({n_subj} patient{?s}: {subj})")
   }
 }
 

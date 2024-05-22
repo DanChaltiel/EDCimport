@@ -4,14 +4,18 @@
 \alias{edc_data_warn}
 \title{Standardized warning system}
 \usage{
-edc_data_warn(df, message, issue_n = NULL)
+edc_data_warn(df, message, ..., issue_n = NULL, max_subjid = 5)
 }
 \arguments{
 \item{df}{the filtered dataframe}
 
 \item{message}{the message. Can use {cli} formats.}
 
+\item{...}{unused}
+
 \item{issue_n}{(optional) identifying row number}
+
+\item{max_subjid}{max number of subjid to show in the}
 }
 \value{
 nothing
