@@ -78,7 +78,8 @@ ae_table_grade_max = function(
 #' 
 #' @examples
 #' tm = edc_example_ae()
-#' ae_plot_grade_max(df_ae=tm$ae, df_enrol=tm$enrolres, type=c("dodge", "fill"))
+#' ae_plot_grade_max(df_ae=tm$ae, df_enrol=tm$enrolres)
+#' ae_plot_grade_max(df_ae=tm$ae, df_enrol=tm$enrolres, type=c("dodge", "fill"), proportion=FALSE)
 #' ae_plot_grade_max(df_ae=tm$ae, df_enrol=tm$enrolres, arm=NULL) + ggplot2::coord_flip()
 #' 
 #' #you can use modificators from the patchwork package, like "&"
@@ -89,6 +90,7 @@ ae_table_grade_max = function(
 ae_plot_grade_max = function(
     df_ae, ..., df_enrol, 
     type = c("stack", "dodge", "fill"),
+    proportion = TRUE,
     drop_levels = FALSE,
     arm="ARM", subjid="SUBJID", soc="AESOC", grade="AEGR"
 ){
@@ -108,21 +110,51 @@ ae_plot_grade_max = function(
     summarise(grade_max = max_narm(grade), .by=any_of(by_cols)) %>%  
     mutate(grade_max = factor(grade_max, levels=0:5, labels=c("No AE", paste("Grade", 1:5))))
   
-  if(is.null(arm)) type="stack"
-  p_list = type %>% set_names() %>% 
-    map(~{
-      y_lab = if(.x=="fill") "Proportion" else "Count"
-      p = x %>% 
-        ggplot(aes(y=grade_max, fill=arm, by=grade_max)) +
-        geom_bar(position=.x) +
-        scale_y_discrete(drop=drop_levels) +
-        scale_x_continuous(labels = if(.x=="fill") scales::percent else waiver()) +
-        labs(y="Max AE grade experienced", x=y_lab, fill="Treatment")
-      # StatProp = ggstats:::StatProp
-      # if(.x=="fill") p = 
-      #   p + geom_text(stat="prop", position = position_fill(.5))
-      p
-    })
+  if(isTRUE(proportion)){
+    type = setdiff(type, "fill")
+    x2 = x %>% 
+      mutate(n_arm = n(), .by=arm) %>% 
+      summarise(n=n(), p=n()/n_arm, 
+                .by=c(grade_max, arm)) %>% 
+      distinct() %>% 
+      mutate(label = paste0("N=",n))
+    p_list = type %>% set_names() %>% 
+      map(~{
+        if(.x=="dodge") .x = position_dodge(width=0.9)
+        p =
+          x2 %>% 
+          ggplot(aes(y=grade_max, x=p, fill=arm, by=grade_max)) +
+          geom_col(position=.x) +
+          # geom_text(aes(label=label), position=.x, hjust=1) +
+          scale_y_discrete(drop=drop_levels) +
+          scale_x_continuous(labels=scales::percent) +
+          labs(y="Max AE grade experienced", x="Proportion of patients", fill="Treatment")
+        # StatProp = ggstats:::StatProp
+        # if(.x=="fill") p = 
+        #   p + geom_text(stat="prop", position = position_fill(.5))
+        p
+      })
+  } else {
+    if(is.null(arm)) type="stack"
+    p_list = type %>% set_names() %>% 
+      map(~{
+        y_lab = if(.x=="fill") "Proportion" else "Count"
+        p =
+          x %>% 
+          ggplot(aes(y=grade_max, fill=arm, by=grade_max)) +
+          geom_bar(position=.x) +
+          scale_y_discrete(drop=drop_levels) +
+          scale_x_continuous(labels = if(.x=="fill") scales::percent else waiver()) +
+          labs(y="Max AE grade experienced", x=y_lab, fill="Treatment")
+        # StatProp = ggstats:::StatProp
+        # if(.x=="fill") p = 
+        #   p + geom_text(stat="prop", position = position_fill(.5))
+        p
+      })
+  }
+  
+  
+  
   
   patchwork::wrap_plots(p_list) + 
     patchwork::plot_layout(guides="collect") & 
