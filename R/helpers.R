@@ -434,12 +434,9 @@ edc_data_warn = function(df, message, ..., issue_n=NULL, max_subjid=5){
     if(is.null(issue_n)) issue_n = "xx"
     else if(is.numeric(issue_n)) issue_n = str_pad(issue_n, width=2, pad="0")
     subj = df %>% pull(any_of2(get_subjid_cols())) %>% unique() %>% sort()
-    subj = paste0("#", subj)
     n_subj = length(subj)
-    if(n_subj > max_subjid){
-      subj = c(subj[seq(max_subjid)], "...")
-      subj = cli_vec(subj, style=list("vec-last"=", "))
-    }
+    subj = paste0("#", subj) %>% 
+      cli_vec(style=list("vec_trunc"=max_subjid, "vec-trunc-style"="head"))
     message = format_inline(message)
     cli_warn("Issue #{col_green(issue_n)}: {message} ({n_subj} patient{?s}: {subj})")
   }
