@@ -430,7 +430,10 @@ reset_manual_correction = function(){
 #' a = tm$long_pure %>% dplyr::filter(val1a>2)
 #' edc_data_warn(a, "{.val val1} should be lesser than 2", issue_n=1)
 edc_data_warn = function(df, message, ..., 
-                         issue_n=NULL, max_subjid=5, col_subjid=get_subjid_cols()){
+                         issue_n=NULL, max_subjid=5, 
+                         col_subjid=get_subjid_cols()){
+  
+  if (missing(max_subjid)) max_subjid = getOption("edc_warn_max_subjid", max_subjid)
   check_dots_empty()
   if(nrow(df)>0){
     if(is.null(issue_n)) issue_n = "xx"

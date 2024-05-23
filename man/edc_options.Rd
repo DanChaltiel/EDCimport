@@ -17,6 +17,7 @@ edc_options(
   edc_cols_id,
   edc_cols_crfname,
   edc_meta_cols_pct,
+  edc_warn_max_subjid,
   edc_read_verbose,
   edc_correction_verbose,
   edc_get_key_cols_verbose,
@@ -44,6 +45,8 @@ edc_options(
 \item{edc_cols_id, edc_cols_crfname}{deprecated}
 
 \item{edc_meta_cols_pct}{The minimal proportion of datasets a column has to reach to be considered "meta"}
+
+\item{edc_warn_max_subjid}{The max number of subject IDs to show in \link{edc_data_warn}}
 
 \item{edc_read_verbose, edc_correction_verbose, edc_get_key_cols_verbose}{the verbosity of the output of functions \link{read_trialmaster} and \link{read_tm_all_xpt}, \link{manual_correction}, and \link{get_key_cols}. For example, set \code{edc_options(edc_read_verbose=0)} to silence the first 2.}
 

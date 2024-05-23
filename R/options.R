@@ -15,6 +15,7 @@
 #' @param edc_fct_yesno **used in [fct_yesno]** list of values to be considered as Yes/No values. Defaults to `get_yesno_lvl()`.
 #' @param edc_cols_subjid,edc_cols_meta **used in [get_key_cols]** the name of the columns holding the subject id (default to `c("ptno", "subjid")`) and the CRF form name (default to `c("crfname")`). It is case-insensitive.
 #' @param edc_cols_id,edc_cols_crfname deprecated
+#' @param edc_warn_max_subjid The max number of subject IDs to show in [edc_data_warn]
 #' @param edc_meta_cols_pct The minimal proportion of datasets a column has to reach to be considered "meta"
 #' @param edc_read_verbose,edc_correction_verbose,edc_get_key_cols_verbose the verbosity of the output of functions [read_trialmaster] and [read_tm_all_xpt], [manual_correction], and [get_key_cols]. For example, set `edc_options(edc_read_verbose=0)` to silence the first 2.
 #' @param edc_lookup_overwrite_warn default to TRUE. Whether there should be warning when overwriting `.lookup` (like when reading 2 databases successively)
@@ -34,6 +35,7 @@ edc_options = function(
     edc_cols_subjid, edc_cols_meta,
     edc_cols_id, edc_cols_crfname,
     edc_meta_cols_pct, 
+    edc_warn_max_subjid, 
     edc_read_verbose, edc_correction_verbose, edc_get_key_cols_verbose,
     edc_lookup_overwrite_warn,
     .local=FALSE){
