@@ -4,7 +4,14 @@
 \alias{edc_data_warn}
 \title{Standardized warning system}
 \usage{
-edc_data_warn(df, message, ..., issue_n = NULL, max_subjid = 5)
+edc_data_warn(
+  df,
+  message,
+  ...,
+  issue_n = NULL,
+  max_subjid = 5,
+  col_subjid = get_subjid_cols()
+)
 }
 \arguments{
 \item{df}{the filtered dataframe}
@@ -15,7 +22,9 @@ edc_data_warn(df, message, ..., issue_n = NULL, max_subjid = 5)
 
 \item{issue_n}{(optional) identifying row number}
 
-\item{max_subjid}{max number of subjid to show in the}
+\item{max_subjid}{max number of subject ID to show in the message}
+
+\item{col_subjid}{column name for subject ID}
 }
 \value{
 nothing

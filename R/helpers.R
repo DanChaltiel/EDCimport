@@ -415,7 +415,8 @@ reset_manual_correction = function(){
 #' @param df the filtered dataframe
 #' @param message the message. Can use {cli} formats.
 #' @param issue_n (optional) identifying row number
-#' @param max_subjid max number of subjid to show in the 
+#' @param max_subjid max number of subject ID to show in the message
+#' @param col_subjid column name for subject ID
 #' @param ... unused 
 #'
 #' @return nothing
@@ -428,12 +429,13 @@ reset_manual_correction = function(){
 #' tm = edc_example_mixed()
 #' a = tm$long_pure %>% dplyr::filter(val1a>2)
 #' edc_data_warn(a, "{.val val1} should be lesser than 2", issue_n=1)
-edc_data_warn = function(df, message, ..., issue_n=NULL, max_subjid=5){
+edc_data_warn = function(df, message, ..., 
+                         issue_n=NULL, max_subjid=5, col_subjid=get_subjid_cols()){
   check_dots_empty()
   if(nrow(df)>0){
     if(is.null(issue_n)) issue_n = "xx"
     else if(is.numeric(issue_n)) issue_n = str_pad(issue_n, width=2, pad="0")
-    subj = df %>% pull(any_of2(get_subjid_cols())) %>% unique() %>% sort()
+    subj = df %>% pull(any_of2(col_subjid)) %>% unique() %>% sort()
     n_subj = length(subj)
     subj = paste0("#", subj) %>% 
       cli_vec(style=list("vec_trunc"=max_subjid, "vec-trunc-style"="head"))
