@@ -51,8 +51,8 @@ find_keyword = function(keyword, data=get_lookup(), ignore_case=TRUE){
     filter(str_detect(names2, keyword) | str_detect(labels2, keyword)) %>% 
     select(-names2, -labels2) %>% 
     mutate(prop_na = map2_dbl(dataset, names, ~{
-      if(!exists(.x)) return(NA)
-      x=get(.x)[[.y]]
+      if(!exists(.x, envir=globalenv())) return(NA)
+      x=get(.x, envir=globalenv())[[.y]]
       mean(is.na(x))
     })) %>% 
     select(-where(~all(is.na(.x))))
