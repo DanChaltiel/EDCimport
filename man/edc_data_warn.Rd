@@ -34,7 +34,7 @@ edc_data_stop(
 
 \item{max_subjid}{max number of subject ID to show in the message}
 
-\item{col_subjid}{column name for subject ID}
+\item{col_subjid}{column name for subject ID. Set to \code{NULL} to ignore.}
 }
 \value{
 \code{df} invisibly
@@ -46,6 +46,7 @@ Database issues should be traced in a separate table file, with an identifying r
 tm = edc_example_mixed()
 a = tm$long_pure \%>\% dplyr::filter(val1a>2)
 edc_data_warn(a, "{.val val1} should be lesser than 2", issue_n=1)
+edc_data_warn(a, "{.val val1} should be lesser than 2", issue_n=1, col_subjid=NULL)
 \dontrun{
 edc_data_stop(a, "{.val val1} should *really* be lesser than 2", issue_n=2)
 }

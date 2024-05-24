@@ -416,7 +416,7 @@ reset_manual_correction = function(){
 #' @param message the message. Can use {cli} formats.
 #' @param issue_n (optional) identifying row number
 #' @param max_subjid max number of subject ID to show in the message
-#' @param col_subjid column name for subject ID
+#' @param col_subjid column name for subject ID. Set to `NULL` to ignore.
 #' @param ... unused 
 #'
 #' @return `df` invisibly
@@ -429,6 +429,7 @@ reset_manual_correction = function(){
 #' tm = edc_example_mixed()
 #' a = tm$long_pure %>% dplyr::filter(val1a>2)
 #' edc_data_warn(a, "{.val val1} should be lesser than 2", issue_n=1)
+#' edc_data_warn(a, "{.val val1} should be lesser than 2", issue_n=1, col_subjid=NULL)
 #' \dontrun{
 #' edc_data_stop(a, "{.val val1} should *really* be lesser than 2", issue_n=2)
 #' }
@@ -463,12 +464,16 @@ edc_data_condition = function(df, message, issue_n, max_subjid,
   if(nrow(df)>0){
     if(is.null(issue_n)) issue_n = "xx"
     else if(is.numeric(issue_n)) issue_n = str_pad(issue_n, width=2, pad="0")
-    subj = df %>% pull(any_of2(col_subjid)) %>% unique() %>% sort()
-    n_subj = length(subj)
-    subj = paste0("#", subj) %>% 
-      cli_vec(style=list("vec_trunc"=max_subjid, "vec-trunc-style"="head"))
     message = format_inline(message)
-    fun("Issue #{col_green(issue_n)}: {message} ({n_subj} patient{?s}: {subj})")
+    subj_label = ""
+    if(!is.null(col_subjid)){
+      subj = df %>% pull(any_of2(col_subjid)) %>% unique() %>% sort()
+      n_subj = length(subj)
+      subj = paste0("#", subj) %>% 
+        cli_vec(style=list("vec_trunc"=max_subjid, "vec-trunc-style"="head"))
+      subj_label = format_inline(" ({n_subj} patient{?s}: {subj})")
+    }
+    fun("Issue #{col_green(issue_n)}: {message}{subj_label}")
   }
   invisible(df)
 }
