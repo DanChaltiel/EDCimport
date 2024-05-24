@@ -2,9 +2,19 @@
 % Please edit documentation in R/helpers.R
 \name{edc_data_warn}
 \alias{edc_data_warn}
+\alias{edc_data_stop}
 \title{Standardized warning system}
 \usage{
 edc_data_warn(
+  df,
+  message,
+  ...,
+  issue_n = NULL,
+  max_subjid = 5,
+  col_subjid = get_subjid_cols()
+)
+
+edc_data_stop(
   df,
   message,
   ...,
@@ -27,13 +37,16 @@ edc_data_warn(
 \item{col_subjid}{column name for subject ID}
 }
 \value{
-nothing
+\code{df} invisibly
 }
 \description{
-Database issues should be traced in a separate table file, with an identifying row number
+Database issues should be traced in a separate table file, with an identifying row number.
 }
 \examples{
 tm = edc_example_mixed()
 a = tm$long_pure \%>\% dplyr::filter(val1a>2)
 edc_data_warn(a, "{.val val1} should be lesser than 2", issue_n=1)
+\dontrun{
+edc_data_stop(a, "{.val val1} should *really* be lesser than 2", issue_n=2)
+}
 }

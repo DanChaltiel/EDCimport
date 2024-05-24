@@ -410,7 +410,7 @@ reset_manual_correction = function(){
 
 #' Standardized warning system
 #' 
-#' Database issues should be traced in a separate table file, with an identifying row number
+#' Database issues should be traced in a separate table file, with an identifying row number. 
 #'
 #' @param df the filtered dataframe
 #' @param message the message. Can use {cli} formats.
@@ -419,22 +419,47 @@ reset_manual_correction = function(){
 #' @param col_subjid column name for subject ID
 #' @param ... unused 
 #'
-#' @return nothing
+#' @return `df` invisibly
 #' @export
 #' @importFrom stringr str_pad
-#' @importFrom cli cli_vec cli_warn format_inline col_green
+#' @importFrom cli cli_vec cli_warn cli_abort format_inline col_green
 #' @importFrom dplyr pull
 #'
 #' @examples
 #' tm = edc_example_mixed()
 #' a = tm$long_pure %>% dplyr::filter(val1a>2)
 #' edc_data_warn(a, "{.val val1} should be lesser than 2", issue_n=1)
+#' \dontrun{
+#' edc_data_stop(a, "{.val val1} should *really* be lesser than 2", issue_n=2)
+#' }
 edc_data_warn = function(df, message, ..., 
                          issue_n=NULL, max_subjid=5, 
                          col_subjid=get_subjid_cols()){
   
   if (missing(max_subjid)) max_subjid = getOption("edc_warn_max_subjid", max_subjid)
   check_dots_empty()
+  edc_data_condition(df=df, message=message, issue_n=issue_n, 
+                     max_subjid=max_subjid, col_subjid=col_subjid, 
+                     fun=cli_warn)
+}
+
+#' @rdname edc_data_warn
+#' @export
+edc_data_stop = function(df, message, ..., 
+                         issue_n=NULL, max_subjid=5, 
+                         col_subjid=get_subjid_cols()){
+  
+  if (missing(max_subjid)) max_subjid = getOption("edc_warn_max_subjid", max_subjid)
+  check_dots_empty()
+  edc_data_condition(df=df, message=message, issue_n=issue_n, 
+                     max_subjid=max_subjid, col_subjid=col_subjid, 
+                     fun=cli_abort)
+}
+
+#' @noRd
+#' @keywords internal
+edc_data_condition = function(df, message, issue_n, max_subjid, 
+                              col_subjid, fun){
   if(nrow(df)>0){
     if(is.null(issue_n)) issue_n = "xx"
     else if(is.numeric(issue_n)) issue_n = str_pad(issue_n, width=2, pad="0")
@@ -443,10 +468,10 @@ edc_data_warn = function(df, message, ...,
     subj = paste0("#", subj) %>% 
       cli_vec(style=list("vec_trunc"=max_subjid, "vec-trunc-style"="head"))
     message = format_inline(message)
-    cli_warn("Issue #{col_green(issue_n)}: {message} ({n_subj} patient{?s}: {subj})")
+    fun("Issue #{col_green(issue_n)}: {message} ({n_subj} patient{?s}: {subj})")
   }
+  invisible(df)
 }
-
 
 
 # Getters -------------------------------------------------------------------------------------

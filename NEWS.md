@@ -13,12 +13,12 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
     -   `ae_table_grade_max()`, `ae_table_grade_n()`, and `ae_table_soc()` to generate standardized tables. They all can be turned to flextables using `as_flextable()`.
     -   `ae_plot_grade_max()`, `ae_plot_grade_n()`, and `ae_plot_soc()` to generate standardized plots.
 
--   New functions `edc_data_warn()` and `assert_no_rows()` to help performing data sanity checks.
+-   New functions `edc_data_warn()`, `edc_data_stop()`, and `assert_no_rows()` to help performing data sanity checks.
 
     ``` r
     ae %>% filter(grade>5) %>% assert_no_rows()
     ae %>% filter(is.na(grade)) %>% edc_data_warn("Grade is missing", issue_n=13)
-    #> Warning: Issue #13: Grade is missing (Patient 21, 28, 39, 95, 97, 120, 173, and 182)
+    #> Warning: Issue #13: Grade is missing (8 patients: #21, #28, #39, #95, #97, ...)
     ```
 
 -   New function `fct_yesno()`, to easily format Yes/No columns.
