@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1.9027</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1.9028</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,12 +69,12 @@
 <code><a href="../reference/ae_plot_grade_max.html">ae_plot_grade_max()</a></code>, <code><a href="../reference/ae_plot_grade_n.html">ae_plot_grade_n()</a></code>, and <code><a href="../reference/ae_plot_soc.html">ae_plot_soc()</a></code> to generate standardized plots.</li>
 </ul></li>
 <li>
-<p>New functions <code><a href="../reference/edc_data_warn.html">edc_data_warn()</a></code> and <code><a href="../reference/assert_no_rows.html">assert_no_rows()</a></code> to help performing data sanity checks.</p>
+<p>New functions <code><a href="../reference/edc_data_warn.html">edc_data_warn()</a></code>, <code><a href="../reference/edc_data_warn.html">edc_data_stop()</a></code>, and <code><a href="../reference/assert_no_rows.html">assert_no_rows()</a></code> to help performing data sanity checks.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">ae</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">grade</span><span class="op">&gt;</span><span class="fl">5</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/assert_no_rows.html">assert_no_rows</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">ae</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">grade</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/edc_data_warn.html">edc_data_warn</a></span><span class="op">(</span><span class="st">"Grade is missing"</span>, issue_n<span class="op">=</span><span class="fl">13</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Issue #13: Grade is missing (Patient 21, 28, 39, 95, 97, 120, 173, and 182)</span></span></code></pre></div>
+<span><span class="co">#&gt; Warning: Issue #13: Grade is missing (8 patients: #21, #28, #39, #95, #97, ...)</span></span></code></pre></div>
 </li>
 <li><p>New function <code><a href="../reference/fct_yesno.html">fct_yesno()</a></code>, to easily format Yes/No columns.</p></li>
 <li><p>New function <code><a href="../reference/save_plotly.html">save_plotly()</a></code>, to save a <code>plotly</code> to an HTML file.</p></li>
