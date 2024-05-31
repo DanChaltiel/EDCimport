@@ -10,7 +10,7 @@
 #' @param trialmaster_pw the password of the trialmaster zip archive. For instance, you can use `edc_options(trialmaster_pw="my_pwd")` in the console once per session, so that you don't have to write the password in clear in your R code
 #' @param path_7zip the path to the 7zip executable. Default to `"C:/Program Files/7-Zip/"`.
 #' @param edc_lookup **(Internal)** a reference to the lookup table (usually `.lookup`). Should usually not be changed manually.
-#' @param edc_subjid_ref **used in [check_subjid]** the vector of the reference subject IDs. You should usually write `edc_options(edc_subjid_ref=enrolres$subjid)`.
+#' @param edc_subjid_ref **used in [assert_no_missing_patient]** the vector of the reference subject IDs. You should usually write `edc_options(edc_subjid_ref=enrolres$subjid)`.
 #' @param edc_plotly **used in [edc_swimmerplot]** whether to use plotly to visualize the plot.
 #' @param edc_fct_yesno **used in [fct_yesno]** list of values to be considered as Yes/No values. Defaults to `get_yesno_lvl()`.
 #' @param edc_cols_subjid,edc_cols_meta **used in [get_key_cols]** the name of the columns holding the subject id (default to `c("ptno", "subjid")`) and the CRF form name (default to `c("crfname")`). It is case-insensitive.

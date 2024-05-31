@@ -75,7 +75,7 @@ find_keyword = function(keyword, data=get_lookup(), ignore_case=TRUE){
 
 #' Check the completion of the subject ID column
 #' 
-#' Compare a subject ID vector to the study's reference subject ID (usually something like `enrolres$subjid`).
+#' Compare a subject ID vector to the study's reference subject ID (usually something like `enrolres$subjid`). `check_subjid()` is the old, deprecated name.
 #'
 #' @param x the subject ID column to check, or a dataframe which ID column will be guessed
 #' @param ref the reference for subject ID. Should usually be set through `edc_options(edc_subjid_ref=xxx)`. See example.
@@ -92,29 +92,36 @@ find_keyword = function(keyword, data=get_lookup(), ignore_case=TRUE){
 #' options(edc_subjid_ref=db0$SUBJID)
 #' #usually, you set something like:
 #' #options(edc_subjid_ref=enrolres$subjid)
-#' check_subjid(db1)
-#' db1 %>% dplyr::filter(SUBJID>1) %>% check_subjid()
-#' check_subjid(c(db1$SUBJID, 99, 999))
-check_subjid = function(x, ref=getOption("edc_subjid_ref")){
+#' assert_no_missing_patient(db1)
+#' db1 %>% dplyr::filter(SUBJID>1) %>% assert_no_missing_patient()
+#' assert_no_missing_patient(c(db1$SUBJID, 99, 999))
+assert_no_missing_patient = function(x, ref=getOption("edc_subjid_ref")){
   if(is.null(ref)){
-    cli_abort("{.arg ref} cannot be NULL in {.fun check_subjid}. See {.help EDCimport::check_subjid} to see how to set it.")
+    cli_abort("{.arg ref} cannot be NULL in {.fun assert_no_missing_patient}. See {.help EDCimport::assert_no_missing_patient} to see how to set it.")
   }
   x_name = rlang::caller_arg(x)
   if(is.data.frame(x)){
-    x = x %>% select(any_of(get_key_cols()$patient_id)) %>% pull()
+    x = x %>% select(any_of(get_subjid_cols())) %>% pull()
   }
   ref = sort(unique(ref))
   m = setdiff(ref, x) %>% sort()
   if(length(m) > 0){
     cli_warn("Missing {length(m)} subject{?s} ID in {.arg {x_name}}: {.val {m}}",
-             class = "edc_check_subjid_miss")
+             class = "edc_assert_no_missing_patient_miss")
   }
   m = setdiff(x, ref) %>% sort()
   if(length(m)>0){
     cli_warn("Additional {length(m)} subject{?s} ID in {.arg {x_name}}: {.val {m}}",
-             class="edc_check_subjid_additional")
+             class="edc_assert_no_missing_patient_additional")
   }
-  invisible(NULL)
+  invisible(x)
+}
+
+#' @rdname assert_no_missing_patient
+#' @usage NULL
+#' @export
+check_subjid = function(x){
+  lifecycle::deprecate_warn("5.0.0", "check_subjid()", "assert_no_missing_patient()")
 }
 
 #' Assert that a dataframe has one row per patient
