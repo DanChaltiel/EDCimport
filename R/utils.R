@@ -325,5 +325,17 @@ init_project = function(path){
   writeLines(con="R/read.R", "#read")
   writeLines(con="R/report.R", "#report")
   writeLines(con="R/description.R", "#description")
+  
+  
+  data <- list(Project = "My STUDY", 
+               Package = "My STUDY", 
+               Version = NULL, 
+               InitialBullet = "Initial version", 
+               Rmd = FALSE, on_github = FALSE, 
+               github_spec = NULL)
+  usethis::create_project(open=FALSE)
+  usethis::use_template("project-README", "README.md", data = data, open = TRUE)
+  usethis::use_template("NEWS.md", data = data, open = TRUE)
+  #TODO: see ?usethis::use_template for custom templates
 }
 
