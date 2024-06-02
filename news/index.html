@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1.9028</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1.9029</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -93,7 +93,7 @@
 <li>
 <code><a href="../reference/read_trialmaster.html">read_trialmaster()</a></code> will output a readable error when no password is entered although one is needed.</li>
 <li>
-<code><a href="../reference/check_subjid.html">check_subjid()</a></code> can either take a vector or a dataframe as input, and the message is more informative.</li>
+<code><a href="../reference/assert_no_missing_patient.html">check_subjid()</a></code> can either take a vector or a dataframe as input, and the message is more informative.</li>
 <li>
 <code><a href="../reference/get_lookup.html">get_lookup()</a></code> will now retreive the lookup table. Use <code><a href="../reference/build_lookup.html">build_lookup()</a></code> to build is from a table list.</li>
 <li>
@@ -112,12 +112,12 @@
 <h2 class="pkg-version" data-toc-text="0.4.0" id="edcimport-040">EDCimport 0.4.0<a class="anchor" aria-label="anchor" href="#edcimport-040"></a></h2><p class="text-muted">CRAN release: 2023-12-11</p>
 <div class="section level4">
 <h4 id="new-features-0-4-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-4-0"></a></h4>
-<ul><li>New function <code><a href="../reference/check_subjid.html">check_subjid()</a></code> to check if a vector is not missing some patients (<a href="https://github.com/DanChaltiel/EDCimport/issues/8" class="external-link">#8</a>).</li>
+<ul><li>New function <code><a href="../reference/assert_no_missing_patient.html">check_subjid()</a></code> to check if a vector is not missing some patients (<a href="https://github.com/DanChaltiel/EDCimport/issues/8" class="external-link">#8</a>).</li>
 </ul><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>edc_subjid_ref<span class="op">=</span><span class="va">enrolres</span><span class="op">$</span><span class="va">subjid</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/check_subjid.html">check_subjid</a></span><span class="op">(</span><span class="va">treatment</span><span class="op">$</span><span class="va">subjid</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/check_subjid.html">check_subjid</a></span><span class="op">(</span><span class="va">ae</span><span class="op">$</span><span class="va">subjid</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/assert_no_missing_patient.html">check_subjid</a></span><span class="op">(</span><span class="va">treatment</span><span class="op">$</span><span class="va">subjid</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/assert_no_missing_patient.html">check_subjid</a></span><span class="op">(</span><span class="va">ae</span><span class="op">$</span><span class="va">subjid</span><span class="op">)</span></span></code></pre></div>
 <ul><li>New function <code><a href="../reference/assert_no_duplicate.html">assert_no_duplicate()</a></code> to abort if a table has duplicates in a subject ID column(<a href="https://github.com/DanChaltiel/EDCimport/issues/9" class="external-link">#9</a>).</li>
 </ul><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>

@@ -43,13 +43,13 @@
     <loc>https://danchaltiel.github.io/EDCimport/reference/assert_no_duplicate.html</loc>
   </url>
   <url>
+    <loc>https://danchaltiel.github.io/EDCimport/reference/assert_no_missing_patient.html</loc>
+  </url>
+  <url>
     <loc>https://danchaltiel.github.io/EDCimport/reference/assert_no_rows.html</loc>
   </url>
   <url>
     <loc>https://danchaltiel.github.io/EDCimport/reference/build_lookup.html</loc>
-  </url>
-  <url>
-    <loc>https://danchaltiel.github.io/EDCimport/reference/check_subjid.html</loc>
   </url>
   <url>
     <loc>https://danchaltiel.github.io/EDCimport/reference/data_example.html</loc>
