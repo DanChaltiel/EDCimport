@@ -183,32 +183,59 @@ ae_table_soc = function(
 as_flextable.ae_table_soc = function(x, arm_colors=c("#f2dcdb", "#dbe5f1", "#ebf1dd", "#e5e0ec")
 ){
   table_ae_header = attr(x, "header")
-  arm_cols = names(table_ae_header) %>% set_names() %>% 
-    map_int(~{
-      pattern = paste0("^", .x, "_(G\\d|Tot)$")
-      sum(str_detect(names(x), pattern))
-    })
-  table_ae_header = table_ae_header[arm_cols>0]
-  arm_cols = arm_cols[arm_cols>0]
+  if(FALSE){
+    arm_cols = names(table_ae_header) %>% set_names() %>%
+      map_int(~{
+        pattern = paste0("^", .x, "_(G\\d|NA|Tot)$")
+        sum(str_detect(names(x), pattern))
+      })
+    table_ae_header = table_ae_header[arm_cols>0]
+    arm_cols = arm_cols[arm_cols>0]
+
+    col1 = names(x) %>% str_detect(names(table_ae_header)[1]) %>% which() %>% min() - 1
+    colwidths = c(col1, arm_cols)
+    header_labels = set_names(names(x)) %>% map(~str_replace_all(.x, ".*_", ""))
+    header_labels$soc = "CTCAE SOC"
+    header_labels$term = "CTCAE v4.0 Term"
+  }
+  # https://github.com/tidyverse/tidyr/issues/1551
+  header_df = names(x) %>% 
+    as_tibble_col("col_keys") %>% 
+    separate_wider_regex(col_keys, c(h1 = ".*", "_", h2 = ".*"), too_few="align_start", cols_remove=FALSE) %>% 
+    transmute(
+      col_keys,
+      row1 = case_match(h1, 
+                        "soc" ~ "", 
+                        "term" ~ "", 
+                        .default=table_ae_header[h1]),
+      row2 = case_match(h1, 
+                        "soc" ~ "CTCAE SOC", 
+                        "term" ~ "CTCAE v4.0 Term", 
+                        .default=h2)
+    )
   
-  col1 = names(x) %>% str_detect(names(table_ae_header)[1]) %>% which() %>% min() - 1
-  colwidths = c(col1, arm_cols)
-  header_labels = set_names(names(x)) %>% map(~str_replace_all(.x, ".*_", ""))
-  header_labels$soc = "CTCAE SOC"
-  header_labels$term = "CTCAE v4.0 Term"
+  col1 = header_df$col_keys %in% c("soc", "term") %>% which() %>% max()
+  
+  sep_cols = with(header_df, !col_keys %in% c("soc", "term") & row1!=lead(row1)) %>% 
+    which() %>% unname() %>% c(ncol(x))
   
   rtn = x %>%
     flextable::flextable() %>%
-    flextable::set_header_labels(values=header_labels) %>%
-    flextable::add_header_row(values=c(" ", table_ae_header), colwidths = colwidths) %>%
+    flextable::set_header_df(mapping=header_df) %>%
+    # flextable::hline_top(part="header") %>% 
+    flextable::hline_bottom(part="header") %>% 
+    flextable::merge_h(part="header") %>%
+    # flextable::set_header_labels(values=header_labels) %>%
+    # flextable::add_header_row(values=c(" ", table_ae_header), colwidths = colwidths) %>%
     flextable::align(i=1, part="header", align="center") %>%
     flextable::align(j=seq(col1), part="all", align="right") %>%
     flextable::padding(padding.top=0, padding.bottom=0) %>%
-    flextable::autofit() %>% 
+    flextable::set_table_properties(layout="autofit") %>% 
     flextable::fontsize(size=8, part="all") %>%
     flextable::bold(part="header")
   
-  a = cumsum(colwidths)[-1]
+  # a = cumsum(colwidths)[-1]
+  a = sep_cols
   for(i in seq_along(a)){
     from = lag(a, default=col1)[i] + 1
     to = a[i]
