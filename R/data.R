@@ -1,4 +1,29 @@
 
+sample_soc = c(
+  "Gastrointestinal disorders",
+  "General disorders and administration site conditions",
+  "Renal and urinary disorders",
+  "Blood and lymphatic system disorders",
+  "Reproductive system and breast disorders",
+  "Infections and infestations",
+  "Investigations",
+  "Metabolism and nutrition disorders",
+  "Skin and subcutaneous tissue disorders",
+  "Ear and labyrinth disorders",
+  "Nervous system disorders",
+  "Musculoskeletal and connective tissue disorders",
+  "Vascular disorders",
+  "Endocrine disorders",
+  "Respiratory, thoracic and mediastinal disorders",
+  "Psychiatric disorders",
+  "Hepatobiliary disorders",
+  "Cardiac disorders",
+  "Immune system disorders",
+  "Injury, poisoning and procedural complications",
+  "Eye disorders",
+  "Neoplasms benign, malignant and unspecified (incl cysts and polyps)",
+  "Surgical and medical procedures"
+)
 
 
 #' Example databases
@@ -85,9 +110,9 @@ edc_example = edc_example_plot
 
 #' @rdname data_example
 #' @export
-#' @importFrom dplyr mutate n
+#' @importFrom dplyr mutate n select
 #' @importFrom purrr imap map
-#' @importFrom stats rbinom
+#' @importFrom stats rbinom runif
 #' @importFrom tibble lst tibble
 #' @importFrom tidyr unnest
 edc_example_ae = function(N=50, seed=42){
@@ -111,15 +136,4 @@ edc_example_ae = function(N=50, seed=42){
   set_lookup(rtn$.lookup)
   rtn
 }
-
-sample_soc = c("Gastrointestinal disorders", "General disorders and administration site conditions", 
-        "Renal and urinary disorders", "Blood and lymphatic system disorders", 
-        "Reproductive system and breast disorders", "Infections and infestations", 
-        "Investigations", "Metabolism and nutrition disorders", "Skin and subcutaneous tissue disorders", 
-        "Ear and labyrinth disorders", "Nervous system disorders", "Musculoskeletal and connective tissue disorders", 
-        "Vascular disorders", "Endocrine disorders", "Respiratory, thoracic and mediastinal disorders", 
-        "Psychiatric disorders", "Hepatobiliary disorders", "Cardiac disorders", 
-        "Immune system disorders", "Injury, poisoning and procedural complications", 
-        "Eye disorders", "Neoplasms benign, malignant and unspecified (incl cysts and polyps)", 
-        "Surgical and medical procedures")
 

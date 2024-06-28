@@ -121,7 +121,6 @@ read_trialmaster = function(archive, ..., use_cache="write",
 #' @export
 #' @importFrom cli cli_abort cli_warn
 #' @importFrom dplyr across distinct mutate na_if select
-#' @importFrom forcats as_factor
 #' @importFrom haven read_xpt
 #' @importFrom purrr imap iwalk keep keep_at map_lgl pwalk walk
 #' @importFrom rlang check_dots_empty is_error set_names
@@ -174,7 +173,7 @@ read_tm_all_xpt = function(directory, ..., format_file="procformat.sas",
   .lookup = build_lookup(rtn)
   bad_utf8 = check_invalid_utf8(.lookup, warn=verbose>1)
   bad_utf8 %>%
-    purrr::pwalk(function(...) {
+    pwalk(function(...) {
       x = tibble(...)
       attr(rtn[[x$dataset]][[x$names]], "label") <<- x$valid_labels
     })
@@ -221,15 +220,15 @@ read_tm_all_xpt = function(directory, ..., format_file="procformat.sas",
   
   # faulty columns ----
   rtn %>% 
-    purrr::iwalk(function(data, name){
+    iwalk(function(data, name){
       if(is_error(data)) return(data)
       a = data %>% 
         select(where(~inherits(.x, "edc_error_col"))) %>% 
-        dplyr::distinct()
+        distinct()
       if(nrow(a)>1) cli_warn("Error 489 ({name}), please contact the developer.")
       if(nrow(a)>0){
         unlist(a) %>% unique() %>% 
-          purrr::walk(~{
+          walk(~{
             columns = names(a)[a==.x]
             cli_warn(c("Error when reading table {.val {name}} on {qty(columns)} column{?s} {.val {columns}}", 
                        x=.x),

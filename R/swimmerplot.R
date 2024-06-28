@@ -212,7 +212,7 @@ save_plotly = function(p, file, ...){
 #' @noRd
 #' @keywords internal
 parse_var = function(input, id, env){
-  input_name = rlang::caller_arg(input)
+  input_name = caller_arg(input)
   
   if(!str_detect(input, "^.*\\$.*$")){
     cli_abort(c(x="{.arg {input_name}} is not in the form `dataset$column`.", 

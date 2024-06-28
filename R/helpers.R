@@ -28,7 +28,7 @@
 #' find_keyword("(Trial|Form) Name")
 #' find_keyword("\\(") #you need to escape special characters
 #' }
-#' @importFrom cli cli_abort cli_warn
+#' @importFrom cli cli_warn
 #' @importFrom dplyr any_of filter mutate pull select
 #' @importFrom purrr map2_chr map2_dbl
 #' @importFrom stringr str_detect str_trim
@@ -99,7 +99,7 @@ assert_no_missing_patient = function(x, ref=getOption("edc_subjid_ref")){
   if(is.null(ref)){
     cli_abort("{.arg ref} cannot be NULL in {.fun assert_no_missing_patient}. See {.help EDCimport::assert_no_missing_patient} to see how to set it.")
   }
-  x_name = rlang::caller_arg(x)
+  x_name = caller_arg(x)
   if(is.data.frame(x)){
     x = x %>% select(any_of(get_subjid_cols())) %>% pull()
   }
@@ -120,8 +120,9 @@ assert_no_missing_patient = function(x, ref=getOption("edc_subjid_ref")){
 #' @rdname assert_no_missing_patient
 #' @usage NULL
 #' @export
+#' @importFrom lifecycle deprecate_warn
 check_subjid = function(x){
-  lifecycle::deprecate_warn("5.0.0", "check_subjid()", "assert_no_missing_patient()")
+  deprecate_warn("5.0.0", "check_subjid()", "assert_no_missing_patient()")
 }
 
 #' Assert that a dataframe has one row per patient
@@ -203,7 +204,7 @@ assert_no_rows = function(df, msg=NULL){
     cli_abort(msg)
   }
   invisible(NULL)
-} 
+}
 
 
 #' Format factor levels as Yes/No
@@ -290,6 +291,11 @@ get_yesno_lvl = function(add, keep_default=TRUE) {
 #' lastnews_table()
 #' lastnews_table(except="db3")
 #' lastnews_table(except="db3$date9")
+#' @importFrom cli cli_abort
+#' @importFrom dplyr arrange filter mutate rename select slice_max
+#' @importFrom purrr discard discard_at imap list_rbind
+#' @importFrom tidyr pivot_longer
+#' @importFrom tidyselect where
 lastnews_table = function(except=NULL, with_ties=FALSE) {
   subjid_cols = get_subjid_cols()
   a = get_datasets(envir=parent.frame()) %>% 
@@ -366,7 +372,7 @@ manual_correction = function(data, col, rows, wrong, correct,
                              verbose=getOption("edc_correction_verbose", TRUE)){
   col = as_name(enquo(col))
   stopifnot(is.data.frame(data))
-  data_name = rlang::caller_arg(data)
+  data_name = caller_arg(data)
   
   if(length(rows)!=length(wrong) || length(rows)!=length(correct)){
     cli_abort("{.arg rows} ({length(rows)}), {.arg wrong} ({length(wrong)}), and {.arg correct} ({length(correct)}) should be the same length.")
@@ -428,9 +434,7 @@ reset_manual_correction = function(){
 #'
 #' @return `df` invisibly
 #' @export
-#' @importFrom stringr str_pad
-#' @importFrom cli cli_vec cli_warn cli_abort format_inline col_green
-#' @importFrom dplyr pull
+#' @importFrom rlang check_dots_empty
 #'
 #' @examples
 #' tm = edc_example_mixed()
@@ -453,6 +457,7 @@ edc_data_warn = function(df, message, ...,
 
 #' @rdname edc_data_warn
 #' @export
+#' @importFrom rlang check_dots_empty
 edc_data_stop = function(df, message, ..., 
                          issue_n=NULL, max_subjid=5, 
                          col_subjid=get_subjid_cols()){
@@ -466,6 +471,9 @@ edc_data_stop = function(df, message, ...,
 
 #' @noRd
 #' @keywords internal
+#' @importFrom cli cli_vec format_inline
+#' @importFrom dplyr pull
+#' @importFrom stringr str_pad
 edc_data_condition = function(df, message, issue_n, max_subjid, 
                               col_subjid, fun){
   if(nrow(df)>0){
@@ -498,8 +506,8 @@ edc_data_condition = function(df, message, issue_n, max_subjid,
 #'
 #' @return a list of all datasets
 #' @export
-#' @importFrom purrr map
-#' @importFrom rlang set_names
+#' @importFrom cli cli_abort cli_warn
+#' @importFrom purrr keep
 get_datasets = function(lookup=get_lookup(), envir=parent.frame()){
   if(is.null(lookup)){
     cli_abort("lookup cannot be NULL, did you forgot to import your database?")
@@ -541,7 +549,7 @@ get_key_cols = function(lookup=get_lookup()){
   patient_id = get_subjid_cols()
   
   crfname = getOption("edc_cols_crfname", "CRFNAME")
-  lifecycle::deprecate_warn("1.0.0", "get_key_cols()")
+  deprecate_warn("1.0.0", "get_key_cols()")
   if(is.null(lookup)) return(lst(patient_id, crfname))
   
   f = function(x, y) x[tolower(x) %in% tolower(y)][1] %0% NA 
@@ -643,6 +651,7 @@ get_crfname_cols = function(lookup=get_lookup()){
 #' load_list(tm)
 #' meta_cols = get_meta_cols()
 #' long_mixed %>% dplyr::select(-dplyr::any_of(meta_cols))
+#' @importFrom dplyr filter pull setdiff
 get_meta_cols = function(min_pct = getOption("edc_meta_cols_pct", 0.95)){
   a = get_common_cols(min_datasets=0)
   subjid_cols = get_subjid_cols()
@@ -859,6 +868,7 @@ build_lookup = function(data_list){
 #' 
 #' @export
 #' @seealso [build_lookup()], [extend_lookup()]
+#' @importFrom cli cli_abort
 get_lookup = function(check_null=TRUE){
   lookup = getOption("edc_lookup")
   if(is.null(lookup) & isTRUE(check_null)){

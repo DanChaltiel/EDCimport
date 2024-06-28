@@ -202,7 +202,7 @@ copy_label_from = function(x, from){
   }
   from_labs = map_chr(from, ~attr(.x, "label") %||% NA)
   mutate(x, across(everything(), ~{
-    attr(.x, "label") = from_labs[dplyr::cur_column()]
+    attr(.x, "label") = from_labs[cur_column()]
     .x
   }))
 }
@@ -311,7 +311,9 @@ min_narm = function(x, na.rm=TRUE) if(all(is.na(x))) NA else min(x, na.rm=na.rm)
 
 
 # path = "F:/Nextcloud GR/04 - Comite Pediatrie/NIVOGLIO/Analyses/Analyse DRM"
+#' @importFrom rlang check_installed
 init_project = function(path){
+  check_installed("usethis")
   w = setwd(path)
   on.exit(setwd(w))
   

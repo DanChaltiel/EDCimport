@@ -13,7 +13,8 @@
 #'
 #' @return a crosstable (dataframe)
 #' @export
-#' @importFrom dplyr arrange full_join mutate recode rename_with select summarise
+#' @importFrom dplyr any_of arrange full_join if_else mutate recode select summarise
+#' @importFrom rlang check_dots_empty check_installed
 #'
 #' @examples
 #' 
@@ -70,10 +71,10 @@ ae_table_grade_max = function(
 #' @param drop_levels whether to drop unused grade levels.
 #'
 #' @return a patchwork of ggplots
-#' @importFrom dplyr arrange full_join mutate rename_with select summarise
-#' @importFrom ggplot2 aes geom_bar ggplot labs position_dodge scale_x_continuous scale_y_discrete theme waiver
+#' @importFrom dplyr any_of arrange distinct full_join mutate n select setdiff summarise
+#' @importFrom ggplot2 aes geom_bar geom_col ggplot labs position_dodge scale_x_continuous scale_y_discrete theme waiver
 #' @importFrom purrr map
-#' @importFrom rlang set_names
+#' @importFrom rlang check_dots_empty check_installed set_names
 #' @export
 #' 
 #' @examples
@@ -171,7 +172,7 @@ ae_plot_grade_max = function(
 #'
 #' @return a crosstable
 #' @importFrom dplyr across arrange count cur_column distinct filter full_join mutate rename_with select
-#' @importFrom rlang int
+#' @importFrom rlang check_dots_empty check_installed int
 #' @importFrom tibble deframe
 #' @export
 #'
@@ -210,9 +211,8 @@ ae_table_grade_n = function(
     filter(!is.na(soc)) 
   
   default_arm = "All patients" 
-  # `:=` = rlang::`:=`
   # browser()
-  npat = rlang::int(!!default_arm:=nrow(df_enrol)) 
+  npat = int(!!default_arm:=nrow(df_enrol)) 
   if(!is.null(arm)){
     npat = deframe(count(df_enrol, arm))
     npat["Total"] = sum(npat)
@@ -248,7 +248,11 @@ ae_table_grade_n = function(
 #'
 #' @return a ggplot
 #' @export
-#' @importFrom ggplot2 scale_fill_steps theme element_blank geom_col labs facet_grid vars 
+#' @importFrom dplyr across any_of arrange count full_join mutate rename_with select
+#' @importFrom forcats fct_infreq
+#' @importFrom ggplot2 aes element_blank facet_grid geom_col ggplot labs scale_fill_steps theme vars
+#' @importFrom rlang check_dots_empty int
+#' @importFrom tibble deframe
 #'
 #' @examples
 #' tm = edc_example_ae()
@@ -271,7 +275,7 @@ ae_plot_grade_n = function(
     arrange(subjid)
   
   default_arm = "All patients"
-  npat = rlang::int(!!default_arm:=nrow(df_enrol)) 
+  npat = int(!!default_arm:=nrow(df_enrol)) 
   if(!is.null(arm)){
     npat = deframe(count(df_enrol, arm))
     npat["Total"] = sum(npat)
@@ -282,7 +286,7 @@ ae_plot_grade_n = function(
   # browser()
   rtn =
     df %>% 
-    mutate(subjid = forcats::fct_infreq(factor(subjid))) %>% 
+    mutate(subjid = fct_infreq(factor(subjid))) %>% 
     count(across(c(subjid, grade, any_of("arm")))) %>% 
       mutate(n = ifelse(is.na(grade), 0.1, n)) %>% 
     # ggplot(aes(x=subjid, y=n, fill=fct_rev(factor(grade)))) + geom_col() +
@@ -302,6 +306,7 @@ ae_plot_grade_n = function(
 
 # Utils ---------------------------------------------------------------------------------------
 
+#' @importFrom dplyr na_if
 fix_grade = function(x){
   as.numeric(na_if(as.character(x), "NA"))
 }

@@ -39,7 +39,7 @@ edc_options = function(
     edc_read_verbose, edc_correction_verbose, edc_get_key_cols_verbose,
     edc_lookup_overwrite_warn,
     .local=FALSE){
-  rlang::check_dots_empty()
+  check_dots_empty()
   
   argg = as.list(match.call())
   argg = argg[have_name(argg)]

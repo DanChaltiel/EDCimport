@@ -46,12 +46,13 @@
 #'   as_flextable()
 #' }
 #' @importFrom cli cli_abort cli_warn
-#' @importFrom dplyr any_of arrange bind_rows count desc filter full_join if_else lag left_join mutate pull rename_with select summarise transmute
+#' @importFrom dplyr across any_of arrange bind_rows count desc filter full_join if_else lag left_join mutate pull rename_with select summarise transmute
 #' @importFrom forcats fct_relabel
 #' @importFrom glue glue
 #' @importFrom purrr discard iwalk keep map
-#' @importFrom rlang ensym is_empty set_names
-#' @importFrom stringr str_replace
+#' @importFrom rlang check_dots_empty ensym is_empty set_names
+#' @importFrom stringr str_remove str_replace
+#' @importFrom testthat expect_false
 #' @importFrom tibble deframe lst
 #' @importFrom tidyr pivot_wider
 ae_table_soc = function(
@@ -176,12 +177,15 @@ ae_table_soc = function(
 #' @rdname ae_table_soc
 #' @exportS3Method flextable::as_flextable
 
-#' @importFrom dplyr lag
+#' @importFrom dplyr case_match lag lead transmute
 #' @importFrom purrr map map_int
-#' @importFrom rlang set_names
-#' @importFrom stringr str_detect str_replace_all str_starts
+#' @importFrom rlang check_installed set_names
+#' @importFrom stringr str_detect str_replace_all
+#' @importFrom tibble as_tibble_col
+#' @importFrom tidyr separate_wider_regex
 as_flextable.ae_table_soc = function(x, arm_colors=c("#f2dcdb", "#dbe5f1", "#ebf1dd", "#e5e0ec")
 ){
+  check_installed("flextable")
   table_ae_header = attr(x, "header")
   if(FALSE){
     arm_cols = names(table_ae_header) %>% set_names() %>%
@@ -259,10 +263,16 @@ as_flextable.ae_table_soc = function(x, arm_colors=c("#f2dcdb", "#dbe5f1", "#ebf
 #'
 #' @return a crosstable (dataframe)
 #' @export
-#' @importFrom dplyr arrange full_join mutate rename_with select summarise
-#' @importFrom ggplot2 aes geom_col ggplot labs unit
+#' @importFrom cli cli_abort
+#' @importFrom dplyr any_of arrange count filter full_join left_join mutate pull select summarise
+#' @importFrom forcats fct_reorder
+#' @importFrom ggplot2 aes facet_grid geom_col ggplot labs scale_x_continuous theme unit vars
+#' @importFrom glue glue
+#' @importFrom rlang check_dots_empty
 #' @importFrom scales label_percent
+#' @importFrom stats na.omit
 #' @importFrom stringr str_remove
+#' @importFrom utils head
 #'
 #' @examples
 #' 
@@ -310,7 +320,7 @@ ae_plot_soc = function(
               .by=any_of(c("arm_", "soc_"))) %>%  
     left_join(df_arm, by="arm_") %>% 
     mutate(
-      soc_ = forcats::fct_reorder(soc_, n_ae),
+      soc_ = fct_reorder(soc_, n_ae),
       n_ae = n_ae * ifelse(arm_==left_arm, -1, 1),
       n_severe = n_severe * ifelse(arm_==left_arm, -1, 1),
       pct_ae = n_ae/n_arm,

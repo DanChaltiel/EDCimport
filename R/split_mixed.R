@@ -34,6 +34,11 @@ table_format = function(df, id=get_subjid_cols(), ...,
 
 #' @noRd
 #' @keywords internal
+#' @importFrom cli cli_abort cli_warn
+#' @importFrom dplyr across select summarise
+#' @importFrom purrr map_dbl
+#' @importFrom rlang check_dots_empty
+#' @importFrom tidyselect everything
 .table_format = function(df, id=get_subjid_cols(), ..., 
                          ignore_cols=get_meta_cols(0.95), 
                          na_rm=FALSE,
@@ -78,7 +83,7 @@ table_format = function(df, id=get_subjid_cols(), ...,
 #' @importFrom cli cli_bullets cli_warn
 #' @importFrom dplyr across group_by select summarise summarise_all ungroup
 #' @importFrom glue glue
-#' @importFrom purrr discard discard_at imap keep keep_at list_flatten map_chr
+#' @importFrom purrr discard discard_at imap keep list_flatten map_chr
 #' @importFrom rlang check_dots_empty
 #' @importFrom tibble lst
 #' @importFrom tidyselect all_of everything
