@@ -52,7 +52,6 @@
 #' @importFrom purrr discard iwalk keep map
 #' @importFrom rlang check_dots_empty ensym is_empty set_names
 #' @importFrom stringr str_remove str_replace
-#' @importFrom testthat expect_false
 #' @importFrom tibble deframe lst
 #' @importFrom tidyr pivot_wider
 ae_table_soc = function(

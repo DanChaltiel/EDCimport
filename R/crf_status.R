@@ -26,6 +26,13 @@
 #' #> [1] "Incomplete"        "No Data Locked"    "No Data"           "Signed"           
 #' #> [5] "Partial Monitored" "Monitored"         "Complete Locked"   "Complete" 
 #' }
+#' @importFrom dplyr count last mutate select
+#' @importFrom forcats fct_reorder2 fct_rev
+#' @importFrom ggplot2 aes geom_col ggplot labs position_fill scale_fill_manual scale_x_continuous
+#' @importFrom purrr list_rbind map
+#' @importFrom scales label_percent
+#' @importFrom stringr str_subset
+#' @importFrom tibble tibble
 crf_status_plot = function(crfstat_col="CRFSTAT", 
                       pal = edc_crf_pal(), 
                       crfstat_lvls = names(pal), 
@@ -77,4 +84,3 @@ edc_crf_pal = function(){
     "Incomplete"="#ED0000FF"
   )
 }
-

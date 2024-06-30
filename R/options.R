@@ -22,7 +22,7 @@
 #' @param .local  if TRUE, the effect will only apply to the local frame (internally using `rlang::local_options()`)
 #'
 #' @return Nothing, called for its side effects
-#' @importFrom rlang caller_env check_dots_empty have_name local_options
+#' @importFrom rlang caller_env check_dots_empty have_name
 #' @export
 edc_options = function(
     ...,

@@ -85,7 +85,7 @@ get_folder_datetime = function(folder, verbose=TRUE){
   mtime=NULL
   rtn = dir(folder, full.names=TRUE) %>% file.info() %>% count(mtime=round(mtime, "secs"))
   if(isTRUE(verbose) && nrow(rtn)>1){
-    cli::cli_warn(c("Folder {.file {folder}} contains files with different modification times. 
+    cli_warn(c("Folder {.file {folder}} contains files with different modification times. 
                     The most frequent one was returned.", 
                     i="Times: {.val {rtn$mtime}}"),
                   class="get_folder_datetime_modiftime_warning")
@@ -338,6 +338,6 @@ init_project = function(path){
   usethis::create_project(open=FALSE)
   usethis::use_template("project-README", "README.md", data = data, open = TRUE)
   usethis::use_template("NEWS.md", data = data, open = TRUE)
+  usethis::use_blank_slate(scope="project")
   #TODO: see ?usethis::use_template for custom templates
 }
-
