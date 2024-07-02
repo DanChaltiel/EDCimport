@@ -9,6 +9,7 @@
 #' @param pal the palette, defaulting to the helper `EDCimport:::edc_crf_pal()`
 #' @param details whether to show all the CRF status levels. When `FALSE` (default), recode the status into "Complete", "Incomplete", or "No Data".
 #' @param crfstat_lvls the CRF status levels, from "best" to "worst". The plot is ordered by the "worst" level. 
+#' @param x_label a glue pattern determining the tick label in the x axis. Available variables are `c("nrow", "ncol", "n_id", "rows_per_id", "crfname")`, taken from [get_lookup()].
 #' @param treat_as_worst a regex for levels that should be treated as worst in the ordering
 #'
 #' @return a ggplot
@@ -20,6 +21,7 @@
 #' crf_status_plot() + ggtitle(date_extraction)
 #' crf_status_plot(pal=rev(edc_crf_pal()))
 #' crf_status_plot(details=TRUE, treat_as_worst="No Data")
+#' crf_status_plot(x_label="{crfname} (N={n_id}, n={nrow})")
 #' 
 #' p = crf_status_plot(details=TRUE)
 #' p$data$crfstat %>% unique()
@@ -38,6 +40,7 @@ crf_status_plot = function(crfstat_col="CRFSTAT",
                            details=FALSE,
                            pal = edc_crf_pal(), 
                            crfstat_lvls = names(pal), 
+                           x_label = "{dataset}",
                            treat_as_worst=NULL){
   check_dots_empty()
   
@@ -56,17 +59,18 @@ crf_status_plot = function(crfstat_col="CRFSTAT",
     list_rbind(names_to="dataset") %>% 
     mutate(crfstat = edf_crfstat_recode(crfstat, do=!details)) %>% 
     count(dataset, crfstat) %>% 
+    left_join(get_lookup(), by="dataset") %>% 
     mutate(
-      # a = browser(),
       crfstat = factor(crfstat, levels=crfstat_lvls) %>% fct_drop() %>% fct_rev(),
-      dataset = fct_reorder2(dataset, crfstat, n,
+      dataset = fct_reorder2(dataset, crfstat, n, #arrange by complete then by incomplete
                              .fun=function(x,y) y[x=="Complete"]/sum(y)) %>% fct_rev(),
       dataset = fct_reorder2(dataset, crfstat, n, .fun=completion_reorder)
-    )
+    ) %>% 
+    arrange(dataset)
   
-  
-  df %>% 
-    ggplot(aes(y=dataset, x=n, fill=fct_rev(crfstat))) +
+  df %>%
+    mutate(title = glue(x_label) %>% fct_inorder()) %>%
+    ggplot(aes(y=title, x=n, fill=fct_rev(crfstat))) +
     geom_col(position=position_fill(reverse=TRUE)) +
     scale_fill_manual(values=pal) +
     scale_x_continuous(labels=label_percent()) +
