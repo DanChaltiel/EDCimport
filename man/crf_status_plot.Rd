@@ -22,6 +22,8 @@ edc_crf_pal()
 \arguments{
 \item{crfstat_col}{the column name of the CRF status}
 
+\item{details}{whether to show all the CRF status levels. When \code{FALSE} (default), recode the status into "Complete", "Incomplete", or "No Data".}
+
 \item{pal}{the palette, defaulting to the helper \code{EDCimport:::edc_crf_pal()}}
 
 \item{crfstat_lvls}{the CRF status levels, from "best" to "worst". The plot is ordered by the "worst" level.}

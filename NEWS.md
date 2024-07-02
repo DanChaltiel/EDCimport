@@ -8,6 +8,8 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 -   New function `lastnews_table()` to find the last date an information has been entered for each patient.
 
+-   New function `crf_status_plot()` to show the current database completion status.
+
 -   New functions to describe adverse events:
 
     -   `ae_table_grade_max()`, `ae_table_grade_n()`, and `ae_table_soc()` to generate standardized tables. They all can be turned to flextables using `as_flextable()`.
