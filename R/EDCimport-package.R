@@ -1,7 +1,7 @@
 #' @keywords internal
 #' @importFrom dplyr %>% 
 #' @importFrom rlang %||% := 
-#' @importFrom cli qty
+#' @importFrom cli qty col_green
 "_PACKAGE"
 
 ## usethis namespace: start
@@ -15,6 +15,11 @@ NULL
 #' @importFrom dplyr %>%
 #' @export
 dplyr::`%>%`
+
+#' @importFrom tibble tibble
+#' @export
+tibble::tibble
+
 
 # Global settings -----------------------------------------------------------------------------
 
