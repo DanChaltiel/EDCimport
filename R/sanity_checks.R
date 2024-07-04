@@ -218,9 +218,6 @@ edc_data_condition = function(df, message, issue_n, max_subjid,
 }
 
 
-edcimport_env = rlang::env()
-edcimport_env$warn_list = list()
-
 #' @noRd
 #' @keywords internal
 save_warn_list_item = function(item){
