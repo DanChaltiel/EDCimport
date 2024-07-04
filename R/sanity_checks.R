@@ -45,13 +45,6 @@ assert_no_missing_patient = function(x, ref=getOption("edc_subjid_ref")){
 }
 
 
-#' @rdname assert_no_missing_patient
-#' @usage NULL
-#' @export
-#' @importFrom lifecycle deprecate_warn
-check_subjid = function(x){
-  deprecate_warn("5.0.0", "check_subjid()", "assert_no_missing_patient()")
-}
 
 
 #' Assert that a dataframe has one row per patient
@@ -112,28 +105,6 @@ assert_no_duplicate = function(df, by=NULL, id_col=get_subjid_cols()){
 }
 
 
-#' Assert that a dataframe has no rows
-#' 
-#' Check that a dataframe is empty in a pipeable style. \cr
-#' Mostly useful for sanity checks.
-#'
-#' @param df a dataframe
-#' @param msg (optional) a custom message to be output (e.g. with the underlying reason)
-#'
-#' @return nothing
-#' @export
-#' @importFrom cli cli_abort
-#'
-#' @examples
-#' tm = edc_example()
-#' tm$db0 %>% dplyr::filter(age>100) %>% assert_no_rows()
-assert_no_rows = function(df, msg=NULL){
-  if(nrow(df)>0){
-    if(is.null(msg)) msg = "Dataframe should have no rows but has {nrow(df)}."
-    cli_abort(msg)
-  }
-  invisible(NULL)
-}
 
 
 
@@ -264,4 +235,26 @@ edc_data_warnings = function(){
   edcimport_env$warn_list %>% 
     list_rbind() %>% 
     arrange(across(any_of(c("issue_n", "message"))))
+}
+
+
+
+# Deprecated ----------------------------------------------------------------------------------
+
+
+#' @rdname assert_no_missing_patient
+#' @usage NULL
+#' @export
+#' @importFrom lifecycle deprecate_warn
+check_subjid = function(x){
+  deprecate_warn("5.0.0", "check_subjid()", "assert_no_missing_patient()")
+}
+
+
+#' @rdname edc_data_warn
+#' @usage NULL
+#' @export
+#' @importFrom lifecycle deprecate_warn
+assert_no_rows = function(df, msg=NULL){
+  deprecate_warn("5.0.0", "assert_no_rows()", "edc_data_stop()")
 }

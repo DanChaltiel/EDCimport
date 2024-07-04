@@ -4,6 +4,7 @@
 \alias{edc_data_warn}
 \alias{edc_data_stop}
 \alias{edc_data_warnings}
+\alias{assert_no_rows}
 \title{Standardized warning system}
 \usage{
 edc_data_warn(
@@ -15,14 +16,7 @@ edc_data_warn(
   col_subjid = get_subjid_cols()
 )
 
-edc_data_stop(
-  df,
-  message,
-  ...,
-  issue_n = NULL,
-  max_subjid = 5,
-  col_subjid = get_subjid_cols()
-)
+edc_data_stop(...) #same arguments
 
 edc_data_warnings()
 }
@@ -43,7 +37,15 @@ edc_data_warnings()
 \code{df} invisibly
 }
 \description{
+When checking your data, filter your dataset to get only problematic rows. \cr
+Then, use either:
+\itemize{
+\item \code{edc_data_warn()} to generate a standardized warning that can be forwarded to the datamanager
+\item \code{edc_data_warn()} to abort the script if the problem is too serious
+}
+
 Database issues should be traced in a separate table file, with an identifying row number.
+Use \code{edc_data_warnings()} to generate such a file.
 }
 \examples{
 library(dplyr)
