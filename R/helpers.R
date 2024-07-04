@@ -188,6 +188,24 @@ lastnews_table = function(except=NULL, with_ties=FALSE) {
 }
 
 
+#' Shows how many code you wrote
+#'
+#' @param main the main R file, which sources the other ones
+#' @param Rdir the R directory, where sourced R files are located
+#'
+#' @return Nothing
+#' @export
+edc_inform_code = function(main="main.R", Rdir="R/"){
+  assert_file_exists(main)
+  sources = readLines(main) %>% 
+    str_subset(Rdir) %>% str_subset("^ *#", negate=TRUE) %>% str_extract('"(.*)"', group=TRUE) %>% 
+    set_names()
+  
+  rslt = sources %>% map_dbl(~readLines(.x) %>% length())
+  
+  cli_inform("Sourcing {length(rslt)} files in {.path {main}} for a total of {sum(rslt)} lines of code")
+}
+
 # Manual correction ---------------------------------------------------------------------------
 
 
