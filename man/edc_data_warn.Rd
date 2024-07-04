@@ -3,6 +3,7 @@
 \name{edc_data_warn}
 \alias{edc_data_warn}
 \alias{edc_data_stop}
+\alias{edc_data_warnings}
 \title{Standardized warning system}
 \usage{
 edc_data_warn(
@@ -22,6 +23,8 @@ edc_data_stop(
   max_subjid = 5,
   col_subjid = get_subjid_cols()
 )
+
+edc_data_warnings()
 }
 \arguments{
 \item{df}{the filtered dataframe}
@@ -43,11 +46,26 @@ edc_data_stop(
 Database issues should be traced in a separate table file, with an identifying row number.
 }
 \examples{
-tm = edc_example_mixed()
-a = tm$long_pure \%>\% dplyr::filter(val1a>2)
-edc_data_warn(a, "{.val val1} should be lesser than 2", issue_n=1)
-edc_data_warn(a, "{.val val1} should be lesser than 2", issue_n=1, col_subjid=NULL)
+library(dplyr)
+tm = edc_example()
+load_list(tm)
+db0 \%>\% 
+  filter(age>70) \%>\% 
+  edc_data_warn("Age should not be >70", issue_n=1)
+
+db0 \%>\% 
+  filter(age<25) \%>\% 
+  edc_data_warn("Age should not be <25", issue_n=2)
+
+db1 \%>\% 
+  filter(n()>1, .by=SUBJID) \%>\% 
+  edc_data_warn("There are duplicated patients in `db1`", issue_n=3)
+
+edc_data_warnings()
+
 \dontrun{
-edc_data_stop(a, "{.val val1} should *really* be lesser than 2", issue_n=2)
+db0 \%>\% 
+  filter(age<25) \%>\% 
+  edc_data_warn("Age should *really* not be <25")
 }
 }

@@ -139,7 +139,13 @@ assert_no_rows = function(df, msg=NULL){
 
 #' Standardized warning system
 #' 
+#' When checking your data, filter your dataset to get only problematic rows. \cr
+#' Then, use either:
+#'  * `edc_data_warn()` to generate a standardized warning that can be forwarded to the datamanager 
+#'  * `edc_data_warn()` to abort the script if the problem is too serious
+#'  
 #' Database issues should be traced in a separate table file, with an identifying row number. 
+#' Use `edc_data_warnings()` to generate such a file.
 #'
 #' @param df the filtered dataframe
 #' @param message the message. Can use {cli} formats.
@@ -187,6 +193,7 @@ edc_data_warn = function(df, message, ...,
 }
 
 #' @rdname edc_data_warn
+#' @usage edc_data_stop(...) #same arguments
 #' @export
 #' @importFrom rlang check_dots_empty
 edc_data_stop = function(df, message, ..., 
@@ -211,7 +218,7 @@ edc_data_condition = function(df, message, issue_n, max_subjid,
     if(is.null(issue_n)) issue_n = "xx"
     else if(is.numeric(issue_n)) issue_n = str_pad(issue_n, width=2, pad="0")
     message = format_inline(message)
-    subj_label = ""
+    subj_label = ""; subj=NULL
     if(!is.null(col_subjid)){
       subj = df %>% pull(any_of2(col_subjid)) %>% unique() %>% sort()
       n_subj = length(subj)
@@ -219,7 +226,42 @@ edc_data_condition = function(df, message, issue_n, max_subjid,
         cli_vec(style=list("vec_trunc"=max_subjid, "vec-trunc-style"="head"))
       subj_label = format_inline(" ({n_subj} patient{?s}: {subj})")
     }
+    
+    item = tibble(issue_n, message, subjid=list(subj), fun=caller_arg(fun))
+    save_warn_list_item(item)
     fun("Issue #{col_green(issue_n)}: {message}{subj_label}")
   }
   invisible(df)
+}
+
+
+edcimport_env = rlang::env()
+edcimport_env$warn_list = list()
+
+#' @noRd
+#' @keywords internal
+save_warn_list_item = function(item){
+  stopifnot(nrow(item)==1)
+  issue_n = item$issue_n
+  issue_key = paste0("issue_", item$issue_n)
+  current = edc_data_warnings()
+  if(item$issue_n %in% current$issue_n){
+    if(item$issue_n=="xx" && !item$message %in% current$message){
+      issue_key = paste0("issue_xx_", nrow(current))
+    } else {
+      cli_warn("Duplicate warning entry")
+    }
+  }
+  edcimport_env$warn_list[[issue_key]] = item
+  
+}
+
+
+#' @rdname edc_data_warn
+#' @usage edc_data_warnings()
+#' @export
+edc_data_warnings = function(){
+  edcimport_env$warn_list %>% 
+    list_rbind() %>% 
+    arrange(across(any_of(c("issue_n", "message"))))
 }
