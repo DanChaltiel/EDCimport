@@ -13,6 +13,7 @@ edc_data_warn(
   ...,
   issue_n = NULL,
   max_subjid = 5,
+  write_to_csv = FALSE,
   col_subjid = get_subjid_cols()
 )
 
@@ -23,13 +24,15 @@ edc_data_warnings()
 \arguments{
 \item{df}{the filtered dataframe}
 
-\item{message}{the message. Can use {cli} formats.}
+\item{message}{the message. Can use \href{https://cli.r-lib.org/reference/inline-markup.html#classes}{cli formats}.}
 
 \item{...}{unused}
 
-\item{issue_n}{(optional) identifying row number}
+\item{issue_n}{identifying row number}
 
 \item{max_subjid}{max number of subject ID to show in the message}
+
+\item{write_to_csv}{a path to save \code{df} in a csv file that can be shared with the DM for more details.}
 
 \item{col_subjid}{column name for subject ID. Set to \code{NULL} to ignore.}
 }
@@ -44,8 +47,8 @@ Then, use either:
 \item \code{edc_data_warn()} to abort the script if the problem is too serious
 }
 
-Database issues should be traced in a separate table file, with an identifying row number.
-Use \code{edc_data_warnings()} to generate such a file.
+Database issues should be traced in a separate file, each with an identifying row number, and the file should be shared with the data-manager. \cr
+Use \code{edc_data_warnings()} to generate the table for such a file.
 }
 \examples{
 library(dplyr)
@@ -68,6 +71,10 @@ edc_data_warnings()
 \dontrun{
 db0 \%>\% 
   filter(age<25) \%>\% 
-  edc_data_warn("Age should *really* not be <25")
+  edc_data_warn("Age should not be <25", write_to_csv="check/check_age_25.csv")
+  
+db0 \%>\% 
+  filter(age<25) \%>\% 
+  edc_data_stop("Age should *never* be <25")
 }
 }

@@ -115,12 +115,13 @@ assert_no_duplicate = function(df, by=NULL, id_col=get_subjid_cols()){
 #'  * `edc_data_warn()` to generate a standardized warning that can be forwarded to the datamanager 
 #'  * `edc_data_warn()` to abort the script if the problem is too serious
 #'  
-#' Database issues should be traced in a separate table file, with an identifying row number. 
-#' Use `edc_data_warnings()` to generate such a file.
+#' Database issues should be traced in a separate file, each with an identifying row number, and the file should be shared with the data-manager. \cr
+#' Use `edc_data_warnings()` to generate the table for such a file.
 #'
 #' @param df the filtered dataframe
-#' @param message the message. Can use {cli} formats.
-#' @param issue_n (optional) identifying row number
+#' @param message the message. Can use [cli formats](https://cli.r-lib.org/reference/inline-markup.html#classes).
+#' @param issue_n identifying row number
+#' @param write_to_csv a path to save `df` in a csv file that can be shared with the DM for more details.
 #' @param max_subjid max number of subject ID to show in the message
 #' @param col_subjid column name for subject ID. Set to `NULL` to ignore.
 #' @param ... unused 
@@ -150,10 +151,15 @@ assert_no_duplicate = function(df, by=NULL, id_col=get_subjid_cols()){
 #' \dontrun{
 #' db0 %>% 
 #'   filter(age<25) %>% 
-#'   edc_data_warn("Age should *really* not be <25")
+#'   edc_data_warn("Age should not be <25", write_to_csv="check/check_age_25.csv")
+#'   
+#' db0 %>% 
+#'   filter(age<25) %>% 
+#'   edc_data_stop("Age should *never* be <25")
 #' }
 edc_data_warn = function(df, message, ..., 
                          issue_n=NULL, max_subjid=5, 
+                         write_to_csv=FALSE, 
                          col_subjid=get_subjid_cols()){
   
   if (missing(max_subjid)) max_subjid = getOption("edc_warn_max_subjid", max_subjid)
@@ -169,6 +175,7 @@ edc_data_warn = function(df, message, ...,
 #' @importFrom rlang check_dots_empty
 edc_data_stop = function(df, message, ..., 
                          issue_n=NULL, max_subjid=5, 
+                         write_to_csv=FALSE, 
                          col_subjid=get_subjid_cols()){
   
   if (missing(max_subjid)) max_subjid = getOption("edc_warn_max_subjid", max_subjid)
@@ -184,8 +191,13 @@ edc_data_stop = function(df, message, ...,
 #' @importFrom dplyr pull
 #' @importFrom stringr str_pad
 edc_data_condition = function(df, message, issue_n, max_subjid, 
+                              write_to_csv, 
                               col_subjid, fun){
   if(nrow(df)>0){
+    if(is.character(write_to_csv)){
+      write.csv2(df, write_to_csv)
+    }
+    
     if(is.null(issue_n)) issue_n = "xx"
     else if(is.numeric(issue_n)) issue_n = str_pad(issue_n, width=2, pad="0")
     message = format_inline(message)
