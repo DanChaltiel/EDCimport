@@ -12,11 +12,12 @@ DEV\.R
 .Rhistory
 .Rprofile
 
-*nogit*
 
 docs
 inst/doc
 /doc/
 /Meta/
-tests/testthat/test-local.R
-tests/testthat/_snaps/local.md
+
+
+*nogit*
+*local*
