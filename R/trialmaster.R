@@ -92,6 +92,10 @@ read_trialmaster = function(archive, ..., use_cache="write",
     }
   }
   
+  # update lookup ----
+  .lookup = .lookup %>% 
+    structure()
+  
   # out ----
   if(verbose>0){
     size = object.size(rtn) %>% format("auto")
@@ -180,7 +184,9 @@ read_tm_all_xpt = function(directory, ..., format_file="procformat.sas",
   .lookup = build_lookup(rtn)
   .lookup = .lookup %>% 
     structure(clean_names_fun=clean_names_fun, 
-              split_mixed=split_mixed)
+              split_mixed=split_mixed,
+              datetime_extraction=datetime_extraction,
+              EDCimport_version=packageVersion("EDCimport"))
   
   # split mixed datasets (with short and long format) ----
   patient_id = get_subjid_cols(lookup=.lookup)
@@ -238,16 +244,16 @@ read_tm_all_xpt = function(directory, ..., format_file="procformat.sas",
       }
     })
   
+  # lookup ----
+  if(isTRUE(extend_lookup)){
+    .lookup = extend_lookup(.lookup, datasets=rtn)
+  }
+  set_lookup(.lookup)
+  
   # out ----
   rtn$date_extraction = format_ymd(datetime_extraction)
   rtn$datetime_extraction = datetime_extraction
   rtn$.lookup = .lookup
-    
-  if(isTRUE(extend_lookup)){
-    rtn$.lookup = extend_lookup(rtn$.lookup, datasets=rtn)
-  }
-  
-  set_lookup(rtn$.lookup)
   
   class(rtn) = "tm_database"
   rtn

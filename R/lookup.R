@@ -48,26 +48,41 @@ build_lookup = function(data_list){
       names=map(data_list, ~f(.x, names(.x), NULL)), 
       labels=map(data_list, ~f(.x, var_label(.x, unlist=TRUE), NULL)), 
     ) %>% 
-    arrange(nrow)
+    arrange(nrow) %>% 
+    add_class("edc_lookup")
 }
 
 #' Retrieve the lookup table from options
 #' 
+#' @param ... passed on to [dplyr::arrange()]
 #' @param check_null whether to stop if lookup is NULL
 #'
-#' @return the lookup dataframe summarizing column names and labels 
+#' @return the lookup dataframe summarizing the database import 
 #' 
 #' @export
 #' @seealso [build_lookup()], [extend_lookup()]
 #' @importFrom cli cli_abort
-get_lookup = function(check_null=TRUE){
-  lookup = getOption("edc_lookup")
+#' @importFrom dplyr arrange
+#' @importFrom rlang enquos
+#' 
+#' @examples
+#' tm = edc_example()
+#' load_list(tm)
+#' edc_lookup()
+#' edc_lookup(dataset)
+edc_lookup = function(..., check_null=TRUE){
+  lookup = edcimport_env$lookup
   if(is.null(lookup) & isTRUE(check_null)){
     cli_abort("Lookup is NULL. Did you forget to import your data?")
   }
-  lookup
+  lookup %>% arrange(!!!enquos(...))
 }
 
+
+#' @rdname edc_lookup
+#' @export
+#' @usage NULL
+get_lookup = edc_lookup
 
 #' @noRd
 #' @keywords internal
@@ -78,7 +93,7 @@ set_lookup = function(lookup){
     cli_warn("Option {.val edc_lookup} has been overwritten.", 
              class="edc_lookup_overwrite_warn")
   }
-  options(edc_lookup=lookup)
+  edcimport_env$lookup = lookup
 }
 
 
@@ -141,16 +156,31 @@ extend_lookup = function(lookup, ...,
 # Methods -----------------------------------------------------------------
 
 #' @export
-#' @importFrom cli cat_rule cli_bullets cli_vec
+#' @importFrom cli cli_text col_silver
 #' @importFrom purrr discard_at keep
 print.edc_lookup = function(x, ...){
-  print.default(x)
-  # x = x %>% keep(is.data.frame) %>% discard_at(".lookup")
-  # cat_rule("Trialmaster database", col = "violet")
-  # nms = cli_vec(names(x), list("vec-trunc"=3))
-  # cli_bullets(c(
-  #   "{length(x)} tables: {.arg {nms}}",
-  #   i="Use {.code EDCimport::load_list(tm)} to load the tables in the global environment",
-  #   i="Use {.code print(tm$.lookup)} to see the summary table"
-  # ))
+  extraction = attr(x, "datetime_extraction")
+  EDCimport_version = attr(x, "EDCimport_version")
+  clean_names_fun = attr(x, "clean_names_fun")
+  split_mixed = attr(x, "split_mixed")
+  
+  par_extraction = par_version = ""
+  if(!is.null(extraction)) 
+    par_extraction = format_inline(" (extraction of {format_ymd(extraction)})")
+  if(!is.null(EDCimport_version)) 
+    par_version = format_inline(" - EDCimport v{EDCimport_version}")
+  
+  a = format_inline("Lookup table {par_extraction}{par_version}")
+  print(rule(a, col = "violet"))
+  
+  x_tbl = remove_class(x, "edc_lookup") %>% 
+    select(-names, -labels) %>% 
+    format(n=Inf) %>% 
+    tail(-1) #remove "A tibble: n × p"
+  cat(x_tbl, sep="\n")
+  
+  invisible(x)
 }
+
+
+

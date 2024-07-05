@@ -25,6 +25,7 @@ tibble::tibble
 
 edcimport_env = rlang::new_environment()
 edcimport_env$warn_list = list()
+edcimport_env$lookup = NULL
 
 utils::globalVariables(c(".", ":=", "!!", ".data", ".env", "SUBJID", "age", "dataset", "n_id", "name", "value", ".id", "aegr", "aesoc", "best_resp", "case_when", "diff_first", "element_blank", "facet_grid", "first_sum", "grade2", "grade_max", "last_sum", "min_sum", "n_ae", "n_arm", "n_soc", "n_term", "replace_na", "resp", "resp_num", "sae", "scale_fill_steps", "star", "star_txt", "subjid", "variable", "vars", "x", "column", "last_date", "origin", "pct_datasets", "arm_", "grade_", "soc_", "subjid_", "term_", "any_ae", "any_severe", "label", "label_percent_positive", "n_severe", "pct_ae", "pct_severe", "severe_", "unit"))
 

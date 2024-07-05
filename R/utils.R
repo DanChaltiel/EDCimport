@@ -265,6 +265,15 @@ mixedorder = function (x, decreasing = FALSE, na.last = TRUE, blank.last = FALSE
 max_narm = function(x, na.rm=TRUE) if(all(is.na(x))) NA else max(x, na.rm=na.rm)
 min_narm = function(x, na.rm=TRUE) if(all(is.na(x))) NA else min(x, na.rm=na.rm)
 
+add_class = function(x, value){
+  class(x) = c(value, class(x))
+  x
+}
+remove_class = function(x, value){
+  class(x) = setdiff(class(x), value)
+  x
+}
+
 
 # path = "F:/Nextcloud GR/04 - Comite Pediatrie/NIVOGLIO/Analyses/Analyse DRM"
 #' @importFrom rlang check_installed
