@@ -6,7 +6,7 @@
 #' Generate a barplot showing the distribution of CRF status (Complete, Incomplete, ...) for each dataset of the database.
 #'
 #' @param crfstat_col the column name of the CRF status 
-#' @param pal the palette, defaulting to the helper `EDCimport:::edc_crf_pal()`
+#' @param pal the palette, defaulting to the helper `EDCimport:::edc_pal_crf()`
 #' @param details whether to show all the CRF status levels. When `FALSE` (default), recode the status into "Complete", "Incomplete", or "No Data".
 #' @param crfstat_lvls the CRF status levels, from "best" to "worst". The plot is ordered by the "worst" level. 
 #' @param x_label a glue pattern determining the tick label in the x axis. Available variables are `c("nrow", "ncol", "n_id", "rows_per_id", "crfname")`, taken from [get_lookup()].
@@ -19,7 +19,7 @@
 #' \dontrun{
 #' #import a TM database and use load_list(), then:
 #' crf_status_plot() + ggtitle(date_extraction)
-#' crf_status_plot(pal=rev(edc_crf_pal()))
+#' crf_status_plot(pal=rev(edc_pal_crf()))
 #' crf_status_plot(details=TRUE, treat_as_worst="No Data")
 #' crf_status_plot(x_label="{crfname} (N={n_id}, n={nrow})")
 #' 
@@ -40,7 +40,7 @@
 crf_status_plot = function(crfstat_col="CRFSTAT", 
                            ..., 
                            details=FALSE,
-                           pal = edc_crf_pal(), 
+                           pal = edc_pal_crf(), 
                            crfstat_lvls = names(pal), 
                            x_label = "{dataset}",
                            treat_as_worst=NULL){
@@ -84,7 +84,7 @@ crf_status_plot = function(crfstat_col="CRFSTAT",
 #' @rdname crf_status_plot
 #' @export
 #' @source ggsci:::ggsci_db$lancet[["lanonc"]] %>% dput()
-edc_crf_pal = function(){
+edc_pal_crf = function(){
   c("Complete"="#000e8b", 
     "Complete Locked"="#0053a5", 
     "Complete Signed"="#006dd8", 
