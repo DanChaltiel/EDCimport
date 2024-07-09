@@ -164,7 +164,7 @@ edc_data_warn = function(df, message, ...,
   
   if (missing(max_subjid)) max_subjid = getOption("edc_warn_max_subjid", max_subjid)
   check_dots_empty()
-  edc_data_condition(df=df, message=message, issue_n=issue_n, 
+  edc_data_condition(df=df, message=message, issue_n=issue_n, write_to_csv=write_to_csv,
                      max_subjid=max_subjid, col_subjid=col_subjid, 
                      fun=cli_warn)
 }
@@ -180,7 +180,7 @@ edc_data_stop = function(df, message, ...,
   
   if (missing(max_subjid)) max_subjid = getOption("edc_warn_max_subjid", max_subjid)
   check_dots_empty()
-  edc_data_condition(df=df, message=message, issue_n=issue_n, 
+  edc_data_condition(df=df, message=message, issue_n=issue_n, write_to_csv=write_to_csv,
                      max_subjid=max_subjid, col_subjid=col_subjid, 
                      fun=cli_abort)
 }
