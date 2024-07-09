@@ -59,6 +59,18 @@ parse_file_datetime = function(x){
     as.POSIXct()
 }
 
+#' Parse a file name to get the date of data extraction
+#'
+#' @param x a file
+#' @noRd
+#' @keywords internal
+#' @importFrom stringr str_remove
+parse_file_projname = function(x){
+  x %>% 
+    basename() %>% 
+    str_remove("_.*")
+}
+
 
 #' Change a `try-error` column to a simpler character column of class "edc_error_col"
 #' @noRd
@@ -269,6 +281,7 @@ add_class = function(x, value){
   class(x) = c(value, class(x))
   x
 }
+#' @importFrom dplyr setdiff
 remove_class = function(x, value){
   class(x) = setdiff(class(x), value)
   x

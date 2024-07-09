@@ -187,9 +187,12 @@ edc_data_stop = function(df, message, ...,
 
 #' @noRd
 #' @keywords internal
-#' @importFrom cli cli_vec format_inline col_green
+#' @importFrom cli cli_vec format_inline
 #' @importFrom dplyr pull
+#' @importFrom rlang caller_arg
 #' @importFrom stringr str_pad
+#' @importFrom tibble tibble
+#' @importFrom utils write.csv2
 edc_data_condition = function(df, message, issue_n, max_subjid, 
                               write_to_csv, 
                               col_subjid, fun){
@@ -220,6 +223,7 @@ edc_data_condition = function(df, message, issue_n, max_subjid,
 
 #' @noRd
 #' @keywords internal
+#' @importFrom cli cli_warn
 save_warn_list_item = function(item){
   stopifnot(nrow(item)==1)
   issue_n = item$issue_n
@@ -240,6 +244,8 @@ save_warn_list_item = function(item){
 #' @rdname edc_data_warn
 #' @usage edc_data_warnings()
 #' @export
+#' @importFrom dplyr across any_of arrange
+#' @importFrom purrr list_rbind
 edc_data_warnings = function(){
   edcimport_env$warn_list %>% 
     list_rbind() %>% 

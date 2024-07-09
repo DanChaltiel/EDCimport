@@ -195,6 +195,10 @@ lastnews_table = function(except=NULL, with_ties=FALSE) {
 #'
 #' @return Nothing
 #' @export
+#' @importFrom cli cli_inform
+#' @importFrom purrr map_dbl
+#' @importFrom rlang set_names
+#' @importFrom stringr str_extract str_subset
 edc_inform_code = function(main="main.R", Rdir="R/"){
   assert_file_exists(main)
   sources = readLines(main) %>% 

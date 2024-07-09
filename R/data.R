@@ -136,4 +136,3 @@ edc_example_ae = function(N=50, seed=42){
   set_lookup(rtn$.lookup)
   rtn
 }
-

@@ -46,7 +46,7 @@ waterfall_plot = function(data_recist, rc_sum="RCTLSUM", rc_resp="RCRESP", rc_da
   }
   if(is.null(timepoint)) type = setdiff(type, "timepoint")
   
-  browser()
+  # browser()
   
   
   # cc = c("1-Complete response"="green", "2-Partial response"="blue", "3-Stable disease"="yellow",

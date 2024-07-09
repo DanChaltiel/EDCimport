@@ -131,6 +131,7 @@ read_trialmaster = function(archive, ..., use_cache="write",
 #' @importFrom stringr str_remove
 #' @importFrom tibble as_tibble tibble
 #' @importFrom tidyselect where
+#' @importFrom utils packageVersion
 read_tm_all_xpt = function(directory, ..., format_file="procformat.sas", 
                            clean_names_fun=NULL, 
                            split_mixed=FALSE,

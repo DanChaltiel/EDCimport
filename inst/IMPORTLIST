@@ -12,6 +12,7 @@ lag = dplyr
 last = dplyr
 matches = tidyselect
 order = base
+readLines = base
 regex = stringr
 set_names = rlang
 setdiff = generics

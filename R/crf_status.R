@@ -28,10 +28,12 @@
 #' #> [1] "Incomplete"        "No Data Locked"    "No Data"           "Signed"           
 #' #> [5] "Partial Monitored" "Monitored"         "Complete Locked"   "Complete" 
 #' }
-#' @importFrom dplyr count last mutate select
-#' @importFrom forcats fct_reorder2 fct_rev
+#' @importFrom dplyr arrange count last left_join mutate select
+#' @importFrom forcats fct_drop fct_inorder fct_reorder2 fct_rev
 #' @importFrom ggplot2 aes geom_col ggplot labs position_fill scale_fill_manual scale_x_continuous
+#' @importFrom glue glue
 #' @importFrom purrr list_rbind map
+#' @importFrom rlang check_dots_empty
 #' @importFrom scales label_percent
 #' @importFrom stringr str_subset
 #' @importFrom tibble tibble
@@ -97,7 +99,7 @@ edc_crf_pal = function(){
 
 #' @noRd
 #' @keywords internal
-#' @importFrom forcats fct_expand fct_recode fct_drop
+#' @importFrom forcats fct_drop fct_expand fct_recode
 edf_crfstat_recode = function(x, do=TRUE){
   if(!do) return(x)
   lvl_recoding = c(  
@@ -114,4 +116,3 @@ edf_crfstat_recode = function(x, do=TRUE){
   
   x %>% fct_expand(lvl_recoding) %>% fct_recode(!!!lvl_recoding) %>% fct_drop()
 }
-

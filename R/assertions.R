@@ -3,6 +3,9 @@
 #' @examples
 #' assert(1+1==2)
 #' assert(1+1==4)
+#' @importFrom cli cli_abort
+#' @importFrom glue glue
+#' @importFrom rlang caller_arg
 assert = function(x, msg=NULL){
   if(is.null(msg)){
     x_str = caller_arg(x)
@@ -20,6 +23,9 @@ assert = function(x, msg=NULL){
 #' @examples
 #' assert_file_exists("R/data.R")
 #' assert_file_exists("R/data.SAS")
+#' @importFrom cli cli_abort
+#' @importFrom glue glue
+#' @importFrom rlang caller_arg
 assert_file_exists = function(x, msg=NULL){
   if(is.null(msg)){
     x_str = caller_arg(x)
