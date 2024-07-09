@@ -233,7 +233,7 @@ save_warn_list_item = function(item){
     if(item$issue_n=="xx" && !item$message %in% current$message){
       issue_key = paste0("issue_xx_", nrow(current))
     } else {
-      cli_warn("Duplicate warning entry")
+      cli_warn("Duplicate `edc_data_warn()` entry")
     }
   }
   edcimport_env$warn_list[[issue_key]] = item
