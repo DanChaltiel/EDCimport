@@ -21,7 +21,7 @@ ae_table_grade_n(
 
 \item{...}{unused}
 
-\item{df_enrol}{enrollment table, one row per patient, containing subjid (and arm if needed)}
+\item{df_enrol}{enrollment table, one row per patient, containing subjid (and arm if needed). All patients should be in this table.}
 
 \item{arm}{name of the treatment column in \code{df_enrol}. Case-insensitive. Can be set to \code{NULL} to not group.}
 

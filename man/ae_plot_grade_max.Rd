@@ -22,7 +22,7 @@ ae_plot_grade_max(
 
 \item{...}{unused}
 
-\item{df_enrol}{enrollment table, one row per patient, containing subjid (and arm if needed)}
+\item{df_enrol}{enrollment table, one row per patient, containing subjid (and arm if needed). All patients should be in this table.}
 
 \item{type}{the plots to be included. One of \code{c("stack", "dodge", "fill")}.}
 
