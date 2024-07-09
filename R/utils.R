@@ -274,8 +274,20 @@ mixedorder = function (x, decreasing = FALSE, na.last = TRUE, blank.last = FALSE
 }
 
 
-max_narm = function(x, na.rm=TRUE) if(all(is.na(x))) NA else max(x, na.rm=na.rm)
-min_narm = function(x, na.rm=TRUE) if(all(is.na(x))) NA else min(x, na.rm=na.rm)
+max_narm = function(x, na.rm=TRUE) {
+  if(all(is.na(x))) {
+    if(is.numeric(x)) return(NA_real_) 
+    return(NA)
+  }
+  max(x, na.rm=na.rm)
+}
+min_narm = function(x, na.rm=TRUE) {
+  if(all(is.na(x))) {
+    if(is.numeric(x)) return(NA_real_) 
+    return(NA)
+  }
+  min(x, na.rm=na.rm)
+}
 
 add_class = function(x, value){
   class(x) = c(value, class(x))
@@ -319,3 +331,5 @@ init_project = function(path){
   usethis::use_blank_slate(scope="project")
   #TODO: see ?usethis::use_template for custom templates
 }
+
+NA_Date_ <- structure(NA_real_, class = "Date")
