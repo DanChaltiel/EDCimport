@@ -75,7 +75,10 @@ edc_lookup = function(..., check_null=TRUE){
   if(is.null(lookup) & isTRUE(check_null)){
     cli_abort("Lookup is NULL. Did you forget to import your data?")
   }
-  lookup %>% arrange(!!!enquos(...))
+  if(!is.null(lookup)){
+    lookup = lookup %>% arrange(!!!enquos(...))
+  }
+  lookup
 }
 
 
