@@ -156,31 +156,32 @@ extend_lookup = function(lookup, ...,
 # Methods -----------------------------------------------------------------
 
 #' @export
-#' @importFrom cli cli_text col_silver
-#' @importFrom purrr discard_at keep
-print.edc_lookup = function(x, ...){
+#' @importFrom cli format_inline rule
+#' @importFrom dplyr select
+#' @importFrom utils tail
+print.edc_lookup = function(x, n=Inf, ...){
   extraction = attr(x, "datetime_extraction")
   EDCimport_version = attr(x, "EDCimport_version")
-  clean_names_fun = attr(x, "clean_names_fun")
-  split_mixed = attr(x, "split_mixed")
+  project_name = attr(x, "project_name")
+  # clean_names_fun = attr(x, "clean_names_fun")
+  # split_mixed = attr(x, "split_mixed")
   
-  par_extraction = par_version = ""
+  par_extraction = par_version = par_projname = ""
+  if(!is.null(project_name)) 
+    par_projname = format_inline("- {project_name} ")
   if(!is.null(extraction)) 
-    par_extraction = format_inline(" (extraction of {format_ymd(extraction)})")
+    par_extraction = format_inline("(extraction of {format_ymd(extraction)}) ")
   if(!is.null(EDCimport_version)) 
-    par_version = format_inline(" - EDCimport v{EDCimport_version}")
+    par_version = format_inline("- EDCimport v{EDCimport_version}")
   
-  a = format_inline("Lookup table {par_extraction}{par_version}")
+  a = format_inline("Lookup table {par_projname}{par_extraction}{par_version}")
   print(rule(a, col = "violet"))
   
   x_tbl = remove_class(x, "edc_lookup") %>% 
     select(-names, -labels) %>% 
-    format(n=Inf) %>% 
+    format(n=n) %>% 
     tail(-1) #remove "A tibble: n × p"
   cat(x_tbl, sep="\n")
   
   invisible(x)
 }
-
-
-

@@ -63,7 +63,6 @@ read_trialmaster = function(archive, ..., use_cache="write",
                   i="Same parameter {.arg clean_names_fun}: {b}"), 
                 class="read_tm_cache_bad_param")
     }
-    set_lookup(rtn$.lookup)
   } else {
     if(verbose>0) cli_inform("Unzipping {.file {archive}}", class="read_tm_zip")
     temp_folder = file.path2(tempdir(), str_remove(basename(archive), "\\.zip"))
@@ -93,8 +92,9 @@ read_trialmaster = function(archive, ..., use_cache="write",
   }
   
   # update lookup ----
-  .lookup = .lookup %>% 
-    structure()
+  rtn$.lookup = rtn$.lookup %>% 
+    structure(project_name = parse_file_projname(archive))
+  set_lookup(rtn$.lookup)
   
   # out ----
   if(verbose>0){
