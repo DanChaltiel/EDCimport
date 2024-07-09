@@ -23,11 +23,11 @@ ae_table_soc(
 \method{as_flextable}{ae_table_soc}(x, arm_colors = c("#f2dcdb", "#dbe5f1", "#ebf1dd", "#e5e0ec"))
 }
 \arguments{
-\item{df_ae}{adverse event table, one row per AE, containing subjid, soc, and grade}
+\item{df_ae}{adverse event dataset, one row per AE, containing subjid, soc, and grade}
 
 \item{...}{unused}
 
-\item{df_enrol}{enrollment table, one row per patient, containing subjid (and arm if needed). All patients should be in this table.}
+\item{df_enrol}{enrollment dataset, one row per patient, containing subjid (and arm if needed). All patients should be in this dataset.}
 
 \item{arm}{name of the treatment column in \code{df_enrol}. Case-insensitive. Can be set to \code{NULL} to not group.}
 

@@ -8,8 +8,8 @@
 #' The function `ae_table_soc()` creates a summary table of maximum AE grades for each patient according to term and SOC CTCAE. 
 #' The resulting dataframe can be piped to `as_flextable()` to get a nicely formatted flextable.
 #' 
-#' @param df_ae adverse event table, one row per AE, containing subjid, soc, and grade
-#' @param df_enrol enrollment table, one row per patient, containing subjid (and arm if needed). All patients should be in this table.
+#' @param df_ae adverse event dataset, one row per AE, containing subjid, soc, and grade
+#' @param df_enrol enrollment dataset, one row per patient, containing subjid (and arm if needed). All patients should be in this dataset.
 #' @param subjid name of the patient ID in both `df_ae` and `df_enrol`. Case-insensitive.
 #' @param arm name of the treatment column in `df_enrol`. Case-insensitive. Can be set to `NULL` to not group.
 #' @param grade  name of the AE grade column in `df_ae`. Case-insensitive.

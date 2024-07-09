@@ -217,10 +217,10 @@ edc_inform_code = function(main="main.R", Rdir="R/"){
 #' 
 #' @description
 #'  
-#' When finding wrong or unexpected values in an exported table, it can be useful to temporarily correct them by hard-coding a value. 
+#' When finding wrong or unexpected values in an exported dataset, it can be useful to temporarily correct them by hard-coding a value. 
 #' However, this manual correction should be undone as soon as the central database is updated with the correction. 
 #' 
-#'  - `manual_correction()` applies a correction in a specific table column location and throws an error if the correction is already in place. This check applies only once per R session so you can source your script without errors.
+#'  - `manual_correction()` applies a correction in a specific dataset column location and throws an error if the correction is already in place. This check applies only once per R session so you can source your script without errors.
 #'  - `reset_manual_correction()` resets all checks. For instance, it is called by [read_trialmaster()].
 #'
 #' @param data,col,rows the rows of a column of a dataframe where the error lies

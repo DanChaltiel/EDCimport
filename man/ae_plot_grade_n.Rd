@@ -16,11 +16,11 @@ ae_plot_grade_n(
 )
 }
 \arguments{
-\item{df_ae}{adverse event table, one row per AE, containing subjid, soc, and grade}
+\item{df_ae}{adverse event dataset, one row per AE, containing subjid, soc, and grade}
 
 \item{...}{unused}
 
-\item{df_enrol}{enrollment table, one row per patient, containing subjid (and arm if needed). All patients should be in this table.}
+\item{df_enrol}{enrollment dataset, one row per patient, containing subjid (and arm if needed). All patients should be in this dataset.}
 
 \item{low}{the color of Grade 1 AE}
 
