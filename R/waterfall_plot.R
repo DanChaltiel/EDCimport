@@ -19,7 +19,7 @@
 #' @return a ggplot
 #' @export
 #' @importFrom cli cli_warn
-#' @importFrom dplyr arrange case_when desc distinct filter first last mutate select setdiff summarise
+#' @importFrom dplyr arrange case_when desc distinct filter first last mutate n_distinct select setdiff summarise
 #' @importFrom forcats as_factor
 #' @importFrom ggplot2 aes facet_wrap geom_col geom_hline geom_text ggplot labs scale_fill_manual scale_x_discrete scale_y_continuous
 #' @importFrom rlang as_label enquo
@@ -45,11 +45,13 @@ waterfall_plot = function(data_recist, rc_sum="RCTLSUM", rc_resp="RCRESP", rc_da
   responses = c("Complete response"="#42B540FF", "Partial response"="#006dd8", 
                 "Stable disease"="#925E9F", "Progressive disease"="#ED0000", "Missing"="white")
   
-  if(type=="best_resp") fun = min_narm else fun = max_narm
   
-  coalesce_resp_num = function(resp_num, f){
-    i = f(resp_num) %>% replace_na(5)
-    names(responses)[i]
+  if (type == "best_resp"){
+    fun = min_narm
+    miss_resp_infinite = +Inf
+  } else{
+    fun = max_narm
+    miss_resp_infinite = -Inf
   }
   
   db_wf = data_recist %>% 
@@ -59,12 +61,12 @@ waterfall_plot = function(data_recist, rc_sum="RCTLSUM", rc_resp="RCRESP", rc_da
            arm=any_of2(arm), 
            )
   
-  if(anyNA(db_wf$sum)){
-    cli_warn("Rows with missing target lesions length sum were ignored.")
-  }
-  if(anyNA(db_wf$date)){
-    cli_warn("Rows with missing recist evaluation date were ignored.")
-  }
+  db_wf %>% 
+    filter(is.na(sum)) %>% 
+    edc_data_warn("Rows with missing target lesions length sum were ignored.", issue_n=FALSE)
+  db_wf %>% 
+    filter(is.na(date)) %>% 
+    edc_data_warn("Rows with missing target evaluation date were ignored.", issue_n=FALSE)
   db_wf %>% 
     filter(date==min(date) & !is.na(resp), .by=subjid) %>% 
     edc_data_warn("Response is not missing at first date", issue_n=FALSE)
@@ -72,6 +74,7 @@ waterfall_plot = function(data_recist, rc_sum="RCTLSUM", rc_resp="RCRESP", rc_da
     filter(n_distinct(date)<2, .by=subjid) %>% 
     edc_data_warn("Patients with <2 recist evaluations were ignored.", issue_n=FALSE)
 
+  
   db_wf2 = db_wf %>% 
     filter(!is.na(sum)) %>%
     filter(!is.na(date)) %>% 
@@ -94,12 +97,12 @@ waterfall_plot = function(data_recist, rc_sum="RCTLSUM", rc_resp="RCRESP", rc_da
         resp=="PR" | str_detect(resp, "(?i)partial")  ~ 2,
         resp=="SD" | str_detect(resp, "(?i)stable")   ~ 3,
         resp=="PD" | str_detect(resp, "(?i)progr")    ~ 4,
-        is.na(resp) | str_detect(resp, "(?i)not [eval|avai]") ~ NA,
+        is.na(resp) | str_detect(resp, "(?i)not [eval|avai]") ~ miss_resp_infinite,
         .default=-99,
       ),
       resp2 = names(responses)[replace_na(resp_num, 5)],
       resp2 = factor(resp2, levels=names(responses)),
-      stop("TODO")
+      # stop("TODO")
       #TODO fun(resp_num) enleve les NA donc pas bien. Idée : resp_num = +/-Inf selon `type`
       # best_resp = coalesce_resp_num(resp_num, min_narm),
       # worst_resp = coalesce_resp_num(resp_num, max_narm),
@@ -107,15 +110,20 @@ waterfall_plot = function(data_recist, rc_sum="RCTLSUM", rc_resp="RCRESP", rc_da
     filter(resp_num==fun(resp_num), .by=subjid) %>% 
     filter(sum==fun(sum), .by=c(subjid, resp_num)) %>% 
     filter(date==min_narm(date), .by=c(subjid, resp_num)) %>% 
-    complete(subjid=db_wf$subjid) %>% 
+    # complete(subjid=db_wf$subjid) %>% 
     assert_no_duplicate() %>% 
     mutate(
-      star_txt = ifelse(rc_star, "*", ""),
       diff_first = (sum - first_sum)/first_sum,
       diff_min = (sum - min_sum)/min_sum
     )  %>% 
     arrange(desc(diff_first), resp2) %>% 
     mutate(subjid = as_factor(as.character(subjid)))
+  
+  
+  # coalesce_resp_num = function(resp_num, f){
+  #   i = f(resp_num) %>% replace_na(5)
+  #   names(responses)[i]
+  # }
   # db_wf2 %>% filter(subjid==1)
   # db_wf2 %>% filter(subjid==31)
   
@@ -131,45 +139,44 @@ waterfall_plot = function(data_recist, rc_sum="RCTLSUM", rc_resp="RCRESP", rc_da
   
   
   
-  browser()
   # 1
-  db_wf3 = db_wf2 %>% 
-    mutate(
-      # a = browser(),
-      star_txt = ifelse(rc_star, "*", ""),
-      
-      diff_first = (sum - first_sum)/first_sum,
-      diff_min = (sum - min_sum)/min_sum
-    )  %>% 
-    arrange(desc(diff_first), resp2) %>% 
-    mutate(subjid = as_factor(as.character(subjid)))
+  # db_wf3 = db_wf2 %>% 
+  #   mutate(
+  #     # a = browser(),
+  #     star_txt = ifelse(rc_star, "*", ""),
+  #     
+  #     diff_first = (sum - first_sum)/first_sum,
+  #     diff_min = (sum - min_sum)/min_sum
+  #   )  %>% 
+  #   arrange(desc(diff_first), resp2) %>% 
+  #   mutate(subjid = as_factor(as.character(subjid)))
+  # 
+  # db_wf3 = db_wf2 %>% 
+  #   summarise(
+  #     # a = browser(),
+  #     arm = unify(arm),
+  #     resp = unify(resp),
+  #     star_txt = ifelse(unify(rc_star), "*", ""),
+  #     
+  #     
+  #     first_sum = sum[first_date],
+  #     current_sum = sum[!first_date],
+  #     last_date = max(date),
+  #     last_sum = last(sum, order_by=date),
+  #     min_sum = min(sum),
+  #     diff_first = (last_sum - first_sum)/first_sum,
+  #     diff_min = (last_sum - min_sum)/min_sum,
+  #     .by=subjid
+  #   ) %>% 
+  #   assert_no_duplicate() %>% 
+  #   # mutate(subjid = fct_reorder2(factor(subjid), final_resp, diff_first, .desc=TRUE)) %>% 
+  #   arrange(desc(diff_first), !!ensym(type)) %>% 
+  #   mutate(subjid = as_factor(as.character(subjid)))
   
-  db_wf3 = db_wf2 %>% 
-    summarise(
-      # a = browser(),
-      arm = unify(arm),
-      resp = unify(resp),
-      star_txt = ifelse(unify(rc_star), "*", ""),
-      
-      
-      first_sum = sum[first_date],
-      current_sum = sum[!first_date],
-      last_date = max(date),
-      last_sum = last(sum, order_by=date),
-      min_sum = min(sum),
-      diff_first = (last_sum - first_sum)/first_sum,
-      diff_min = (last_sum - min_sum)/min_sum,
-      .by=subjid
-    ) %>% 
-    assert_no_duplicate() %>% 
-    # mutate(subjid = fct_reorder2(factor(subjid), final_resp, diff_first, .desc=TRUE)) %>% 
-    arrange(desc(diff_first), !!ensym(type)) %>% 
-    mutate(subjid = as_factor(as.character(subjid)))
   
-  
-  setdiff(db_wf$subjid, db_wf3$subjid) %>% length()
-  db_wf$subjid %>% unique %>% length()
-  db_wf3$subjid %>% unique %>% length()
+  # setdiff(db_wf$subjid, db_wf3$subjid) %>% length()
+  # db_wf$subjid %>% unique %>% length()
+  # db_wf3$subjid %>% unique %>% length()
   #TODO gérer les missings selon ce qu'on prend comme data dans la macro
   # missings = db_wf %>% summarise(across(-subjid, anyNA)) %>% unlist()
   # missings2 = data_recist %>% summarise(across(-subjid, anyNA)) %>% unlist()
@@ -184,19 +191,23 @@ waterfall_plot = function(data_recist, rc_sum="RCTLSUM", rc_resp="RCRESP", rc_da
   # 
   # cc = scales::seq_gradient_pal(low="blue", high="red")((as.numeric(db_wf$final_resp)-1)/4)
   # cc = scales::seq_gradient_pal(low="blue", high="red")(seq(0, 1, length.out=length(levels(db_wf$final_resp))))
-
+  
+  star_layer = NULL
+  if(!is.null(rc_star)){
+    star_nudge = 0.05
+    db_wf2$star_txt = ifelse(db_wf2$rc_star, "*", "")
+    star_layer = geom_text(aes(y=diff_first + sign(diff_first)*star_nudge, label=star_txt))
+  }
   
   fill_lab = "Best global response \n(RECIST v1.1)"
   if(type=="worst_resp") fill_lab = "Worst global response \n(RECIST v1.1)"
 
-  star_nudge = 0.05
-  # p =
+  p =
   db_wf2 %>%
-    # ggplot(aes(x=subjid, y=diff_first, group=subjid, fill=!!ensym(type))) +
     ggplot(aes(x=subjid, y=diff_first, group=subjid, fill=resp2)) +
     geom_hline(yintercept=c(-.3, .2), linetype="dashed") +
     geom_col(color='black') +
-    geom_text(aes(y=diff_first + sign(diff_first)*star_nudge, label=star_txt)) +
+    star_layer  +
     scale_x_discrete(labels = NULL, breaks = NULL) + 
     scale_y_continuous(labels=label_percent(), breaks=breaks_width(0.2)) +
     scale_fill_manual(values=responses) +
@@ -204,4 +215,5 @@ waterfall_plot = function(data_recist, rc_sum="RCTLSUM", rc_resp="RCRESP", rc_da
   
   if(!missing(arm)) p = p + facet_wrap(~arm, scales="free_x", ncol=1)
   p
+  browser()
 }
