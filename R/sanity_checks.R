@@ -1,11 +1,12 @@
 
 
-#' Check the completion of the subject ID column
+#' Check the validity of the subject ID column
 #' 
 #' Compare a subject ID vector to the study's reference subject ID (usually something like `enrolres$subjid`). `check_subjid()` is the old, deprecated name.
 #'
-#' @param x the subject ID column to check, or a dataframe which ID column will be guessed
+#' @param x the subject ID vector to check, or a dataframe which ID column will be guessed
 #' @param ref the reference for subject ID. Should usually be set through `edc_options(edc_subjid_ref=xxx)`. See example.
+#' @param ref name of the subject ID column if `x` is a dataframe.
 #'
 #' @return nothing, called for errors/warnings
 #' @importFrom cli cli_abort cli_warn
@@ -19,32 +20,77 @@
 #' options(edc_subjid_ref=db0$SUBJID)
 #' #usually, you set something like:
 #' #options(edc_subjid_ref=enrolres$subjid)
-#' assert_no_missing_patient(db1)
-#' db1 %>% dplyr::filter(SUBJID>1) %>% assert_no_missing_patient()
-#' assert_no_missing_patient(c(db1$SUBJID, 99, 999))
-assert_no_missing_patient = function(x, ref=getOption("edc_subjid_ref")){
+#' edc_warn_patient_diffs(db1)
+#' db1 %>% dplyr::filter(SUBJID>1) %>% edc_warn_patient_diffs()
+#' edc_warn_patient_diffs(c(db1$SUBJID, 99, 999))
+edc_warn_patient_diffs = function(x, ref=getOption("edc_subjid_ref"), 
+                                          data_name=NULL, issue_n=NULL,
+                                          col_subjid=get_subjid_cols()){
   if(is.null(ref)){
-    cli_abort("{.arg ref} cannot be NULL in {.fun assert_no_missing_patient}. See {.help EDCimport::assert_no_missing_patient} to see how to set it.")
+    cli_abort(c("Argument {.arg ref} cannot be NULL in {.fun edc_warn_patient_diffs}.", 
   }
-  x_name = caller_arg(x)
+  if(is.null(data_name)) data_name=caller_arg(x)
+
   if(is.data.frame(x)){
-    x = x %>% select(any_of(get_subjid_cols())) %>% pull()
+    x = x %>% select(subjid=any_of(col_subjid)) %>% pull()
   }
   ref = sort(unique(ref))
-  m = setdiff(ref, x) %>% sort()
-  if(length(m) > 0){
-    cli_warn("Missing {length(m)} subject{?s} ID in {.arg {x_name}}: {.val {m}}",
-             class = "edc_assert_no_missing_patient_miss")
+  missing_id = setdiff(ref, x) %>% sort()
+  extra_id = setdiff(x, ref) %>% sort()
+  n_pat = length(missing_id) + length(extra_id)
+  
+  if(n_pat>0){
+  
+    
+    # browser()
+    
+    par_subj_miss = par_subj_extra = NULL
+    if(length(missing_id) > 0){
+      par_subj_miss = format_inline("Missing: {format_subj(missing_id, par=FALSE)}")
+    }
+    if(length(extra_id)>0){
+      par_subj_extra = format_inline("Extra: {format_subj(extra_id, par=FALSE)}")
+    }
+    
+    par_issue = ""
+    if(!is.null(issue_n)){
+      if(data_name=="."){
+        cli_warn("In `edc_warn_patient_diffs()`, `data_name` should not be NULL 
+                 if `issue_n` is not NULL and function is piped, otherwise the 
+                 message will be unreadable.")
+      }
+      if(is.numeric(issue_n)) issue_n = str_pad(issue_n, width=2, pad="0")
+      par_issue = format_inline("Issue #{col_green(issue_n)}: ")
+      item1 = tibble(issue_n, message=format_inline("{data_name}: {par_subj_miss}"), 
+                     subjid=list(missing_id), fun="cli_warn")
+      save_warn_list_item(item1)
+      item2 = tibble(issue_n, message=format_inline("{data_name}: {par_subj_extra}"), 
+                     subjid=list(extra_id), fun="cli_warn")
+      save_warn_list_item(item2)
+    }
+    
+    message = format_inline("{.arg {data_name}} has patient discrepancies:")
+    
+    
+    cli_warn(c("{par_issue}{message}", 
+               i=par_subj_miss, 
+               i=par_subj_extra))
+    
   }
-  m = setdiff(x, ref) %>% sort()
-  if(length(m)>0){
-    cli_warn("Additional {length(m)} subject{?s} ID in {.arg {x_name}}: {.val {m}}",
-             class="edc_assert_no_missing_patient_additional")
-  }
+  
   invisible(x)
 }
 
-
+format_subj = function(subj, max_subjid=5, par=TRUE){
+  if(length(subj)==0) return("")
+  subj = subj %>% unique() %>% sort()
+  n_subj = length(subj)
+  subj = paste0("#", subj) %>% 
+    cli_vec(style=list("vec_trunc"=max_subjid, "vec-trunc-style"="head"))
+  rtn = format_inline("{n_subj} patient{?s}: {subj}")
+  if(isTRUE(par)) rtn = format_inline(" ({rtn})")
+  rtn
+}
 
 
 #' Assert that a dataframe has one row per patient
