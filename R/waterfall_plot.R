@@ -31,7 +31,7 @@
 #' 
 #' \dontrun{
 #' waterfall_plot(rc, rc_date="RCDT", rc_sum="RCTLSUM", rc_resp="RCRESP")
-#' waterfall_plot(rc, rc_date="RCDT", rc_sum="RCTLSUM", rc_resp="RCRESP")
+#' waterfall_plot(rc, rc_date="RCDT", rc_sum="RCTLSUM", rc_resp="RCRESP", type="worst_resp")
 #' rc %>% 
 #'   left_join(arm, by="SUBJID") %>%
 #'   mutate(star = any(RCNEW=="1-Yes", na.rm=TRUE), .by=SUBJID) %>% 
@@ -41,10 +41,16 @@ waterfall_plot = function(data_recist, rc_sum="RCTLSUM", rc_resp="RCRESP", rc_da
                           type = c("best_resp", "worst_resp"), 
                           rc_star=NULL, arm=NULL, warn_missing=TRUE) {
   type = match.arg(type)
+  assert_class(data_recist, class="data.frame")
+  assert_class(rc_sum, class="character")
+  assert_class(rc_resp, class="character")
+  assert_class(rc_date, class="character")
+  assert_class(rc_star, class="character")
+  assert_class(arm, class="character")
+  assert_class(warn_missing, class="logical")
   subjid = get_subjid_cols()
   responses = c("Complete response"="#42B540FF", "Partial response"="#006dd8", 
                 "Stable disease"="#925E9F", "Progressive disease"="#ED0000", "Missing"="white")
-  
   
   if (type == "best_resp"){
     fun = min_narm
@@ -80,7 +86,6 @@ waterfall_plot = function(data_recist, rc_sum="RCTLSUM", rc_resp="RCRESP", rc_da
     filter(!is.na(date)) %>% 
     filter(n_distinct(date)>2, .by=subjid) %>%
     arrange(subjid) %>%
-    # filter(subjid==16) %>%
     distinct() %>% 
     mutate(
       first_date = min_narm(date, na.rm=TRUE),
@@ -91,7 +96,6 @@ waterfall_plot = function(data_recist, rc_sum="RCTLSUM", rc_resp="RCRESP", rc_da
     ) %>% 
     mutate(
       first_date = date==first_date,
-      # time = if_else(date==first_date, "baseline", "visit"),
       resp_num = case_when(
         resp=="CR" | str_detect(resp, "(?i)complete") ~ 1,
         resp=="PR" | str_detect(resp, "(?i)partial")  ~ 2,
@@ -102,10 +106,6 @@ waterfall_plot = function(data_recist, rc_sum="RCTLSUM", rc_resp="RCRESP", rc_da
       ),
       resp2 = names(responses)[replace_na(resp_num, 5)],
       resp2 = factor(resp2, levels=names(responses)),
-      # stop("TODO")
-      #TODO fun(resp_num) enleve les NA donc pas bien. Idée : resp_num = +/-Inf selon `type`
-      # best_resp = coalesce_resp_num(resp_num, min_narm),
-      # worst_resp = coalesce_resp_num(resp_num, max_narm),
     ) %>% 
     filter(resp_num==fun(resp_num), .by=subjid) %>% 
     filter(sum==fun(sum), .by=c(subjid, resp_num)) %>% 
@@ -119,78 +119,17 @@ waterfall_plot = function(data_recist, rc_sum="RCTLSUM", rc_resp="RCRESP", rc_da
     arrange(desc(diff_first), resp2) %>% 
     mutate(subjid = as_factor(as.character(subjid)))
   
-  
-  # coalesce_resp_num = function(resp_num, f){
-  #   i = f(resp_num) %>% replace_na(5)
-  #   names(responses)[i]
-  # }
-  # db_wf2 %>% filter(subjid==1)
-  # db_wf2 %>% filter(subjid==31)
-  
-  # db_wf2 %>% 
-  #   count(subjid) %>%
-  #   filter(n!=2) %>% 
-  #   edc_data_warn("Internal error, waterfall plot may be slightly irrelevant. Code=count2", 
-  #                 issue_n=FALSE)
   db_wf2 %>% 
     filter(resp_num==-99) %>% 
     edc_data_warn("Internal error, waterfall plot may be slightly irrelevant. Code=resp_num_error", 
                   issue_n=FALSE)
-  
-  
-  
-  # 1
-  # db_wf3 = db_wf2 %>% 
-  #   mutate(
-  #     # a = browser(),
-  #     star_txt = ifelse(rc_star, "*", ""),
-  #     
-  #     diff_first = (sum - first_sum)/first_sum,
-  #     diff_min = (sum - min_sum)/min_sum
-  #   )  %>% 
-  #   arrange(desc(diff_first), resp2) %>% 
-  #   mutate(subjid = as_factor(as.character(subjid)))
-  # 
-  # db_wf3 = db_wf2 %>% 
-  #   summarise(
-  #     # a = browser(),
-  #     arm = unify(arm),
-  #     resp = unify(resp),
-  #     star_txt = ifelse(unify(rc_star), "*", ""),
-  #     
-  #     
-  #     first_sum = sum[first_date],
-  #     current_sum = sum[!first_date],
-  #     last_date = max(date),
-  #     last_sum = last(sum, order_by=date),
-  #     min_sum = min(sum),
-  #     diff_first = (last_sum - first_sum)/first_sum,
-  #     diff_min = (last_sum - min_sum)/min_sum,
-  #     .by=subjid
-  #   ) %>% 
-  #   assert_no_duplicate() %>% 
-  #   # mutate(subjid = fct_reorder2(factor(subjid), final_resp, diff_first, .desc=TRUE)) %>% 
-  #   arrange(desc(diff_first), !!ensym(type)) %>% 
-  #   mutate(subjid = as_factor(as.character(subjid)))
-  
-  
-  # setdiff(db_wf$subjid, db_wf3$subjid) %>% length()
-  # db_wf$subjid %>% unique %>% length()
-  # db_wf3$subjid %>% unique %>% length()
+
   #TODO gérer les missings selon ce qu'on prend comme data dans la macro
   # missings = db_wf %>% summarise(across(-subjid, anyNA)) %>% unlist()
   # missings2 = data_recist %>% summarise(across(-subjid, anyNA)) %>% unlist()
   # if(any(missings) & warn_missing) {
   #   cli_warn(c("Missing values, the waterfall plot will be incomplete."))
   # }
-  
-  # grad = scales::seq_gradient_pal(low="blue", high="red")
-  # 
-  # grad(length(unique(db_wf$final_resp)))
-  # cc = scales::seq_gradient_pal(low="blue", high="red")(length(unique(db_wf$final_resp)))
-  # 
-  # cc = scales::seq_gradient_pal(low="blue", high="red")((as.numeric(db_wf$final_resp)-1)/4)
-  # cc = scales::seq_gradient_pal(low="blue", high="red")(seq(0, 1, length.out=length(levels(db_wf$final_resp))))
   
   star_layer = NULL
   if(!is.null(rc_star)){
@@ -215,5 +154,4 @@ waterfall_plot = function(data_recist, rc_sum="RCTLSUM", rc_resp="RCRESP", rc_da
   
   if(!missing(arm)) p = p + facet_wrap(~arm, scales="free_x", ncol=1)
   p
-  browser()
 }
