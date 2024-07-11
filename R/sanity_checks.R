@@ -232,7 +232,7 @@ save_warn_list_item = function(item){
   if(item$issue_n %in% current$issue_n){
     if(item$issue_n=="xx" && !item$message %in% current$message){
       issue_key = paste0("issue_xx_", nrow(current))
-    } else {
+    } else if(getOption("edc_warn_duplicate_verbose", FALSE)){
       cli_warn("Duplicate `edc_data_warn()` entry")
     }
   }
