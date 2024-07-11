@@ -17,9 +17,11 @@ options(
   tidyverse.quiet=TRUE,
   tidyselect_verbosity ="verbose",#quiet or verbose
   lifecycle_verbosity="warning", #NULL, "quiet", "warning" or "error"
+  rlang_backtrace_on_error = "full",
   testthat.progress.max_fails = 50
 )
 
+# globalCallingHandlers(NULL)
 # rlang::global_entrace()
 
 library(rlang, warn.conflicts=FALSE)
@@ -155,7 +157,6 @@ tryCatch2 = function(expr){
   rtn
 }
 
-
-clean_cache()
-cli::cli_inform(c(v="Initializer {.file helper-init_dataset.R} loaded: 
+# clean_cache()
+cli::cli_inform(c(v="Initializer {.file helper-init.R} loaded at {.path {getwd()}}: 
                      is_testing={is_testing()}, is_parallel={is_parallel()}"))
