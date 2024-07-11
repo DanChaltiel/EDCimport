@@ -24,13 +24,14 @@
 #' db1 %>% dplyr::filter(SUBJID>1) %>% edc_warn_patient_diffs()
 #' edc_warn_patient_diffs(c(db1$SUBJID, 99, 999))
 edc_warn_patient_diffs = function(x, ref=getOption("edc_subjid_ref"), 
-                                          data_name=NULL, issue_n=NULL,
-                                          col_subjid=get_subjid_cols()){
+                                  data_name=NULL, issue_n="xx",
+                                  col_subjid=get_subjid_cols()){
   if(is.null(ref)){
     cli_abort(c("Argument {.arg ref} cannot be NULL in {.fun edc_warn_patient_diffs}.", 
+                " "="See {.help EDCimport::edc_warn_patient_diffs} to see how to set it."))
   }
   if(is.null(data_name)) data_name=caller_arg(x)
-
+  
   if(is.data.frame(x)){
     x = x %>% select(subjid=any_of(col_subjid)) %>% pull()
   }
@@ -40,7 +41,7 @@ edc_warn_patient_diffs = function(x, ref=getOption("edc_subjid_ref"),
   n_pat = length(missing_id) + length(extra_id)
   
   if(n_pat>0){
-  
+    
     
     # browser()
     
@@ -79,17 +80,6 @@ edc_warn_patient_diffs = function(x, ref=getOption("edc_subjid_ref"),
   }
   
   invisible(x)
-}
-
-format_subj = function(subj, max_subjid=5, par=TRUE){
-  if(length(subj)==0) return("")
-  subj = subj %>% unique() %>% sort()
-  n_subj = length(subj)
-  subj = paste0("#", subj) %>% 
-    cli_vec(style=list("vec_trunc"=max_subjid, "vec-trunc-style"="head"))
-  rtn = format_inline("{n_subj} patient{?s}: {subj}")
-  if(isTRUE(par)) rtn = format_inline(" ({rtn})")
-  rtn
 }
 
 
@@ -204,7 +194,7 @@ assert_no_duplicate = function(df, by=NULL, id_col=get_subjid_cols()){
 #'   edc_data_stop("Age should *never* be <25")
 #' }
 edc_data_warn = function(df, message, ..., 
-                         issue_n=NULL, max_subjid=5, 
+                         issue_n="xx", max_subjid=5, 
                          write_to_csv=FALSE, 
                          col_subjid=get_subjid_cols()){
   
@@ -220,7 +210,7 @@ edc_data_warn = function(df, message, ...,
 #' @export
 #' @importFrom rlang check_dots_empty
 edc_data_stop = function(df, message, ..., 
-                         issue_n=NULL, max_subjid=5, 
+                         issue_n="xx", max_subjid=5, 
                          write_to_csv=FALSE, 
                          col_subjid=get_subjid_cols()){
   
@@ -230,6 +220,24 @@ edc_data_stop = function(df, message, ...,
                      max_subjid=max_subjid, col_subjid=col_subjid, 
                      fun=cli_abort)
 }
+
+
+
+
+#' @rdname edc_data_warn
+#' @usage edc_data_warnings()
+#' @export
+#' @importFrom dplyr across any_of arrange
+#' @importFrom purrr list_rbind
+edc_data_warnings = function(){
+  edcimport_env$warn_list %>% 
+    list_rbind() %>% 
+    arrange(across(any_of(c("issue_n", "message"))))
+}
+
+
+# Utils ---------------------------------------------------------------------------------------
+
 
 #' @noRd
 #' @keywords internal
@@ -247,23 +255,42 @@ edc_data_condition = function(df, message, issue_n, max_subjid,
       write.csv2(df, write_to_csv)
     }
     
-    if(is.null(issue_n)) issue_n = "xx"
-    else if(is.numeric(issue_n)) issue_n = str_pad(issue_n, width=2, pad="0")
-    message = format_inline(message)
-    subj_label = ""; subj=NULL
+    message = format_inline(message, .envir=parent.frame())
+    
+    par_issue = par_subj = ""; subj=NULL
+    
+    if(!is.null(issue_n)){
+      if(is.numeric(issue_n)) issue_n = str_pad(issue_n, width=2, pad="0")
+      par_issue = format_inline("Issue #{col_green(issue_n)}: ")
+    }
+    
     if(!is.null(col_subjid)){
       subj = df %>% pull(any_of2(col_subjid)) %>% unique() %>% sort()
       n_subj = length(subj)
       subj = paste0("#", subj) %>% 
         cli_vec(style=list("vec_trunc"=max_subjid, "vec-trunc-style"="head"))
-      subj_label = format_inline(" ({n_subj} patient{?s}: {subj})")
+      par_subj = format_inline(" ({n_subj} patient{?s}: {subj})")
     }
-    
-    item = tibble(issue_n, message, subjid=list(subj), fun=caller_arg(fun))
+    fun_name = caller_arg(fun)
+    item = tibble(issue_n, message, subjid=list(subj), fun=fun_name)
     save_warn_list_item(item)
-    fun("Issue #{col_green(issue_n)}: {message}{subj_label}")
+    
+    fun("{par_issue}{message}{par_subj}")
   }
   invisible(df)
+}
+
+#' @noRd
+#' @keywords internal
+format_subj = function(subj, max_subjid=5, par=TRUE){
+  if(length(subj)==0) return("")
+  subj = subj %>% unique() %>% sort()
+  n_subj = length(subj)
+  subj = paste0("#", subj) %>% 
+    cli_vec(style=list("vec_trunc"=max_subjid, "vec-trunc-style"="head"))
+  rtn = format_inline("{n_subj} patient{?s}: {subj}")
+  if(isTRUE(par)) rtn = format_inline(" ({rtn})")
+  rtn
 }
 
 
@@ -286,29 +313,15 @@ save_warn_list_item = function(item){
   
 }
 
-
-#' @rdname edc_data_warn
-#' @usage edc_data_warnings()
-#' @export
-#' @importFrom dplyr across any_of arrange
-#' @importFrom purrr list_rbind
-edc_data_warnings = function(){
-  edcimport_env$warn_list %>% 
-    list_rbind() %>% 
-    arrange(across(any_of(c("issue_n", "message"))))
-}
-
-
-
 # Deprecated ----------------------------------------------------------------------------------
 
 
-#' @rdname assert_no_missing_patient
+#' @rdname edc_warn_patient_diffs
 #' @usage NULL
 #' @export
 #' @importFrom lifecycle deprecate_warn
 check_subjid = function(x){
-  deprecate_warn("5.0.0", "check_subjid()", "assert_no_missing_patient()")
+  deprecate_warn("5.0.0", "check_subjid()", "edc_warn_patient_diffs()")
 }
 
 
