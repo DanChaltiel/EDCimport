@@ -1,6 +1,6 @@
 on: [push, workflow_dispatch]
 
-name: Update dev version
+name: Bump dev version
 
 jobs:
   update_version:
