@@ -1,3 +1,9 @@
+
+
+# Assertions ----------------------------------------------------------------------------------
+#to avoid dependency on checkmate
+
+
 #' @noRd
 #' @keywords internal
 #' @examples
@@ -6,13 +12,13 @@
 #' @importFrom cli cli_abort
 #' @importFrom glue glue
 #' @importFrom rlang caller_arg
-assert = function(x, msg=NULL){
+assert = function(x, msg=NULL, call=parent.frame()){
   if(is.null(msg)){
     x_str = caller_arg(x)
     msg = glue("`{x_str}` is FALSE")
   }
   if(!x){
-    cli_abort(msg)
+    cli_abort(msg, call=call)
   }
   invisible(TRUE)
 }
@@ -23,33 +29,29 @@ assert = function(x, msg=NULL){
 #' @examples
 #' assert_file_exists("R/data.R")
 #' assert_file_exists("R/data.SAS")
-#' @importFrom cli cli_abort
-#' @importFrom glue glue
-#' @importFrom rlang caller_arg
 assert_file_exists = function(x, msg=NULL){
-  if(is.null(msg)){
-    x_str = caller_arg(x)
-    msg = glue("{x_str} doesn't exist.")
-  }
-  if(!file.exists(x)){
-    cli_abort(msg)
+  assert(file.exists(x), msg, call=parent.frame())
+}
+
+
+#' @noRd
+#' @keywords internal
+#' @importFrom cli cli_abort
+#' @importFrom rlang caller_arg
+assert_class = function(x, class, null.ok=TRUE){
+  if(is.null(x) && null.ok) return(invisible(TRUE))
+  if(!inherits(x, class)){
+    cli_abort("{.arg {caller_arg(x)}} should be of class {.val {class}}", 
+              call=parent.frame())
   }
   invisible(TRUE)
 }
 
 
-#' @noRd
-#' @keywords internal
-can_be_numeric = function(x){
-  stopifnot(is.atomic(x) || is.list(x))
-  xnum_na <- suppressWarnings(is.na(as.numeric(x)))
-  all(is.na(x)==xnum_na)
-}
-#' @noRd
-#' @keywords internal
-is.Date = function (x) {
-  inherits(x, "POSIXt") || inherits(x, "POSIXct") || inherits(x, "Date")
-}
+
+# UTF8 ----------------------------------------------------------------------------------------
+
+
 
 #' @noRd
 #' @keywords internal
@@ -84,3 +86,24 @@ check_invalid_utf8 = function(lookup=get_lookup(), warn=FALSE){
   
   x
 }
+
+
+
+# Misc ----------------------------------------------------------------------------------------
+
+
+#' @noRd
+#' @keywords internal
+can_be_numeric = function(x){
+  stopifnot(is.atomic(x) || is.list(x))
+  xnum_na <- suppressWarnings(is.na(as.numeric(x)))
+  all(is.na(x)==xnum_na)
+}
+
+
+#' @noRd
+#' @keywords internal
+is.Date = function (x) {
+  inherits(x, "POSIXt") || inherits(x, "POSIXct") || inherits(x, "Date")
+}
+
