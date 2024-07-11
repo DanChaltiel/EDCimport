@@ -9,25 +9,22 @@ waterfall_plot(
   rc_sum = "RCTLSUM",
   rc_resp = "RCRESP",
   rc_date = "RCDT",
-  type = c("best_resp", "worst_resp", "timepoint"),
-  timepoint = NULL,
+  type = c("best_resp", "worst_resp"),
   rc_star = NULL,
   arm = NULL,
   warn_missing = TRUE
 )
 }
 \arguments{
-\item{data_recist}{recist table, one row}
+\item{data_recist}{recist dataset}
 
 \item{rc_sum}{name of the target lesions length sum column in \code{data_recist}, usually "RCTLSUM".}
 
 \item{rc_resp}{name of the response column in \code{data_recist}, usually "RCRESP".}
 
-\item{rc_date}{unused for now}
+\item{rc_date}{name of the date column in \code{data_recist}, usually "RCDT".}
 
 \item{type}{one of \code{c("best_resp", "worst_resp")}}
-
-\item{timepoint}{unused for now}
 
 \item{rc_star}{name of the logical column in \code{data_recist} that triggers the .  Can be set to \code{NULL}.}
 
@@ -41,14 +38,19 @@ a ggplot
 \description{
 Generate a waterfall plot
 }
+\section{Methods}{
+
+Data are ordered on \code{rc_date}.
+}
+
 \examples{
 
 \dontrun{
-waterfall_plot(rc, rc_date=RCDT, rc_sum=RCTLSUM, rc_resp=RCRESP)
-waterfall_plot(rc_date=RCDT, rc_sum=RCTLSUM, rc_resp=RCRESP, rc_star="RCNEW")
+waterfall_plot(rc, rc_date="RCDT", rc_sum="RCTLSUM", rc_resp="RCRESP")
+waterfall_plot(rc, rc_date="RCDT", rc_sum="RCTLSUM", rc_resp="RCRESP", type="worst_resp")
 rc \%>\% 
   left_join(arm, by="SUBJID") \%>\%
-  waterfall_plot(rc_date=RCDT, rc_sum=RCTLSUM, rc_resp=RCRESP, arm=ARM) +
-  NULL
+  mutate(star = any(RCNEW=="1-Yes", na.rm=TRUE), .by=SUBJID) \%>\% 
+  waterfall_plot(rc_date="RCDT", rc_sum="RCTLSUM", rc_resp="RCRESP", arm="ARM", rc_star="star")
 }
 }

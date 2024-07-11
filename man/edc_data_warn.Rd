@@ -11,7 +11,7 @@ edc_data_warn(
   df,
   message,
   ...,
-  issue_n = NULL,
+  issue_n = "xx",
   max_subjid = 5,
   write_to_csv = FALSE,
   col_subjid = get_subjid_cols()

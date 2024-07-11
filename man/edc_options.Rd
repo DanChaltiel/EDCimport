@@ -34,7 +34,7 @@ edc_options(
 
 \item{edc_lookup}{\strong{(Internal)} a reference to the lookup table (usually \code{.lookup}). Should usually not be changed manually.}
 
-\item{edc_subjid_ref}{\strong{used in \link{assert_no_missing_patient}} the vector of the reference subject IDs. You should usually write \code{edc_options(edc_subjid_ref=enrolres$subjid)}.}
+\item{edc_subjid_ref}{\strong{used in \link{edc_warn_patient_diffs}} the vector of the reference subject IDs. You should usually write \code{edc_options(edc_subjid_ref=enrolres$subjid)}.}
 
 \item{edc_plotly}{\strong{used in \link{edc_swimmerplot}} whether to use plotly to visualize the plot.}
 

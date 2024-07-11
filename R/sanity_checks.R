@@ -2,11 +2,14 @@
 
 #' Check the validity of the subject ID column
 #' 
-#' Compare a subject ID vector to the study's reference subject ID (usually something like `enrolres$subjid`). `check_subjid()` is the old, deprecated name.
+#' Compare a subject ID vector to the study's reference subject ID (usually something like `enrolres$subjid`), and warn if any patient is missing or extra. \cr
+#' `check_subjid()` is the old, deprecated name.
 #'
 #' @param x the subject ID vector to check, or a dataframe which ID column will be guessed
 #' @param ref the reference for subject ID. Should usually be set through `edc_options(edc_subjid_ref=xxx)`. See example.
-#' @param ref name of the subject ID column if `x` is a dataframe.
+#' @param data_name the name of the data (for the warning message)
+#' @param col_subjid name of the subject ID column if `x` is a dataframe.
+#' @inheritParams edc_data_warn
 #'
 #' @return nothing, called for errors/warnings
 #' @importFrom cli cli_abort cli_warn
@@ -24,7 +27,7 @@
 #' db1 %>% dplyr::filter(SUBJID>1) %>% edc_warn_patient_diffs()
 #' edc_warn_patient_diffs(c(db1$SUBJID, 99, 999))
 edc_warn_patient_diffs = function(x, ref=getOption("edc_subjid_ref"), 
-                                  data_name=NULL, issue_n="xx",
+                                  issue_n="xx", data_name=NULL, 
                                   col_subjid=get_subjid_cols()){
   if(is.null(ref)){
     cli_abort(c("Argument {.arg ref} cannot be NULL in {.fun edc_warn_patient_diffs}.", 
