@@ -15,6 +15,6 @@ jobs:
       with:
         install-r: false
     - name: Bump dev version
-      uses: DanChaltiel/actions/bumb-dev-version@v1
+      uses: DanChaltiel/actions/bump-dev-version@v1
       with:
         create-tag: true
