@@ -6,20 +6,9 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 ### New features
 
--   New function `edc_new_project()` to create an empty, standardized project r(r.
+#### Sanity checks alerts
 
--   New function `lastnews_table()` to find the last date an information has been entered for each patient.
-
--   New function `crf_status_plot()` to show the current database completion status.
-
--   New function `edc_inform_code()` to show how many code you wrote.
-
--   New functions to describe adverse events:
-
-    -   `ae_table_grade_max()`, `ae_table_grade_n()`, and `ae_table_soc()` to generate standardized tables. They all can be turned to flextables using `as_flextable()`.
-    -   `ae_plot_grade_max()`, `ae_plot_grade_n()`, and `ae_plot_soc()` to generate standardized plots.
-
--   New functions `edc_data_warn()`, `edc_data_stop()`, and `assert_no_rows()` to help performing data sanity checks.
+-   New functions `edc_data_warn()` and `edc_data_stop()`, to alert if data has inconsistencies.
 
     ``` r
     ae %>% filter(grade>5) %>% assert_no_rows()
@@ -29,6 +18,14 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 -   New function `edc_warn_extraction_date()`, to alert if data is too old.
 
+#### Miscellaneous utils
+
+-   New function `edc_new_project()` to create an empty, standardized project.
+
+-   New function `edc_inform_code()` to show how many code you wrote.
+
+-   New function `crf_status_plot()` to show the current database completion status.
+
 -   New function `save_sessioninfo()`, to save `sessionInfo()` into a text file.
 
 -   New function `fct_yesno()`, to easily format Yes/No columns.
@@ -36,6 +33,16 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 -   New function `save_plotly()`, to save a `plotly` to an HTML file.
 
 -   New experimental functions `table_format()`, `get_common_cols()` and `get_meta_cols()` that might become useful to find keys to pivot or summarise data.
+
+#### Clinical research (might be moved to another package)
+
+-   New function `lastnews_table()` to find the last date an information has been entered for each patient. Useful for survival
+
+-   New functions to describe adverse events:
+
+    -   `ae_table_grade_max()`, `ae_table_grade_n()`, and `ae_table_soc()` to generate standardized tables. They all can be turned to flextables using `as_flextable()`.
+    -   `ae_plot_grade_max()`, `ae_plot_grade_n()`, and `ae_plot_soc()` to generate standardized plots.
+
 
 ### Bug fixes & Improvements
 
@@ -48,6 +55,7 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 -   `get_lookup()` will now retreive the lookup table. Use `build_lookup()` to build is from a table list.
 -   `get_subjid_cols()` and `get_crfname_cols()` replace the now deprecated `get_key_cols()`.
 
+
 # EDCimport 0.4.1
 
 ### Bug fixes & Improvements
@@ -55,6 +63,7 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 -   Changes in testing environment so that the package can be installed from CRAN despite firewall policies forbidding password-protected archive downloading.
 
 -   Fixed a bug where a corrupted XPT file can prevent the whole import to fail.
+
 
 # EDCimport 0.4.0
 
