@@ -116,7 +116,7 @@ find_keyword = function(keyword, data=get_lookup(), ignore_case=TRUE){
 fct_yesno = function(x, lvl=getOption("edc_fct_yesno", get_yesno_lvl()), 
                      mutate_character=TRUE){
   stopifnot(is.list(lvl))
-  if(all(x %in% c(1,0))) return(factor(x, levels=c(1,0), labels=lvl[[1]]))
+  if(all(x %in% c(1,0))) return(factor(as.numeric(x), levels=c(1,0), labels=lvl[[1]]))
   if(!is.factor(x) && !is.character(x)) return(x)
   if(is.character(x) && isFALSE(mutate_character)) return(x)
   lvls = lvl %>% keep(~all(x %in% union(.x, NA)))

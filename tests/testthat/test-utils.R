@@ -131,20 +131,20 @@ test_that("7zip not in the path", {
 
 test_that("expect_classed_conditions()", {
   fun1 = function(){
-    rlang::inform("I am a message", class="message1")
-    rlang::inform("I am a message too", class="message2")
-    rlang::inform("I am a message three", class="message3")
-    rlang::warn("Beware, I am a warning", class="warn1")
-    rlang::warn("Beware, I am a warning 2", class="warn2")
-    rlang::abort("STOP, I am the error!", class="error1")
+    inform("I am a message", class="message1")
+    inform("I am a message too", class="message2")
+    inform("I am a message three", class="message3")
+    warn("Beware, I am a warning", class="warn1")
+    warn("Beware, I am a warning 2", class="warn2")
+    abort("STOP, I am the error!", class="error1")
     999
   }
   fun2 = function(){
-    rlang::inform("I am a message", class="message1")
-    rlang::inform("I am a message too", class="message2")
-    rlang::inform("I am a message three", class="message3")
-    rlang::warn("Beware, I am a warning", class="warn1")
-    rlang::warn("Beware, I am a warning 2", class="warn2")
+    inform("I am a message", class="message1")
+    inform("I am a message too", class="message2")
+    inform("I am a message three", class="message3")
+    warn("Beware, I am a warning", class="warn1")
+    warn("Beware, I am a warning 2", class="warn2")
     999
   }
   
@@ -175,3 +175,26 @@ test_that("expect_classed_conditions()", {
                             error_class="error1") %>% 
     expect_error("message3.*xxxx")
 })
+
+
+
+# Misc ----------------------------------------------------------------------------------------
+
+
+test_that("fct_yesno() works", {
+  
+  set.seed(42)
+  x = tibble(a=sample(c("Yes", "No"), size=20, replace=TRUE),
+             b=sample(c("1-Yes", "0-No"), size=20, replace=TRUE),
+             c=sample(0:1, size=20, replace=TRUE),
+             x=sample(c("Oui", "Non"), size=20, replace=TRUE),
+             y=1:20)
+  
+  fct_yesno(x$a) %>% class() %>% expect_equal("factor")
+  fct_yesno(x$b) %>% class() %>% expect_equal("factor")
+  fct_yesno(x$c) %>% class() %>% expect_equal("factor")
+  fct_yesno(x$x) %>% class() %>% expect_equal("character")
+  fct_yesno(x$y) %>% class() %>% expect_equal("integer")
+  
+})
+1
