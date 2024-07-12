@@ -43,6 +43,24 @@ edc_make_clean_name = function (string, from = "") {
 }
 
 
+#' @noRd
+#' @keywords internal
+#' @source vctrs::`%0%`
+#' @seealso https://github.com/r-lib/rlang/issues/1583
+`%0%` = function (x, y) {
+  if(length(x) == 0L) y else x
+}
+
+#' any_of() with case sensitivity
+#' @noRd
+#' @keywords internal
+#' @importFrom tidyselect matches
+any_of2 = function(x, ignore.case=TRUE, ...){
+  matches(paste(paste0("^",x,"$"), collapse="|"), ignore.case=ignore.case, ...)
+}
+
+
+# Parse zip name ------------------------------------------------------------------------------
 
 #' Parse a file name to get the date of data extraction
 #'
@@ -72,18 +90,6 @@ parse_file_projname = function(x){
 }
 
 
-#' Change a `try-error` column to a simpler character column of class "edc_error_col"
-#' @noRd
-#' @keywords internal
-#' @importFrom dplyr across mutate
-#' @importFrom tidyselect where
-flatten_error_columns = function(df){
-  df %>% 
-    mutate(across(where(~inherits(.x, "try-error")), ~{
-      attr(.x, "condition")$message %>% `class<-`("edc_error_col")
-    }))
-}
-
 
 #' Get the date of data extraction from the modification time of all files
 #'
@@ -107,36 +113,6 @@ get_folder_datetime = function(folder, verbose=TRUE){
 
 
 
-#' @noRd
-#' @keywords internal
-format_ymd = function(x){
-  stopifnot(inherits(x, "POSIXt") || inherits(x, "Date"))
-  format(x, "%Y-%m-%d")
-}
-#' @noRd
-#' @keywords internal
-format_ymdhm = function(x){
-  stopifnot(inherits(x, "POSIXct") || inherits(x, "Date"))
-  format(x, "%Y-%m-%d %Hh%M")
-}
-
-
-
-#' @noRd
-#' @keywords internal
-#' @source vctrs::`%0%`
-#' @seealso https://github.com/r-lib/rlang/issues/1583
-`%0%` = function (x, y) {
-  if(length(x) == 0L) y else x
-}
-
-#' any_of() with case sensitivity
-#' @noRd
-#' @keywords internal
-#' @importFrom tidyselect matches
-any_of2 = function(x, ignore.case=TRUE, ...){
-  matches(paste(paste0("^",x,"$"), collapse="|"), ignore.case=ignore.case, ...)
-}
 
 #' @noRd
 #' @keywords internal
@@ -155,6 +131,9 @@ get_data_name = function(df, crfname=getOption("edc_cols_crfname", "crfname")){
     NA
   }
 }
+
+
+# Labels --------------------------------------------------------------------------------------
 
 #' @noRd
 #' @keywords internal
@@ -184,10 +163,12 @@ set_label = function(x, lab){
 }
 
 
+# Mixed ordering ------------------------------------------------------------------------------
+
 #' @source gtools::mixedsort
 #' @noRd
 #' @keywords internal 
-function (x, decreasing = FALSE, na.last = TRUE, blank.last = FALSE, 
+mixedsort = function (x, decreasing = FALSE, na.last = TRUE, blank.last = FALSE, 
           numeric.type = c("decimal", "roman"), roman.case = c("upper", 
                                                                "lower", "both"), scientific = TRUE) 
 {
@@ -196,6 +177,7 @@ function (x, decreasing = FALSE, na.last = TRUE, blank.last = FALSE,
                     roman.case = roman.case, scientific = scientific)
   x[ord]
 }
+
 #' @source gtools::mixedorder
 #' @noRd
 #' @keywords internal
@@ -274,6 +256,8 @@ mixedorder = function (x, decreasing = FALSE, na.last = TRUE, blank.last = FALSE
 }
 
 
+# NA.RM ---------------------------------------------------------------------------------------
+
 max_narm = function(x, na.rm=TRUE) {
   if(all(is.na(x))) {
     if(is.numeric(x)) return(NA_real_) 
@@ -281,6 +265,7 @@ max_narm = function(x, na.rm=TRUE) {
   }
   max(x, na.rm=na.rm)
 }
+
 min_narm = function(x, na.rm=TRUE) {
   if(all(is.na(x))) {
     if(is.numeric(x)) return(NA_real_) 
@@ -288,6 +273,9 @@ min_narm = function(x, na.rm=TRUE) {
   }
   min(x, na.rm=na.rm)
 }
+
+# Classes -------------------------------------------------------------------------------------
+
 
 add_class = function(x, value){
   class(x) = c(value, class(x))
@@ -299,4 +287,25 @@ remove_class = function(x, value){
   x
 }
 
-NA_Date_ <- structure(NA_real_, class = "Date")
+# Dates ---------------------------------------------------------------------------------------
+
+
+NA_Date_ = structure(NA_real_, class = "Date")
+
+today_ymd = function(){
+  format(Sys.Date(), "%Y-%m-%d")
+}
+
+
+#' @noRd
+#' @keywords internal
+format_ymd = function(x){
+  stopifnot(inherits(x, "POSIXt") || inherits(x, "Date"))
+  format(x, "%Y-%m-%d")
+}
+#' @noRd
+#' @keywords internal
+format_ymdhm = function(x){
+  stopifnot(inherits(x, "POSIXct") || inherits(x, "Date"))
+  format(x, "%Y-%m-%d %Hh%M")
+}

@@ -38,7 +38,7 @@ ae_table_grade_max = function(
     df_ae, ..., df_enrol, 
     arm="ARM", subjid="SUBJID", soc="AESOC", grade="AEGR", total=TRUE, digits=0
 ){
-  check_installed("crosstable", "for `ae_table_grade_max()` to work")
+  check_installed("crosstable", "for `ae_table_grade_max()` to work.")
   check_dots_empty()
   null_arm = is.null(arm)
   
@@ -95,7 +95,7 @@ ae_plot_grade_max = function(
     drop_levels = FALSE,
     arm="ARM", subjid="SUBJID", soc="AESOC", grade="AEGR"
 ){
-  check_installed("patchwork", "for `ae_plot_grade_max()` to work")
+  check_installed("patchwork", "for `ae_plot_grade_max()` to work.")
   check_dots_empty()
   
   df_ae = df_ae %>% 
@@ -197,7 +197,7 @@ ae_table_grade_n = function(
     arm="ARM", grade="AEGR", subjid="SUBJID", soc="AESOC",
     total=FALSE, digits=0
 ){
-  check_installed("crosstable", "for `ae_table_grade_n()` to work")
+  check_installed("crosstable", "for `ae_table_grade_n()` to work.")
   check_dots_empty()
   
   df_ae = df_ae %>% rename_with(tolower) %>%
