@@ -72,7 +72,7 @@ edc_example_mixed = function(N=100, seed=42){
 #' @importFrom purrr imap
 #' @importFrom stats rnorm runif
 #' @importFrom tibble lst tibble
-edc_example_plot = function(N=50, seed=42){
+edc_example = function(N=50, seed=42){
   set.seed(seed)
   start = ISOdate(2010, 04, 13)
   day = 3600*24
@@ -97,6 +97,9 @@ edc_example_plot = function(N=50, seed=42){
   rtn = lst(db0, db1, db2, db3) %>% 
     imap(~.x %>% mutate(crfname=.y %>% set_label("Form name")))
   # rtn$.lookup = build_lookup(rtn) %>% extend_lookup()
+  rtn$date_extraction = "2024/01/01"
+  rtn$datetime_extraction = structure(1704067200, class = c("POSIXct", "POSIXt"), 
+                                      tzone = "Europe/Paris")
   rtn$.lookup=build_lookup(rtn)
   set_lookup(rtn$.lookup)
   rtn
@@ -105,7 +108,7 @@ edc_example_plot = function(N=50, seed=42){
 
 #' @rdname data_example
 #' @export
-edc_example = edc_example_plot
+edc_example_plot = edc_example
 
 
 #' @rdname data_example

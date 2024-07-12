@@ -25,6 +25,8 @@ options(
 # rlang::global_entrace()
 
 library(rlang, warn.conflicts=FALSE)
+library(cli, warn.conflicts=FALSE)
+library(tidyverse, warn.conflicts=FALSE)
 
 
 edc_options(

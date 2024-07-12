@@ -25,6 +25,8 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
     #> Warning: Issue #13: Grade is missing (8 patients: #21, #28, #39, #95, #97, ...)
     ```
 
+-   New function `edc_warn_extraction_date()`, to alert if data is too old.
+
 -   New function `fct_yesno()`, to easily format Yes/No columns.
 
 -   New function `save_plotly()`, to save a `plotly` to an HTML file.

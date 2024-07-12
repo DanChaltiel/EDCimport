@@ -85,6 +85,26 @@ edc_warn_patient_diffs = function(x, ref=getOption("edc_subjid_ref"),
   invisible(x)
 }
 
+#' Warn if extraction is too old
+#'
+#' @param max_days the max acceptable age of the data
+#'
+#' @return nothing
+#' @export
+#'
+#' @examples
+#' tm = edc_example()
+#' load_list(tm)
+#' edc_warn_extraction_date()
+edc_warn_extraction_date = function(max_days=30){
+  a = round(as.numeric(Sys.time() - datetime_extraction))
+  if(a>max_days){
+    cli_warn("{col_red('- OUTDATED - ')}Data extraction is {col_red(a)} days old.")
+  }
+  invisible(TRUE)
+}
+
+
 
 #' Assert that a dataframe has one row per patient
 #' 
