@@ -3,16 +3,16 @@
 \name{data_example}
 \alias{data_example}
 \alias{edc_example_mixed}
-\alias{edc_example_plot}
 \alias{edc_example}
+\alias{edc_example_plot}
 \alias{edc_example_ae}
 \title{Example databases}
 \usage{
 edc_example_mixed(N = 100, seed = 42)
 
-edc_example_plot(N = 50, seed = 42)
-
 edc_example(N = 50, seed = 42)
+
+edc_example_plot(N = 50, seed = 42)
 
 edc_example_ae(N = 50, seed = 42)
 }

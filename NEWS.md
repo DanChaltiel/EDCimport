@@ -6,7 +6,7 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 ### New features
 
--   New function `edc_new_project()` to create an empty, standardized project.
+-   New function `edc_new_project()` to create an empty, standardized project r(r.
 
 -   New function `lastnews_table()` to find the last date an information has been entered for each patient.
 

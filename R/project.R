@@ -65,6 +65,8 @@ edc_new_project = function(path, open=TRUE){
 
 # Utils ---------------------------------------------------------------------------------------
 
+#' @noRd
+#' @keywords internal
 #' @param ... names=pattern, values=replacement
 file_str_replace = function(file, ...) {
   readLines(file) %>% 

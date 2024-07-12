@@ -219,7 +219,7 @@ edc_inform_code = function(main="main.R", Rdir="R/"){
 #' @param path target path to write the file
 #' @param with_date whether to insert the date before the file extension
 #'
-#' @return
+#' @return nothing
 #' @export
 #'
 #' @examples
