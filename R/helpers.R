@@ -570,7 +570,11 @@ load_list = function(x, env=parent.frame(), remove=TRUE){
   }
   list2env(x, env)
   
-  if(remove) remove(list=caller_arg(x), envir=env)
+  if(remove) {
+    x_name = caller_arg(x)
+    if(exists(x_name, where=env)) remove(list=x_name, envir=env)
+    else                          remove(list=x_name, envir=parent.frame())
+  }
 }
 
 #' Load a `.RData` file as a list
