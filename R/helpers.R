@@ -207,8 +207,31 @@ edc_inform_code = function(main="main.R", Rdir="R/"){
   
   rslt = sources %>% map_dbl(~readLines(.x) %>% length())
   
-  cli_inform("Sourcing {length(rslt)} files in {.path {main}} for a total of {sum(rslt)} lines of code")
+  cli_inform("Sourcing {length(rslt)} files in {.path {main}} for a total 
+             of {sum(rslt)} lines of code.")
 }
+
+
+#' Save `sessionInfo()` output
+#'
+#' Save `sessionInfo()` output into a text file.
+#'
+#' @param path target path to write the file
+#' @param with_date whether to insert the date before the file extension
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' save_sessioninfo()
+save_sessioninfo = function(path="check/session_info.txt", with_date=TRUE){
+  extension = path %>% str_extract("\\..+$")
+  target = path %>% str_remove(extension) %>% paste0("_", today_ymd(), extension)
+  dir.create(dirname(target), showWarnings=FALSE, recursive=TRUE)
+  sessionInfo() %>% capture.output() %>% cat(file=target, sep="\n")
+  invisible(TRUE)
+}
+
 
 # Manual correction ---------------------------------------------------------------------------
 

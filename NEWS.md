@@ -27,6 +27,8 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 -   New function `edc_warn_extraction_date()`, to alert if data is too old.
 
+-   New function `save_sessioninfo()`, to save `sessionInfo()` into a text file.
+
 -   New function `fct_yesno()`, to easily format Yes/No columns.
 
 -   New function `save_plotly()`, to save a `plotly` to an HTML file.
