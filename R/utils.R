@@ -44,6 +44,37 @@ any_of2 = function(x, ignore.case=TRUE, ...){
 }
 
 
+#' @noRd
+#' @keywords internal
+#' @source https://github.com/r-lib/cli/issues/228#issuecomment-1453614104
+cli_menu <- function(prompt, not_interactive, choices, quit = integer(), .envir = caller_env()) {
+  if (!cli:::is_interactive()) {
+    cli::cli_abort(c(prompt, not_interactive), .envir = .envir)
+  }
+  choices <- sapply(choices, cli::format_inline, .envir = .envir, USE.NAMES = FALSE)
+  
+  choices <- paste0(seq_along(choices), " ", choices)
+  cli::cli_inform(
+    c(prompt, choices),
+    .envir = .envir
+  )
+  
+  repeat {
+    selected <- readline("Selection: ")
+    if (selected %in% c("0", seq_along(choices))) {
+      break
+    }
+    cli::cli_inform("Enter an item from the menu, or 0 to exit")
+  }
+  
+  selected <- as.integer(selected)
+  if (selected %in% c(0, quit)) {
+    cli::cli_abort("Quiting...", call = NULL)
+  }
+  selected
+}
+exists('cli_menu', where='package:cli', mode='function') %>% `!` %>% stopifnot()
+
 # Parse zip name ------------------------------------------------------------------------------
 
 #' Parse a file name to get the date of data extraction
