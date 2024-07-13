@@ -113,6 +113,26 @@ get_folder_datetime = function(folder, verbose=TRUE){
 
 
 
+
+#' @noRd
+#' @keywords internal
+#' @importFrom cli cli_warn
+#' @importFrom dplyr select
+#' @importFrom rlang is_error
+get_data_name = function(df, crfname=getOption("edc_cols_crfname", "crfname")){
+  if(is_error(df)) return(NA)
+  sel = select(df, any_of2(crfname))
+  if(!is.null(attr(df, "data_name"))){
+    attr(df, "data_name")
+  } else if(ncol(sel)>0){
+    if(ncol(sel)>1) cli_warn("Several columns named {.val {crfname}}: {.val {names(sel)}}.")
+    sel[[1]][1]
+  } else {
+    NA
+  }
+}
+
+
 # Labels --------------------------------------------------------------------------------------
 
 #' @noRd
