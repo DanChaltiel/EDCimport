@@ -225,9 +225,11 @@ edc_inform_code = function(main="main.R", Rdir="R/"){
 #' @examples
 #' save_sessioninfo()
 save_sessioninfo = function(path="check/session_info.txt", with_date=TRUE){
-  extension = path %>% str_extract("\\..+$")
-  target = path %>% str_remove(extension) %>% paste0("_", today_ymd(), extension)
-  dir.create(dirname(target), showWarnings=FALSE, recursive=TRUE)
+  target = path %>% 
+    path_ext_remove() %>% 
+    paste0("_", today_ymd()) %>% 
+    path(ext=path_ext(path))
+  dir_create(path_dir(target), recurse=TRUE)
   sessionInfo() %>% capture.output() %>% cat(file=target, sep="\n")
   invisible(TRUE)
 }

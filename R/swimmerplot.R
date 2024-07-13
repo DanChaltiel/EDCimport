@@ -195,8 +195,8 @@ save_plotly = function(p, file, ...){
   check_installed("plotly", reason="for `save_plotly()` to work.")
   check_installed("htmlwidgets", reason="for `save_plotly()` to work.")
   if(inherits(p, "ggplot")) p = plotly::ggplotly(p)
-  dir.create(dirname(file), showWarnings=FALSE, recursive=TRUE)
-  wd = setwd(dirname(file))
+  dir_create(path_dir(file), recurse=TRUE)
+  wd = setwd(path_dir(file))
   on.exit(setwd(wd))
   htmlwidgets::saveWidget(p, file=basename(file), ...)
 }

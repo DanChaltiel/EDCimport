@@ -12,8 +12,8 @@ get_7z_dir = function(){
   #TODO multiple default depending on OS?
   default = "C:/Program Files/7-Zip/"
   path_7zip = getOption("path_7zip", default)
-  #TODO dir.exists is weak af, better check the executable. But what about linux and macos?
-  if(!dir.exists(path_7zip)){
+  #TODO dir_exists is weak af, better check the executable. But what about linux and macos?
+  if(!dir_exists(path_7zip)){
     cli_abort(c("Path {.val {path_7zip}} does not lead to 7-Zip.", 
                 x="Try to add 7-Zip to the PATH environment variable.", 
                 x='Otherwise, use {.code options(path_7zip="path/to/7zip")} to change the', 
@@ -51,10 +51,10 @@ get_7z_dir = function(){
 #' @noRd
 #' @keywords internal
 extract_7z = function(archive, target_dir, password=NULL, path_7zip=NULL){
-  if(!file.exists(archive)){
+  if(!file_exists(archive)){
     cli_abort("Archive file {.val {archive}} does not exist.")
   }
-  if(!dir.exists(target_dir)){
+  if(!dir_exists(target_dir)){
     cli_abort("Target directory {.val {target_dir}} does not exist.")
   }
   cur_path = Sys.getenv("PATH")

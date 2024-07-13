@@ -7,7 +7,7 @@
 #' @noRd
 #' @keywords internal
 read_sas_format = function(file){
-  if(!file.exists(file)){
+  if(!file_exists(file)){
     cli_abort("File {file} does not exist.")
   }
   source = read_file(file)

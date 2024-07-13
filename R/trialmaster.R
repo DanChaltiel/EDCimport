@@ -32,7 +32,7 @@ read_trialmaster = function(archive, ..., use_cache="write",
     cli_abort("{.arg use_cache} should be one of {.val c(TRUE, FALSE, 'read', 'write')}.")
   }
   
-  if(!file.exists(archive)){
+  if(!file_exists(archive)){
     cli_abort("Archive {.val {archive}} does not exist.", 
              class="edc_tm_404")
   }
@@ -47,9 +47,9 @@ read_trialmaster = function(archive, ..., use_cache="write",
   }
   
   # read (+/-cache) ----
-  directory = dirname(archive)
+  directory = path_dir(archive)
   cache_file = glue("{directory}/trialmaster_export_{format_ymdhm(extract_datetime)}.rds")
-  if(file.exists(cache_file) && (isTRUE(use_cache) || use_cache=="read")){
+  if(file_exists(cache_file) && (isTRUE(use_cache) || use_cache=="read")){
     if(verbose>0) cli_inform("Reading cache: {.file {cache_file}}", class="read_tm_cache")
     rtn = readRDS(cache_file)
     
@@ -65,13 +65,13 @@ read_trialmaster = function(archive, ..., use_cache="write",
     }
   } else {
     if(verbose>0) cli_inform("Unzipping {.file {archive}}", class="read_tm_zip")
-    temp_folder = file.path2(tempdir(), str_remove(basename(archive), "\\.zip"))
-    dir.create(temp_folder, recursive=TRUE, showWarnings=FALSE)
+    temp_folder = basename(archive) %>% str_remove("\\.zip") %>% path_temp()
+    dir_create(temp_folder, recurse=TRUE)
     msg = extract_7z(archive, temp_folder, pw)
     if(verbose>1) cli_inform(msg)
     if(is.na(extract_datetime)) extract_datetime = get_folder_datetime(temp_folder)
-    format_file = file.path2(temp_folder, "procformat.sas")
-    if(!file.exists(format_file)){
+    format_file = path(temp_folder, "procformat.sas")
+    if(!file_exists(format_file)){
       cli_warn("No file {.val procformat.sas} found in {.arg directory}. 
              Data formats cannot be applied.", 
              class="edc_tm_no_procformat_warning") 
@@ -154,9 +154,9 @@ read_tm_all_xpt = function(directory, ..., format_file="procformat.sas",
   
   # applying formats ----
   if(!is.null(format_file)){
-    procformat = file.path2(directory, format_file)
-    if(!file.exists(procformat)) procformat = format_file
-    if(!file.exists(procformat)) {
+    procformat = path(directory, format_file)
+    if(!file_exists(procformat)) procformat = format_file
+    if(!file_exists(procformat)) {
       cli_abort("File {.file {format_file}} does not exist. Set {.arg format_file=NULL} to override.", 
                 class="edc_tm_no_procformat_error")
     }

@@ -30,7 +30,7 @@ edc_new_project = function(path, open=TRUE){
     str_replace(fixed(as.character(templ_dir)), path) %>% 
     str_replace("xxxxxx.Rproj", rproj_file) %>% 
     path()
-  dir_create(dirname(new_files))
+  dir_create(path_dir(new_files))
   file_copy(pkg_files, new_path=new_files, overwrite=TRUE)
   
   #replace template variables

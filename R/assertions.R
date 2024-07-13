@@ -30,7 +30,7 @@ assert = function(x, msg=NULL, call=parent.frame()){
 #' assert_file_exists("R/data.R")
 #' assert_file_exists("R/data.SAS")
 assert_file_exists = function(x, msg=NULL){
-  assert(file.exists(x), msg, call=parent.frame())
+  assert(file_exists(x), msg, call=parent.frame())
 }
 
 

@@ -1,22 +1,6 @@
 
 
 
-#' Improve file.path but remove duplicated separators
-#'
-#' @param ... passed on to base::file.path()
-#'
-#' @return a file path
-#' @noRd
-#' @keywords internal
-#' @importFrom stringr str_replace_all
-file.path2 = function(..., ext=NULL){
-  #TODO utilise le package fs?
-  fsep = .Platform$file.sep
-  rtn = file.path(...) %>% str_replace_all(paste0(fsep, "+"), fsep)
-  if(!is.null(ext)) rtn = paste0(rtn, ext)
-  rtn
-}
-
 #' Rudimentary function to clean the names
 #'
 #' Avoids a dependency to janitor.

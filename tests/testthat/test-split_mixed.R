@@ -13,7 +13,7 @@ if(FALSE){
     x = tm[[i]]
     if(!is.data.frame(x) || i==".lookup") next
     print(i)
-    filename = file.path2(path, i, ext=".xpt")
+    filename = path(path, i, ext="xpt")
     haven::write_xpt(tm[[i]], filename)
   }
   # archive::archive_write_files()
