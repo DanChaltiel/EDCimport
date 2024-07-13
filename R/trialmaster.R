@@ -81,7 +81,7 @@ read_trialmaster = function(archive, ..., use_cache="write",
                           clean_names_fun=clean_names_fun, 
                           split_mixed=split_mixed,
                           extend_lookup=extend_lookup,
-                          key_columns=key_columns, 
+                          key_columns=key_columns,
                           datetime_extraction=extract_datetime, 
                           verbose=verbose)
     

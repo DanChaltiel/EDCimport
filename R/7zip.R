@@ -72,12 +72,6 @@ extract_7z = function(archive, target_dir, password=NULL, path_7zip=NULL){
     cli_abort(msg, class="edc_7z_cmd_error")
   }
   
-  # browser()
-  # pwc = if(is.null(password)) "" else password
-  # msg = archive::archive_extract(archive, dir=target_dir, password=pwc)
-  # TODO trycatch pour mauvais mot de passe
-  # return(msg[1])
-  
   status = attr(msg, "status")
   if(!nzchar(msg[1])) msg=msg[-1]
   msg = paste(msg, sep="\n")
