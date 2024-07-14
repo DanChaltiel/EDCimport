@@ -74,7 +74,6 @@ cli_menu <- function(prompt, not_interactive, choices, quit = integer(), .envir 
   }
   selected
 }
-exists('cli_menu', where='package:cli', mode='function') %>% `!` %>% stopifnot()
 
 # Parse zip name ------------------------------------------------------------------------------
 

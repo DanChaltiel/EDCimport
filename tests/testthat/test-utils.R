@@ -4,6 +4,11 @@ skip_on_cran()
 edc_options(edc_lookup_overwrite_warn=FALSE)
 
 
+test_that("no exports", {
+  testthat::test_path("../../R/utils.R") %>% 
+    readLines() %>% str_subset("@export") %>% expect_length(0)
+})
+
 # load_list() ---------------------------------------------------------------------------------
 
 test_that("load_list() works", {
@@ -40,12 +45,8 @@ test_that("save_list() works", {
 
 test_that("get_folder_datetime() works", {
   folder = paste0(tempdir(), "/test_get_datetime")
-  dir.create(folder, showWarnings=FALSE)
-  file.create(paste0(folder, "/f1.R"))
-  file.create(paste0(folder, "/f2.R"))
-  file.create(paste0(folder, "/f3.R"))
-  file.create(paste0(folder, "/f4.R"))
-  file.create(paste0(folder, "/f5.R"))
+  fs::dir_create(folder)
+  fs::file_create(paste0(folder, "/f", 1:5, ".R"))
   dir(folder, full.names=TRUE)[1:3] %>% purrr::walk(~Sys.setFileTime(.x, "1975-01-01 CET"))
   # dir(folder, full.names=TRUE) %>% file.info() %>% select(mtime)
   x = get_folder_datetime(folder) %>% 
@@ -197,4 +198,8 @@ test_that("fct_yesno() works", {
   fct_yesno(x$y) %>% class() %>% expect_equal("integer")
   
 })
-1
+
+test_that("cli_menu() is not in package cli yet", {
+  # exists('cli_menu', where='package:cli', mode='function') %>% expect_false()
+  expect_false("package:cli" %in% find("cli_menu"))
+})
