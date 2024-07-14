@@ -29,6 +29,7 @@ assert = function(x, msg=NULL, call=parent.frame()){
 #' @examples
 #' assert_file_exists("R/data.R")
 #' assert_file_exists("R/data.SAS")
+#' @importFrom fs file_exists
 assert_file_exists = function(x, msg=NULL){
   assert(file_exists(x), msg, call=parent.frame())
 }
@@ -37,7 +38,6 @@ assert_file_exists = function(x, msg=NULL){
 #' @noRd
 #' @keywords internal
 #' @importFrom cli cli_abort
-#' @importFrom rlang caller_arg
 assert_class = function(x, class, null.ok=TRUE){
   if(is.null(x) && null.ok) return(invisible(TRUE))
   if(!inherits(x, class)){
@@ -106,4 +106,3 @@ can_be_numeric = function(x){
 is.Date = function (x) {
   inherits(x, "POSIXt") || inherits(x, "POSIXct") || inherits(x, "Date")
 }
-

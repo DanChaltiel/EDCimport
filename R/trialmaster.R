@@ -15,6 +15,7 @@
 #' 
 #' @export
 #' @importFrom cli cli_abort cli_inform cli_warn
+#' @importFrom fs dir_create file_exists path path_dir path_temp
 #' @importFrom glue glue
 #' @importFrom rlang check_dots_empty
 #' @importFrom stringr str_remove
@@ -125,6 +126,7 @@ read_trialmaster = function(archive, ..., use_cache="write",
 #' @export
 #' @importFrom cli cli_abort cli_warn
 #' @importFrom dplyr across distinct mutate na_if select
+#' @importFrom fs file_exists path
 #' @importFrom haven read_xpt
 #' @importFrom purrr imap iwalk keep keep_at map_lgl pwalk walk
 #' @importFrom rlang check_dots_empty is_error set_names

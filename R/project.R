@@ -9,6 +9,11 @@
 #'
 #' @return Path to the project, invisibly.
 #' @export
+#' @importFrom cli cli_abort cli_inform
+#' @importFrom fs dir_create dir_ls file_copy is_dir path path_dir
+#' @importFrom purrr walk
+#' @importFrom rlang check_installed is_installed
+#' @importFrom stringr fixed str_replace
 edc_new_project = function(path, open=TRUE){
   check_installed("usethis", "for `init_project()` to work.")
   dir_create(path)
@@ -68,6 +73,7 @@ edc_new_project = function(path, open=TRUE){
 #' @noRd
 #' @keywords internal
 #' @param ... names=pattern, values=replacement
+#' @importFrom stringr str_replace_all
 file_str_replace = function(file, ...) {
   readLines(file) %>% 
     str_replace_all(c(...)) %>% 

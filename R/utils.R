@@ -47,6 +47,7 @@ any_of2 = function(x, ignore.case=TRUE, ...){
 #' @noRd
 #' @keywords internal
 #' @source https://github.com/r-lib/cli/issues/228#issuecomment-1453614104
+#' @importFrom rlang caller_env
 cli_menu <- function(prompt, not_interactive, choices, quit = integer(), .envir = caller_env()) {
   if (!cli:::is_interactive()) {
     cli::cli_abort(c(prompt, not_interactive), .envir = .envir)

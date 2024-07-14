@@ -5,6 +5,7 @@
 #'
 #' @return the path to 7zip executable directory
 #' @importFrom cli cli_abort
+#' @importFrom fs dir_exists
 #' 
 #' @noRd
 #' @keywords internal
@@ -46,6 +47,7 @@ get_7z_dir = function(){
 #' @return the success/error message. Mainly used for its side effect of extracting the archive.
 #' @seealso https://info.nrao.edu/computing/guide/file-access-and-archiving/7zip/7z-7za-command-line-guide#section-17
 #' @importFrom cli cli_abort cli_warn
+#' @importFrom fs dir_exists file_exists
 #' @importFrom glue glue
 #' @importFrom stringr str_detect
 #' @noRd

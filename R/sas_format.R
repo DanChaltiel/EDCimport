@@ -1,5 +1,6 @@
 
 #' @importFrom cli cli_abort
+#' @importFrom fs file_exists
 #' @importFrom purrr compact map
 #' @importFrom readr read_file
 #' @importFrom rlang set_names

@@ -11,11 +11,15 @@
 #'
 #' @return the path to the newer file, invisibly.
 #' @export
+#' @importFrom cli cli_inform
+#' @importFrom fs dir_ls file_copy path_file path_home
+#' @importFrom glue glue
+#' @importFrom stringr str_detect
 search_for_newer_data = function(project_name, path=c("data", path_home("Downloads")), 
                                ask=TRUE, advice=NULL){
   files = dir_ls(path, type="file", regexp=glue(".*{project_name}.*\\.zip"))
   
-  files_dates = EDCimport:::parse_file_datetime(files)
+  files_dates = parse_file_datetime(files)
   max_date = max(files_dates, na.rm=TRUE)
   
   if(max_date > datetime_extraction){
@@ -50,5 +54,3 @@ search_for_newer_data = function(project_name, path=c("data", path_home("Downloa
   
   invisible(last_file)
 }
-
-

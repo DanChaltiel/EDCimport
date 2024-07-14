@@ -18,11 +18,9 @@
 #' 
 #' @return a ggplot
 #' @export
-#' @importFrom cli cli_warn
-#' @importFrom dplyr arrange case_when desc distinct filter first last mutate n_distinct select setdiff summarise
+#' @importFrom dplyr arrange case_when desc distinct filter mutate n_distinct select
 #' @importFrom forcats as_factor
 #' @importFrom ggplot2 aes facet_wrap geom_col geom_hline geom_text ggplot labs scale_fill_manual scale_x_discrete scale_y_continuous
-#' @importFrom rlang as_label enquo
 #' @importFrom scales breaks_width label_percent
 #' @importFrom stringr str_detect
 #' @importFrom tidyr replace_na

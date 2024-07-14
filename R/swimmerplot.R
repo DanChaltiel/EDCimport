@@ -190,6 +190,7 @@ edc_swimmerplot = function(.lookup=get_lookup(), ...,
 #' p = edc_swimmerplot(tm$.lookup, id_lim=c(5,45))
 #' save_plotly(p, "graph/swimplots/edc_swimmerplot.html", title="My Swimmerplot")
 #' }
+#' @importFrom fs dir_create path_dir
 #' @importFrom rlang check_installed
 save_plotly = function(p, file, ...){
   check_installed("plotly", reason="for `save_plotly()` to work.")

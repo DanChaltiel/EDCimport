@@ -12,9 +12,11 @@
 #' @inheritParams edc_data_warn
 #'
 #' @return nothing, called for errors/warnings
-#' @importFrom cli cli_abort cli_warn
+#' @importFrom cli cli_abort cli_warn format_inline
 #' @importFrom dplyr any_of pull select setdiff
 #' @importFrom rlang caller_arg
+#' @importFrom stringr str_pad
+#' @importFrom tibble tibble
 #' @export
 #'
 #' @examples
@@ -96,6 +98,7 @@ edc_warn_patient_diffs = function(x, ref=getOption("edc_subjid_ref"),
 #' tm = edc_example()
 #' load_list(tm)
 #' edc_warn_extraction_date()
+#' @importFrom cli cli_warn
 edc_warn_extraction_date = function(max_days=30){
   a = round(as.numeric(Sys.time() - datetime_extraction))
   if(a>max_days){
@@ -305,6 +308,7 @@ edc_data_condition = function(df, message, issue_n, max_subjid,
 
 #' @noRd
 #' @keywords internal
+#' @importFrom cli cli_vec format_inline
 format_subj = function(subj, max_subjid=5, par=TRUE){
   if(length(subj)==0) return("")
   subj = subj %>% unique() %>% sort()

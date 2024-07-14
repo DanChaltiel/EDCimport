@@ -224,6 +224,8 @@ edc_inform_code = function(main="main.R", Rdir="R/"){
 #'
 #' @examples
 #' save_sessioninfo()
+#' @importFrom fs dir_create path path_dir path_ext path_ext_remove
+#' @importFrom utils capture.output sessionInfo
 save_sessioninfo = function(path="check/session_info.txt", with_date=TRUE){
   target = path %>% 
     path_ext_remove() %>% 
