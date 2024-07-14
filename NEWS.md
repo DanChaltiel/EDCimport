@@ -38,6 +38,8 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 -   New function `lastnews_table()` to find the last date an information has been entered for each patient. Useful for survival
 
+-   New function `waterfall_plot()` to plot RECIST response for target lesions by percentage of tumor reduction.
+
 -   New functions to describe adverse events:
 
     -   `ae_table_grade_max()`, `ae_table_grade_n()`, and `ae_table_soc()` to generate standardized tables. They all can be turned to flextables using `as_flextable()`.
