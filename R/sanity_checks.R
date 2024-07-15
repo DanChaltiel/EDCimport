@@ -280,12 +280,11 @@ edc_data_condition = function(df, message, issue_n, max_subjid,
     if(is.character(write_to_csv)){
       write.csv2(df, write_to_csv)
     }
-    
     message = format_inline(message, .envir=parent.frame())
     
     par_issue = par_subj = ""; subj=NULL
     
-    if(!is.null(issue_n)){
+    if(!is.na(issue_n)){
       if(is.numeric(issue_n)) issue_n = str_pad(issue_n, width=2, pad="0")
       par_issue = format_inline("Issue #{col_green(issue_n)}: ")
     }
@@ -306,6 +305,26 @@ edc_data_condition = function(df, message, issue_n, max_subjid,
   invisible(df)
 }
 
+
+#' @noRd
+#' @keywords internal
+#' @importFrom cli cli_warn
+save_warn_list_item = function(item){
+  stopifnot(nrow(item)==1)
+  issue_n = item$issue_n
+  issue_key = paste0("issue_", item$issue_n)
+  current = edc_data_warnings()
+  if(!is.na(item$issue_n) && item$issue_n %in% current$issue_n){
+    if(item$issue_n=="xx" && !item$message %in% current$message){
+      issue_key = paste0("issue_xx_", nrow(current))
+    } else if(getOption("edc_warn_duplicate_verbose", FALSE)){
+      cli_warn("Duplicate `edc_data_warn()` entry")
+    }
+  }
+  edcimport_env$warn_list[[issue_key]] = item
+}
+
+
 #' @noRd
 #' @keywords internal
 #' @importFrom cli cli_vec format_inline
@@ -321,27 +340,7 @@ format_subj = function(subj, max_subjid=5, par=TRUE){
 }
 
 
-#' @noRd
-#' @keywords internal
-#' @importFrom cli cli_warn
-save_warn_list_item = function(item){
-  stopifnot(nrow(item)==1)
-  issue_n = item$issue_n
-  issue_key = paste0("issue_", item$issue_n)
-  current = edc_data_warnings()
-  if(item$issue_n %in% current$issue_n){
-    if(item$issue_n=="xx" && !item$message %in% current$message){
-      issue_key = paste0("issue_xx_", nrow(current))
-    } else if(getOption("edc_warn_duplicate_verbose", FALSE)){
-      cli_warn("Duplicate `edc_data_warn()` entry")
-    }
-  }
-  edcimport_env$warn_list[[issue_key]] = item
-  
-}
-
 # Deprecated ----------------------------------------------------------------------------------
-
 
 #' @rdname edc_warn_patient_diffs
 #' @usage NULL

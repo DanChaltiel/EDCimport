@@ -67,16 +67,16 @@ waterfall_plot = function(data_recist, rc_sum="RCTLSUM", rc_resp="RCRESP", rc_da
   
   db_wf %>% 
     filter(is.na(sum)) %>% 
-    edc_data_warn("Rows with missing target lesions length sum were ignored.", issue_n=FALSE)
+    edc_data_warn("Rows with missing target lesions length sum were ignored.", issue_n=NA)
   db_wf %>% 
     filter(is.na(date)) %>% 
-    edc_data_warn("Rows with missing target evaluation date were ignored.", issue_n=FALSE)
+    edc_data_warn("Rows with missing target evaluation date were ignored.", issue_n=NA)
   db_wf %>% 
     filter(date==min(date) & !is.na(resp), .by=subjid) %>% 
     edc_data_warn("Response is not missing at first date", issue_n=FALSE)
   db_wf %>% 
     filter(n_distinct(date)<2, .by=subjid) %>% 
-    edc_data_warn("Patients with <2 recist evaluations were ignored.", issue_n=FALSE)
+    edc_data_warn("Patients with <2 recist evaluations were ignored.", issue_n=NA)
 
   
   db_wf2 = db_wf %>% 
@@ -148,7 +148,7 @@ waterfall_plot = function(data_recist, rc_sum="RCTLSUM", rc_resp="RCRESP", rc_da
     scale_x_discrete(labels = NULL, breaks = NULL) + 
     scale_y_continuous(labels=label_percent(), breaks=breaks_width(0.2)) +
     scale_fill_manual(values=responses) +
-    labs(x = "", y="Percent change from baseline", fill=fill_lab)
+    labs(x = "", y="Percentage of tumor reduction from baseline", fill=fill_lab)
   
   if(!missing(arm)) p = p + facet_wrap(~arm, scales="free_x", ncol=1)
   p
