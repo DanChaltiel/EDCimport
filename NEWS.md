@@ -44,20 +44,25 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 -   New functions to describe adverse events:
 
-    -   `ae_table_grade_max()`, `ae_table_grade_n()`, and `ae_table_soc()` to generate standardized tables. They all can be turned to flextables using `as_flextable()`.
+    -   `ae_table_grade_max()`, `ae_table_grade_n()`, and `ae_table_soc()` to generate standardized tables.  \
+        They all can be turned to flextables using `as_flextable()`.
     -   `ae_plot_grade_max()`, `ae_plot_grade_n()`, and `ae_plot_soc()` to generate standardized plots.
 
 
 ### Bug fixes & Improvements
 
+-   `read_trialmaster()` will output a readable error when no password is entered although one is needed.
 -   `read_trialmaster(split_mixed="TRUE")` will work as intended.
--   `extend_lookup()` will not fail anymore when the database has a faulty table.
 -   `assert_no_duplicate()` has now a `by` argument to check for duplicate in groups, for example by visit.
 -   `find_keyword()` is more robust and inform on the proportion of missing if possible.
--   `read_trialmaster()` will output a readable error when no password is entered although one is needed.
--   `check_subjid()` can either take a vector or a dataframe as input, and the message is more informative.
--   `get_lookup()` will now retreive the lookup table. Use `build_lookup()` to build is from a table list.
--   `get_subjid_cols()` and `get_crfname_cols()` replace the now deprecated `get_key_cols()`.
+-   `edc_lookup()` will now retreive the lookup table. Use `build_lookup()` to build it from a table list.
+-   `extend_lookup()` will not fail anymore when the database has a faulty table.
+
+### Deprecations
+
+-   `get_key_cols()` is replaced by `get_subjid_cols()` and `get_crfname_cols()`.
+-   `check_subjid()` is replaced by `edc_warn_patient_diffs()`. It can either take a vector or a dataframe as input, and the message is more informative.
+
 
 
 # EDCimport 0.4.1
