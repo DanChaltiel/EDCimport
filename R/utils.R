@@ -184,12 +184,9 @@ set_label = function(x, lab){
 #' @noRd
 #' @keywords internal 
 mixedsort = function (x, decreasing = FALSE, na.last = TRUE, blank.last = FALSE, 
-          numeric.type = c("decimal", "roman"), roman.case = c("upper", 
-                                                               "lower", "both"), scientific = TRUE) 
-{
+                      roman.case = c("upper", "lower", "both"), scientific = TRUE) {
   ord <- mixedorder(x, decreasing = decreasing, na.last = na.last, 
-                    blank.last = blank.last, numeric.type = numeric.type, 
-                    roman.case = roman.case, scientific = scientific)
+                    blank.last = blank.last, roman.case = roman.case, scientific = scientific)
   x[ord]
 }
 
@@ -197,8 +194,7 @@ mixedsort = function (x, decreasing = FALSE, na.last = TRUE, blank.last = FALSE,
 #' @noRd
 #' @keywords internal
 mixedorder = function (x, decreasing = FALSE, na.last = TRUE, blank.last = FALSE, 
-                       roman.case = c("upper", "lower", "both"), scientific = TRUE) 
-{
+                       roman.case = c("upper", "lower", "both"), scientific = TRUE) {
   roman.case <- match.arg(roman.case)
   if (length(x) == 0) 
     return(NULL)
