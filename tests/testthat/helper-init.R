@@ -24,6 +24,7 @@ options(
 # globalCallingHandlers(NULL)
 # rlang::global_entrace()
 
+library(fs, warn.conflicts=FALSE)
 library(rlang, warn.conflicts=FALSE)
 library(cli, warn.conflicts=FALSE)
 library(tidyverse, warn.conflicts=FALSE)
@@ -74,9 +75,9 @@ snapshot_review_bg = function(...){
 }
 
 temp_target = function(name){
-  target = file.path2(tempdir(), "name")
+  target = path_temp(name)
   unlink(target, recursive=TRUE)
-  dir.create(target, showWarnings=FALSE)
+  dir_create(target)
   target
 }
 
