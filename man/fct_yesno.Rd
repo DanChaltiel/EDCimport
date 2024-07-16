@@ -2,57 +2,59 @@
 % Please edit documentation in R/helpers.R
 \name{fct_yesno}
 \alias{fct_yesno}
-\alias{get_yesno_lvl}
 \title{Format factor levels as Yes/No}
 \usage{
 fct_yesno(
   x,
-  lvl = getOption("edc_fct_yesno", get_yesno_lvl()),
-  mutate_character = TRUE
+  input = list(yes = c("Yes", "Oui"), no = c("No", "Non")),
+  output = c("Yes", "No"),
+  strict = FALSE,
+  mutate_character = TRUE,
+  fail = TRUE
 )
-
-get_yesno_lvl(add, keep_default = TRUE)
 }
 \arguments{
-\item{x}{a vector of any type/class}
+\item{x}{a vector of any type/class.}
 
-\item{lvl}{list of values to be considered as Yes/No values. Defaults to \code{get_yesno_lvl()}. See example.}
+\item{input}{list of values to be considered as "yes" and "no".}
 
-\item{mutate_character}{whether to turn characters into factor}
+\item{output}{the output factor levels.}
 
-\item{add}{levels to add to \code{list(c("Yes", "No"), c("1-Yes", "0-No"))}}
+\item{strict}{whether to match the input strictly or use \link[stringr:str_detect]{stringr::str_detect} to find them.}
 
-\item{keep_default}{whether to keep the default}
+\item{mutate_character}{whether to turn characters into factor.}
+
+\item{fail}{whether to fail if some levels cannot be recoded to yes/no.}
 }
 \value{
-a factor, or \code{x} untouched
+a factor, or \code{x} untouched.
 }
 \description{
-Format factor levels as arbitrary values of Yes/No (with Yes always first) while leaving untouched all vectors that contain other information.
-Default level values can be set through options, which is best done before calling \code{\link[=read_trialmaster]{read_trialmaster()}}.
-Helper \code{get_yesno_lvl()} is a helper to provide default TM levels.
+Format factor levels as arbitrary values of Yes/No (with Yes always first) while \strong{leaving untouched} all vectors that contain other information.
 }
 \examples{
+
+fct_yesno(c("No", "Yes")) #levels are in order
+
 set.seed(42)
-x = tibble(a=sample(c("Yes", "No"), size=20, replace=TRUE),
-           b=sample(c("1-Yes", "0-No"), size=20, replace=TRUE),
-           c=sample(c("Oui", "Non"), size=20, replace=TRUE),
-           x=sample(0:1, size=20, replace=TRUE),
-           y=1:20)
+N=6
+x = tibble(
+  a=sample(c("Yes", "No"), size=N, replace=TRUE),
+  b=sample(c("Oui", "Non"), size=N, replace=TRUE),
+  c=sample(0:1, size=N, replace=TRUE),
+  d=sample(c(TRUE, FALSE), size=N, replace=TRUE),
+  e=sample(c("1-Yes", "0-No"), size=N, replace=TRUE),
+  
+  y=sample(c("aaa", "bbb", "ccc"), size=N, replace=TRUE),
+  z=1:N,
+)
+ 
+x          
+#y and z are left untouched (or throw an error if fail=TRUE)   
+mutate_all(x, fct_yesno, fail=FALSE)
 
-# leave untouched unhandled vectors (c,x, and y)
-x \%>\% purrr::iwalk(~{
-  cat("--- Levels of ", .y, " ---\n")
-  print(.x \%>\% factor() \%>\% levels())
-  print(.x \%>\% fct_yesno() \%>\% levels())
-})
-
-#add other levels
-supp_levels = list(c("Oui", "Non"), c("Ja", "Nein"))
-options(edc_fct_yesno = get_yesno_lvl(supp_levels))
-x \%>\% purrr::iwalk(~{
-  cat("--- Levels of ", .y, " ---\n")
-  print(.x \%>\% factor() \%>\% levels())
-  print(.x \%>\% fct_yesno() \%>\% levels())
-})
+# as "1-Yes" is not in `input`, x$e is untouched/fails if strict=TRUE
+fct_yesno(x$e)
+fct_yesno(x$e, strict=TRUE, fail=FALSE) 
+fct_yesno(x$e, output=c("Ja", "Nein"))
 }

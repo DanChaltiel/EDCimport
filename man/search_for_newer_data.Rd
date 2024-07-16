@@ -5,24 +5,33 @@
 \title{Search for newer data}
 \usage{
 search_for_newer_data(
-  project_name,
-  path = c("data", path_home("Downloads")),
+  archive,
+  ...,
+  source = c("data", path_home("Downloads")),
+  target = "data",
   ask = TRUE,
-  advice = NULL
+  advice = TRUE
 )
 }
 \arguments{
-\item{project_name}{the project name, treated as a regex}
+\item{source}{the path vector to be searched, default to both "data" and the usual "Downloads" folder}
 
-\item{path}{the path vector to be searched, default to both "data" and the usual "Downloads" folder}
+\item{target}{the path where files should be copied}
 
 \item{ask}{whether to ask the user to move the file to "data"}
 
 \item{advice}{whether to advice how to move it, if \code{ask==FALSE}}
+
+\item{project}{archive path, giving the project name}
 }
 \value{
 the path to the newer file, invisibly.
 }
 \description{
 Search in some folders if a TrialMaster database more recent than the current extration is present. By default, it will search the "data" folder and the OS usual "Downloads" folder. If a newer database is found, user will be asked if they want to move it to the "data" folder.
+}
+\examples{
+\dontrun{
+
+}
 }
