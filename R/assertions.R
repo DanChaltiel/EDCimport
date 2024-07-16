@@ -41,7 +41,7 @@ assert_file_exists = function(x, msg=NULL){
 assert_class = function(x, class, null.ok=TRUE){
   if(is.null(x) && null.ok) return(invisible(TRUE))
   if(!inherits(x, class)){
-    cli_abort("{.arg {caller_arg(x)}} should be of class {.val {class}}", 
+    cli_abort("{.arg {caller_arg(x)}} should be of class {.cls {class}}, not  {.cls {class(x)}}", 
               call=parent.frame())
   }
   invisible(TRUE)
