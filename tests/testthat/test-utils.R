@@ -181,21 +181,38 @@ test_that("expect_classed_conditions()", {
 
 # Misc ----------------------------------------------------------------------------------------
 
-
 test_that("fct_yesno() works", {
   
   set.seed(42)
-  x = tibble(a=sample(c("Yes", "No"), size=20, replace=TRUE),
-             b=sample(c("1-Yes", "0-No"), size=20, replace=TRUE),
-             c=sample(0:1, size=20, replace=TRUE),
-             x=sample(c("Oui", "Non"), size=20, replace=TRUE),
-             y=1:20)
+  N=20
+  x = tibble(
+    eng=sample(c("Yes", "No"), size=N, replace=TRUE),
+    fra=sample(c("Oui", "Non"), size=N, replace=TRUE),
+    bin=sample(0:1, size=N, replace=TRUE),
+    log=sample(c(TRUE, FALSE), size=N, replace=TRUE),
+    eng2=sample(c("1-Yes", "0-No"), size=N, replace=TRUE),
+
+    chr=sample(c("aaa", "bbb", "ccc"), size=N, replace=TRUE),
+    num=1:N,
+  )
+  x[10:11,] = NA
   
-  fct_yesno(x$a) %>% class() %>% expect_equal("factor")
-  fct_yesno(x$b) %>% class() %>% expect_equal("factor")
-  fct_yesno(x$c) %>% class() %>% expect_equal("factor")
-  fct_yesno(x$x) %>% class() %>% expect_equal("character")
-  fct_yesno(x$y) %>% class() %>% expect_equal("integer")
+  
+  expect_snapshot({
+    
+    fct_yesno("Yes")
+    fct_yesno(c("No", "Yes"))
+    
+    mutate_all(x, fct_yesno, fail=FALSE)
+    mutate_all(x, fct_yesno, fail=FALSE, strict=TRUE)
+    mutate_all(x, fct_yesno, fail=FALSE, input=list(yes="Ja", no="Nein"))
+  })
+  
+  mutate_all(x, fct_yesno, fail=TRUE) %>% expect_error(class="fct_yesno_unparsed_error")
+  fct_yesno(x$chr) %>% expect_error(class="fct_yesno_unparsed_error")
+  # fct_yesno(x$num) %>% expect_error(class="fct_yesno_unparsed_error") #TODO?
+  fct_yesno("YesNo") %>% expect_error(class="fct_yesno_both_error")
+  fct_yesno("foobar") %>% expect_error(class="fct_yesno_unparsed_error")
   
 })
 
