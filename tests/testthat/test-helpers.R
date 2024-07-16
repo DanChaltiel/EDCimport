@@ -33,15 +33,15 @@ test_that("assert_no_duplicate works", {
 
 
 
-test_that("assert_no_missing_patient works", {
+test_that("edc_warn_patient_diffs works", {
   local_options(edc_subjid_ref = 1:50)
   
-  assert_no_missing_patient(1:50) %>% expect_silent()
-  assert_no_missing_patient(rep(1:50, 3)) %>% expect_silent()
-  assert_no_missing_patient(1:48, ref=1:48) %>% expect_silent()
+  edc_warn_patient_diffs(1:50) %>% expect_silent()
+  edc_warn_patient_diffs(rep(1:50, 3)) %>% expect_silent()
+  edc_warn_patient_diffs(1:48, ref=1:48) %>% expect_silent()
   
-  assert_no_missing_patient(1:48) %>% expect_warning(class="edc_assert_no_missing_patient_miss")
-  assert_no_missing_patient(1:52) %>% expect_warning(class="edc_assert_no_missing_patient_additional")
+  edc_warn_patient_diffs(1:48) %>% expect_warning(class="edc_edc_warn_patient_diffs_miss")
+  edc_warn_patient_diffs(1:52) %>% expect_warning(class="edc_edc_warn_patient_diffs_additional")
 })
 
 
