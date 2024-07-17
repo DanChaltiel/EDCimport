@@ -8,7 +8,7 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 #### Sanity checks alerts
 
--   New functions `edc_data_warn()` and `edc_data_stop()`, to alert if data has inconsistencies.
+-   New functions `edc_data_warn()` and `edc_data_stop()`, to alert if data has inconsistencies (#29, #39, #43).
 
     ``` r
     ae %>% filter(grade>5) %>% assert_no_rows()
@@ -20,27 +20,27 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 #### Miscellaneous utils
 
--   New function `edc_new_project()` to create an empty, standardized project.
+-   New function `edc_new_project()` to create an empty, standardized project (#54).
 
--   New function `edc_inform_code()` to show how many code you wrote.
+-   New function `edc_inform_code()` to show how many code you wrote (#49).
 
--   New function `search_for_newer_data()` to search a path (e.g. Downloads) for a newer data archive.
+-   New function `search_for_newer_data()` to search a path (e.g. Downloads) for a newer data archive (#46).
 
--   New function `crf_status_plot()` to show the current database completion status.
+-   New function `crf_status_plot()` to show the current database completion status (#48).
 
--   New function `save_sessioninfo()`, to save `sessionInfo()` into a text file.
+-   New function `save_sessioninfo()`, to save `sessionInfo()` into a text file (#42).
 
--   New function `fct_yesno()`, to easily format Yes/No columns.
+-   New function `fct_yesno()`, to easily format Yes/No columns (#19, #23, #40).
 
--   New function `save_plotly()`, to save a `plotly` to an HTML file.
+-   New function `save_plotly()`, to save a `plotly` to an HTML file (#15).
 
 -   New experimental functions `table_format()`, `get_common_cols()` and `get_meta_cols()` that might become useful to find keys to pivot or summarise data.
 
 #### Clinical research (might be moved to another package)
 
--   New function `lastnews_table()` to find the last date an information has been entered for each patient. Useful for survival
+-   New function `lastnews_table()` to find the last date an information has been entered for each patient (#37). Useful for survival.
 
--   New function `waterfall_plot()` to plot RECIST response for target lesions by percentage of tumor reduction.
+-   New function `waterfall_plot()` to plot RECIST response for target lesions by percentage of tumor reduction (#27).
 
 -   New functions to describe adverse events:
 
@@ -53,9 +53,9 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 -   `read_trialmaster()` will output a readable error when no password is entered although one is needed.
 -   `read_trialmaster(split_mixed="TRUE")` will work as intended.
--   `assert_no_duplicate()` has now a `by` argument to check for duplicate in groups, for example by visit.
+-   `assert_no_duplicate()` has now a `by` argument to check for duplicate in groups, for example by visit (#17).
 -   `find_keyword()` is more robust and inform on the proportion of missing if possible.
--   `edc_lookup()` will now retreive the lookup table. Use `build_lookup()` to build it from a table list.
+-   `edc_lookup()` will now retreive the lookup table. Use `build_lookup()` to build one from a table list.
 -   `extend_lookup()` will not fail anymore when the database has a faulty table.
 
 ### Deprecations
