@@ -26,10 +26,15 @@ search_for_newer_data = function(archive, ...,
                                  target="data", 
                                  ask=TRUE, advice=TRUE){
   check_dots_empty()
+  assert(length(target)==1)
   project_name = parse_file_projname(archive)
   project_date = parse_file_datetime(archive)
   
-  source = source[dir_exists(source)]
+  if(any(!dir_exists(source))){
+    source_bad = source[!dir_exists(source)]
+    cli_warn(c("{.arg source} contains nonexistent directories: {.val {source_bad}}."))
+    source = source[dir_exists(source)]
+  }
   files = dir_ls(source, type="file", fail=FALSE, 
                  regexp=glue(".*{project_name}.*\\.zip"))
   if(length(files)==0){
@@ -41,7 +46,7 @@ search_for_newer_data = function(archive, ...,
   max_date = max(files_dates, na.rm=TRUE)
   if(max_date > project_date){
     date_diff = as.numeric(round(max_date - project_date))
-    newest_file = files[files_dates==max_date]
+    newest_file = files[files_dates==max_date] %>% na.omit()
     newest_file_name = path_file(newest_file) %>% unique()
     if(length(newest_file_name)>1)  cli_abort("Several `newest_file_name`", .internal=TRUE)
     if(length(newest_file)>1) newest_file=newest_file[1]  #same file in several paths
