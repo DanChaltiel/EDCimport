@@ -44,6 +44,7 @@ search_for_newer_data = function(archive, ...,
   
   files_dates = parse_file_datetime(files)
   max_date = max(files_dates, na.rm=TRUE)
+  newest_file = NULL
   if(max_date > project_date){
     date_diff = as.numeric(round(max_date - project_date))
     newest_file = files[files_dates==max_date] %>% na.omit()
@@ -72,6 +73,7 @@ search_for_newer_data = function(archive, ...,
     
     if(user_input==1){ #1=Yes
       file_copy(from, to)
+      cli_inform(c("v"="New file copied, change your code to", "{.path {to}}"))
     } else if(isTRUE(advice)){
       # cli_inform(c("Run the following code to copy it to {.path target}:",
       #              " "='{.emph file.copy("\n\t{from}", \n"{to}", \ncopy.date=TRUE)}'))
