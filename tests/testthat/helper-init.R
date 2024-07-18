@@ -25,6 +25,7 @@ options(
 # rlang::global_entrace()
 
 library(fs, warn.conflicts=FALSE)
+library(usethis, warn.conflicts=FALSE)
 library(rlang, warn.conflicts=FALSE)
 library(cli, warn.conflicts=FALSE)
 library(tidyverse, warn.conflicts=FALSE)

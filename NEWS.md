@@ -20,6 +20,8 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 #### Miscellaneous utils
 
+-   New function `edc_population_plot()` to visualize which patient is in which analysis population (#56).
+
 -   New function `edc_new_project()` to create an empty, standardized project (#54).
 
 -   New function `edc_inform_code()` to show how many code you wrote (#49).
