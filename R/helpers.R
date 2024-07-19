@@ -171,11 +171,13 @@ fct_yesno = function(x,
 #' Get a table with the latest date for each patient
 #' 
 #' This function search for date columns in every tables and returns the latest date 
-#' for each patient with the variable it comes from. 
-#' 
+#' for each patient with the variable it comes from. Useful in survival analysis to get 
+#' the right censoring time.
 #'
-#' @param except the datasets that should not be searched
+#' @param except the datasets/columns that should not be searched. Example: a scheduled visit for which the patient may have died before attending should not be considered.
 #' @param with_ties in case of tie, whether to return the first `origin` (FALSE) or all the origins that share this tie (TRUE).
+#' @param numeric_id set to FALSE if the patient ID column is not numeric
+#' @param warn_if_future whether to show a warning about dates that are after the extraction date
 #'
 #' @return a dataframe
 #' @export
@@ -191,30 +193,46 @@ fct_yesno = function(x,
 #' @importFrom purrr discard discard_at imap list_rbind
 #' @importFrom tidyr pivot_longer
 #' @importFrom tidyselect where
-lastnews_table = function(except=NULL, with_ties=FALSE) {
+lastnews_table = function(except=NULL, with_ties=FALSE, numeric_id=TRUE, 
+                          warn_if_future=TRUE) {
   subjid_cols = get_subjid_cols()
   a = get_datasets(envir=parent.frame()) %>% 
     discard_at(as.character(except)) %>% 
     imap(~{
       if(!is.data.frame(.x) || !any(subjid_cols %in% names(.x))) return(NULL)
-      a = .x %>% select(subjid=any_of2(subjid_cols), where(is.Date)) %>% 
+      a = .x %>% 
+        select(subjid = any_of2(subjid_cols), where(is.Date)) %>% 
         mutate(subjid = as.character(subjid))
       if(ncol(a)<=1) return(NULL) #only subjid
       a %>% 
         pivot_longer(-subjid) %>% 
         filter(!is.na(value)) %>% 
-        mutate(name=paste0(.y,"$",name))
+        mutate(label=unlist(get_label(.x)[name]),
+               name=paste0(.y,"$",name))
     }) %>% 
     discard(is.null) %>% 
     list_rbind()  %>% 
-    rename(origin=name, last_date=value)
+    select(subjid, last_date=value, origin=name, label)
   if(nrow(a)==0){
     cli_abort("No data with dates could be found.")
   }
-  a %>% 
+  if(numeric_id) {
+    a$subjid = as.numeric(a$subjid)
+  }
+  a = a %>% 
     filter(!origin %in% except) %>% 
     slice_max(last_date, by=subjid, with_ties=with_ties) %>% 
-    arrange(mixedorder(subjid))
+    arrange(order(mixedorder(subjid)))
+  
+  if(exists("datetime_extraction")){
+    if(any(a$last_date > datetime_extraction) && warn_if_future) {
+      a %>% 
+        filter(last_date>datetime_extraction) %>% 
+        edc_data_warn("Date of last news after the extraction date", issue_n=NA)
+    }
+  }
+  
+  a
 }
 
 

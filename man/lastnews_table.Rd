@@ -4,19 +4,29 @@
 \alias{lastnews_table}
 \title{Get a table with the latest date for each patient}
 \usage{
-lastnews_table(except = NULL, with_ties = FALSE)
+lastnews_table(
+  except = NULL,
+  with_ties = FALSE,
+  numeric_id = TRUE,
+  warn_if_future = TRUE
+)
 }
 \arguments{
-\item{except}{the datasets that should not be searched}
+\item{except}{the datasets/columns that should not be searched. Example: a scheduled visit for which the patient may have died before attending should not be considered.}
 
 \item{with_ties}{in case of tie, whether to return the first \code{origin} (FALSE) or all the origins that share this tie (TRUE).}
+
+\item{numeric_id}{set to FALSE if the patient ID column is not numeric}
+
+\item{warn_if_future}{whether to show a warning about dates that are after the extraction date}
 }
 \value{
 a dataframe
 }
 \description{
 This function search for date columns in every tables and returns the latest date
-for each patient with the variable it comes from.
+for each patient with the variable it comes from. Useful in survival analysis to get
+the right censoring time.
 }
 \examples{
 tm = edc_example_plot()
