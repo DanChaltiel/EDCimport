@@ -40,6 +40,7 @@ Suggests:
     htmlwidgets,
     janitor,
     knitr,
+    openxlsx,
     patchwork,
     plotly,
     quarto,

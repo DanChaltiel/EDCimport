@@ -177,6 +177,21 @@ set_label = function(x, lab){
   x
 }
 
+#' @noRd
+#' @keywords internal
+get_label = function(x, default=names(x)){
+  if (is.list(x)) {
+    if (is.null(default)) default = rep(NA, length(x))
+    lab = x %>% map(get_label) %>% map2(default, ~{
+      if (is.null(.x)) .y else .x
+    })
+  } else {
+    lab = attr(x, "label", exact=TRUE)
+    if (is_null(lab)) lab = default
+  }
+  lab
+}
+
 
 # Mixed ordering ------------------------------------------------------------------------------
 

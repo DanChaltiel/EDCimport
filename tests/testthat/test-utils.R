@@ -220,3 +220,12 @@ test_that("cli_menu() is not in package cli yet", {
   # exists('cli_menu', where='package:cli', mode='function') %>% expect_false()
   expect_false("package:cli" %in% find("cli_menu"))
 })
+
+test_that("edc_save_db_to_excel() works", {
+  tm = edc_example()
+  load_list(tm)
+  filename=tempfile(fileext=".xlsx")
+  edc_save_db_to_excel(filename=filename, open=FALSE) %>% expect_message()
+  expect_true(file.exists(filename))
+  file.remove(filename)
+})
