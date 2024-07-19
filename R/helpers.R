@@ -384,11 +384,11 @@ get_datasets = function(lookup=get_lookup(), envir=parent.frame()){
     cli_abort("lookup cannot be NULL, did you forgot to import your database?")
   }
   rtn = lookup$dataset %>% 
-    # set_names() %>% 
-    mget(envir=envir, ifnotfound=list(NULL))
+    mget(envir=envir, ifnotfound=list(NULL), inherits=TRUE)
   a = rtn %>% keep(is.null) %>% names()
   if(length(a) > 5){
-    cli_warn("Could not find multiple datasets from the lookup, did you forget to call {.fn load_list} on your import?")
+    cli_warn(c("Could not find {length(a)}/{length(rtn)} datasets from the lookup, did you forget to call {.fn load_list} on your import?",
+               i="{.val {a}}"))
   }
   
   rtn
