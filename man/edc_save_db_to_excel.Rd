@@ -8,6 +8,7 @@ edc_save_db_to_excel(
   ...,
   datasets = get_datasets(),
   filename = NULL,
+  overwrite = TRUE,
   open = TRUE
 )
 }
@@ -17,6 +18,8 @@ edc_save_db_to_excel(
 \item{datasets}{a named list of dataframes. Default to the TM export.}
 
 \item{filename}{the path to the Excel output file. Default to a dated file in the "data" folder.}
+
+\item{overwrite}{whether to overwrite any existing file. Default to \code{TRUE}.}
 
 \item{open}{whether to open the Excel file afterward. Default to \code{TRUE}.}
 }
