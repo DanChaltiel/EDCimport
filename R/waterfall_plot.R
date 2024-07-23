@@ -65,24 +65,12 @@ waterfall_plot = function(data_recist, rc_sum="RCTLSUM", rc_resp="RCRESP", rc_da
            arm=any_of2(arm), 
            )
   
-  db_wf %>% 
-    filter(is.na(sum)) %>% 
-    edc_data_warn("Rows with missing target lesions length sum were ignored.", issue_n=NA)
-  db_wf %>% 
-    filter(is.na(date)) %>% 
-    edc_data_warn("Rows with missing target evaluation date were ignored.", issue_n=NA)
-  db_wf %>% 
-    filter(date==min(date) & !is.na(resp), .by=subjid) %>% 
-    edc_data_warn("Response is not missing at first date", issue_n=FALSE)
-  db_wf %>% 
-    filter(n_distinct(date)<2, .by=subjid) %>% 
-    edc_data_warn("Patients with <2 recist evaluations were ignored.", issue_n=NA)
-
+  waterfall_check(db_wf)
   
   db_wf2 = db_wf %>% 
     filter(!is.na(sum)) %>%
     filter(!is.na(date)) %>% 
-    filter(n_distinct(date)>2, .by=subjid) %>%
+    filter(n_distinct(date)>=2, .by=subjid) %>%
     arrange(subjid) %>%
     distinct() %>% 
     mutate(
@@ -117,10 +105,10 @@ waterfall_plot = function(data_recist, rc_sum="RCTLSUM", rc_resp="RCRESP", rc_da
     arrange(desc(diff_first), resp2) %>% 
     mutate(subjid = as_factor(as.character(subjid)))
   
-  db_wf2 %>% 
-    filter(resp_num==-99) %>% 
-    edc_data_warn("Internal error, waterfall plot may be slightly irrelevant. Code=resp_num_error", 
-                  issue_n=FALSE)
+  if(any(db_wf2$resp_num==-99)){
+    cli_abort("Internal error 'resp_num_error', waterfall plot may be slightly irrelevant.", 
+              .internal=TRUE)
+  }
 
   #TODO gérer les missings selon ce qu'on prend comme data dans la macro
   # missings = db_wf %>% summarise(across(-subjid, anyNA)) %>% unlist()
@@ -152,4 +140,23 @@ waterfall_plot = function(data_recist, rc_sum="RCTLSUM", rc_resp="RCRESP", rc_da
   
   if(!missing(arm)) p = p + facet_wrap(~arm, scales="free_x", ncol=1)
   p
+}
+
+
+
+#' @noRd
+#' @keywords internal
+waterfall_check = function(df) {
+  df %>% 
+    filter(is.na(sum)) %>% 
+    edc_data_warn("Rows with missing target lesions length sum were ignored.", issue_n=NA)
+  df %>% 
+    filter(is.na(date)) %>% 
+    edc_data_warn("Rows with missing target evaluation date were ignored.", issue_n=NA)
+  df %>% 
+    filter(date==min(date) & !is.na(resp), .by=subjid) %>% 
+    edc_data_warn("Response is not missing at first date", issue_n=NA)
+  df %>% 
+    filter(n_distinct(date)<2, .by=subjid) %>% 
+    edc_data_warn("Patients with <2 recist evaluations were ignored.", issue_n=NA)
 }
