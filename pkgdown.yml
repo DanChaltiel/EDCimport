@@ -1,10 +1,8 @@
 pandoc: 3.1.11
-pkgdown: 2.0.9
+pkgdown: 2.1.0
 pkgdown_sha: ~
-articles:
-  adverse_events: adverse_events.html
-last_built: 2024-06-02T19:34Z
+articles: {}
+last_built: 2024-07-25T19:26Z
 urls:
   reference: https://danchaltiel.github.io/EDCimport/reference
   article: https://danchaltiel.github.io/EDCimport/articles
-
