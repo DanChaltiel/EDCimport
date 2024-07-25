@@ -4,12 +4,13 @@
 #'
 #' Because RStudio is not very good at showing data, it can be more convenient to browse the 
 #' database using MS Excel. This function turns the whole TM export (or any named list of datasets)
-#' into an Excel workbook, with one tab for each dataset.
+#' into an Excel workbook, with one tab for each dataset.\cr
+#' Use `edc_db_to_excel()` to create the file and `edc_browse_excel()` to open it.
 #'
+#' @param filename the path to the Excel output file. Default to a temporary file. Use the special value `TRUE` to save in "data/database_{date_extraction}.xlsx".
 #' @param datasets a named list of dataframes. Default to the TM export.
-#' @param filename the path to the Excel output file. Default to a dated file in the "data" folder.
-#' @param overwrite whether to overwrite any existing file. Default to `TRUE`.
-#' @param open whether to open the Excel file afterward. Default to `TRUE`.
+#' @param overwrite whether to overwrite any existing file. Default to `FALSE`.
+#' @param open whether to open the Excel file afterward. Default to `FALSE`.
 #' @param ... unused 
 #'
 #' @return nothing
@@ -18,7 +19,8 @@
 #' \dontrun{
 #'   tm = edc_example()
 #'   load_list(tm)  
-#'   edc_save_db_to_excel() #default arguments are usually OK
+#'   edc_db_to_excel() #default arguments are usually OK
+#'   edc_db_to_excel(filename=TRUE)
 #' }
 #' @importFrom cli cli_abort cli_inform
 #' @importFrom dplyr arrange
@@ -28,15 +30,24 @@
 #' @importFrom rlang check_dots_empty check_installed is_named sym
 #' @importFrom stringr str_ends
 #' @importFrom utils browseURL
-edc_save_db_to_excel = function(..., 
-                                datasets=get_datasets(),
-                                filename=NULL,
-                                overwrite=TRUE, 
-                                open=TRUE){
+edc_db_to_excel = function(filename=tempfile(fileext=".xlsx"),
+                           ..., 
+                           datasets=get_datasets(),
+                           overwrite=FALSE, 
+                           open=FALSE){
   check_installed("openxlsx", "for `edc_save_to_excel()` to work.")
   check_dots_empty()
   assert(is_named(datasets))
-  if(is.null(filename)) filename = glue("data/database_{str_replace_all(date_extraction,'/','-')}.xlsx")
+  if(file_exists(filename) && !overwrite){
+    cli_inform("Excel file {.path {filename}} already exists.")
+    edcimport_env$excel_db_path = filename
+    if(open) browseURL(filename)
+    return(invisible(filename))
+  }
+    
+  if(isTRUE(filename) && exists("date_extraction")){
+    filename = glue("data/database_{str_replace_all(date_extraction,'/','-')}.xlsx")
+  }
   assert(str_ends(filename, ".xlsx"))
   filename = clean_filename(filename)
   dir_create(dirname(filename))
@@ -53,12 +64,14 @@ edc_save_db_to_excel = function(...,
     openxlsx::setColWidths(wb, sheet=.y, cols=2:ncol(.x), widths="auto")
     openxlsx::setColWidths(wb, sheet=.y, cols=1, widths=2.14)
     
-  })
+  }, .progress=TRUE)
   rslt = openxlsx::saveWorkbook(wb, filename, overwrite=overwrite, returnValue=TRUE)
   if(!rslt){
     cli_abort("Could not create the Excel workbook.")
     return(FALSE)
   }
+  
+  edcimport_env$excel_db_path = filename
   
   size = file_size(filename)
   cli_inform("Excel file {.path {filename}} has been created ({size}).")
@@ -67,6 +80,12 @@ edc_save_db_to_excel = function(...,
   }
   
   invisible(filename)
+}
+
+#' @rdname edc_db_to_excel
+#' @export
+edc_browse_excel = function(){
+  browseURL(edcimport_env$excel_db_path)
 }
 
 
