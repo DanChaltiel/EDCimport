@@ -25,12 +25,21 @@ reference:
 - contents:
   - edc_data_warn
   - assert_no_duplicate
-  - assert_no_rows
-  - check_subjid
+  - edc_warn_patient_diffs
+  - edc_warn_extraction_date
+  - crf_status_plot
+  - edc_population_plot
+- title: "Project management"
+- contents:
+  - edc_new_project
+  - edc_inform_code
+  - search_for_newer_data
+  - save_sessioninfo
 - title: "Searching databases"
 - contents:
   - find_keyword
   - lastnews_table
+  - edc_db_to_excel
   - get_common_cols
 - title: "Clinical Utils"
 - contents:
