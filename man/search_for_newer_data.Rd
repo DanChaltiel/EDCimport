@@ -20,7 +20,7 @@ search_for_newer_data(
 
 \item{ask}{whether to ask the user to move the file to "data"}
 
-\item{advice}{whether to advice how to move it, if \code{ask==FALSE}}
+\item{advice}{whether to advice how to move it instead, if \code{ask==FALSE}}
 
 \item{project}{archive path, giving the project name}
 }

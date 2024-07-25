@@ -8,7 +8,7 @@
 #' @param source the path vector to be searched, default to both "data" and the usual "Downloads" folder
 #' @param target the path where files should be copied
 #' @param ask whether to ask the user to move the file to "data"
-#' @param advice whether to advice how to move it, if `ask==FALSE`
+#' @param advice whether to advice how to move it instead, if `ask==FALSE`
 #'
 #' @return the path to the newer file, invisibly.
 #' @export
@@ -22,7 +22,7 @@
 #' 
 #' }
 search_for_newer_data = function(archive, ..., 
-                                 source=c("data", path_home("Downloads")), 
+                                 source=path_home("Downloads"), 
                                  target="data", 
                                  ask=TRUE, advice=TRUE){
   check_dots_empty()
@@ -30,11 +30,12 @@ search_for_newer_data = function(archive, ...,
   project_name = parse_file_projname(archive)
   project_date = parse_file_datetime(archive)
   
-  if(any(!dir_exists(source))){
-    source_bad = source[!dir_exists(source)]
-    cli_warn(c("{.arg source} contains nonexistent directories: {.val {source_bad}}."))
+  if(all(!dir_exists(setdiff(source, target)))){
+    cli_abort(c("{.arg source} contains only nonexistent directories."))
     source = source[dir_exists(source)]
   }
+  source = c(target, source)
+  
   files = dir_ls(source, type="file", fail=FALSE, 
                  regexp=glue(".*{project_name}.*\\.zip"))
   if(length(files)==0){
