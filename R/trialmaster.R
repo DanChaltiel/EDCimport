@@ -78,13 +78,13 @@ read_trialmaster = function(archive, ..., use_cache="write",
              class="edc_tm_no_procformat_warning") 
       format_file = NULL
     }
-    rtn = read_tm_all_xpt(temp_folder, format_file=format_file, 
-                          clean_names_fun=clean_names_fun, 
-                          split_mixed=split_mixed,
-                          extend_lookup=extend_lookup,
-                          key_columns=key_columns,
-                          datetime_extraction=extract_datetime, 
-                          verbose=verbose)
+    rtn = read_all_xpt(temp_folder, format_file=format_file, 
+                       clean_names_fun=clean_names_fun, 
+                       split_mixed=split_mixed,
+                       extend_lookup=extend_lookup,
+                       key_columns=key_columns,
+                       datetime_extraction=extract_datetime, 
+                       verbose=verbose)
     
     if(isTRUE(use_cache) || use_cache=="write"){
       if(verbose>0) cli_inform("Writing cache file {.file {cache_file}}", class="read_tm_zip")
@@ -134,13 +134,13 @@ read_trialmaster = function(archive, ..., use_cache="write",
 #' @importFrom tibble as_tibble tibble
 #' @importFrom tidyselect where
 #' @importFrom utils packageVersion
-read_tm_all_xpt = function(directory, ..., format_file="procformat.sas", 
-                           clean_names_fun=NULL, 
-                           split_mixed=FALSE,
-                           extend_lookup=TRUE,
-                           datetime_extraction=NULL, 
-                           verbose=getOption("edc_read_verbose", 1),
-                           key_columns="deprecated"){
+read_all_xpt = function(directory, ..., format_file="procformat.sas", 
+                        clean_names_fun=NULL, 
+                        split_mixed=FALSE,
+                        extend_lookup=TRUE,
+                        datetime_extraction=NULL, 
+                        verbose=getOption("edc_read_verbose", 1),
+                        key_columns="deprecated"){
   check_dots_empty()
   reset_manual_correction()
   clean_names_fun = get_clean_names_fun(clean_names_fun)
@@ -261,6 +261,12 @@ read_tm_all_xpt = function(directory, ..., format_file="procformat.sas",
   class(rtn) = "tm_database"
   rtn
 }
+
+
+#' @rdname read_all_xpt
+#' @export
+#' @usage NULL
+read_tm_all_xpt = read_all_xpt
 
 
 # Utils ---------------------------------------------------------------------------------------

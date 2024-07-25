@@ -7,7 +7,7 @@
 search_for_newer_data(
   archive,
   ...,
-  source = c("data", path_home("Downloads")),
+  source = path_home("Downloads"),
   target = "data",
   ask = TRUE,
   advice = TRUE
