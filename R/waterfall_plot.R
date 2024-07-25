@@ -7,10 +7,10 @@
 #' @param rc_sum name of the target lesions length sum column in `data_recist`, usually "RCTLSUM". 
 #' @param rc_resp name of the response column in `data_recist`, usually "RCRESP". 
 #' @param rc_date name of the date column in `data_recist`, usually "RCDT". 
-#' @param rc_star name of the logical column in `data_recist` that triggers the .  Can be set to `NULL`.
-#' @param arm name of the treatment column in `data_recist`. Can be set to `NULL` to not group.
+#' @param rc_star name of the column in `data_recist` that triggers the star symbol. The column should be character or factor, with `NA` for patients without symbol.
+#' @param arm name of the treatment column in `data_recist`. Can be left to `NULL` to not group.
 #' @param type one of `c("best_resp", "worst_resp")`
-#' @param warn_missing whether to warn about missing values
+#' @param warnings whether to warn about any problems
 #'
 #' @section Methods: 
 #' Data are ordered on `rc_date`. 
@@ -31,13 +31,14 @@
 #' waterfall_plot(rc, rc_date="RCDT", rc_sum="RCTLSUM", rc_resp="RCRESP")
 #' waterfall_plot(rc, rc_date="RCDT", rc_sum="RCTLSUM", rc_resp="RCRESP", type="worst_resp")
 #' rc %>% 
-#'   left_join(arm, by="SUBJID") %>%
-#'   mutate(star = any(RCNEW=="1-Yes", na.rm=TRUE), .by=SUBJID) %>% 
-#'   waterfall_plot(rc_date="RCDT", rc_sum="RCTLSUM", rc_resp="RCRESP", arm="ARM", rc_star="star")
+#'   left_join(enrolres, by="SUBJID") %>% #adds the ARM column
+#'   mutate(new_lesion = ifelse(RCNEW=="1-Yes", "New lesion", NA)) %>% 
+#'   waterfall_plot(rc_date="RCDT", rc_sum="RCTLSUM", rc_resp="RCRESP", arm="ARM", rc_star="new_lesion")
 #'}
 waterfall_plot = function(data_recist, rc_sum="RCTLSUM", rc_resp="RCRESP", rc_date="RCDT",
                           type = c("best_resp", "worst_resp"), 
-                          rc_star=NULL, arm=NULL, warn_missing=TRUE) {
+                          rc_star=NULL, arm=NULL, 
+                          warnings=getOption("edc_wp_warnings", TRUE)) {
   type = match.arg(type)
   assert_class(data_recist, class="data.frame")
   assert_class(rc_sum, class="character")
@@ -45,7 +46,7 @@ waterfall_plot = function(data_recist, rc_sum="RCTLSUM", rc_resp="RCRESP", rc_da
   assert_class(rc_date, class="character")
   assert_class(rc_star, class="character")
   assert_class(arm, class="character")
-  assert_class(warn_missing, class="logical")
+  assert_class(warnings, class="logical")
   subjid = get_subjid_cols()
   responses = c("Complete response"="#42B540FF", "Partial response"="#006dd8", 
                 "Stable disease"="#925E9F", "Progressive disease"="#ED0000", "Missing"="white")
@@ -64,8 +65,9 @@ waterfall_plot = function(data_recist, rc_sum="RCTLSUM", rc_resp="RCRESP", rc_da
            rc_star=any_of2(rc_star), 
            arm=any_of2(arm), 
            )
-  
-  waterfall_check(db_wf)
+  if(isTRUE(warnings)){
+    waterfall_check(db_wf)
+  }
   
   db_wf2 = db_wf %>% 
     filter(!is.na(sum)) %>%
@@ -117,11 +119,14 @@ waterfall_plot = function(data_recist, rc_sum="RCTLSUM", rc_resp="RCRESP", rc_da
   #   cli_warn(c("Missing values, the waterfall plot will be incomplete."))
   # }
   
+  # browser()
   star_layer = NULL
   if(!is.null(rc_star)){
     star_nudge = 0.05
-    db_wf2$star_txt = ifelse(db_wf2$rc_star, "*", "")
-    star_layer = geom_text(aes(y=diff_first + sign(diff_first)*star_nudge, label=star_txt))
+    star_layer = list(
+      geom_point(aes(y=diff_first + sign(diff_first)*star_nudge, shape=rc_star), na.rm=TRUE),
+      scale_shape_manual(values=unique(c(8, 0:25)), name=NULL, na.translate = FALSE)
+    )
   }
   
   fill_lab = "Best global response \n(RECIST v1.1)"
@@ -132,13 +137,13 @@ waterfall_plot = function(data_recist, rc_sum="RCTLSUM", rc_resp="RCRESP", rc_da
     ggplot(aes(x=subjid, y=diff_first, group=subjid, fill=resp2)) +
     geom_hline(yintercept=c(-.3, .2), linetype="dashed") +
     geom_col(color='black') +
-    star_layer  +
+    star_layer +
     scale_x_discrete(labels = NULL, breaks = NULL) + 
     scale_y_continuous(labels=label_percent(), breaks=breaks_width(0.2)) +
     scale_fill_manual(values=responses) +
     labs(x = "", y="Percentage of tumor reduction from baseline", fill=fill_lab)
   
-  if(!missing(arm)) p = p + facet_wrap(~arm, scales="free_x", ncol=1)
+  if(!is.null(arm)) p = p + facet_wrap(~arm, scales="free_x", ncol=1)
   p
 }
 

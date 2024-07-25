@@ -12,7 +12,7 @@ waterfall_plot(
   type = c("best_resp", "worst_resp"),
   rc_star = NULL,
   arm = NULL,
-  warn_missing = TRUE
+  warnings = getOption("edc_wp_warnings", TRUE)
 )
 }
 \arguments{
@@ -26,11 +26,11 @@ waterfall_plot(
 
 \item{type}{one of \code{c("best_resp", "worst_resp")}}
 
-\item{rc_star}{name of the logical column in \code{data_recist} that triggers the .  Can be set to \code{NULL}.}
+\item{rc_star}{name of the column in \code{data_recist} that triggers the star symbol. The column should be character or factor, with \code{NA} for patients without symbol.}
 
-\item{arm}{name of the treatment column in \code{data_recist}. Can be set to \code{NULL} to not group.}
+\item{arm}{name of the treatment column in \code{data_recist}. Can be left to \code{NULL} to not group.}
 
-\item{warn_missing}{whether to warn about missing values}
+\item{warnings}{whether to warn about any problems}
 }
 \value{
 a ggplot
@@ -49,8 +49,8 @@ Data are ordered on \code{rc_date}.
 waterfall_plot(rc, rc_date="RCDT", rc_sum="RCTLSUM", rc_resp="RCRESP")
 waterfall_plot(rc, rc_date="RCDT", rc_sum="RCTLSUM", rc_resp="RCRESP", type="worst_resp")
 rc \%>\% 
-  left_join(arm, by="SUBJID") \%>\%
-  mutate(star = any(RCNEW=="1-Yes", na.rm=TRUE), .by=SUBJID) \%>\% 
-  waterfall_plot(rc_date="RCDT", rc_sum="RCTLSUM", rc_resp="RCRESP", arm="ARM", rc_star="star")
+  left_join(enrolres, by="SUBJID") \%>\% #adds the ARM column
+  mutate(new_lesion = ifelse(RCNEW=="1-Yes", "New lesion", NA)) \%>\% 
+  waterfall_plot(rc_date="RCDT", rc_sum="RCTLSUM", rc_resp="RCRESP", arm="ARM", rc_star="new_lesion")
 }
 }
