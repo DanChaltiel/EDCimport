@@ -36,6 +36,7 @@ edc_warn_patient_diffs = function(x, ref=getOption("edc_subjid_ref"),
                 " "="See {.help EDCimport::edc_warn_patient_diffs} to see how to set it."))
   }
   if(is.null(data_name)) data_name=caller_arg(x)
+  x_bak = x
   
   if(is.data.frame(x)){
     x = x %>% select(subjid=any_of(col_subjid)) %>% pull()
@@ -84,7 +85,7 @@ edc_warn_patient_diffs = function(x, ref=getOption("edc_subjid_ref"),
     
   }
   
-  invisible(x)
+  invisible(x_bak)
 }
 
 #' Warn if extraction is too old
