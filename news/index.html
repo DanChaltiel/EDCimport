@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1.9046</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1.9048</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -16,6 +16,13 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/aaaaa_test_1.html">quarto vignettes</a></li>
+    <li><a class="dropdown-item" href="../articles/aaaaa_test_2.html">Adverse Events</a></li>
+    <li><a class="dropdown-item" href="../articles/aaaaa_test_3.html">Adverse Events</a></li>
+    <li><a class="dropdown-item" href="../articles/adverse_events.html">Adverse Events</a></li>
+  </ul></li>
 <li class="active nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -42,7 +49,7 @@
 <ul><li>
 <p>New functions <code><a href="../reference/edc_data_warn.html">edc_data_warn()</a></code> and <code><a href="../reference/edc_data_warn.html">edc_data_stop()</a></code>, to alert if data has inconsistencies (<a href="https://github.com/DanChaltiel/EDCimport/issues/29" class="external-link">#29</a>, <a href="https://github.com/DanChaltiel/EDCimport/issues/39" class="external-link">#39</a>, <a href="https://github.com/DanChaltiel/EDCimport/issues/43" class="external-link">#43</a>).</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ae</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">grade</span><span class="op">&gt;</span><span class="fl">5</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/edc_data_warn.html">assert_no_rows</a></span><span class="op">(</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">ae</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">grade</span><span class="op">&lt;</span><span class="fl">1</span> <span class="op">|</span> <span class="va">grade</span><span class="op">&gt;</span><span class="fl">5</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/edc_data_warn.html">edc_data_stop</a></span><span class="op">(</span><span class="st">"AE of invalid grade"</span><span class="op">)</span></span>
 <span><span class="va">ae</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">grade</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/edc_data_warn.html">edc_data_warn</a></span><span class="op">(</span><span class="st">"Grade is missing"</span>, issue_n<span class="op">=</span><span class="fl">13</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: Issue #13: Grade is missing (8 patients: #21, #28, #39, #95, #97, ...)</span></span></code></pre></div>
 </li>
