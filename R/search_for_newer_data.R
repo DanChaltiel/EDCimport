@@ -32,10 +32,10 @@ search_for_newer_data = function(archive, ...,
   
   if(all(!dir_exists(setdiff(source, target)))){
     cli_abort(c("{.arg source} contains only nonexistent directories."))
-    source = source[dir_exists(source)]
   }
-  source = c(target, source)
-  
+  source = unique(c(target, source))
+  source = source[dir_exists(source)]
+
   files = dir_ls(source, type="file", fail=FALSE, 
                  regexp=glue(".*{project_name}.*\\.zip"))
   if(length(files)==0){
