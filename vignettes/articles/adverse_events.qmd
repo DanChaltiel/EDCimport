@@ -2,10 +2,7 @@
 title: "Adverse Events"
 description: > 
   Learn how to make AE tables.
-vignette: >
-  %\VignetteIndexEntry{Adverse Events}
-  %\VignetteEngine{quarto::html}
-  %\VignetteEncoding{UTF-8}
+format: html
 knitr:
   opts_chunk: 
     collapse: true
