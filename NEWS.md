@@ -11,7 +11,7 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 -   New functions `edc_data_warn()` and `edc_data_stop()`, to alert if data has inconsistencies (#29, #39, #43).
 
     ``` r
-    ae %>% filter(grade>5) %>% assert_no_rows()
+    ae %>% filter(grade<1 | grade>5) %>% edc_data_stop("AE of invalid grade")
     ae %>% filter(is.na(grade)) %>% edc_data_warn("Grade is missing", issue_n=13)
     #> Warning: Issue #13: Grade is missing (8 patients: #21, #28, #39, #95, #97, ...)
     ```
