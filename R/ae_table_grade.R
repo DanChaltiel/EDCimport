@@ -162,6 +162,9 @@ ae_plot_grade_max = function(
     theme(legend.position="top")
   
 }
+
+
+
 # Nb of grades --------------------------------------------------------------------------------
 
 
@@ -197,6 +200,7 @@ ae_table_grade_n = function(
     arm="ARM", grade="AEGR", subjid="SUBJID", soc="AESOC",
     total=FALSE, digits=0
 ){
+  deprecate_warn("5.0.0", "ae_table_grade_n()", "ae_table_grade()")
   check_installed("crosstable", "for `ae_table_grade_n()` to work.")
   check_dots_empty()
   
@@ -237,6 +241,8 @@ ae_table_grade_n = function(
 }
 
 
+
+
 #' Graphic representation of AEs
 #' 
 #' Produce a graphic representation of AE, counting AE as bars for each patient, colored by grade. Can be faceted by treatment arm.
@@ -256,9 +262,9 @@ ae_table_grade_n = function(
 #'
 #' @examples
 #' tm = edc_example_ae()
-#' ae_plot_grade_n(df_ae=tm$ae, df_enrol=tm$enrolres)
-#' ae_plot_grade_n(df_ae=tm$ae, df_enrol=tm$enrolres, arm=NULL)
-ae_plot_grade_n = function(
+#' ae_plot_grade_sum(df_ae=tm$ae, df_enrol=tm$enrolres)
+#' ae_plot_grade_sum(df_ae=tm$ae, df_enrol=tm$enrolres, arm=NULL)
+ae_plot_grade_sum = function(
     df_ae, ..., df_enrol, 
     low="#ffc425", high="#d11141", 
     arm="ARM", grade="AEGR", subjid="SUBJID"
@@ -301,6 +307,177 @@ ae_plot_grade_n = function(
   
   rtn
 }
+
+
+#' @rdname ae_plot_grade_sum
+#' @usage NULL
+#' @export
+ae_plot_grade_n = ae_plot_grade_sum
+
+# Grades --------------------------------------------------------------------------------------
+
+
+#' Summary tables for AE
+#' 
+#' @param type default to `c("max", "sup", "eq")`. `max` computes the maximum AE grade per patient, `sup` computes the number of patients having experienced at least one AE of grade higher than X, and `eq` computes the number of patients having experienced at least one AE of grade equal to X.
+#' @inheritParams ae_table_soc
+#' @inherit ae_table_soc seealso
+#'
+#' @return a crosstable
+#' @importFrom dplyr across arrange count cur_column distinct filter full_join mutate rename_with select
+#' @importFrom rlang check_dots_empty check_installed int
+#' @importFrom tibble deframe
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' tm = edc_example_ae()
+#' 
+#' ae_table_grade(df_ae=tm$ae, df_enrol=tm$enrolres, arm=NULL) %>% 
+#'   as_flextable(header_show_n=TRUE)
+#' 
+#' ae_table_grade(df_ae=tm$ae, df_enrol=tm$enrolres, arm="ARM") %>% 
+#'   as_flextable(header_show_n=TRUE) 
+#'   
+#' #To get SAE only, filter df_ae first
+#' library(dplyr)
+#' tm$ae %>% 
+#'   filter(sae=="Yes") %>% 
+#'   ae_table_grade(df_enrol=tm$enrolres, arm="ARM") %>% 
+#'   mutate_all(~str_replace(.x, "AE", "SAE")) %>% 
+#'   as_flextable(header_show_n=TRUE) 
+#' }
+ae_table_grade = function(
+    df_ae, ..., df_enrol, 
+    type=c("max", "sup", "eq"), 
+    arm=NULL, grade="AEGR", subjid="SUBJID", 
+    percent=TRUE,
+    total=FALSE
+){
+  check_installed("crosstable", "for `ae_table_grade()` to work.")
+  check_dots_empty()
+  
+  default_arm = set_label("All patients", "Treatment arm")
+  
+  df_ae = df_ae %>% rename_with(tolower) %>%
+    select(subjid=tolower(subjid), grade=tolower(grade))
+  df_enrol = df_enrol %>% rename_with(tolower) %>%
+    select(subjid=tolower(subjid), arm=tolower(arm)) %>% 
+    mutate(arm=if(is.null(.env$arm)) default_arm else .data$arm)
+  
+  df = df_enrol %>%
+    full_join(df_ae, by=tolower(subjid)) %>% 
+    arrange(subjid) %>% 
+    mutate(
+      grade = fix_grade(grade),
+    )
+  
+  
+  type = case_match(type, "max"~"max_grade", "sup"~"any_grade_sup", "eq"~"any_grade_eq")
+  
+  rex = type %>% paste(collapse="|") %>% paste0("^(", ., ")")
+  
+  percent_pattern = if(isTRUE(percent)) "{n} ({scales::percent(n/n_col,1)})" 
+  else if(percent=="only") "{n/n_col}" else "{n}"
+  
+  
+  rtn = df %>% 
+    summarise(
+      
+      max_grade_na= case_when(!cur_group()$subjid %in% df_ae$subjid ~ "No declared AE",
+                              all(is.na(grade), na.rm=TRUE) ~ "Grade missing",
+                              .default="foobar"),
+      max_grade_1 = ifelse(max_narm(grade) == 1 , "Grade 1", "foobar"), 
+      max_grade_2 = ifelse(max_narm(grade) == 2 , "Grade 2", "foobar"), 
+      max_grade_3 = ifelse(max_narm(grade) == 3 , "Grade 3", "foobar"), 
+      max_grade_4 = ifelse(max_narm(grade) == 4 , "Grade 4", "foobar"), 
+      max_grade_5 = ifelse(max_narm(grade) == 5 , "Grade 5", "foobar"), 
+      any_grade_sup_na   = max_grade_na,
+      any_grade_sup_1 = ifelse(any(grade >= 1, na.rm=TRUE), "Grade ≥ 1", "foobar"), 
+      any_grade_sup_2 = ifelse(any(grade >= 2, na.rm=TRUE), "Grade ≥ 2", "foobar"), 
+      any_grade_sup_3 = ifelse(any(grade >= 3, na.rm=TRUE), "Grade ≥ 3", "foobar"), 
+      any_grade_sup_4 = ifelse(any(grade >= 4, na.rm=TRUE), "Grade ≥ 4", "foobar"), 
+      any_grade_sup_5 = ifelse(any(grade >= 5, na.rm=TRUE), "Grade = 5", "foobar"), 
+      any_grade_eq_na   = max_grade_na,
+      any_grade_eq_1 = ifelse(any(grade == 1, na.rm=TRUE), "Grade 1", "foobar"), 
+      any_grade_eq_2 = ifelse(any(grade == 2, na.rm=TRUE), "Grade 2", "foobar"), 
+      any_grade_eq_3 = ifelse(any(grade == 3, na.rm=TRUE), "Grade 3", "foobar"), 
+      any_grade_eq_4 = ifelse(any(grade == 4, na.rm=TRUE), "Grade 4", "foobar"), 
+      any_grade_eq_5 = ifelse(any(grade == 5, na.rm=TRUE), "Grade 5", "foobar"), 
+      .by=c(subjid, arm)
+    ) %>% 
+    crosstable(matches(rex), 
+               by=arm, total=total, 
+               percent_pattern=percent_pattern) %>%
+    filter(variable!="foobar" & variable!="NA") %>% 
+    mutate(
+      label=case_when(str_starts(.id, "max_grade_") ~ "Patient maximum AE grade", 
+                      str_starts(.id, "any_grade_sup_") ~ "Patient had at least one AE of grade",
+                      str_starts(.id, "any_grade_eq_") ~ "Patient had at least one AE of grade ",
+                      .default="ERROR"),
+      .id = str_remove(.id, "_[^_]*$") %>% factor(levels=type),
+      label = fct_reorder(label, as.numeric(.id)),
+      variable = suppressWarnings(fct_relevel(variable, "Grade = 5", after=4)),
+      variable = suppressWarnings(fct_relevel(variable, "No declared AE", after=0)),
+      variable = suppressWarnings(fct_relevel(variable, "Grade missing", after=Inf)),
+    ) %>% 
+    arrange(.id, label, variable)
+  
+  rtn
+}
+
+
+#' Graphic representation of AEs
+#' 
+#' Produce a graphic representation of AE, counting AE as bars for each patient, colored by grade. Can be faceted by treatment arm.
+#'
+#' @inheritParams ae_table_grade
+#' @param type2 whether to present patients as proportions (`relative`) or as counts (`absolute`)
+#'
+#' @return a ggplot
+#' @export
+#'
+#' @examples
+ae_plot_grade = function(
+    df_ae, ..., df_enrol, 
+    type=c("max", "sup", "eq"), 
+    type2=c("relative", "absolute"), 
+    arm=NULL, grade="AEGR", subjid="SUBJID"
+){
+  
+  df_enrol = df_enrol %>% 
+    mutate(arm2 = paste0(cur_group()[[1]], " (N=", n(), ")"), 
+           .by=any_of2(arm))
+  type2 = match.arg(type2)
+  if(type2=="relative"){
+    percent = "only"
+    y_lab = "Patient proportion"
+    add_layer = scale_y_continuous(labels=label_percent(), limits=0:1)
+  } else {
+    percent = FALSE
+    y_lab = "Patient count"
+    add_layer = NULL
+  }
+ 
+  
+  tbl = ae_table_grade(df_ae=df_ae, df_enrol=df_enrol, type=type, 
+                       arm="arm2", grade=grade, subjid=subjid,
+                       percent=percent)
+  
+  
+  tbl %>% 
+    mutate(across(-c(.id, label, variable), ~as.numeric(as.character(.x)))) %>% 
+    pivot_longer(-c(.id, label, variable)) %>% 
+    mutate(name=as_factor(name)) %>% 
+    ggplot(aes(x=variable, y=value, fill=name)) +
+    geom_col(position=position_dodge(0.9)) +
+    labs(x=NULL, fill=NULL, y=y_lab) + 
+    facet_wrap(~label, scales="free_x") +
+    add_layer +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
+          legend.position="top")
+}
+
 
 
 

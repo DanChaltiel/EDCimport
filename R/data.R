@@ -129,7 +129,7 @@ edc_example_ae = function(N=50, seed=42){
     mutate(
       aegr = sample(1:5, size=n(), replace=TRUE, prob=c(0.3,0.25,0.2,0.1,0.05)) %>% set_label("AE grade"),
       aesoc = sample(sample_soc, size=n(), replace=TRUE) %>% set_label("AE SOC"),
-      sae = (runif(n())<0.1) %>% set_label("Serious AE"),
+      sae = fct_yesno(runif(n())<0.1) %>% set_label("Serious AE"),
     ) %>% 
     select(subjid, aesoc, aegr, n_ae, sae)
   
