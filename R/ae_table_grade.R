@@ -377,9 +377,8 @@ ae_table_grade = function(
   
   rex = type %>% paste(collapse="|") %>% paste0("^(", ., ")")
   
-  percent_pattern = if(isTRUE(percent)) "{n} ({scales::percent(n/n_col,1)})" 
+  percent_pattern = if(isTRUE(percent)) "{n} ({scales::percent(n/n_col_na,1)})" 
   else if(percent=="only") "{n/n_col}" else "{n}"
-  
   
   rtn = df %>% 
     summarise(
