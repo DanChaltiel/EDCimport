@@ -168,80 +168,6 @@ ae_plot_grade_max = function(
 # Nb of grades --------------------------------------------------------------------------------
 
 
-#' Summary tables for AE
-#' 
-#' @inheritParams ae_table_soc
-#' @inherit ae_table_soc seealso
-#'
-#' @return a crosstable
-#' @importFrom dplyr across arrange count cur_column distinct filter full_join mutate rename_with select
-#' @importFrom rlang check_dots_empty check_installed int
-#' @importFrom tibble deframe
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' tm = edc_example_ae()
-#' 
-#' ae_table_grade_n(df_ae=tm$ae, df_enrol=tm$enrolres) %>% 
-#'   as_flextable() %>% 
-#'   flextable::add_footer_lines("Percentages are given as the proportion of patients 
-#'                                presenting at least one AE of given grade")
-#' 
-#' ae_table_grade_n(df_ae=tm$ae, df_enrol=tm$enrolres, arm=NULL) %>% 
-#'   as_flextable(by_header=F) %>% 
-#'   flextable::set_header_labels(values=c("","","N (%)")) 
-#'   
-#' #To get SAE only, filter df_ae first
-#' tm$ae %>% filter(sae==TRUE) %>% ae_table_grade_n(df_enrol=tm$enrolres, arm=NULL)
-#' }
-ae_table_grade_n = function(
-    df_ae, ..., df_enrol, 
-    arm="ARM", grade="AEGR", subjid="SUBJID", soc="AESOC",
-    total=FALSE, digits=0
-){
-  deprecate_warn("5.0.0", "ae_table_grade_n()", "ae_table_grade()")
-  check_installed("crosstable", "for `ae_table_grade_n()` to work.")
-  check_dots_empty()
-  
-  df_ae = df_ae %>% rename_with(tolower) %>%
-    select(subjid=tolower(subjid), soc=tolower(soc), grade=tolower(grade))
-  df_enrol = df_enrol %>% rename_with(tolower) %>%
-    select(subjid=tolower(subjid), arm=tolower(arm))
-  df = df_enrol %>%
-    full_join(df_ae, by=tolower(subjid)) %>% 
-    arrange(subjid) %>% 
-    mutate(grade = fix_grade(grade)) %>% 
-    filter(!is.na(soc)) 
-  
-  default_arm = "All patients" 
-  # browser()
-  npat = int(!!default_arm:=nrow(df_enrol)) 
-  if(!is.null(arm)){
-    npat = deframe(count(df_enrol, arm))
-    npat["Total"] = sum(npat)
-  }
-  total = if(total) "row" else FALSE 
-  
-  if(!any(names(df)=="arm")) df$arm=default_arm %>% set_label("Treatment arm")
-  rtn = df %>% 
-    distinct(subjid, arm, grade) %>% 
-    mutate(arm) %>%
-    mutate(grade = ifelse(is.na(grade), "NA", paste("Grade", grade)) %>% copy_label_from(grade)) %>% 
-    crosstable::crosstable(grade, by=arm, total=total,
-               percent_pattern=crosstable::get_percent_pattern("none")) %>% 
-    mutate(across(-(.id:variable), function(x){
-      x = as.numeric(x)
-      tot = npat[cur_column()]
-      p = crosstable::format_fixed(x/tot, digits, percent=TRUE)
-      paste0(x, " (", p, ")")
-    }))
-  attr(rtn, "by_table")[] = npat[!is.na(names(npat)) & names(npat)!="Total"] #zarb que crosstable oublie les NA dans by_table non?
-  rtn
-}
-
-
-
 
 #' Graphic representation of AEs
 #' 
@@ -486,3 +412,83 @@ ae_plot_grade = function(
 fix_grade = function(x){
   as.numeric(na_if(as.character(x), "NA"))
 }
+
+
+
+# Deprecated ----------------------------------------------------------------------------------
+
+
+
+
+#' Summary tables for AE
+#' 
+#' @inheritParams ae_table_soc
+#' @inherit ae_table_soc seealso
+#'
+#' @return a crosstable
+#' @importFrom dplyr across arrange count cur_column distinct filter full_join mutate rename_with select
+#' @importFrom rlang check_dots_empty check_installed int
+#' @importFrom tibble deframe
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' tm = edc_example_ae()
+#' 
+#' ae_table_grade_n(df_ae=tm$ae, df_enrol=tm$enrolres) %>% 
+#'   as_flextable() %>% 
+#'   flextable::add_footer_lines("Percentages are given as the proportion of patients 
+#'                                presenting at least one AE of given grade")
+#' 
+#' ae_table_grade_n(df_ae=tm$ae, df_enrol=tm$enrolres, arm=NULL) %>% 
+#'   as_flextable(by_header=F) %>% 
+#'   flextable::set_header_labels(values=c("","","N (%)")) 
+#'   
+#' #To get SAE only, filter df_ae first
+#' tm$ae %>% filter(sae==TRUE) %>% ae_table_grade_n(df_enrol=tm$enrolres, arm=NULL)
+#' }
+ae_table_grade_n = function(
+    df_ae, ..., df_enrol, 
+    arm="ARM", grade="AEGR", subjid="SUBJID", soc="AESOC",
+    total=FALSE, digits=0
+){
+  deprecate_warn("5.0.0", "ae_table_grade_n()", "ae_table_grade()")
+  check_installed("crosstable", "for `ae_table_grade_n()` to work.")
+  check_dots_empty()
+  
+  df_ae = df_ae %>% rename_with(tolower) %>%
+    select(subjid=tolower(subjid), soc=tolower(soc), grade=tolower(grade))
+  df_enrol = df_enrol %>% rename_with(tolower) %>%
+    select(subjid=tolower(subjid), arm=tolower(arm))
+  df = df_enrol %>%
+    full_join(df_ae, by=tolower(subjid)) %>% 
+    arrange(subjid) %>% 
+    mutate(grade = fix_grade(grade)) %>% 
+    filter(!is.na(soc)) 
+  
+  default_arm = "All patients" 
+  # browser()
+  npat = int(!!default_arm:=nrow(df_enrol)) 
+  if(!is.null(arm)){
+    npat = deframe(count(df_enrol, arm))
+    npat["Total"] = sum(npat)
+  }
+  total = if(total) "row" else FALSE 
+  
+  if(!any(names(df)=="arm")) df$arm=default_arm %>% set_label("Treatment arm")
+  rtn = df %>% 
+    distinct(subjid, arm, grade) %>% 
+    mutate(arm) %>%
+    mutate(grade = ifelse(is.na(grade), "NA", paste("Grade", grade)) %>% copy_label_from(grade)) %>% 
+    crosstable::crosstable(grade, by=arm, total=total,
+                           percent_pattern=crosstable::get_percent_pattern("none")) %>% 
+    mutate(across(-(.id:variable), function(x){
+      x = as.numeric(x)
+      tot = npat[cur_column()]
+      p = crosstable::format_fixed(x/tot, digits, percent=TRUE)
+      paste0(x, " (", p, ")")
+    }))
+  attr(rtn, "by_table")[] = npat[!is.na(names(npat)) & names(npat)!="Total"] #zarb que crosstable oublie les NA dans by_table non?
+  rtn
+}
+
