@@ -11,7 +11,8 @@ ae_plot_grade_sum(
   df_enrol,
   low = "#ffc425",
   high = "#d11141",
-  arm = "ARM",
+  weights = NULL,
+  arm = NULL,
   grade = "AEGR",
   subjid = "SUBJID"
 )
@@ -27,6 +28,8 @@ ae_plot_grade_sum(
 
 \item{high}{the color of Grade 5 AE}
 
+\item{weights}{(optional) a length 5 numeric vector, giving the weights of each grade}
+
 \item{arm}{name of the treatment column in \code{df_enrol}. Case-insensitive. Can be set to \code{NULL} to not group.}
 
 \item{grade}{name of the AE grade column in \code{df_ae}. Case-insensitive.}
@@ -41,8 +44,10 @@ Produce a graphic representation of AE, counting AE as bars for each patient, co
 }
 \examples{
 tm = edc_example_ae()
-ae_plot_grade_sum(df_ae=tm$ae, df_enrol=tm$enrolres)
-ae_plot_grade_sum(df_ae=tm$ae, df_enrol=tm$enrolres, arm=NULL)
+load_list(tm)
+ae_plot_grade_sum(df_ae=ae, df_enrol=enrolres)
+ae_plot_grade_sum(df_ae=ae, df_enrol=enrolres, arm="ARM")
+ae_plot_grade_sum(df_ae=ae, df_enrol=enrolres, arm="ARM", weights=c(1,1,3,6,10))
 }
 \seealso{
 \code{\link[=ae_table_grade_max]{ae_table_grade_max()}}, \code{\link[=ae_table_grade_n]{ae_table_grade_n()}}, \code{\link[=ae_table_soc]{ae_table_soc()}}, \code{\link[=ae_plot_grade_max]{ae_plot_grade_max()}}, \code{\link[=ae_plot_grade_n]{ae_plot_grade_n()}}

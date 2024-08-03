@@ -173,6 +173,7 @@ ae_plot_grade_max = function(
 #' 
 #' Produce a graphic representation of AE, counting AE as bars for each patient, colored by grade. Can be faceted by treatment arm.
 #'
+#' @param weights (optional) a length 5 numeric vector, giving the weights of each grade
 #' @param low the color of Grade 1 AE
 #' @param high the color of Grade 5 AE
 #' @inheritParams ae_table_soc 
@@ -188,47 +189,59 @@ ae_plot_grade_max = function(
 #'
 #' @examples
 #' tm = edc_example_ae()
-#' ae_plot_grade_sum(df_ae=tm$ae, df_enrol=tm$enrolres)
-#' ae_plot_grade_sum(df_ae=tm$ae, df_enrol=tm$enrolres, arm=NULL)
+#' load_list(tm)
+#' ae_plot_grade_sum(df_ae=ae, df_enrol=enrolres)
+#' ae_plot_grade_sum(df_ae=ae, df_enrol=enrolres, arm="ARM")
+#' ae_plot_grade_sum(df_ae=ae, df_enrol=enrolres, arm="ARM", weights=c(1,1,3,6,10))
 ae_plot_grade_sum = function(
     df_ae, ..., df_enrol, 
     low="#ffc425", high="#d11141", 
-    arm="ARM", grade="AEGR", subjid="SUBJID"
+    weights=NULL,
+    arm=NULL, grade="AEGR", subjid="SUBJID"
 ){
   check_dots_empty()
   df_ae = df_ae %>% rename_with(tolower) %>%
     select(subjid=tolower(subjid), grade=tolower(grade)) 
-    
+  weighted = !is.null(weights)
+  if(!weighted) weights=c(1,1,1,1,1)
+  assert(is.numeric(weights))
+  assert(length(weights)==5)
   df_enrol = df_enrol %>% rename_with(tolower) %>%
     select(subjid=tolower(subjid), arm=tolower(arm))
+  # browser()
   df = df_enrol %>%
     full_join(df_ae, by=tolower(subjid)) %>% 
-    mutate(grade = fix_grade(grade)) %>% 
+    mutate(grade = fix_grade(grade),
+           weight = weights[grade] %>% replace_na(0.1)) %>% 
     arrange(subjid)
   
   default_arm = "All patients"
-  npat = int(!!default_arm:=nrow(df_enrol)) 
   if(!is.null(arm)){
     npat = deframe(count(df_enrol, arm))
     npat["Total"] = sum(npat)
+  } else {
+    npat = int(!!default_arm:=nrow(df_enrol)) 
   }
-
-  # if(!any(names(df)=="arm")) df$arm=default_arm %>% set_label("Treatment arm")
   
-  # browser()
+  y_lab = "Count"; caption = NULL
+  if(weighted){
+    y_lab = "Weighted count"
+    caption = paste0("Weights: Grade ", 1:5, " = ", weights) %>% 
+      paste(collapse=", ")
+  }
+  
   rtn =
     df %>% 
-    mutate(subjid = fct_infreq(factor(subjid))) %>% 
-    count(across(c(subjid, grade, any_of("arm")))) %>% 
-      mutate(n = ifelse(is.na(grade), 0.1, n)) %>% 
+    mutate(subjid = fct_infreq(factor(subjid), w=weight)) %>% 
+    count(across(c(subjid, grade, any_of("arm"))), wt=weight) %>% 
+    mutate(n = ifelse(is.na(grade), 0.1, n)) %>% 
     # ggplot(aes(x=subjid, y=n, fill=fct_rev(factor(grade)))) + geom_col() +
     ggplot(aes(x=subjid, y=n, fill=grade)) + geom_col() + 
     scale_fill_steps(low=low, high=high) +
     theme(axis.text.x=element_blank(),
           axis.ticks.x=element_blank()) +
-    labs(x="Patient", y="Count", fill="AE grade")
-    
-    
+    labs(x="Patient", y=y_lab, fill="AE grade", caption=caption)
+  
   if(!is.null(arm)) rtn = rtn + facet_grid(cols=vars(arm), scales="free_x")
   
   rtn
@@ -383,7 +396,6 @@ ae_plot_grade = function(
     y_lab = "Patient count"
     add_layer = NULL
   }
- 
   
   tbl = ae_table_grade(df_ae=df_ae, df_enrol=df_enrol, type=type, 
                        arm="arm2", grade=grade, subjid=subjid,
