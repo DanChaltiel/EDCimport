@@ -86,8 +86,8 @@ find_keyword = function(keyword, data=get_lookup(), ignore_case=TRUE){
 #' @return a factor, or `x` untouched.
 #' @export
 #' @importFrom cli cli_abort
-#' @importFrom dplyr union
-#' @importFrom purrr keep
+#' @importFrom dplyr case_when
+#' @importFrom stringr str_detect
 #'
 #' @examples 
 #' 
@@ -189,7 +189,7 @@ fct_yesno = function(x,
 #' lastnews_table(except="db3")
 #' lastnews_table(except="db3$date9")
 #' @importFrom cli cli_abort
-#' @importFrom dplyr arrange filter mutate rename select slice_max
+#' @importFrom dplyr arrange filter mutate select slice_max
 #' @importFrom purrr discard discard_at imap list_rbind
 #' @importFrom tidyr pivot_longer
 #' @importFrom tidyselect where

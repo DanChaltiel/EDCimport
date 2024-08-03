@@ -18,9 +18,10 @@
 #' 
 #' @return a ggplot
 #' @export
+#' @importFrom cli cli_abort
 #' @importFrom dplyr arrange case_when desc distinct filter mutate n_distinct select
 #' @importFrom forcats as_factor
-#' @importFrom ggplot2 aes facet_wrap geom_col geom_hline geom_text ggplot labs scale_fill_manual scale_x_discrete scale_y_continuous
+#' @importFrom ggplot2 aes facet_wrap geom_col geom_hline geom_point ggplot labs scale_fill_manual scale_shape_manual scale_x_discrete scale_y_continuous
 #' @importFrom scales breaks_width label_percent
 #' @importFrom stringr str_detect
 #' @importFrom tidyr replace_na
@@ -151,6 +152,7 @@ waterfall_plot = function(data_recist, rc_sum="RCTLSUM", rc_resp="RCRESP", rc_da
 
 #' @noRd
 #' @keywords internal
+#' @importFrom dplyr filter n_distinct
 waterfall_check = function(df) {
   df %>% 
     filter(is.na(sum)) %>% 

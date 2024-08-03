@@ -24,7 +24,7 @@
 #' }
 #' @importFrom cli cli_abort cli_inform
 #' @importFrom dplyr arrange
-#' @importFrom fs dir_create file_size
+#' @importFrom fs dir_create file_exists file_size
 #' @importFrom glue glue
 #' @importFrom purrr iwalk
 #' @importFrom rlang check_dots_empty check_installed is_named sym
@@ -84,6 +84,7 @@ edc_db_to_excel = function(filename=tempfile(fileext=".xlsx"),
 
 #' @rdname edc_db_to_excel
 #' @export
+#' @importFrom utils browseURL
 edc_browse_excel = function(){
   browseURL(edcimport_env$excel_db_path)
 }

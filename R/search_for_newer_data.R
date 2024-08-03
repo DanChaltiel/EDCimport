@@ -12,9 +12,12 @@
 #'
 #' @return the path to the newer file, invisibly.
 #' @export
-#' @importFrom cli cli_inform
-#' @importFrom fs dir_ls file_copy path path_file path_home
+#' @importFrom cli cli_abort cli_code cli_inform
+#' @importFrom dplyr setdiff
+#' @importFrom fs dir_exists dir_ls file_copy path path_file path_home
 #' @importFrom glue glue
+#' @importFrom rlang check_dots_empty
+#' @importFrom stats na.omit
 #' @importFrom stringr str_detect
 #' 
 #' @examples

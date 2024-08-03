@@ -13,9 +13,11 @@
 #' @inherit ae_table_soc seealso
 #'
 #' @return a crosstable
-#' @importFrom dplyr across arrange count cur_column distinct filter full_join mutate rename_with select
-#' @importFrom rlang check_dots_empty check_installed int
-#' @importFrom tibble deframe
+#' @importFrom dplyr arrange case_match case_when cur_group filter full_join mutate rename_with select summarise
+#' @importFrom forcats fct_relevel fct_reorder
+#' @importFrom rlang check_dots_empty check_installed
+#' @importFrom stringr str_remove str_starts
+#' @importFrom tidyselect matches
 #' @export
 #'
 #' @examples
@@ -139,6 +141,12 @@ ae_table_grade = function(
 #' ae_plot_grade(df_ae=ae, df_enrol=enrolres, arm="ARM", type="absolute")
 #' ae_plot_grade(df_ae=ae, df_enrol=enrolres, arm="ARM", position="fill")
 #' ae_plot_grade(df_ae=ae, df_enrol=enrolres, arm="ARM", position="stack", type="absolute")
+#' @importFrom cli cli_warn
+#' @importFrom dplyr across cur_group mutate n
+#' @importFrom forcats as_factor
+#' @importFrom ggplot2 aes element_text facet_wrap geom_col ggplot labs position_dodge position_fill position_stack scale_y_continuous theme
+#' @importFrom scales label_percent
+#' @importFrom tidyr pivot_longer
 ae_plot_grade = function(
     df_ae, ..., df_enrol, 
     variant = c("max", "sup", "eq"), 
@@ -214,6 +222,7 @@ ae_plot_grade = function(
 #' @importFrom ggplot2 aes element_blank facet_grid geom_col ggplot labs scale_fill_steps theme vars
 #' @importFrom rlang check_dots_empty int
 #' @importFrom tibble deframe
+#' @importFrom tidyr replace_na
 #'
 #' @examples
 #' tm = edc_example_ae()
@@ -303,6 +312,7 @@ fix_grade = function(x){
 #'
 #' @return a crosstable
 #' @importFrom dplyr across arrange count cur_column distinct filter full_join mutate rename_with select
+#' @importFrom lifecycle deprecate_warn
 #' @importFrom rlang check_dots_empty check_installed int
 #' @importFrom tibble deframe
 #' @export
@@ -382,6 +392,7 @@ ae_table_grade_n = function(
 #' @return a crosstable (dataframe)
 #' @export
 #' @importFrom dplyr any_of arrange full_join if_else mutate recode select summarise
+#' @importFrom lifecycle deprecate_warn
 #' @importFrom rlang check_dots_empty check_installed
 #'
 #' @examples

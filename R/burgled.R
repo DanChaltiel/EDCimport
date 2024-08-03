@@ -39,11 +39,11 @@ mixedorder = function (x, decreasing = FALSE, na.last = TRUE, blank.last = FALSE
     }
     numeric <- function(x) as.numeric(x)
   }
-  else if (numeric.type == "roman") {
-    regex <- switch(roman.case, both = "([IVXCLDMivxcldm]+)", 
-                    upper = "([IVXCLDM]+)", lower = "([ivxcldm]+)")
-    numeric <- function(x) roman2int(x)
-  }
+  # else if (numeric.type == "roman") {
+  #   regex <- switch(roman.case, both = "([IVXCLDMivxcldm]+)", 
+  #                   upper = "([IVXCLDM]+)", lower = "([ivxcldm]+)")
+  #   numeric <- function(x) roman2int(x)
+  # }
   else {
     stop("Unknown value for numeric.type: ", numeric.type)
   }
