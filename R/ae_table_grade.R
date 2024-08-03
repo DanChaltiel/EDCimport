@@ -39,6 +39,7 @@ ae_table_grade_max = function(
     arm="ARM", subjid="SUBJID", soc="AESOC", grade="AEGR", total=TRUE, digits=0
 ){
   check_installed("crosstable", "for `ae_table_grade_max()` to work.")
+  deprecate_warn("5.0.0", "ae_table_grade_max()", 'ae_table_grade(variant="max")')
   check_dots_empty()
   null_arm = is.null(arm)
   
@@ -288,7 +289,7 @@ ae_plot_grade_n = ae_plot_grade_sum
 #' }
 ae_table_grade = function(
     df_ae, ..., df_enrol, 
-    type=c("max", "sup", "eq"), 
+    variant=c("max", "sup", "eq"), 
     arm=NULL, grade="AEGR", subjid="SUBJID", 
     percent=TRUE,
     total=FALSE
@@ -312,9 +313,9 @@ ae_table_grade = function(
     )
   
   
-  type = case_match(type, "max"~"max_grade", "sup"~"any_grade_sup", "eq"~"any_grade_eq")
+  variant = case_match(variant, "max"~"max_grade", "sup"~"any_grade_sup", "eq"~"any_grade_eq")
   
-  rex = type %>% paste(collapse="|") %>% paste0("^(", ., ")")
+  rex = variant %>% paste(collapse="|") %>% paste0("^(", ., ")")
   
   percent_pattern = if(isTRUE(percent)) "{n} ({scales::percent(n/n_col_na,1)})" 
   else if(percent=="only") "{n/n_col}" else "{n}"
@@ -344,7 +345,7 @@ ae_table_grade = function(
       any_grade_eq_5 = ifelse(any(grade == 5, na.rm=TRUE), "Grade 5", "foobar"), 
       .by=c(subjid, arm)
     ) %>% 
-    crosstable(matches(rex), 
+    crosstable::crosstable(matches(rex), 
                by=arm, total=total, 
                percent_pattern=percent_pattern) %>%
     filter(variable!="foobar" & variable!="NA") %>% 
@@ -353,7 +354,7 @@ ae_table_grade = function(
                       str_starts(.id, "any_grade_sup_") ~ "Patient had at least one AE of grade",
                       str_starts(.id, "any_grade_eq_") ~ "Patient had at least one AE of grade ",
                       .default="ERROR"),
-      .id = str_remove(.id, "_[^_]*$") %>% factor(levels=type),
+      .id = str_remove(.id, "_[^_]*$") %>% factor(levels=variant),
       label = fct_reorder(label, as.numeric(.id)),
       variable = suppressWarnings(fct_relevel(variable, "Grade = 5", after=4)),
       variable = suppressWarnings(fct_relevel(variable, "No declared AE", after=0)),
@@ -370,24 +371,35 @@ ae_table_grade = function(
 #' Produce a graphic representation of AE, counting AE as bars for each patient, colored by grade. Can be faceted by treatment arm.
 #'
 #' @inheritParams ae_table_grade
-#' @param type2 whether to present patients as proportions (`relative`) or as counts (`absolute`)
+#' @param type whether to present patients as proportions (`relative`) or as counts (`absolute`)
+#' @param position Position adjustment (cf. [ggplot2::geom_col()]) 
 #'
 #' @return a ggplot
 #' @export
 #'
 #' @examples
+#' tm = edc_example_ae()
+#' load_list(tm)
+#' ae_plot_grade(df_ae=ae, df_enrol=enrolres)
+#' ae_plot_grade(df_ae=ae, df_enrol=enrolres, arm="ARM", variant=c("sup", "max"))
+#' ae_plot_grade(df_ae=ae, df_enrol=enrolres, arm="ARM", type="absolute")
+#' ae_plot_grade(df_ae=ae, df_enrol=enrolres, arm="ARM", position="fill")
+#' ae_plot_grade(df_ae=ae, df_enrol=enrolres, arm="ARM", position="stack", type="absolute")
 ae_plot_grade = function(
     df_ae, ..., df_enrol, 
-    type=c("max", "sup", "eq"), 
-    type2=c("relative", "absolute"), 
+    variant = c("max", "sup", "eq"), 
+    position = c("dodge", "stack", "fill"),
+    type = c("relative", "absolute"), 
     arm=NULL, grade="AEGR", subjid="SUBJID"
 ){
-  
-  df_enrol = df_enrol %>% 
-    mutate(arm2 = paste0(cur_group()[[1]], " (N=", n(), ")"), 
-           .by=any_of2(arm))
-  type2 = match.arg(type2)
-  if(type2=="relative"){
+  type = match.arg(type)
+  position = match.arg(position)
+  if(type=="relative" && position=="stack"){
+    type = "absolute"
+    cli_warn('{.arg type} has been corrected to {.val absolute} to 
+             be consistent with `position="stack"`.')
+  }
+  if(type=="relative" || position=="fill"){
     percent = "only"
     y_lab = "Patient proportion"
     add_layer = scale_y_continuous(labels=label_percent(), limits=0:1)
@@ -397,19 +409,32 @@ ae_plot_grade = function(
     add_layer = NULL
   }
   
-  tbl = ae_table_grade(df_ae=df_ae, df_enrol=df_enrol, type=type, 
-                       arm="arm2", grade=grade, subjid=subjid,
+  fill_aes = NULL
+  if(!is.null(arm)){
+    df_enrol = df_enrol %>% 
+      # mutate(arm = if(is.null(.env$arm)) "All Patients" else .data$arm) %>% 
+      mutate(arm2 = paste0(cur_group()[[1]], " (N=", n(), ")"), 
+             .by=any_of2(arm))
+    arm="arm2"
+    fill_aes = aes(fill=name)
+  }
+  
+  
+  tbl = ae_table_grade(df_ae=df_ae, df_enrol=df_enrol, variant=variant, 
+                       arm=arm, grade=grade, subjid=subjid,
                        percent=percent)
+  p = switch(position, fill=position_fill(), stack=position_stack(), 
+             dodge=position_dodge(0.9, preserve="single"))
   
-  
+  browser()
   tbl %>% 
     mutate(across(-c(.id, label, variable), ~as.numeric(as.character(.x)))) %>% 
     pivot_longer(-c(.id, label, variable)) %>% 
     mutate(name=as_factor(name)) %>% 
-    ggplot(aes(x=variable, y=value, fill=name)) +
-    geom_col(position=position_dodge(0.9)) +
+    ggplot(aes(x=variable, y=value)) + fill_aes +
+    geom_col(position=p) +
     labs(x=NULL, fill=NULL, y=y_lab) + 
-    facet_wrap(~label, scales="free_x") +
+    facet_wrap(~label, scales="free_x") +scale_y_continuous(labels=label_percent(), limits=NULL)
     add_layer +
     theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
           legend.position="top")
@@ -464,7 +489,7 @@ ae_table_grade_n = function(
     arm="ARM", grade="AEGR", subjid="SUBJID", soc="AESOC",
     total=FALSE, digits=0
 ){
-  deprecate_warn("5.0.0", "ae_table_grade_n()", "ae_table_grade()")
+  deprecate_warn("5.0.0", "ae_table_grade_n()", 'ae_table_grade(variant="eq")')
   check_installed("crosstable", "for `ae_table_grade_n()` to work.")
   check_dots_empty()
   
@@ -491,7 +516,8 @@ ae_table_grade_n = function(
   rtn = df %>% 
     distinct(subjid, arm, grade) %>% 
     mutate(arm) %>%
-    mutate(grade = ifelse(is.na(grade), "NA", paste("Grade", grade)) %>% copy_label_from(grade)) %>% 
+    mutate(grade = ifelse(is.na(grade), "NA", paste("Grade", grade)) %>%
+             copy_label_from(grade)) %>% 
     crosstable::crosstable(grade, by=arm, total=total,
                            percent_pattern=crosstable::get_percent_pattern("none")) %>% 
     mutate(across(-(.id:variable), function(x){
