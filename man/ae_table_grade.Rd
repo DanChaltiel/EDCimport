@@ -8,7 +8,7 @@ ae_table_grade(
   df_ae,
   ...,
   df_enrol,
-  type = c("max", "sup", "eq"),
+  variant = c("max", "sup", "eq"),
   arm = NULL,
   grade = "AEGR",
   subjid = "SUBJID",
@@ -23,8 +23,6 @@ ae_table_grade(
 
 \item{df_enrol}{enrollment dataset, one row per patient, containing subjid (and arm if needed). All patients should be in this dataset.}
 
-\item{type}{default to \code{c("max", "sup", "eq")}. \code{max} computes the maximum AE grade per patient, \code{sup} computes the number of patients having experienced at least one AE of grade higher than X, and \code{eq} computes the number of patients having experienced at least one AE of grade equal to X.}
-
 \item{arm}{name of the treatment column in \code{df_enrol}. Case-insensitive. Can be set to \code{NULL} to not group.}
 
 \item{grade}{name of the AE grade column in \code{df_ae}. Case-insensitive.}
@@ -32,6 +30,8 @@ ae_table_grade(
 \item{subjid}{name of the patient ID in both \code{df_ae} and \code{df_enrol}. Case-insensitive.}
 
 \item{total}{whether to add a \code{total} column for each arm}
+
+\item{type}{default to \code{c("max", "sup", "eq")}. \code{max} computes the maximum AE grade per patient, \code{sup} computes the number of patients having experienced at least one AE of grade higher than X, and \code{eq} computes the number of patients having experienced at least one AE of grade equal to X.}
 }
 \value{
 a crosstable
@@ -42,18 +42,19 @@ Summary tables for AE
 \examples{
 \dontrun{
 tm = edc_example_ae()
+load_list(tm)
 
-ae_table_grade(df_ae=tm$ae, df_enrol=tm$enrolres, arm=NULL) \%>\% 
+ae_table_grade(df_ae=ae, df_enrol=enrolres, arm=NULL) \%>\% 
   as_flextable(header_show_n=TRUE)
 
-ae_table_grade(df_ae=tm$ae, df_enrol=tm$enrolres, arm="ARM") \%>\% 
+ae_table_grade(df_ae=ae, df_enrol=enrolres, arm="ARM") \%>\% 
   as_flextable(header_show_n=TRUE) 
   
 #To get SAE only, filter df_ae first
 library(dplyr)
-tm$ae \%>\% 
+ae \%>\% 
   filter(sae=="Yes") \%>\% 
-  ae_table_grade(df_enrol=tm$enrolres, arm="ARM") \%>\% 
+  ae_table_grade(df_enrol=enrolres, arm="ARM") \%>\% 
   mutate_all(~str_replace(.x, "AE", "SAE")) \%>\% 
   as_flextable(header_show_n=TRUE) 
 }

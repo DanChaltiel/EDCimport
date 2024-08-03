@@ -21,18 +21,19 @@
 #' @examples
 #' \dontrun{
 #' tm = edc_example_ae()
+#' load_list(tm)
 #' 
-#' ae_table_grade(df_ae=tm$ae, df_enrol=tm$enrolres, arm=NULL) %>% 
+#' ae_table_grade(df_ae=ae, df_enrol=enrolres, arm=NULL) %>% 
 #'   as_flextable(header_show_n=TRUE)
 #' 
-#' ae_table_grade(df_ae=tm$ae, df_enrol=tm$enrolres, arm="ARM") %>% 
+#' ae_table_grade(df_ae=ae, df_enrol=enrolres, arm="ARM") %>% 
 #'   as_flextable(header_show_n=TRUE) 
 #'   
 #' #To get SAE only, filter df_ae first
 #' library(dplyr)
-#' tm$ae %>% 
+#' ae %>% 
 #'   filter(sae=="Yes") %>% 
-#'   ae_table_grade(df_enrol=tm$enrolres, arm="ARM") %>% 
+#'   ae_table_grade(df_enrol=enrolres, arm="ARM") %>% 
 #'   mutate_all(~str_replace(.x, "AE", "SAE")) %>% 
 #'   as_flextable(header_show_n=TRUE) 
 #' }

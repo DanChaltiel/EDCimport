@@ -43,11 +43,10 @@ reference:
   - get_common_cols
 - title: "Clinical Utils"
 - contents:
-  - ae_table_grade_max
-  - ae_table_grade_n
+  - ae_plot_grade 
+  - ae_table_grade
+  - ae_plot_grade_sum
   - ae_table_soc
-  - ae_plot_grade_max
-  - ae_plot_grade_n
   - ae_plot_soc
   - waterfall_plot
 - title: "Options"
@@ -88,4 +87,9 @@ reference:
 - contents:
   - manual_correction
   - reset_manual_correction
+- title: "Deprecated"
+- contents:
+  - ae_table_grade_max
+  - ae_table_grade_n
+  - ae_plot_grade_max
   
