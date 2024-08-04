@@ -44,11 +44,13 @@ ae_table_grade = function(
     variant=c("max", "sup", "eq"), 
     arm=NULL, grade="AEGR", subjid="SUBJID", 
     percent=TRUE,
-    total=FALSE
+    total=TRUE
 ){
   check_installed("crosstable", "for `ae_table_grade()` to work.")
   check_dots_empty()
   
+  if(missing(total) && is.null(arm)) total = FALSE
+  if(total) total = "row"
   default_arm = set_label("All patients", "Treatment arm")
   
   df_ae = df_ae %>% rename_with(tolower) %>%
@@ -64,13 +66,13 @@ ae_table_grade = function(
       grade = fix_grade(grade),
     )
   
-  
-  variant = case_match(variant, "max"~"max_grade", "sup"~"any_grade_sup", "eq"~"any_grade_eq")
-  
+  variant = case_match(variant, "max"~"max_grade", "sup"~"any_grade_sup",
+                       "eq"~"any_grade_eq")
   rex = variant %>% paste(collapse="|") %>% paste0("^(", ., ")")
   
   percent_pattern = if(isTRUE(percent)) "{n} ({scales::percent(n/n_col_na,1)})" 
-  else if(percent=="only") "{n/n_col}" else "{n}"
+                    else if(percent=="only") "{n/n_col}" else "{n}"
+  percent_pattern = list(body=percent_pattern, total_col=percent_pattern)
   
   rtn = df %>% 
     summarise(
@@ -152,7 +154,7 @@ ae_plot_grade = function(
     variant = c("max", "sup", "eq"), 
     position = c("dodge", "stack", "fill"),
     type = c("relative", "absolute"), 
-    arm=NULL, grade="AEGR", subjid="SUBJID"
+    arm=NULL, grade="AEGR", subjid="SUBJID", total=FALSE
 ){
   type = match.arg(type)
   position = match.arg(position)
@@ -184,11 +186,10 @@ ae_plot_grade = function(
   
   tbl = ae_table_grade(df_ae=df_ae, df_enrol=df_enrol, variant=variant, 
                        arm=arm, grade=grade, subjid=subjid,
-                       percent=percent)
+                       percent=percent, total=total)
   p = switch(position, fill=position_fill(), stack=position_stack(), 
-             dodge=position_dodge(0.9, preserve="single"))
+             dodge=position_dodge(0.9))
   
-  browser()
   tbl %>% 
     mutate(across(-c(.id, label, variable), ~as.numeric(as.character(.x)))) %>% 
     pivot_longer(-c(.id, label, variable)) %>% 
@@ -196,7 +197,7 @@ ae_plot_grade = function(
     ggplot(aes(x=variable, y=value)) + fill_aes +
     geom_col(position=p) +
     labs(x=NULL, fill=NULL, y=y_lab) + 
-    facet_wrap(~label, scales="free_x") +scale_y_continuous(labels=label_percent(), limits=NULL)
+    facet_wrap(~label, scales="free_x") +
     add_layer +
     theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
           legend.position="top")
