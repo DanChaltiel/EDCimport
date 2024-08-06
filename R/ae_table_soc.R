@@ -451,6 +451,76 @@ ae_table_soc2 = function(
   }
   ##_______________________________________________________________________
 
+  arm_count = df_enrol %>% 
+    count(arm_) %>% 
+    deframe() %>% as.list()
+  arm_count2 = arm_count %>% 
+    set_names(to_snake_case)
+  
+  
+  #' for each patient/soc, detect if each grade satisfies the specified 
+  #' condition (max/eq/sup)
+  evaluate_grades = function(gr){
+    inner_calc = switch(variant, max=~max_narm(gr) == .x,
+                        sup=~any(gr >= .x, na.rm=TRUE),
+                        eq=~any(gr == .x, na.rm=TRUE))
+    n = c(1:5) %>% set_names(paste0("G",1:5)) %>% map_lgl(inner_calc)
+    n_na = c("NA"=all(is.na(n)))
+    n = replace_na(n, FALSE)
+    n_tot = c(Tot=sum(c(n, n_na), na.rm=TRUE))
+    c(n, n_na, n_tot) %>% 
+      as_tibble_row()
+  }
+  
+  # soc_ = fct_infreq(soc_) %>% fct_relevel(label_missing_soc, label_missing_pat, after=Inf)
+ 
+  rtn = df %>% 
+    # filter(subjid_==126) %>%
+    # filter(arm_=="crt_atezolizumab") %>%
+    summarise(calc = evaluate_grades(grade_),
+              .by=any_of(c("subjid_", "arm_", "soc_", "term_"))) %>% 
+    unnest(calc) %>% 
+    mutate(soc_ = soc_ %>% fct_infreq(w=Tot) %>% 
+             fct_relevel(label_missing_soc, label_missing_pat, after=Inf)) %>% 
+    summarise(
+      across(c(matches("^G\\d$"), any_of(c("NA", "Tot"))), ~{
+        n = sum(.x)
+        n_arm = arm_count2[[cur_group()$arm_]]
+        label = glue("{n} ({p})", p=scales::percent(n/n_arm, 1))
+        label[n==0] = NA
+        label
+      }),
+      .by=any_of(c("arm_", "soc_", "term_"))
+    ) %>% 
+    arrange(arm_, soc_)
+  
+  if(!total) rtn = rtn %>% select(-Tot)
+  if(!showNA) rtn = rtn %>% select(-"NA")
+  if(!sort_by_count) rtn = rtn %>% mutate(soc_=as.character(soc_)) %>% arrange(arm_, soc_)
+  
+  spec = rtn %>% 
+    build_wider_spec(names_from=arm_, 
+                     values_from=c(matches("^G\\d$"), any_of(c("NA", "Tot"))), 
+                     names_glue="{arm_}_{.value}") %>% 
+    arrange(.name)
+  rtn = rtn %>% 
+    rename(soc=soc_) %>% 
+    pivot_wider_spec(spec) %>% 
+    add_class("ae_table_soc")
+  
+  attr(rtn, "header") =
+    glue("{a} (N={b})", a=names(arm_count), b=arm_count) %>%
+    set_names(to_snake_case(names(arm_count))) %>% 
+    as.character()
+  
+  rtn
+  # class(rtn) = c("ae_table_soc", class(rtn))
+  return(rtn)
+  # waldo::compare(rtn, rtn0)
+  as_flextable(rtn) %>% add_header_lines("New")
+  as_flextable(rtn0) %>% add_header_lines("old")
+  browser()
+  
   # percent = TRUE
   # percent_pattern = if(isTRUE(percent)) "{n} ({scales::percent(n/n_col_na,1)})" 
   # else if(percent=="only") "{n/n_col}" else "{n}"
@@ -458,11 +528,8 @@ ae_table_soc2 = function(
   # df2 = df %>% 
   #   summarise(grade_=max_na(grade_) %>% as_grade(), 
   #             .by=any_of(c("subjid_", "arm_", "soc_", "term_")))
-  arm_count = df_enrol %>% 
-    count(arm_) %>% 
-    deframe() %>% as.list()
   
-  # browser()
+  
   # df2 %>% 
   #   crosstable(soc_, by=c(grade_, arm_), 
   #              # percent_pattern="{browser()})" ,
@@ -502,57 +569,6 @@ ae_table_soc2 = function(
   #       as_tibble_row(),
   #     .by=any_of(c("subjid_", "arm_", "soc_", "term_"))
   #   )
-  
-  count_grade = function(gr, arm){
-    inner_calc = switch(variant, max=~max_narm(gr) == .x,
-                        sup=~ifelse(any(gr >= .x, na.rm=TRUE)),
-                        eq=~ifelse(any(gr == .x, na.rm=TRUE)))
-    n = c(1:5) %>% set_names(paste0("G",1:5)) %>% map_lgl(inner_calc)
-    n_na = c(na=all(is.na(n)))
-    n = replace_na(n, FALSE)
-    # browser()
-    n_tot = c(tot=sum(n, na.rm=TRUE))
-    c(n, n_na, n_tot) %>% 
-      as_tibble_row()
-  }
-  
- 
-  rtn = df %>% 
-    # filter(subjid_==126) %>% 
-    # filter(arm_=="CRT + Atezolizumab") %>% 
-    # filter(arm_=="CRT + Atezolizumab") %>% 
-    summarise(
-      calc = count_grade(grade_, cur_group()[["arm_"]]),
-      .by=any_of(c("subjid_", "arm_", "soc_", "term_"))
-    ) %>% 
-    unnest(calc) %>% 
-    mutate(soc_ = fct_infreq(soc_, w=tot)) %>% 
-    summarise(
-      across(c(matches("^G\\d$"), any_of(c("na", "tot"))), ~{
-        n = sum(.x)
-        n_arm = arm_count[[cur_group()$arm_]]
-        label = glue("{n} ({p})", p=scales::percent(n/n_arm, 1))
-        label[n==0] = ""
-        label
-      }),
-      .by=any_of(c("arm_", "soc_", "term_"))
-    ) %>% 
-    arrange(arm_, soc_)
-  # rtn$soc_ %>% levels
-  
-  spec = rtn %>% 
-    build_wider_spec(names_from=arm_, 
-                     values_from=c(matches("^G\\d$"), any_of(c("na", "tot"))), 
-                     names_glue="{arm_}_{.value}") %>% 
-    arrange(.name)
-  rtn %>% 
-    pivot_wider_spec(spec) %>% flextable()
-  rtn %>% 
-    pivot_wider(names_from=arm_, values_from=c(matches("^G\\d$"), any_of(c("na", "tot"))), 
-                names_glue="{arm_}_{.value}", names_sort=F)
-  
-  
-  browser()
   
   
   # 
@@ -620,45 +636,45 @@ ae_table_soc2 = function(
   
   
   
-  ct = df2 %>% 
-    # mutate(grade_ = as_grade(grade_), 
-    #        soc_=fct_drop(soc_) %>% fct_infreq()) %>% 
-    crosstable(soc_, by=c(grade_, arm_), 
-               # percent_pattern="{browser()})" ,
-               percent_pattern="{n}" ,
-               drop_levels=FALSE) %>% 
-    mutate(
-      across(-c(.id, label, variable), \(.x){
-        cur_arm = cur_column() %>% str_extract("arm_=(.*)", group=1)
-        cur_n_tot = arm_count[[cur_arm]]
-        print(.x)
-        glue("{x} ({scales::percent(x/cur_n_tot,1)})", x=as.numeric(.x))
-      }),
-      across(-c(.id, label, variable), ~str_remove(.x, "0 \\(0\\%\\)")),
-      
-    )
-  
-  ct %>% 
-    af(remove_header_keys=TRUE, header_show_n=2)
-  
-  a = df2 %>% 
-    # filter(soc_=="Gastrointestinal disorders") %>% 
-    mutate(grade_ = as_grade(grade_), 
-           soc_=fct_drop(soc_) %>% fct_infreq()) %>% 
-    split(.$soc_) %>% 
-    map(~{
-      .x %>% 
-        mutate(soc_=fct_drop(soc_)) %>% 
-        crosstable(soc_, by=c(grade_, arm_), percent_pattern=percent_pattern, 
-                   drop_levels=FALSE)
-    }) %>% 
-    list_rbind()
-  
-  a %>% filter(variable=="Gastrointestinal disorders")
-  
-  n_tot
-  n_row
-  print(n)
+  # ct = df2 %>% 
+  #   # mutate(grade_ = as_grade(grade_), 
+  #   #        soc_=fct_drop(soc_) %>% fct_infreq()) %>% 
+  #   crosstable(soc_, by=c(grade_, arm_), 
+  #              # percent_pattern="{browser()})" ,
+  #              percent_pattern="{n}" ,
+  #              drop_levels=FALSE) %>% 
+  #   mutate(
+  #     across(-c(.id, label, variable), \(.x){
+  #       cur_arm = cur_column() %>% str_extract("arm_=(.*)", group=1)
+  #       cur_n_tot = arm_count[[cur_arm]]
+  #       print(.x)
+  #       glue("{x} ({scales::percent(x/cur_n_tot,1)})", x=as.numeric(.x))
+  #     }),
+  #     across(-c(.id, label, variable), ~str_remove(.x, "0 \\(0\\%\\)")),
+  #     
+  #   )
+  # 
+  # ct %>% 
+  #   af(remove_header_keys=TRUE, header_show_n=2)
+  # 
+  # a = df2 %>% 
+  #   # filter(soc_=="Gastrointestinal disorders") %>% 
+  #   mutate(grade_ = as_grade(grade_), 
+  #          soc_=fct_drop(soc_) %>% fct_infreq()) %>% 
+  #   split(.$soc_) %>% 
+  #   map(~{
+  #     .x %>% 
+  #       mutate(soc_=fct_drop(soc_)) %>% 
+  #       crosstable(soc_, by=c(grade_, arm_), percent_pattern=percent_pattern, 
+  #                  drop_levels=FALSE)
+  #   }) %>% 
+  #   list_rbind()
+  # 
+  # a %>% filter(variable=="Gastrointestinal disorders")
+  # 
+  # n_tot
+  # n_row
+  # print(n)
   
   
   ##_______________________________________________________________________
