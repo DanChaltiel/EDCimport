@@ -61,6 +61,7 @@ reference:
 - contents:
   - unify
   - fct_yesno
+  - select_distinct
   - table_format
   - save_plotly
   - get_datasets
