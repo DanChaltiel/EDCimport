@@ -366,6 +366,8 @@ butterfly_plot = ae_plot_soc
 #' @importFrom rlang set_names
 #' @importFrom tibble as_tibble_row
 #' @importFrom tidyr replace_na
+#' @noRd
+#' @keywords internal
 evaluate_grades = function(gr, variant){
   inner_calc = switch(variant, max=~max_narm(gr) == .x,
                       sup=~any(gr >= .x, na.rm=TRUE),
@@ -389,6 +391,7 @@ evaluate_grades = function(gr, variant){
 #' @importFrom tibble as_tibble_row deframe lst
 #' @importFrom tidyr build_wider_spec pivot_wider_spec replace_na unnest
 #' @importFrom tidyselect matches
+#' @keywords internal
 ae_table_soc_legacy = function(
     df_ae, ..., df_enrol, 
     variant=c("max", "sup", "eq"), 
