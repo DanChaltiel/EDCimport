@@ -30,6 +30,7 @@ edc_new_project = function(path, open=TRUE){
   rproj_file = paste0(proj_name, ".Rproj")
   
   #copy template files from package to path
+  templ_dir = system.file("/init_proj", package="EDCimport")
   pkg_files = dir_ls(templ_dir, type="file", recurse=TRUE)
   new_files = pkg_files %>% 
     str_replace(fixed(as.character(templ_dir)), path) %>% 
