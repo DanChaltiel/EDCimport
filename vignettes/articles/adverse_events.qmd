@@ -46,119 +46,121 @@ Voir la description du package `{crosstable}` pour plus d'informations: [documen
 
 ### Tableaux
 
-::: tabset
+::: {.panel-tabset}
+
+#### `AE_grades1`
+
+##### Table des grades maximum par patient
+
+```{r}
+ae_table_grade(df_ae=ae, df_enrol=enrolres, arm=NULL, variant="max") %>% 
+  as_flextable(header_show_n=TRUE) %>% 
+  add_footer_lines("Percentages reflect the proportion of patients whose maximum AE grade was as indicated.")
+```
+
+#### `AE_grades2`
+
+##### Table des grades maximum par patient stratifié sur le bras
+
+On pourrait retrouver exactement la sortie SAS en mettant `total=FALSE`.
+
+```{r}
+ae_table_grade(df_ae=ae, df_enrol=enrolres, arm="arm", variant="max") %>% 
+  as_flextable(header_show_n=TRUE) %>% 
+  add_footer_lines("Percentages reflect the proportion of patients presenting at most one AE of given grade")
+```
+
+#### `AE_grades3`
+
+##### Table de tous les grades pour chaque patient
+
+```{r}
+ae_table_grade(df_ae=ae, df_enrol=enrolres, arm=NULL, variant="eq") %>% 
+  as_flextable(header_show_n=TRUE) %>% 
+  add_footer_lines("Percentages reflect the proportion of patients presenting at least one AE of given grade")
+```
+
+##### Table de tous les grades pour chaque patient, stratifié sur le bras
+
+On pourrait retrouver exactement la sortie SAS en mettant `total=FALSE`.
+
+```{r}
+ae_table_grade(df_ae=ae, df_enrol=enrolres, arm="arm", variant="eq") %>% 
+  as_flextable(header_show_n=TRUE) %>% 
+  add_footer_lines("Percentages reflect the proportion of patients presenting at least one AE of given grade")
+```
+
+#### `AE_grades4`
+
+##### Table des grades maximum par patient, filtrée sur les SAE
+
+Il suffit de filtrer la table AE en amont et de remplacer AE par SAE dans la crosstable de sortie.
+
+```{r}
+ae %>% 
+  filter(sae=="Yes") %>% 
+  ae_table_grade(df_enrol=enrolres, arm=NULL, variant="max") %>% 
+  mutate(label=str_replace(label, "AE", "SAE"),
+         variable=str_replace(variable, "AE", "SAE")) %>% 
+  as_flextable(header_show_n=TRUE) %>% 
+  add_footer_lines("Percentages reflect the proportion of patients whose maximum SAE grade was as indicated.")
+```
+
 :::
-
--   `AE_grades1`
-
-    #### Table des grades maximum par patient
-
-    ```{r}
-    ae_table_grade(df_ae=ae, df_enrol=enrolres, arm=NULL, variant="max") %>% 
-      as_flextable(header_show_n=TRUE) %>% 
-      add_footer_lines("Percentages reflect the proportion of patients whose maximum AE grade was as indicated.")
-    ```
-
--   `AE_grades2`
-
-    #### Table des grades maximum par patient stratifié sur le bras
-
-    On pourrait retrouver exactement la sortie SAS en mettant `total=FALSE`.
-
-    ```{r}
-    ae_table_grade(df_ae=ae, df_enrol=enrolres, arm="arm", variant="max") %>% 
-      as_flextable(header_show_n=TRUE) %>% 
-      add_footer_lines("Percentages reflect the proportion of patients presenting at most one AE of given grade")
-    ```
-
--   `AE_grades3`
-
-    #### Table de tous les grades pour chaque patient
-
-    ```{r}
-    ae_table_grade(df_ae=ae, df_enrol=enrolres, arm=NULL, variant="eq") %>% 
-      as_flextable(header_show_n=TRUE) %>% 
-      add_footer_lines("Percentages reflect the proportion of patients presenting at least one AE of given grade")
-    ```
-
-    #### Table de tous les grades pour chaque patient, stratifié sur le bras
-
-    On pourrait retrouver exactement la sortie SAS en mettant `total=FALSE`.
-
-    ```{r}
-    ae_table_grade(df_ae=ae, df_enrol=enrolres, arm="arm", variant="eq") %>% 
-      as_flextable(header_show_n=TRUE) %>% 
-      add_footer_lines("Percentages reflect the proportion of patients presenting at least one AE of given grade")
-    ```
-
--   `AE_grades4`
-
-    #### Table des grades maximum par patient, filtrée sur les SAE
-
-    Il suffit de filtrer la table AE en amont et de remplacer AE par SAE dans la crosstable de sortie.
-
-    ```{r}
-    ae %>% 
-      filter(sae=="Yes") %>% 
-      ae_table_grade(df_enrol=enrolres, arm=NULL, variant="max") %>% 
-      mutate(label=str_replace(label, "AE", "SAE"),
-             variable=str_replace(variable, "AE", "SAE")) %>% 
-      as_flextable(header_show_n=TRUE) %>% 
-      add_footer_lines("Percentages reflect the proportion of patients whose maximum SAE grade was as indicated.")
-    ```
 
 ### Graphiques
 
-::: tabset
+::: {.panel-tabset}
+
+#### `AE max`
+
+##### Graphique des grades maximum par patient
+
+```{r}
+#| fig.asp: 0.5
+#| fig.width: 7
+#| out.width: "100%"
+ae_plot_grade(df_ae=ae, df_enrol=enrolres, 
+              variant="max", position="dodge")
+```
+
+##### Graphique des grades maximum par patient, par bras de traitement
+
+```{r}
+#| fig.asp: 0.5
+#| fig.width: 7
+#| out.width: "100%"
+ae_plot_grade(df_ae=ae, df_enrol=enrolres, arm="ARM", 
+              variant="max", position="dodge")
+```
+
+#### `AE N`
+
+##### Graphique des grades minimum par patient, par bras de traitement
+
+```{r}
+#| fig.asp: 0.5
+#| fig.width: 7
+#| out.width: "100%"
+ae_plot_grade(df_ae=ae, df_enrol=enrolres, arm="ARM", 
+              variant="sup", position="dodge")
+```
+
+#### `AE sum`
+
+##### Graphique des sommes des grades par patient, par bras de traitement
+
+Dans cet exemple, les AE sont pondérés, avec ici un AE de grade 5 comptant comme 10 AE, un AE de grade 4 comme 6 AE, etc.
+
+```{r}
+#| fig.asp: 0.5
+#| fig.width: 7
+#| out.width: "100%"
+ae_plot_grade_sum(df_ae=ae, df_enrol=enrolres, arm="ARM", 
+                  weights=c(1,1,3,6,10))
+```
+
 :::
-
--   `AE max`
-
-    #### Graphique des grades maximum par patient
-
-    ```{r}
-    #| fig.asp: 0.5
-    #| fig.width: 7
-    #| out.width: "100%"
-    ae_plot_grade(df_ae=ae, df_enrol=enrolres, 
-                  variant="max", position="dodge")
-    ```
-
-    #### Graphique des grades maximum par patient, par bras de traitement
-
-    ```{r}
-    #| fig.asp: 0.5
-    #| fig.width: 7
-    #| out.width: "100%"
-    ae_plot_grade(df_ae=ae, df_enrol=enrolres, arm="ARM", 
-                  variant="max", position="dodge")
-    ```
-
--   `AE N`
-
-    #### Graphique des grades minimum par patient, par bras de traitement
-
-    ```{r}
-    #| fig.asp: 0.5
-    #| fig.width: 7
-    #| out.width: "100%"
-    ae_plot_grade(df_ae=ae, df_enrol=enrolres, arm="ARM", 
-                  variant="sup", position="dodge")
-    ```
-
--   `AE sum`
-
-    #### Graphique des sommes des grades par patient, par bras de traitement
-
-    Dans cet exemple, les AE sont pondérés, avec ici un AE de grade 5 comptant comme 10 AE, un AE de grade 4 comme 6 AE, etc.
-
-    ```{r}
-    #| fig.asp: 0.5
-    #| fig.width: 7
-    #| out.width: "100%"
-    ae_plot_grade_sum(df_ae=ae, df_enrol=enrolres, arm="ARM", 
-                      weights=c(1,1,3,6,10))
-    ```
 
 ## Macro `AE_SOC`
 
@@ -170,80 +172,87 @@ Pour les sorties sur `{officer}`, comme ces tables sont très larges, pensez bie
 
 ### Tableaux
 
-::: tabset
+::: {.panel-tabset}
+
+#### `AE_SOC1`
+
+##### Table des grades par soc et termes
+
+On peut ajouter `total=FALSE` pour retirer la colonne "Tot".
+
+```{r}
+ae_table_soc(df_ae=ae, df_enrol=enrolres, term=NULL, arm=NULL, sort_by_ae=FALSE) %>% 
+  as_flextable() %>% 
+  add_footer_lines("In the header, N represents the number of patients.") %>% 
+  add_footer_lines("Percentages reflect the proportion of patients whose maximum AE grade was as indicated.")
+```
+
+
+#### `AE_SOC2`
+
+##### Table des grades par soc et termes
+
+```{r}
+##TODO exemple avec des TERMS
+```
+
+
+#### `AE_SOC3`
+
+##### Table des grades par termes uniquement, filtrée sur les SAE
+
+Il suffit de filtrer la table AE en amont.
+
+```{r}
+ae %>% 
+  #filter(sae=="Yes") %>%
+  ae_table_soc(df_enrol=enrolres, term=NULL, arm=NULL, sort_by_ae=FALSE) %>% 
+  as_flextable() %>% 
+  add_footer_lines("In the header, N represents the number of patients.") %>% 
+  add_footer_lines("Percentages reflect the proportion of patients whose maximum AE grade was as indicated.")
+```
+
+
+#### `AE_SOC4/5`
+
+##### Table des grades stratifiée sur le bras (sans colonne total)
+
+On peut ajouter `total=FALSE` pour retirer la colonne "Tot" et obtenir la sortie *AE_SOC5*.
+
+```{r}
+ae_table_soc(df_ae=ae, df_enrol=enrolres, term=NULL, arm="arm", sort_by_ae=FALSE) %>% 
+  as_flextable() %>% 
+  add_footer_lines("In the header, N represents the number of patients.") %>% 
+  add_footer_lines("Percentages reflect the proportion of patients whose maximum AE grade was as indicated.")
+```
+
+
+#### `AE_SOC6`
+
+##### Table des soc et termes tous grades confondus stratifiée sur le bras
+
+```{r}
+##TODO
+```
+
 :::
-
--   `AE_SOC1`
-
-    Table des grades par soc et termes
-
-    On peut ajouter `total=FALSE` pour retirer la colonne "Tot".
-
-    ```{r}
-    ae_table_soc(df_ae=ae, df_enrol=enrolres, term=NULL, arm=NULL, sort_by_ae=FALSE) %>% 
-      as_flextable() %>% 
-      add_footer_lines("In the header, N represents the number of patients.") %>% 
-      add_footer_lines("Percentages reflect the proportion of patients whose maximum AE grade was as indicated.")
-    ```
-
--   `AE_SOC2`
-
-    Table des grades par soc et termes
-
-    ```{r}
-    ##TODO exemple avec des TERMS
-    ```
-
--   `AE_SOC3`
-
-    #### Table des grades par termes uniquement, filtrée sur les SAE
-
-    Il suffit de filtrer la table AE en amont.
-
-    ```{r}
-    ae %>% 
-      #filter(sae=="Yes") %>%
-      ae_table_soc(df_enrol=enrolres, term=NULL, arm=NULL, sort_by_ae=FALSE) %>% 
-      as_flextable() %>% 
-      add_footer_lines("In the header, N represents the number of patients.") %>% 
-      add_footer_lines("Percentages reflect the proportion of patients whose maximum AE grade was as indicated.")
-    ```
-
--   `AE_SOC4/5`
-
-    Table des grades stratifiée sur le bras (sans colonne total)
-
-    On peut ajouter `total=FALSE` pour retirer la colonne "Tot" et obtenir la sortie *AE_SOC5*.
-
-    ```{r}
-    ae_table_soc(df_ae=ae, df_enrol=enrolres, term=NULL, arm="arm", sort_by_ae=FALSE) %>% 
-      as_flextable() %>% 
-      add_footer_lines("In the header, N represents the number of patients.") %>% 
-      add_footer_lines("Percentages reflect the proportion of patients whose maximum AE grade was as indicated.")
-    ```
-
--   `AE_SOC6`
-
-    Table des soc et termes tous grades confondus stratifiée sur le bras
-
-    ```{r}
-    ##TODO
-    ```
 
 ### Graphiques
 
-::: tabset
+
+::: {.panel-tabset}
+
+####  `Butterfly plot`
+
+Ici, on considère comme sévères les AE de grade \>= 3 :
+
+```{r}
+#| fig.asp: 0.5
+#| fig.width: 7
+#| out.width: "100%"
+ae %>% 
+  dplyr::mutate(severe = aegr>=3) %>% 
+  ae_plot_soc(df_enrol=enrolres)
+```
+
 :::
-
--   `Butterfly plot`
-
-    Ici, on considère comme sévères les AE de grade \>= 3 :
-
-    ```{r}
-    #| fig.asp: 0.5
-    #| fig.width: 7
-    #| out.width: "100%"
-    ae %>% 
-      dplyr::mutate(severe = aegr>=3) %>% 
-      ae_plot_soc(df_enrol=enrolres)
-    ```
