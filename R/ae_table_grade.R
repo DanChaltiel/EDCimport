@@ -49,6 +49,9 @@ ae_table_grade = function(
   check_installed("crosstable", "for `ae_table_grade()` to work.")
   check_dots_empty()
   
+  assert_names_exists(df_ae, lst(subjid, grade))
+  assert_names_exists(df_enrol, lst(subjid, arm))
+  
   if(missing(total) && is.null(arm)) total = FALSE
   if(total) total = "row"
   default_arm = set_label("All patients", "Treatment arm")
@@ -158,6 +161,7 @@ ae_plot_grade = function(
 ){
   type = match.arg(type)
   position = match.arg(position)
+  
   if(type=="relative" && position=="stack"){
     type = "absolute"
     cli_warn('{.arg type} has been corrected to {.val absolute} to 
@@ -238,15 +242,19 @@ ae_plot_grade_sum = function(
     arm=NULL, grade="AEGR", subjid="SUBJID"
 ){
   check_dots_empty()
-  df_ae = df_ae %>% rename_with(tolower) %>%
-    select(subjid=tolower(subjid), grade=tolower(grade)) 
+  assert_names_exists(df_ae, lst(subjid, grade))
+  assert_names_exists(df_enrol, lst(subjid, arm))
+  
   weighted = !is.null(weights)
   if(!weighted) weights=c(1,1,1,1,1)
   assert(is.numeric(weights))
   assert(length(weights)==5)
+  
+  df_ae = df_ae %>% rename_with(tolower) %>%
+    select(subjid=tolower(subjid), grade=tolower(grade)) 
   df_enrol = df_enrol %>% rename_with(tolower) %>%
     select(subjid=tolower(subjid), arm=tolower(arm))
-  # browser()
+
   df = df_enrol %>%
     full_join(df_ae, by=tolower(subjid)) %>% 
     mutate(grade = fix_grade(grade),

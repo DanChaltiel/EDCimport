@@ -278,6 +278,9 @@ ae_plot_soc = function(
   check_dots_empty()
   sort_by = arg_match(sort_by)
   
+  assert_names_exists(df_ae, lst(subjid, soc, severe))
+  assert_names_exists(df_enrol, lst(subjid, arm))
+  
   df_ae = df_ae %>% 
     select(subjid_=any_of2(subjid), soc_=any_of2(soc), severe_=any_of2(severe))
   df_enrol = df_enrol %>% 

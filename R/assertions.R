@@ -48,6 +48,18 @@ assert_class = function(x, class, null.ok=TRUE){
 }
 
 
+assert_names_exists = function(df, l){
+  df_name = caller_arg(df)
+  not_found = l %>% 
+    discard(is.null) %>%
+    discard(~tolower(.x) %in% tolower(names(df)))
+  if(length(not_found)>0){
+    a = paste0(names(not_found), "='", not_found, "'")
+    cli_abort("Columns not found in {.arg df_name}: {.val {a}}",
+              class="edc_name_notfound_error")
+  }
+}
+
 
 # UTF8 ----------------------------------------------------------------------------------------
 
