@@ -40,31 +40,39 @@ test_that("edc_warn_patient_diffs works", {
   edc_warn_patient_diffs(rep(1:50, 3)) %>% expect_silent()
   edc_warn_patient_diffs(1:48, ref=1:48) %>% expect_silent()
   
-  edc_warn_patient_diffs(1:48) %>% expect_warning(class="edc_edc_warn_patient_diffs_miss")
-  edc_warn_patient_diffs(1:52) %>% expect_warning(class="edc_edc_warn_patient_diffs_additional")
+  edc_warn_patient_diffs(1:48) %>% expect_warning(class="edc_edc_patient_diffs_warning")
+  edc_warn_patient_diffs(1:52) %>% expect_warning(class="edc_edc_patient_diffs_warning")
 })
 
 
 
 test_that("fct_yesno works", {
-  set.seed(42)
-  x = tibble(a=sample(c("Yes", "No"), size=20, replace=T),
-             b=sample(c("1-Yes", "0-No"), size=20, replace=T),
-             c=sample(c("Oui", "Non"), size=20, replace=T),
-             x=sample(0:1, size=20, replace=T),
-             y=1:20)
   edc_reset_options(quiet=TRUE)
-  x$a %>% factor() %>% levels() %>% expect_equal(c("No", "Yes"))
-  x$a %>% fct_yesno() %>% levels() %>% expect_equal(c("Yes", "No"))
+  set.seed(42)
+  N=10
+  dat = tibble(
+    a=sample(c("Yes", "No"), size=N, replace=TRUE),
+    b=sample(c("Oui", "Non"), size=N, replace=TRUE),
+    c=sample(0:1, size=N, replace=TRUE),
+    d=sample(c(TRUE, FALSE), size=N, replace=TRUE),
+    e=sample(c("1-Yes", "0-No"), size=N, replace=TRUE),
+    y=sample(c("aaa", "bbb", "ccc"), size=N, replace=TRUE),
+    z=1:N,
+  )
   
-  x$b %>% factor() %>% levels() %>% expect_equal(c("0-No", "1-Yes"))
-  x$b %>% fct_yesno() %>% levels() %>% expect_equal(c("1-Yes", "0-No"))
+  rslt = dat %>% mutate(across(everything(), ~fct_yesno(.x, fail=FALSE)))
   
-  x$c %>% factor() %>% levels() %>% expect_equal(c("Non", "Oui"))
-  x$c %>% fct_yesno() %>% levels() %>% expect_null()
+  x1 = rslt %>% 
+    select(a:e) %>% 
+    pivot_longer(everything()) %>% 
+    pull(value)
   
-  supp_levels = list(c("Oui", "Non"), c("Ja", "Nein"))
-  local_options(edc_fct_yesno = get_yesno_lvl(supp_levels))
-  x$c %>% factor() %>% levels() %>% expect_equal(c("Non", "Oui"))
-  x$c %>% fct_yesno() %>% levels() %>% expect_equal(c("Oui", "Non"))
+  expect_true(is.factor(x1))
+  expect_identical(levels(x1), c("Yes", "No"))
+  
+  expect_identical(dat$y, rslt$y)
+  expect_identical(dat$z, rslt$z)
+  
+  fct_yesno(dat$y, fail=TRUE) %>% expect_error(class="fct_yesno_unparsed_error")
+  fct_yesno(dat$z, fail=TRUE) %>% expect_silent()
 })
