@@ -119,7 +119,7 @@ ae_table_soc = function(
               .by=any_of(c("subjid_", "arm_", "soc_", "term_"))) %>% 
     unnest(calc) %>% 
     mutate(soc_ = soc_ %>% fct_infreq(w=Tot) %>% 
-             fct_relevel(label_missing_soc, label_missing_pat, after=Inf)) %>% 
+             fct_last(label_missing_soc, label_missing_pat)) %>% 
     summarise(
       across(c(matches("^G\\d$"), any_of(c("NA", "Tot"))), ~{
         n = sum(.x)

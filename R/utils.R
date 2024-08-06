@@ -43,6 +43,26 @@ any_of2 = function(x, ignore.case=TRUE, ...){
   matches(paste(paste0("^",x,"$"), collapse="|"), ignore.case=ignore.case, ...)
 }
 
+#' @noRd
+#' @keywords internal
+to_snake_case <- function(str) {
+  str %>%
+    str_replace_all("([a-z])([A-Z])", "\\1_\\2") %>%
+    str_replace_all("[^\\w\\s]", "") %>%
+    str_replace_all("\\s+", "_") %>%
+    str_to_lower()
+}
+
+
+#' `fct_relevel` to the end, without warning for missing levels
+#' @noRd
+#' @keywords internal
+fct_last = function(f, ...) {
+  lvl = c(...)
+  lvl = intersect(lvl, levels(f))
+  fct_relevel(f, lvl, after = Inf)
+}
+
 
 #' @noRd
 #' @keywords internal
