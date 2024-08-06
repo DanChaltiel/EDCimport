@@ -188,3 +188,9 @@ print.edc_lookup = function(x, n=Inf, ...){
   
   invisible(x)
 }
+
+
+clean_lookup = function(){
+  edcimport_env$lookup = NULL
+  invisible(TRUE)
+}
