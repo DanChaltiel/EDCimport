@@ -72,6 +72,13 @@ ae_table_soc = function(
   label_missing_soc = "Missing SOC"
   label_missing_pat = "No Declared AE"
   
+  if(variant!="max" && missing(total) && total){
+    cli_warn("Total has been set to `FALSE` as totals are not very interpretable 
+             when {.arg variant} is {.val sup} or {.val eq}. Set `total=TRUE` 
+             explicitly to silence this warning.")
+    total=FALSE
+  }
+  
   df_ae = df_ae %>% 
     select(subjid_=any_of2(subjid), soc_=any_of2(soc), 
            term_=any_of2(term), grade_=any_of2(grade)) %>% 
