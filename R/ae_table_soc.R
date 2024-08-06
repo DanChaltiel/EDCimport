@@ -268,7 +268,9 @@ as_flextable.ae_table_soc = function(x, arm_colors=c("#f2dcdb", "#dbe5f1", "#ebf
 #' 
 #' @inheritParams ae_table_soc
 #' @inherit ae_table_soc seealso
-#' @param severe name of the logical column in `df_ae` telling wheter an AE is severe. Case-insensitive. 
+#' @param severe name of the logical column in `df_ae` telling whether an AE is severe. Case-insensitive. 
+#' @param sort_by either "total" or "severe"
+#' @param range_min The minimum value for the upper limit of the x-axis range. Set to `1` to always include 100%.
 #'
 #' @return a crosstable (dataframe)
 #' @export
@@ -287,14 +289,16 @@ as_flextable.ae_table_soc = function(x, arm_colors=c("#f2dcdb", "#dbe5f1", "#ebf
 #' 
 #' tm = edc_example_ae()
 #' tm$ae %>% 
-#'   #dplyr::mutate(severe = aeser=="Yes") %>% 
-#'   dplyr::mutate(severe = aegr>=3) %>% 
-#'   ae_plot_soc(df_enrol=tm$enrolres)
+#'   #dplyr::mutate(ae_severe = aeser=="Yes") %>% 
+#'   dplyr::mutate(ae_severe = aegr>=3) %>% 
+#'   ae_plot_soc(df_enrol=tm$enrolres, severe="ae_severe")
 ae_plot_soc = function(
-    df_ae, ..., df_enrol, 
-    arm="ARM", subjid="SUBJID", soc="AESOC", severe="SEVERE"
+    df_ae, ..., df_enrol, severe, sort_by=c("total", "severe"), range_min=NULL,
+    arm="ARM", subjid="SUBJID", soc="AESOC"
 ){
   check_dots_empty()
+  sort_by = arg_match(sort_by)
+  
   df_ae = df_ae %>% 
     select(subjid_=any_of2(subjid), soc_=any_of2(soc), severe_=any_of2(severe))
   df_enrol = df_enrol %>% 
@@ -304,7 +308,9 @@ ae_plot_soc = function(
     filter(!is.na(soc_))  %>% 
     arrange(subjid_)
   
-  arms = df$arm_ %>% unique() %>% na.omit()
+  if(!is.factor(df_enrol$arm_)) df_enrol$arm_ = factor(df_enrol$arm_)
+  
+  arms = df_enrol$arm_ %>% unique() %>% na.omit()
   if(length(arms)!=2){
     cli_abort(c("{.fn EDCimport::ae_plot_soc} needs exactly 2 arms.", 
                 i="Arms: {.val {arms}}"))
@@ -315,10 +321,8 @@ ae_plot_soc = function(
   
   df_arm = df_enrol %>% 
     count(arm_, name="n_arm") %>% 
-    mutate(label=glue("{arm_} (N={n_arm})"))
-  
-  # left_arm = df_arm %>% dplyr::slice_min(n_arm, n=1) %>% pull(arm_)
-  left_arm = df_enrol %>% pull(arm_) %>% factor() %>% levels() %>% head(1)
+    mutate(label=glue("{arm_} (N={n_arm})") %>% fct_reorder(as.numeric(arm_)))
+  left_arm = levels(arms)[1]
   
   a = df %>% 
     summarise(any_ae = TRUE, 
@@ -329,25 +333,36 @@ ae_plot_soc = function(
               .by=any_of(c("arm_", "soc_"))) %>%  
     left_join(df_arm, by="arm_") %>% 
     mutate(
-      soc_ = fct_reorder(soc_, n_ae),
       n_ae = n_ae * ifelse(arm_==left_arm, -1, 1),
       n_severe = n_severe * ifelse(arm_==left_arm, -1, 1),
       pct_ae = n_ae/n_arm,
       pct_severe = n_severe/n_arm,
+      soc_ = fct_reorder(soc_, abs(pct_ae), .fun=max),
     )
+  
+  a %>% arrange(soc_)
+  a %>% arrange(abs(pct_ae))
+  if(sort_by=="severe") a$soc_ = fct_reorder(a$soc_, abs(a$pct_severe), .fun=max)
   
   label_percent_positive = \(x) label_percent()(x) %>% str_remove("-")
   
+  layer_blank = NULL
+  if(!is.null(range_min)){
+    data_blank = a %>% summarise(pct_ae = ifelse(arm_==left_arm, -range_min, range_min), 
+                                 .by=c(label, soc_))
+    layer_blank = geom_blank(aes(x=pct_ae), data=data_blank)
+  }
+  
   a %>% 
-    ggplot(aes(y=soc_, fill=arm_)) +
+    ggplot(aes(y=soc_, fill=label)) +
     geom_col(aes(x=pct_ae), alpha=0.6) +
     geom_col(aes(x=pct_severe), color="grey40", width=0.6) +
-    # scale_x_continuous(labels=label_percent_positive, limit=c(-1,1)) +
+    layer_blank +
     scale_x_continuous(labels=label_percent_positive) +
     facet_grid(cols=vars(label), scales="free_x") +
     labs(y=NULL, fill=NULL, x="Proportion of patients presenting at least 1 adverse event") +
     theme(
-      legend.position="bottom",
+      legend.position="none",
       panel.spacing.x=unit(1, "mm")
     )
 }
@@ -383,15 +398,15 @@ butterfly_plot = ae_plot_soc
 #' @keywords internal
 #' 
 #' @examples
-#' rtn0 = ae_table_soc(ae, df_enrol=enrolres, term=NULL, arm="ARM", sort_by_ae=FALSE)
+#' rtn0 = ae_table_soc(ae, df_enrol=enrolres, term=NULL, arm="ARM", sort_by_ae=TRUE)
 #' attributes(rtn0)
-#' ae_table_soc2(ae, df_enrol=enrolres, term=NULL, arm="ARM", sort_by_ae=FALSE)
+#' ae_table_soc2(ae, df_enrol=enrolres, term=NULL, arm="ARM", sort_by_count=TRUE)
 #' 
 ae_table_soc2 = function(
     df_ae, ..., df_enrol, 
     variant=c("max", "sup", "eq"), 
-    arm="ARM", grade="AEGR", soc="AESOC", term=NULL, subjid="SUBJID",
-    sort_by_ae=TRUE, total=TRUE, digits=0, warn_miss=FALSE
+    arm=NULL, grade="AEGR", soc="AESOC", term=NULL, subjid="SUBJID",
+    sort_by_count=TRUE, total=TRUE, showNA=TRUE, digits=0, warn_miss=FALSE
 ){
   check_dots_empty()
   default_arm = set_label("All patients", "Treatment arm")
@@ -412,15 +427,16 @@ ae_table_soc2 = function(
     mutate(soc_ = if_else(soc_ %in% c(0, NA), label_missing_soc, soc_))
   df_enrol = df_enrol %>% 
     select(subjid_=any_of2(subjid), arm_=any_of2(arm)) %>% 
-    mutate(arm_ = if(is.null(.env$arm)) default_arm else to_snake_case(.data$arm_))
+    mutate(arm_ = if(is.null(.env$arm)) default_arm else .data$arm_)
   
   df = df_enrol %>%
     full_join(df_ae, by="subjid_") %>% 
     arrange(subjid_) %>% 
     mutate(
-      arm_ = if(is.null(.env$arm)) default_arm else .data$arm_,
+      arm_ = to_snake_case(arm_),
       soc_ = if_else(!subjid_ %in% df_ae$subjid_, label_missing_pat, soc_),
-      # soc_ = fct_infreq(soc_) %>% fct_relevel(label_missing_soc, label_missing_pat, after=Inf)
+      # soc_ = fct_infreq(soc_) %>% fct_relevel(label_missing_soc, 
+      #                                         label_missing_pat, after=Inf)
     )
   
   #check missing data
