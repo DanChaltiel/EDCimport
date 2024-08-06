@@ -75,10 +75,10 @@ edc_warn_patient_diffs = function(x, ref=getOption("edc_subjid_ref"),
     
     message = format_inline("{.arg {data_name}} has patient discrepancies:")
     
-    
     cli_warn(c("{par_issue}{message}", 
                i=par_subj_miss, 
-               i=par_subj_extra))
+               i=par_subj_extra),
+             class="edc_edc_patient_diffs_warning")
     
   }
   
