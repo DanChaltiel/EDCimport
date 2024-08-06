@@ -38,6 +38,10 @@ edc_db_to_excel = function(filename=tempfile(fileext=".xlsx"),
   check_installed("openxlsx", "for `edc_save_to_excel()` to work.")
   check_dots_empty()
   assert(is_named(datasets))
+  assert(is.list(datasets))
+  assert(length(datasets)>0)
+  assert(all(lengths(datasets)>0))
+  assert(all(map_lgl(datasets, is.data.frame)))
   if(file_exists(filename) && !overwrite){
     cli_inform("Excel file {.path {filename}} already exists.")
     edcimport_env$excel_db_path = filename
