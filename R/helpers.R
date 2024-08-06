@@ -168,6 +168,35 @@ fct_yesno = function(x,
 }
 
 
+#' Select only distinct columns
+#' 
+#' Select all columns that has only one level for a given grouping scope. 
+#' Useful when dealing with mixed datasets containing both long data and repeated short data.
+#'
+#' @param df a dataframe
+#' @param .by optional grouping columns
+#'
+#' @return `df` with less columns
+#' @export
+#'
+#' @examples
+#' tm = edc_example_ae()
+#' tm$ae %>% names
+#' tm$ae %>% select_distinct() %>% names
+#' tm$ae %>% select_distinct(.by=subjid) %>% names
+select_distinct = function(df, .by) {
+  a = df %>% 
+    summarise(across(everything(), function(.x) n_distinct(.x, na.rm=TRUE)), 
+              .by={{.by}}) %>% 
+    select(where(~all(.x==1))) %>% 
+    names()
+  
+  df %>% 
+    select({{.by}}, all_of(a)) %>% 
+    distinct() 
+}
+
+
 #' Get a table with the latest date for each patient
 #' 
 #' This function search for date columns in every tables and returns the latest date 
