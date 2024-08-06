@@ -11,6 +11,7 @@ edc_options(edc_lookup_overwrite_warn=FALSE)
 
 test_that("Read an archive", {
   clean_cache()
+  clean_lookup()
   edc_options(edc_lookup_overwrite_warn=TRUE, .local=TRUE)
   w = read_trialmaster(filename) %>% 
     expect_classed_conditions(message_class="read_tm_zip")

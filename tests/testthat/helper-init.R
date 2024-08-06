@@ -63,7 +63,7 @@ filename_bad = test_path("CRF_Dan_Export.zip")
 
 clean_cache = function(){
   if(file.exists(cachename)) file.remove(cachename)
-  options(edc_lookup=NULL)
+  invisible(TRUE)
 }
 v=utils::View
 
