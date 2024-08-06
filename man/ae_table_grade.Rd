@@ -13,7 +13,7 @@ ae_table_grade(
   grade = "AEGR",
   subjid = "SUBJID",
   percent = TRUE,
-  total = FALSE
+  total = TRUE
 )
 }
 \arguments{

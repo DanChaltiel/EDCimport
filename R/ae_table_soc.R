@@ -33,27 +33,28 @@
 #' ae_table_soc(df_ae=tm$ae, df_enrol=tm$enrolres, term=NULL)
 #' ae_table_soc(df_ae=tm$ae, df_enrol=tm$enrolres, term=NULL, arm=NULL)
 #' 
-#' \dontrun{
+#' if (require("flextable")) {
+#' 
 #' #the resulting flextable can be customized using the flextable package
-#' library(flextable)
 #' ae_table_soc(tm$ae, df_enrol=tm$enrolres, total=FALSE) %>% 
 #'   as_flextable() %>% 
 #'   hline(i=~soc=="" & soc!=dplyr::lead(soc))
-#' ae_table_soc(tm$ae, df_enrol=tm$enrolres, term=NULL, sort_by_ae=FALSE) %>% 
+#' ae_table_soc(tm$ae, df_enrol=tm$enrolres, term=NULL, sort_by_count=FALSE) %>% 
 #'   as_flextable() %>% 
-#'   hline()
+#'   bold(i=~soc=="Eye disorders")
 #' ae_table_soc(tm$ae, df_enrol=tm$enrolres, term=NULL, arm=NULL) %>% 
-#'   as_flextable()
+#'   as_flextable() %>% 
+#'   highlight(i=~soc=="Hepatobiliary disorders", j="all_patients_Tot")
 #' }
-#' @importFrom cli cli_abort cli_warn
-#' @importFrom dplyr across any_of arrange bind_rows count desc filter full_join if_else lag left_join mutate pull rename_with select summarise transmute
-#' @importFrom forcats fct_relabel
+#' @importFrom cli cli_warn
+#' @importFrom dplyr across any_of arrange count cur_group filter full_join if_else mutate pull rename select summarise
+#' @importFrom forcats fct_infreq
 #' @importFrom glue glue
-#' @importFrom purrr discard iwalk keep map
-#' @importFrom rlang check_dots_empty ensym is_empty set_names
-#' @importFrom stringr str_remove str_replace
+#' @importFrom purrr iwalk keep map
+#' @importFrom rlang arg_match check_dots_empty ensym is_empty set_names
 #' @importFrom tibble deframe lst
-#' @importFrom tidyr pivot_wider
+#' @importFrom tidyr build_wider_spec pivot_wider_spec unnest
+#' @importFrom tidyselect matches
 ae_table_soc = function(
     df_ae, ..., df_enrol, 
     variant=c("max", "sup", "eq"), 
@@ -171,8 +172,8 @@ ae_table_soc = function(
 #' @importFrom stringr str_detect str_replace_all
 #' @importFrom tibble as_tibble_col
 #' @importFrom tidyr separate_wider_regex
-as_flextable.ae_table_soc = function(x, arm_colors=c("#f2dcdb", "#dbe5f1", "#ebf1dd", "#e5e0ec")
-){
+as_flextable.ae_table_soc = function(x, 
+                                     arm_colors=c("#f2dcdb", "#dbe5f1", "#ebf1dd", "#e5e0ec")){
   check_installed("flextable")
   table_ae_header = attr(x, "header")
   if(FALSE){
@@ -254,15 +255,15 @@ as_flextable.ae_table_soc = function(x, arm_colors=c("#f2dcdb", "#dbe5f1", "#ebf
 #' @return a crosstable (dataframe)
 #' @export
 #' @importFrom cli cli_abort
-#' @importFrom dplyr any_of arrange count filter full_join left_join mutate pull select summarise
+#' @importFrom dplyr any_of arrange count filter full_join left_join mutate select summarise
 #' @importFrom forcats fct_reorder
-#' @importFrom ggplot2 aes facet_grid geom_col ggplot labs scale_x_continuous theme unit vars
+#' @importFrom ggplot2 aes facet_grid geom_blank geom_col ggplot labs scale_x_continuous theme unit vars
 #' @importFrom glue glue
-#' @importFrom rlang check_dots_empty
+#' @importFrom rlang arg_match check_dots_empty
 #' @importFrom scales label_percent
 #' @importFrom stats na.omit
 #' @importFrom stringr str_remove
-#' @importFrom utils head
+#' @importFrom tibble lst
 #'
 #' @examples
 #' 
@@ -361,6 +362,10 @@ butterfly_plot = ae_plot_soc
 
 #' for each patient/soc, detect if each grade satisfies the specified 
 #' condition (max/eq/sup)
+#' @importFrom purrr map_lgl
+#' @importFrom rlang set_names
+#' @importFrom tibble as_tibble_row
+#' @importFrom tidyr replace_na
 evaluate_grades = function(gr, variant){
   inner_calc = switch(variant, max=~max_narm(gr) == .x,
                       sup=~any(gr >= .x, na.rm=TRUE),
@@ -375,6 +380,15 @@ evaluate_grades = function(gr, variant){
 
 # Legacy --------------------------------------------------------------------------------------
 
+#' @importFrom cli cli_warn
+#' @importFrom dplyr across any_of arrange count cur_group filter full_join if_else mutate pull rename select summarise
+#' @importFrom forcats fct_infreq fct_relevel
+#' @importFrom glue glue
+#' @importFrom purrr iwalk keep map map_lgl
+#' @importFrom rlang arg_match check_dots_empty ensym is_empty set_names
+#' @importFrom tibble as_tibble_row deframe lst
+#' @importFrom tidyr build_wider_spec pivot_wider_spec replace_na unnest
+#' @importFrom tidyselect matches
 ae_table_soc_legacy = function(
     df_ae, ..., df_enrol, 
     variant=c("max", "sup", "eq"), 
@@ -488,5 +502,4 @@ ae_table_soc_legacy = function(
   
   rtn
 }
-
 

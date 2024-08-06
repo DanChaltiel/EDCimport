@@ -2,17 +2,22 @@
 % Please edit documentation in R/ae_table_soc.R
 \name{ae_plot_soc}
 \alias{ae_plot_soc}
+\alias{butterfly_plot}
 \title{Graphic representation of AEs by soc (Butterfly plot)}
 \usage{
 ae_plot_soc(
   df_ae,
   ...,
   df_enrol,
+  severe,
+  sort_by = c("total", "severe"),
+  range_min = NULL,
   arm = "ARM",
   subjid = "SUBJID",
-  soc = "AESOC",
-  severe = "SEVERE"
+  soc = "AESOC"
 )
+
+butterfly_plot(...)
 }
 \arguments{
 \item{df_ae}{adverse event dataset, one row per AE, containing subjid, soc, and grade}
@@ -21,13 +26,17 @@ ae_plot_soc(
 
 \item{df_enrol}{enrollment dataset, one row per patient, containing subjid (and arm if needed). All patients should be in this dataset.}
 
+\item{severe}{name of the logical column in \code{df_ae} telling whether an AE is severe. Case-insensitive.}
+
+\item{sort_by}{either "total" or "severe"}
+
+\item{range_min}{The minimum value for the upper limit of the x-axis range. Set to \code{1} to always include 100\%.}
+
 \item{arm}{name of the treatment column in \code{df_enrol}. Case-insensitive. Can be set to \code{NULL} to not group.}
 
 \item{subjid}{name of the patient ID in both \code{df_ae} and \code{df_enrol}. Case-insensitive.}
 
 \item{soc}{name of the SOC column in \code{df_ae}. Case-insensitive. Grade will be considered 0 if missing(e.g. if patient if absent from \code{df_ae}).}
-
-\item{severe}{name of the logical column in \code{df_ae} telling wheter an AE is severe. Case-insensitive.}
 }
 \value{
 a crosstable (dataframe)
@@ -43,9 +52,9 @@ The resulting crosstable can be piped to \code{as_flextable()} to get a nicely f
 
 tm = edc_example_ae()
 tm$ae \%>\% 
-  #dplyr::mutate(severe = aeser=="Yes") \%>\% 
-  dplyr::mutate(severe = aegr>=3) \%>\% 
-  ae_plot_soc(df_enrol=tm$enrolres)
+  #dplyr::mutate(ae_severe = aeser=="Yes") \%>\% 
+  dplyr::mutate(ae_severe = aegr>=3) \%>\% 
+  ae_plot_soc(df_enrol=tm$enrolres, severe="ae_severe")
 }
 \seealso{
 \code{\link[=ae_table_grade_max]{ae_table_grade_max()}}, \code{\link[=ae_table_grade_n]{ae_table_grade_n()}}, \code{\link[=ae_table_soc]{ae_table_soc()}}, \code{\link[=ae_plot_grade_max]{ae_plot_grade_max()}}, \code{\link[=ae_plot_grade_n]{ae_plot_grade_n()}}

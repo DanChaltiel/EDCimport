@@ -102,5 +102,3 @@ mixedorder = function (x, decreasing = FALSE, na.last = TRUE, blank.last = FALSE
   retval <- do.call("order", order.frame)
   return(retval)
 }
-
-

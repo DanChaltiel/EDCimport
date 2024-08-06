@@ -9,13 +9,15 @@ ae_table_soc(
   df_ae,
   ...,
   df_enrol,
-  arm = "ARM",
-  term = "AETERM",
-  soc = "AESOC",
+  variant = c("max", "sup", "eq"),
+  arm = NULL,
   grade = "AEGR",
+  soc = "AESOC",
+  term = NULL,
   subjid = "SUBJID",
-  sort_by_ae = TRUE,
+  sort_by_count = TRUE,
   total = TRUE,
+  showNA = TRUE,
   digits = 0,
   warn_miss = FALSE
 )
@@ -31,15 +33,13 @@ ae_table_soc(
 
 \item{arm}{name of the treatment column in \code{df_enrol}. Case-insensitive. Can be set to \code{NULL} to not group.}
 
-\item{term}{name of the the CTCAE term column in \code{df_ae}. Case-insensitive. Can be set to \code{NULL}.}
+\item{grade}{name of the AE grade column in \code{df_ae}. Case-insensitive.}
 
 \item{soc}{name of the SOC column in \code{df_ae}. Case-insensitive. Grade will be considered 0 if missing(e.g. if patient if absent from \code{df_ae}).}
 
-\item{grade}{name of the AE grade column in \code{df_ae}. Case-insensitive.}
+\item{term}{name of the the CTCAE term column in \code{df_ae}. Case-insensitive. Can be set to \code{NULL}.}
 
 \item{subjid}{name of the patient ID in both \code{df_ae} and \code{df_enrol}. Case-insensitive.}
-
-\item{sort_by_ae}{should the table be sorted by number or alphabetically}
 
 \item{total}{whether to add a \code{total} column for each arm}
 
@@ -50,6 +50,8 @@ ae_table_soc(
 \item{x}{a dataframe, resulting of \code{ae_table_soc()}}
 
 \item{arm_colors}{colors for the arm groups}
+
+\item{sort_by_ae}{should the table be sorted by number or alphabetically}
 }
 \value{
 a dataframe (\code{ae_table_soc()}) or a flextable (\code{as_flextable()}).
@@ -66,17 +68,18 @@ tm = edc_example_ae()
 ae_table_soc(df_ae=tm$ae, df_enrol=tm$enrolres, term=NULL)
 ae_table_soc(df_ae=tm$ae, df_enrol=tm$enrolres, term=NULL, arm=NULL)
 
-\dontrun{
+if (require("flextable")) {
+
 #the resulting flextable can be customized using the flextable package
-library(flextable)
 ae_table_soc(tm$ae, df_enrol=tm$enrolres, total=FALSE) \%>\% 
   as_flextable() \%>\% 
   hline(i=~soc=="" & soc!=dplyr::lead(soc))
-ae_table_soc(tm$ae, df_enrol=tm$enrolres, term=NULL, sort_by_ae=FALSE) \%>\% 
+ae_table_soc(tm$ae, df_enrol=tm$enrolres, term=NULL, sort_by_count=FALSE) \%>\% 
   as_flextable() \%>\% 
-  hline()
+  bold(i=~soc=="Eye disorders")
 ae_table_soc(tm$ae, df_enrol=tm$enrolres, term=NULL, arm=NULL) \%>\% 
-  as_flextable()
+  as_flextable() \%>\% 
+  highlight(i=~soc=="Hepatobiliary disorders", j="all_patients_Tot")
 }
 }
 \seealso{

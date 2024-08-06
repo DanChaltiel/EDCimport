@@ -48,9 +48,6 @@ edc_warn_patient_diffs = function(x, ref=getOption("edc_subjid_ref"),
   
   if(n_pat>0){
     
-    
-    # browser()
-    
     par_subj_miss = par_subj_extra = NULL
     if(length(missing_id) > 0){
       par_subj_miss = format_inline("Missing: {format_subj(missing_id, par=FALSE)}")

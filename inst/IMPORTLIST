@@ -9,6 +9,7 @@ discard = purrr
 file_exists = fs
 filter = dplyr
 first = dplyr
+intersect = base
 is_formula = rlang
 is_null = rlang
 isFALSE = base

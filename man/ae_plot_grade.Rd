@@ -13,7 +13,8 @@ ae_plot_grade(
   type = c("relative", "absolute"),
   arm = NULL,
   grade = "AEGR",
-  subjid = "SUBJID"
+  subjid = "SUBJID",
+  total = FALSE
 )
 }
 \arguments{
@@ -32,6 +33,8 @@ ae_plot_grade(
 \item{grade}{name of the AE grade column in \code{df_ae}. Case-insensitive.}
 
 \item{subjid}{name of the patient ID in both \code{df_ae} and \code{df_enrol}. Case-insensitive.}
+
+\item{total}{whether to add a \code{total} column for each arm}
 }
 \value{
 a ggplot

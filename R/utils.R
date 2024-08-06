@@ -45,6 +45,7 @@ any_of2 = function(x, ignore.case=TRUE, ...){
 
 #' @noRd
 #' @keywords internal
+#' @importFrom stringr str_replace_all str_to_lower
 to_snake_case <- function(str) {
   str %>%
     str_replace_all("([a-z])([A-Z])", "\\1_\\2") %>%
@@ -57,6 +58,7 @@ to_snake_case <- function(str) {
 #' `fct_relevel` to the end, without warning for missing levels
 #' @noRd
 #' @keywords internal
+#' @importFrom forcats fct_relevel
 fct_last = function(f, ...) {
   lvl = c(...)
   lvl = intersect(lvl, levels(f))

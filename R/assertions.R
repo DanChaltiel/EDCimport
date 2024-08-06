@@ -48,6 +48,9 @@ assert_class = function(x, class, null.ok=TRUE){
 }
 
 
+#' @importFrom cli cli_abort
+#' @importFrom purrr discard
+#' @importFrom rlang caller_arg
 assert_names_exists = function(df, l){
   df_name = caller_arg(df)
   not_found = l %>% 
