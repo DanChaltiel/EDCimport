@@ -1,7 +1,7 @@
 
 
 
-test_that("multiplication works", {
+test_that("edc_new_project works", {
   path = tempdir() %>% paste0("/test/test_init_project.dir")
   # browseURL(path)
   
