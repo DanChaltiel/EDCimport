@@ -44,7 +44,10 @@ EDCimport comprend aussi les fonctions `ae_plot_grade()` et `ae_plot_grade_sum()
 
 Voir la description du package `{crosstable}` pour plus d'informations: [documentation](https://danchaltiel.github.io/crosstable/reference/as_flextable.html). <br> Voir la description du package `{flextable}` pour la liste des modificateurs (comme `add_footer_lines()`) : [documentation](https://davidgohel.github.io/flextable/reference/index.html).
 
-### Tableaux {.tabset}
+### Tableaux
+
+::: tabset
+:::
 
 -   `AE_grades1`
 
@@ -104,7 +107,10 @@ Voir la description du package `{crosstable}` pour plus d'informations: [documen
       add_footer_lines("Percentages reflect the proportion of patients whose maximum SAE grade was as indicated.")
     ```
 
-### Graphiques {.tabset}
+### Graphiques
+
+::: tabset
+:::
 
 -   `AE max`
 
@@ -154,7 +160,6 @@ Voir la description du package `{crosstable}` pour plus d'informations: [documen
                       weights=c(1,1,3,6,10))
     ```
 
-
 ## Macro `AE_SOC`
 
 La macro `AE_SOC` est traduite en la fonctions : `ae_table_soc()`. Cette fonction retourne des objets de classe `ae_table_soc`. Ils ont également une méthode `as_flextable` qui les transforme en table HTML de classe `flextable`, mais différente de celle de crosstable.
@@ -163,7 +168,10 @@ Voir la description du package `{flextable}` pour la liste des modificateurs (co
 
 Pour les sorties sur `{officer}`, comme ces tables sont très larges, pensez bien à basculer en format paysage en utilisant `officer::body_end_section_continuous()`, puis `officer::body_end_section_landscape()` pour revenir au format portrait.
 
-### Tableaux {.tabset}
+### Tableaux
+
+::: tabset
+:::
 
 -   `AE_SOC1`
 
@@ -222,7 +230,10 @@ Pour les sorties sur `{officer}`, comme ces tables sont très larges, pensez bie
     ##TODO
     ```
 
-### Graphiques {.tabset}
+### Graphiques
+
+::: tabset
+:::
 
 -   `Butterfly plot`
 
