@@ -9,6 +9,9 @@ test_that("no exports", {
     readLines() %>% str_subset("@export") %>% expect_length(0)
 })
 
+
+
+
 # load_list() ---------------------------------------------------------------------------------
 
 test_that("load_list() works", {
@@ -126,8 +129,8 @@ test_that("7zip not in the path", {
 })
 
 
-# Expect --------------------------------------------------------------------------------------
 
+# Expect --------------------------------------------------------------------------------------
 
 
 test_that("expect_classed_conditions()", {
@@ -181,6 +184,7 @@ test_that("expect_classed_conditions()", {
 
 # Misc ----------------------------------------------------------------------------------------
 
+
 test_that("fct_yesno() works", {
   
   set.seed(42)
@@ -216,16 +220,18 @@ test_that("fct_yesno() works", {
   
 })
 
+
 test_that("cli_menu() is not in package cli yet", {
   # exists('cli_menu', where='package:cli', mode='function') %>% expect_false()
   expect_false("package:cli" %in% find("cli_menu"))
 })
 
-test_that("edc_save_db_to_excel() works", {
+
+test_that("edc_db_to_excel() works", {
   tm = edc_example()
   load_list(tm)
   filename=tempfile(fileext=".xlsx")
-  edc_save_db_to_excel(filename=filename, open=FALSE) %>% expect_message()
+  edc_db_to_excel(filename=filename, datasets=get_datasets(), open=FALSE) %>% expect_message()
   expect_true(file.exists(filename))
   file.remove(filename)
 })
