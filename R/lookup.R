@@ -84,8 +84,9 @@ edc_lookup = function(..., check_null=TRUE){
 
 #' @rdname edc_lookup
 #' @export
+#' @include utils.R
 #' @usage NULL
-get_lookup = edc_lookup
+get_lookup = deprecatedly(edc_lookup, "0.5.0", "get_lookup()")
 
 #' @noRd
 #' @keywords internal

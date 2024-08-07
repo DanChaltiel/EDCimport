@@ -66,6 +66,17 @@ fct_last = function(f, ...) {
 }
 
 
+#' adverb that adds a deprecated warning
+#' @noRd
+#' @keywords internal
+deprecatedly = function(f, what, when, with=caller_arg(f), details=NULL, type="warn"){
+  if(!str_ends(with, "\\(\\)")) with=paste0(with,"()")
+  function(...){
+    deprecate_warn(what, when, with, details)
+    f(...)
+  }
+}
+
 #' @noRd
 #' @keywords internal
 #' @source https://github.com/r-lib/cli/issues/228#issuecomment-1453614104
