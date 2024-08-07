@@ -348,7 +348,7 @@ ae_table_grade_n = function(
     arm="ARM", grade="AEGR", subjid="SUBJID", soc="AESOC",
     total=FALSE, digits=0
 ){
-  deprecate_warn("5.0.0", "ae_table_grade_n()", 'ae_table_grade(variant="eq")')
+  deprecate_warn("0.5.0", "ae_table_grade_n()", 'ae_table_grade(variant="eq")')
   check_installed("crosstable", "for `ae_table_grade_n()` to work.")
   check_dots_empty()
   
@@ -428,7 +428,7 @@ ae_table_grade_max = function(
     arm="ARM", subjid="SUBJID", soc="AESOC", grade="AEGR", total=TRUE, digits=0
 ){
   check_installed("crosstable", "for `ae_table_grade_max()` to work.")
-  deprecate_warn("5.0.0", "ae_table_grade_max()", 'ae_table_grade(variant="max")')
+  deprecate_warn("0.5.0", "ae_table_grade_max()", 'ae_table_grade(variant="max")')
   check_dots_empty()
   null_arm = is.null(arm)
   

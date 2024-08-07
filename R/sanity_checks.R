@@ -345,7 +345,7 @@ format_subj = function(subj, max_subjid=5, par=TRUE){
 #' @export
 #' @importFrom lifecycle deprecate_warn
 check_subjid = function(x){
-  deprecate_warn("5.0.0", "check_subjid()", "edc_warn_patient_diffs()")
+  deprecate_warn("0.5.0", "check_subjid()", "edc_warn_patient_diffs()")
 }
 
 
@@ -354,5 +354,5 @@ check_subjid = function(x){
 #' @export
 #' @importFrom lifecycle deprecate_warn
 assert_no_rows = function(df, msg=NULL){
-  deprecate_warn("5.0.0", "assert_no_rows()", "edc_data_stop()")
+  deprecate_warn("0.5.0", "assert_no_rows()", "edc_data_stop()")
 }
