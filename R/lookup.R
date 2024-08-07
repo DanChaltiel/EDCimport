@@ -91,9 +91,8 @@ get_lookup = deprecatedly(edc_lookup, "0.5.0", "get_lookup()")
 #' @noRd
 #' @keywords internal
 #' @importFrom cli cli_warn
-set_lookup = function(lookup){
-  verbose = getOption("edc_lookup_overwrite_warn", TRUE)
-  if(verbose && !is.null(get_lookup(check_null=FALSE))){
+set_lookup = function(lookup, verbose=getOption("edc_lookup_overwrite_warn", TRUE)){
+  if(verbose && !is.null(edc_lookup(check_null=FALSE))){
     cli_warn("Option {.val edc_lookup} has been overwritten.", 
              class="edc_lookup_overwrite_warn")
   }

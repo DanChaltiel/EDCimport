@@ -53,6 +53,7 @@ read_trialmaster = function(archive, ..., use_cache="write",
   if(file_exists(cache_file) && (isTRUE(use_cache) || use_cache=="read")){
     if(verbose>0) cli_inform("Reading cache: {.file {cache_file}}", class="read_tm_cache")
     rtn = readRDS(cache_file)
+    lookup_verbose = TRUE
     
     a = rtn$.lookup %>% attr("split_mixed") %>% 
       identical(split_mixed)
@@ -85,6 +86,7 @@ read_trialmaster = function(archive, ..., use_cache="write",
                        key_columns=key_columns,
                        datetime_extraction=extract_datetime, 
                        verbose=verbose)
+    lookup_verbose = FALSE
     
     if(isTRUE(use_cache) || use_cache=="write"){
       if(verbose>0) cli_inform("Writing cache file {.file {cache_file}}", class="read_tm_zip")
@@ -95,7 +97,7 @@ read_trialmaster = function(archive, ..., use_cache="write",
   # update lookup ----
   rtn$.lookup = rtn$.lookup %>% 
     structure(project_name = parse_file_projname(archive))
-  set_lookup(rtn$.lookup)
+  set_lookup(rtn$.lookup, verbose=lookup_verbose)
   
   # out ----
   if(verbose>0){
