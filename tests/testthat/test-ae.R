@@ -46,15 +46,15 @@ test_that("ae_plot_grade() works", {
     load_list(tm)
     
     p = ae_plot_grade(df_ae=ae, df_enrol=enrolres)
-    vdiffr::expect_doppelganger("ae_plot_grade_1", p)
+    vdiffr::expect_doppelganger("ae-plot-grade-1", p)
     p = ae_plot_grade(df_ae=ae, df_enrol=enrolres, arm="ARM", variant=c("sup", "max"))
-    vdiffr::expect_doppelganger("ae_plot_grade_2", p)
+    vdiffr::expect_doppelganger("ae-plot-grade-2", p)
     p = ae_plot_grade(df_ae=ae, df_enrol=enrolres, arm="ARM", type="absolute")
-    vdiffr::expect_doppelganger("ae_plot_grade_3", p)
+    vdiffr::expect_doppelganger("ae-plot-grade-3", p)
     p = ae_plot_grade(df_ae=ae, df_enrol=enrolres, arm="ARM", position="fill")
-    vdiffr::expect_doppelganger("ae_plot_grade_4", p)
+    vdiffr::expect_doppelganger("ae-plot-grade-4", p)
     p = ae_plot_grade(df_ae=ae, df_enrol=enrolres, arm="ARM", position="stack", type="absolute")
-    vdiffr::expect_doppelganger("ae_plot_grade_5", p)
+    vdiffr::expect_doppelganger("ae-plot-grade-5", p)
     
   })
 })
@@ -64,12 +64,12 @@ test_that("ae_plot_grade_sum() works", {
     tm = edc_example_ae()
     load_list(tm)
     
-    p = ae_plot_grade_sum(df_ae=ae, df_enrol=enrolres)
-    vdiffr::expect_doppelganger("ae_plot_grade_sum_1", p)
-    p = ae_plot_grade_sum(df_ae=ae, df_enrol=enrolres, arm="ARM")
-    vdiffr::expect_doppelganger("ae_plot_grade_sum_2", p)
-    p = ae_plot_grade_sum(df_ae=ae, df_enrol=enrolres, arm="ARM", weights=c(1,1,3,6,10))
-    vdiffr::expect_doppelganger("ae_plot_grade_sum_3", p)
+    p = ae-plot-grade-sum(df_ae=ae, df_enrol=enrolres)
+    vdiffr::expect_doppelganger("ae-plot-grade-sum-1", p)
+    p = ae-plot-grade-sum(df_ae=ae, df_enrol=enrolres, arm="ARM")
+    vdiffr::expect_doppelganger("ae-plot-grade-sum-2", p)
+    p = ae-plot-grade-sum(df_ae=ae, df_enrol=enrolres, arm="ARM", weights=c(1,1,3,6,10))
+    vdiffr::expect_doppelganger("ae-plot-grade-sum-3", p)
     
   })
   
@@ -86,11 +86,11 @@ test_that("butterfly_plot() works", {
            bad_serious = sae=="foobar",)
   
   p = butterfly_plot(ae2, df_enrol=enrolres)
-  vdiffr::expect_doppelganger("butterfly_plot_1", p)
+  vdiffr::expect_doppelganger("butterfly-plot-1", p)
   p = butterfly_plot(ae2, df_enrol=enrolres, severe="serious", sort_by="severe")
-  vdiffr::expect_doppelganger("butterfly_plot_2", p)
+  vdiffr::expect_doppelganger("butterfly-plot-2", p)
   p = butterfly_plot(ae2, df_enrol=enrolres, range_min=1)
-  vdiffr::expect_doppelganger("butterfly_plot_3", p)
+  vdiffr::expect_doppelganger("butterfly-plot-3", p)
   
   
   # Warnings
