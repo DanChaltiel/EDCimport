@@ -181,7 +181,7 @@ Pour les sorties sur `{officer}`, comme ces tables sont très larges, pensez bie
 On peut ajouter `total=FALSE` pour retirer la colonne "Tot".
 
 ```{r}
-ae_table_soc(df_ae=ae, df_enrol=enrolres, term=NULL, arm=NULL, sort_by_ae=FALSE) %>% 
+ae_table_soc(df_ae=ae, df_enrol=enrolres, term=NULL, arm=NULL, sort_by_count=FALSE) %>% 
   as_flextable() %>% 
   add_footer_lines("In the header, N represents the number of patients.") %>% 
   add_footer_lines("Percentages reflect the proportion of patients whose maximum AE grade was as indicated.")
@@ -206,7 +206,7 @@ Il suffit de filtrer la table AE en amont.
 ```{r}
 ae %>% 
   #filter(sae=="Yes") %>%
-  ae_table_soc(df_enrol=enrolres, term=NULL, arm=NULL, sort_by_ae=FALSE) %>% 
+  ae_table_soc(df_enrol=enrolres, term=NULL, arm=NULL, sort_by_count=FALSE) %>% 
   as_flextable() %>% 
   add_footer_lines("In the header, N represents the number of patients.") %>% 
   add_footer_lines("Percentages reflect the proportion of patients whose maximum AE grade was as indicated.")
@@ -220,7 +220,7 @@ ae %>%
 On peut ajouter `total=FALSE` pour retirer la colonne "Tot" et obtenir la sortie *AE_SOC5*.
 
 ```{r}
-ae_table_soc(df_ae=ae, df_enrol=enrolres, term=NULL, arm="arm", sort_by_ae=FALSE) %>% 
+ae_table_soc(df_ae=ae, df_enrol=enrolres, term=NULL, arm="arm", sort_by_count=FALSE) %>% 
   as_flextable() %>% 
   add_footer_lines("In the header, N represents the number of patients.") %>% 
   add_footer_lines("Percentages reflect the proportion of patients whose maximum AE grade was as indicated.")
