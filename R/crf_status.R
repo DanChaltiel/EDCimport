@@ -9,7 +9,7 @@
 #' @param pal the palette, defaulting to the helper `EDCimport:::edc_pal_crf()`
 #' @param details whether to show all the CRF status levels. When `FALSE` (default), recode the status into "Complete", "Incomplete", or "No Data".
 #' @param crfstat_lvls the CRF status levels, from "best" to "worst". The plot is ordered by the "worst" level. 
-#' @param x_label a glue pattern determining the tick label in the x axis. Available variables are `c("nrow", "ncol", "n_id", "rows_per_id", "crfname")`, taken from [get_lookup()].
+#' @param x_label a glue pattern determining the tick label in the x axis. Available variables are `c("nrow", "ncol", "n_id", "rows_per_id", "crfname")`, taken from [edc_lookup()].
 #' @param treat_as_worst a regex for levels that should be treated as worst in the ordering
 #'
 #' @return a ggplot
@@ -61,7 +61,7 @@ crf_status_plot = function(crfstat_col="CRFSTAT",
     list_rbind(names_to="dataset") %>% 
     mutate(crfstat = edf_crfstat_recode(crfstat, do=!details)) %>% 
     count(dataset, crfstat) %>% 
-    left_join(get_lookup(), by="dataset") %>% 
+    left_join(edc_lookup(), by="dataset") %>% 
     mutate(
       crfstat = factor(crfstat, levels=crfstat_lvls) %>% fct_drop() %>% fct_rev(),
       dataset = fct_reorder2(dataset, crfstat, n, #arrange by complete then by incomplete

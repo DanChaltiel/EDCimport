@@ -34,7 +34,7 @@
 #' @importFrom stringr str_detect str_trim
 #' @importFrom tidyr unite unnest
 #' @importFrom tidyselect where
-find_keyword = function(keyword, data=get_lookup(), ignore_case=TRUE){
+find_keyword = function(keyword, data=edc_lookup(), ignore_case=TRUE){
   invalid=names2=labels2=x=NULL
   f = if(isTRUE(ignore_case)) tolower else identity
   f2 = function(x,y) map2_chr(x, y, ~if(.y) {.x} else {f(.x)})
@@ -426,7 +426,7 @@ reset_manual_correction = function(){
 #' @export
 #' @importFrom cli cli_abort cli_warn
 #' @importFrom purrr keep
-get_datasets = function(lookup=get_lookup(), envir=parent.frame()){
+get_datasets = function(lookup=edc_lookup(), envir=parent.frame()){
   if(is.null(lookup)){
     cli_abort("lookup cannot be NULL, did you forgot to import your database?")
   }
@@ -463,7 +463,7 @@ get_datasets = function(lookup=get_lookup(), envir=parent.frame()){
 #' @importFrom purrr map map_chr
 #' @importFrom stats na.omit
 #' @importFrom tibble lst
-get_key_cols = function(lookup=get_lookup()){
+get_key_cols = function(lookup=edc_lookup()){
   patient_id = get_subjid_cols()
   
   crfname = getOption("edc_cols_crfname", "CRFNAME")
@@ -517,14 +517,14 @@ get_key_cols = function(lookup=get_lookup()){
 #' @examples
 #' get_subjid_cols()
 #' get_crfname_cols()
-get_subjid_cols = function(lookup=get_lookup()){
+get_subjid_cols = function(lookup=edc_lookup()){
   subjid_cols=getOption("edc_cols_subjid", c("PTNO", "SUBJID"))
   .get_key_cols(subjid_cols, id_name="patient", lookup)
 }
 
 #' @rdname get_subjid_cols
 #' @export
-get_crfname_cols = function(lookup=get_lookup()){
+get_crfname_cols = function(lookup=edc_lookup()){
   crfname_cols=getOption("edc_cols_crfname", "CRFNAME")
   .get_key_cols(crfname_cols, id_name="CRF", lookup)
 }
@@ -583,7 +583,7 @@ get_meta_cols = function(min_pct = getOption("edc_meta_cols_pct", 0.95)){
 #' common to some datasets.
 #' Useful to find keys to pivot or summarise data.
 #'
-#' @param lookup the lookup table, default to [get_lookup()]
+#' @param lookup the lookup table, default to [edc_lookup()]
 #' @param min_datasets the minimal number of datasets to be considered
 #' @param object an object of class "common_cols"
 #' @param ... unused
@@ -601,7 +601,7 @@ get_meta_cols = function(min_pct = getOption("edc_meta_cols_pct", 0.95)){
 #' x = get_common_cols(min_datasets=1)
 #' x
 #' summary(x)
-get_common_cols = function(lookup=get_lookup(), min_datasets=3){
+get_common_cols = function(lookup=edc_lookup(), min_datasets=3){
   all_names = lookup$names %>% unlist() %>% unique() %>% sort()
   rtn = tibble(column=all_names) %>%
     rowwise() %>% 

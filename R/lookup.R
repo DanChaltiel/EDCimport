@@ -13,7 +13,7 @@
 #' lk %>% tidyr::unnest(c(names, labels))  
 #' 
 #' @export
-#' @seealso [extend_lookup()], [get_lookup()]
+#' @seealso [extend_lookup()], [edc_lookup()]
 #' 
 #' @importFrom cli cli_abort
 #' @importFrom dplyr arrange mutate
@@ -86,7 +86,7 @@ edc_lookup = function(..., check_null=TRUE){
 #' @export
 #' @include utils.R
 #' @usage NULL
-get_lookup = deprecatedly(edc_lookup, "0.5.0", "get_lookup()")
+get_lookup = deprecatedly(edc_lookup, "0.5.0", "edc_lookup()")
 
 #' @noRd
 #' @keywords internal
@@ -114,7 +114,7 @@ set_lookup = function(lookup, verbose=getOption("edc_lookup_overwrite_warn", TRU
 #'
 #' @return the lookup, extended
 #' @export
-#' @seealso [build_lookup()], [get_lookup()]
+#' @seealso [build_lookup()], [edc_lookup()]
 #' 
 #' @importFrom cli cli_abort cli_warn
 #' @importFrom dplyr arrange desc filter mutate relocate select

@@ -82,7 +82,7 @@ is_invalid_utf8 = function(x){
 #' @importFrom glue glue
 #' @importFrom rlang set_names
 #' @importFrom tidyr unnest
-check_invalid_utf8 = function(lookup=get_lookup(), warn=FALSE){
+check_invalid_utf8 = function(lookup=edc_lookup(), warn=FALSE){
   stopifnot(!is.null(lookup))
   x = lookup %>% 
     arrange(desc(nrow)) %>% 
