@@ -275,13 +275,20 @@ as_flextable.ae_table_soc = function(x,
 #'
 #' @examples
 #' 
-#' tm = edc_example_ae()
-#' tm$ae %>% 
-#'   #dplyr::mutate(ae_severe = aeser=="Yes") %>% 
-#'   dplyr::mutate(ae_severe = aegr>=3) %>% 
-    df_ae, ..., df_enrol, severe, sort_by=c("total", "severe"), range_min=NULL,
-#'   butterfly_plot(df_enrol=tm$enrolres, severe="ae_severe") + 
+#' tm = edc_example_ae(N=100)
+#' load_list(tm)
+#' 
+#' ae2 = ae %>% 
+#'   dplyr::mutate(serious = sae=="Yes")
+#'   
+#' ae2 %>% 
+#'   butterfly_plot(df_enrol=enrolres, range_min=0.5)
+#'   
+#' ae2 %>% 
+#'   butterfly_plot(df_enrol=enrolres, severe="serious") + 
+#'   labs(caption="Darker areas represent Serious Adverse Events")
 butterfly_plot = function(
+    df_ae, ..., df_enrol, severe=NULL, sort_by=c("total", "severe"), range_min=NULL,
     arm="ARM", subjid="SUBJID", soc="AESOC"
 ){
   check_dots_empty()
@@ -291,23 +298,33 @@ butterfly_plot = function(
   assert_names_exists(df_enrol, lst(subjid, arm))
   
   df_ae = df_ae %>% 
-    select(subjid_=any_of2(subjid), soc_=any_of2(soc), severe_=any_of2(severe))
+    select(subjid_=any_of2(subjid), soc_=any_of2(soc),
+           severe_=any_of2(severe)) %>% 
+    mutate(severe_ = if(is.null(severe)) NA else severe_)
   df_enrol = df_enrol %>% 
     select(subjid_=any_of2(subjid), arm_=any_of2(arm)) 
-  df = df_enrol %>%
-    full_join(df_ae, by="subjid_") %>% 
+  df = df_ae %>%
+    full_join(df_enrol, by="subjid_") %>% 
     filter(!is.na(soc_))  %>% 
     arrange(subjid_)
-  
+
   if(!is.factor(df_enrol$arm_)) df_enrol$arm_ = factor(df_enrol$arm_)
   
   arms = df_enrol$arm_ %>% unique() %>% na.omit()
   if(length(arms)!=2){
     cli_abort(c("{.fn EDCimport::butterfly_plot} needs exactly 2 arms.", 
-                i="Arms: {.val {arms}}"))
+                i="Arms: {.val {arms}}"),
+              class="edc_butterfly_two_arms_error")
   }
-  if(!is.logical(df_ae$severe_)){
-    cli_abort(c("{.arg severe} should be a logical column, not a {.type {df_ae$severe_}}. Did you forget to mutate it with `==`?"))
+  if(!is.null(severe)){
+    if(!is.logical(df_ae$severe_)){
+      cli_abort(c("{.arg severe} should be a logical column, not a {.type {df_ae$severe_}}. Did you forget to mutate it with `==`?"),
+                class="edc_butterfly_serious_lgl_error")
+    }
+    if(!any(df_ae$severe_)){
+      cli_warn(c("All {.arg severe} values are FALSE."),
+               class="edc_butterfly_serious_false_warning")
+    }
   }
   
   df_arm = df_enrol %>% 
@@ -328,7 +345,7 @@ butterfly_plot = function(
       n_severe = n_severe * ifelse(arm_==left_arm, -1, 1),
       pct_ae = n_ae/n_arm,
       pct_severe = n_severe/n_arm,
-      soc_ = fct_reorder(soc_, abs(pct_ae), .fun=max),
+      soc_ = fct_reorder(soc_, abs(pct_ae), .fun=max, .na_rm=TRUE),
     )
   
   a %>% arrange(soc_)
@@ -343,11 +360,15 @@ butterfly_plot = function(
                                  .by=c(label, soc_))
     layer_blank = geom_blank(aes(x=pct_ae), data=data_blank)
   }
+  layer_severe = NULL
+  if(!is.null(severe)){
+    layer_severe = geom_col(aes(x=pct_severe), color="grey40", width=0.6)
+  }
   
   a %>% 
     ggplot(aes(y=soc_, fill=label)) +
     geom_col(aes(x=pct_ae), alpha=0.6) +
-    geom_col(aes(x=pct_severe), color="grey40", width=0.6) +
+    layer_severe +
     layer_blank +
     scale_x_continuous(labels=label_percent_positive) +
     facet_grid(cols=vars(label), scales="free_x") +
