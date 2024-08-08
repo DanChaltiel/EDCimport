@@ -41,13 +41,22 @@
     Message
       No project files were found in `source`.
     Code
-      search_for_newer_data(archive, source = "foobar", target = target, ask = 2)
+      search_for_newer_data(archive, source = c(source, "foobar"), target = target,
+      ask = 2)
     Message
-      No project files were found in `source`.
+      ! There is a database in 'CURRENT_PATH_TEMP/search_for_newer_data/downloads' that is 61 days more recent than the current extraction (2024-08-01 vs 2024-06-01).
+      Run the following code to copy it to `target`:
+      file.copy(
+        "CURRENT_PATH_TEMP/search_for_newer_data/downloads/MYPROJECT_ExportTemplate_xxx_SAS_XPORT_2024_08_01_12_00.zip",
+        "CURRENT_PATH_TEMP/search_for_newer_data/data/MYPROJECT_ExportTemplate_xxx_SAS_XPORT_2024_08_01_12_00.zip",
+        "copy.date=TRUE", 
+      )
     Code
       search_for_newer_data(archive, source = source, target = target, ask = 1)
     Message
       ! There is a database in 'CURRENT_PATH_TEMP/search_for_newer_data/downloads' that is 61 days more recent than the current extraction (2024-08-01 vs 2024-06-01).
+      v New file copied, change your code to
+      'CURRENT_PATH_TEMP/search_for_newer_data/data/MYPROJECT_ExportTemplate_xxx_SAS_XPORT_2024_08_01_12_00.zip'
     Code
       fs::dir_tree(pt)
     Output

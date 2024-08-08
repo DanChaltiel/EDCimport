@@ -35,7 +35,7 @@ test_that("search_for_newer_data() works", {
     
     #skip: no project in source
     search_for_newer_data("YOURPROJECT", source=target, target=target, ask=2)
-    search_for_newer_data(archive, source="foobar", target=target, ask=2)
+    search_for_newer_data(archive, source=c(source, "foobar"), target=target, ask=2)
     
     #normal case, with copy
     search_for_newer_data(archive, source=source, target=target, ask=1)
