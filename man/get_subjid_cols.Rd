@@ -5,9 +5,9 @@
 \alias{get_crfname_cols}
 \title{Get key column names}
 \usage{
-get_subjid_cols(lookup = get_lookup())
+get_subjid_cols(lookup = edc_lookup())
 
-get_crfname_cols(lookup = get_lookup())
+get_crfname_cols(lookup = edc_lookup())
 }
 \arguments{
 \item{lookup}{the lookup table}

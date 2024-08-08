@@ -24,5 +24,5 @@ lk \%>\% tidyr::unnest(c(names, labels))
 
 }
 \seealso{
-\code{\link[=extend_lookup]{extend_lookup()}}, \code{\link[=get_lookup]{get_lookup()}}
+\code{\link[=extend_lookup]{extend_lookup()}}, \code{\link[=edc_lookup]{edc_lookup()}}
 }

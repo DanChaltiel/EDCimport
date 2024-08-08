@@ -41,5 +41,5 @@ load_list(tm)
 .lookup
 }
 \seealso{
-\code{\link[=build_lookup]{build_lookup()}}, \code{\link[=get_lookup]{get_lookup()}}
+\code{\link[=build_lookup]{build_lookup()}}, \code{\link[=edc_lookup]{edc_lookup()}}
 }

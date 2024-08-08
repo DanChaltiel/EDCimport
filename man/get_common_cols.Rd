@@ -5,12 +5,12 @@
 \alias{summary.common_cols}
 \title{Get columns that are common to multiple datasets}
 \usage{
-get_common_cols(lookup = get_lookup(), min_datasets = 3)
+get_common_cols(lookup = edc_lookup(), min_datasets = 3)
 
 \method{summary}{common_cols}(object, ...)
 }
 \arguments{
-\item{lookup}{the lookup table, default to \code{\link[=get_lookup]{get_lookup()}}}
+\item{lookup}{the lookup table, default to \code{\link[=edc_lookup]{edc_lookup()}}}
 
 \item{min_datasets}{the minimal number of datasets to be considered}
 

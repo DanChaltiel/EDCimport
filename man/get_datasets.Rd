@@ -4,7 +4,7 @@
 \alias{get_datasets}
 \title{Retrieve the datasets as a list of data.frames}
 \usage{
-get_datasets(lookup = get_lookup(), envir = parent.frame())
+get_datasets(lookup = edc_lookup(), envir = parent.frame())
 }
 \arguments{
 \item{lookup}{the lookup table}

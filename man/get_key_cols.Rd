@@ -4,7 +4,7 @@
 \alias{get_key_cols}
 \title{Important column names}
 \usage{
-get_key_cols(lookup = get_lookup())
+get_key_cols(lookup = edc_lookup())
 }
 \arguments{
 \item{lookup}{the lookup table}

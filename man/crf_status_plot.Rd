@@ -29,7 +29,7 @@ edc_pal_crf()
 
 \item{crfstat_lvls}{the CRF status levels, from "best" to "worst". The plot is ordered by the "worst" level.}
 
-\item{x_label}{a glue pattern determining the tick label in the x axis. Available variables are \code{c("nrow", "ncol", "n_id", "rows_per_id", "crfname")}, taken from \code{\link[=get_lookup]{get_lookup()}}.}
+\item{x_label}{a glue pattern determining the tick label in the x axis. Available variables are \code{c("nrow", "ncol", "n_id", "rows_per_id", "crfname")}, taken from \code{\link[=edc_lookup]{edc_lookup()}}.}
 
 \item{treat_as_worst}{a regex for levels that should be treated as worst in the ordering}
 }

@@ -4,7 +4,7 @@
 \alias{find_keyword}
 \title{Find a keyword in the whole database}
 \usage{
-find_keyword(keyword, data = get_lookup(), ignore_case = TRUE)
+find_keyword(keyword, data = edc_lookup(), ignore_case = TRUE)
 }
 \arguments{
 \item{keyword}{the keyword to search for. Can handle regular expressions (see examples).}
