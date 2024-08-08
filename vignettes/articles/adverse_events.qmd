@@ -251,8 +251,11 @@ Ici, on considère comme sévères les AE de grade \>= 3 :
 #| fig.width: 7
 #| out.width: "100%"
 ae %>% 
-  dplyr::mutate(severe = aegr>=3) %>% 
-  butterfly_plot(df_enrol=enrolres)
+  dplyr::mutate(serious = sae=="Yes") %>% 
+  butterfly_plot(df_enrol=enrolres, severe="serious") + 
+  labs(caption="Darker areas represent Serious Adverse Events")
 ```
 
 :::
+
+Ces fonctions feront sans doute l'objet d'un package séparé dans le futur.
