@@ -39,7 +39,7 @@ ae_table_grade_n(
 a crosstable
 }
 \description{
-Summary tables for AE
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 }
 \examples{
 \dontrun{

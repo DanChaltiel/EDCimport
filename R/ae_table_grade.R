@@ -320,6 +320,8 @@ fix_grade = function(x){
 
 #' Summary tables for AE
 #' 
+#' `r lifecycle::badge("deprecated")`
+#' 
 #' @inheritParams ae_table_soc
 #' @inherit ae_table_soc seealso
 #'
@@ -396,6 +398,8 @@ ae_table_grade_n = function(
 
 #' Summary tables for AE by grade max
 #' 
+#' `r lifecycle::badge("deprecated")`
+#' 
 #' The function `ae_table_grade_max()` creates a summary table of the maximum AE grade experienced per each patient. 
 #' The resulting crosstable can be piped to `as_flextable()` to get a nicely formatted flextable.
 #' 
@@ -456,6 +460,8 @@ ae_table_grade_max = function(
 
 #' Graphic representation of AEs by grade max
 #'
+#' `r lifecycle::badge("deprecated")`
+#' 
 #' Produces a graphic representation of AE, counting the maximum grade each patient experienced, colored by treatment arm. Returns up to 3 representations if `arm!=NULL`.
 #' 
 #' @inheritParams ae_table_soc 

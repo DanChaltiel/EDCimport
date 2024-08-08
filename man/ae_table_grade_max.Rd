@@ -39,6 +39,9 @@ ae_table_grade_max(
 a crosstable (dataframe)
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+}
+\details{
 The function \code{ae_table_grade_max()} creates a summary table of the maximum AE grade experienced per each patient.
 The resulting crosstable can be piped to \code{as_flextable()} to get a nicely formatted flextable.
 }
