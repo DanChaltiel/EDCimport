@@ -97,6 +97,7 @@ set_lookup = function(lookup, verbose=getOption("edc_lookup_overwrite_warn", TRU
              class="edc_lookup_overwrite_warn")
   }
   edcimport_env$lookup = lookup
+  invisible(lookup)
 }
 
 
