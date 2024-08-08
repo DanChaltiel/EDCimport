@@ -21,6 +21,14 @@ options(
   testthat.progress.max_fails = 50
 )
 
+options(
+  tibble.print_max = Inf,
+  tibble.max_extra_cols = 0,
+  tibble.width = NULL, 
+  
+  warn=1
+)
+
 # globalCallingHandlers(NULL)
 # rlang::global_entrace()
 
@@ -31,10 +39,10 @@ library(cli, warn.conflicts=FALSE)
 library(tidyverse, warn.conflicts=FALSE)
 
 
-edc_options(
-  # trialmaster_pw="0", 
-  edc_lookup_overwrite_warn=FALSE
-)
+# edc_options(
+#   # trialmaster_pw="0", 
+#   edc_lookup_overwrite_warn=FALSE
+# )
 
 # cachename="trialmaster_export_2022-08-25 15h16.rds"
 # filename="CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16.zip"
@@ -94,6 +102,10 @@ is_testing_in_buildpane = function(){
   str_ends(getwd(), "testthat/?")
 }
 
+plot_data = function(p) p$data
+
+#' @examples
+#' warn("hello", class="foobar") %>% expect_classed_conditions(warning_class="foo")
 expect_classed_conditions = function(expr, message_class=NULL, warning_class=NULL, error_class=NULL){
   dummy = c("rlang_message", "message", "rlang_warning", "warning", "rlang_error", "error", "condition")
   ms = list()
@@ -117,8 +129,8 @@ expect_classed_conditions = function(expr, message_class=NULL, warning_class=NUL
   
   f = function(cond_list, cond_class){
     cl = map(cond_list, class) %>% purrr::flatten_chr()
-    missing = setdiff(cl, cond_class) %>% setdiff(dummy)
-    extra = setdiff(cond_class, cl) %>% setdiff(dummy)
+    missing = setdiff(cond_class, cl) %>% setdiff(dummy)
+    extra = setdiff(cl, cond_class) %>% setdiff(dummy)
     if(length(missing)>0 || length(extra)>0){
       cli_abort(c("{.arg {caller_arg(cond_class)}} is not matching thrown conditions:",
                   i="Missing expected classes: {.val {missing}}",
@@ -162,5 +174,6 @@ tryCatch2 = function(expr){
 }
 
 # clean_cache()
-cli::cli_inform(c(v="Initializer {.file helper-init.R} loaded at {.path {getwd()}}: 
-                     is_testing={is_testing()}, is_parallel={is_parallel()}"))
+cli::cli_inform(c(v="Initializer {.file helper-init.R} loaded at {.path {getwd()}}",
+                  i="is_testing={.val {is_testing()}}, is_checking={.val {is_checking()}}, 
+                  is_parallel={.val {is_parallel()}}"))
