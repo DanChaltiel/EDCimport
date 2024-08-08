@@ -13,7 +13,7 @@ edc_data_warn(
   ...,
   issue_n = "xx",
   max_subjid = 5,
-  write_to_csv = FALSE,
+  csv_path = FALSE,
   col_subjid = get_subjid_cols()
 )
 
@@ -24,7 +24,7 @@ edc_data_warnings()
 \arguments{
 \item{df}{the filtered dataframe}
 
-\item{message}{the message. Can use \href{https://cli.r-lib.org/reference/inline-markup.html#classes}{cli formats}.}
+\item{message}{the message. Can use \href{https://cli.r-lib.org/reference/inline-markup.html#classes}{cli formats}. \code{df} can be accessed using the \code{.data} special keyword (see example)}
 
 \item{...}{unused}
 
@@ -32,7 +32,7 @@ edc_data_warnings()
 
 \item{max_subjid}{max number of subject ID to show in the message}
 
-\item{write_to_csv}{a path to save \code{df} in a csv file that can be shared with the DM for more details.}
+\item{csv_path}{a path to save \code{df} in a csv file that can be shared with the DM for more details.}
 
 \item{col_subjid}{column name for subject ID. Set to \code{NULL} to ignore.}
 }
@@ -64,14 +64,18 @@ db0 \%>\%
 
 db1 \%>\% 
   filter(n()>1, .by=SUBJID) \%>\% 
-  edc_data_warn("There are duplicated patients in `db1`", issue_n=3)
+  edc_data_warn("There are duplicated patients in `db1` ({nrow(.data)} rows)", issue_n=3)
 
+db0 \%>\% 
+  filter(age<25) \%>\% 
+  edc_data_warn("Age should not be <25", issue_n=NULL)
+  
 edc_data_warnings()
 
 \dontrun{
 db0 \%>\% 
   filter(age<25) \%>\% 
-  edc_data_warn("Age should not be <25", write_to_csv="check/check_age_25.csv")
+  edc_data_warn("Age should not be <25", csv_path="check/check_age_25.csv")
   
 db0 \%>\% 
   filter(age<25) \%>\% 

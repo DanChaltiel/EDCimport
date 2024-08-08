@@ -8,6 +8,7 @@ lastnews_table(
   except = NULL,
   with_ties = FALSE,
   numeric_id = TRUE,
+  prefer = NULL,
   warn_if_future = TRUE
 )
 }
@@ -17,6 +18,8 @@ lastnews_table(
 \item{with_ties}{in case of tie, whether to return the first \code{origin} (FALSE) or all the origins that share this tie (TRUE).}
 
 \item{numeric_id}{set to FALSE if the patient ID column is not numeric}
+
+\item{prefer}{origins to be favoured in case of ties. Usually the followup table.}
 
 \item{warn_if_future}{whether to show a warning about dates that are after the extraction date}
 }
@@ -34,4 +37,5 @@ load_list(tm)
 lastnews_table()
 lastnews_table(except="db3")
 lastnews_table(except="db3$date9")
+lastnews_table(prefer="db2") 
 }

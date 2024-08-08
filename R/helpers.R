@@ -206,6 +206,7 @@ select_distinct = function(df, .by) {
 #' @param except the datasets/columns that should not be searched. Example: a scheduled visit for which the patient may have died before attending should not be considered.
 #' @param with_ties in case of tie, whether to return the first `origin` (FALSE) or all the origins that share this tie (TRUE).
 #' @param numeric_id set to FALSE if the patient ID column is not numeric
+#' @param prefer origins to be favoured in case of ties. Usually the followup table.
 #' @param warn_if_future whether to show a warning about dates that are after the extraction date
 #'
 #' @return a dataframe
@@ -217,15 +218,17 @@ select_distinct = function(df, .by) {
 #' lastnews_table()
 #' lastnews_table(except="db3")
 #' lastnews_table(except="db3$date9")
+#' lastnews_table(prefer="db2") 
 #' @importFrom cli cli_abort
 #' @importFrom dplyr arrange filter mutate select slice_max
 #' @importFrom purrr discard discard_at imap list_rbind
 #' @importFrom tidyr pivot_longer
 #' @importFrom tidyselect where
 lastnews_table = function(except=NULL, with_ties=FALSE, numeric_id=TRUE, 
+                          prefer=NULL,
                           warn_if_future=TRUE) {
   subjid_cols = get_subjid_cols()
-  a = get_datasets(envir=parent.frame()) %>% 
+  rtn = get_datasets(envir=parent.frame()) %>% 
     discard_at(as.character(except)) %>% 
     imap(~{
       if(!is.data.frame(.x) || !any(subjid_cols %in% names(.x))) return(NULL)
@@ -236,32 +239,47 @@ lastnews_table = function(except=NULL, with_ties=FALSE, numeric_id=TRUE,
       a %>% 
         pivot_longer(-subjid) %>% 
         filter(!is.na(value)) %>% 
-        mutate(label=unlist(get_label(.x)[name]),
-               name=paste0(.y,"$",name))
+        mutate(origin_label=unlist(get_label(.x)[name]),
+               dataset=.y)
     }) %>% 
     discard(is.null) %>% 
     list_rbind()  %>% 
-    select(subjid, last_date=value, origin=name, label)
-  if(nrow(a)==0){
-    cli_abort("No data with dates could be found.")
+    select(subjid, last_date=value, origin_data=dataset, origin_col=name, origin_label) %>% 
+    mutate(origin = paste0(origin_data, "$", origin_col))
+  if(nrow(rtn)==0){
+    cli_abort("No data with dates could be found, verify your export settings.")
   }
   if(numeric_id) {
-    a$subjid = as.numeric(a$subjid)
+    rtn$subjid = as.numeric(rtn$subjid)
   }
-  a = a %>% 
+  
+  rtn = rtn %>% 
     filter(!origin %in% except) %>% 
-    slice_max(last_date, by=subjid, with_ties=with_ties) %>% 
+    filter(!origin_data %in% except) %>% 
+    filter(!origin_col %in% except) %>% 
+    slice_max(last_date, by=subjid, with_ties=TRUE) %>% 
     arrange(order(mixedorder(subjid)))
   
+  if(!with_ties){
+    rtn = rtn %>% 
+      rowwise() %>%  
+      mutate(prefered = which(prefer %in% c(origin, origin_data, origin_col)) %0% Inf) %>% 
+      ungroup() %>% 
+      arrange((prefered)) %>% 
+      select(-prefered, -origin) %>% 
+      slice_max(last_date, by=subjid, with_ties=FALSE) %>% 
+      arrange(order(mixedorder(subjid)))
+  }
+  
   if(exists("datetime_extraction")){
-    if(any(a$last_date > datetime_extraction) && warn_if_future) {
-      a %>% 
+    if(any(rtn$last_date > datetime_extraction) && warn_if_future) {
+      rtn %>% 
         filter(last_date>datetime_extraction) %>% 
         edc_data_warn("Date of last news after the extraction date", issue_n=NA)
     }
   }
   
-  a
+  rtn
 }
 
 
