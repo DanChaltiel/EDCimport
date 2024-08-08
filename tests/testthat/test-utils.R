@@ -167,17 +167,17 @@ test_that("expect_classed_conditions()", {
                             message_class=c("message1", "message2", "xxxx"),
                             warning_class=c("warn1", "xxxx"), 
                             error_class="xxxx") %>% 
-    expect_error("error1.*xxxx")
+    expect_error("xxxx.*error1")
   expect_classed_conditions(fun1(), 
                             message_class=c("message1", "message2", "xxxx"),
                             warning_class=c("warn1", "xxxx"), 
                             error_class="error1") %>% 
-    expect_error("warn2.*xxxx")
+    expect_error("xxxx.*warn2")
   expect_classed_conditions(fun1(), 
                             message_class=c("message1", "message2", "xxxx"),
                             warning_class=c("warn1", "warn2"), 
                             error_class="error1") %>% 
-    expect_error("message3.*xxxx")
+    expect_error("xxxx.*message3")
 })
 
 
