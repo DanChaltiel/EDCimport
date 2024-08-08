@@ -33,7 +33,7 @@ search_for_newer_data = function(archive, ...,
   project_name = parse_file_projname(archive)
   project_date = parse_file_datetime(archive)
   
-  if(all(!dir_exists(setdiff(source, target)))){
+  if(!identical(source, target) && all(!dir_exists(setdiff(source, target)))){
     cli_abort(c("{.arg source} contains only nonexistent directories."))
   }
   source = unique(c(target, source))
