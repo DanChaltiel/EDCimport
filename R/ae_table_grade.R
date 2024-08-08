@@ -78,24 +78,27 @@ ae_table_grade = function(
                     else if(percent=="only") "{n/n_col}" else "{n}"
   percent_pattern = list(body=percent_pattern, total_col=percent_pattern)
   
+  lab_no_ae = "No declared AE"
+  
   rtn = df %>% 
     summarise(
-      
-      max_grade_na= case_when(!cur_group()$subjid %in% df_ae$subjid ~ "No declared AE",
-                              all(is.na(grade), na.rm=TRUE) ~ "Grade missing",
+      max_grade_na = case_when(!cur_group()$subjid %in% df_ae$subjid ~ lab_no_ae,
+                              all(is.na(grade), na.rm=TRUE) ~ "Grade all missing",
                               .default="foobar"),
       max_grade_1 = ifelse(max_narm(grade) == 1 , "Grade 1", "foobar"), 
       max_grade_2 = ifelse(max_narm(grade) == 2 , "Grade 2", "foobar"), 
       max_grade_3 = ifelse(max_narm(grade) == 3 , "Grade 3", "foobar"), 
       max_grade_4 = ifelse(max_narm(grade) == 4 , "Grade 4", "foobar"), 
       max_grade_5 = ifelse(max_narm(grade) == 5 , "Grade 5", "foobar"), 
-      any_grade_sup_na   = max_grade_na,
+      any_grade_sup_na   = case_when(!cur_group()$subjid %in% df_ae$subjid ~ lab_no_ae,
+                                     any(is.na(grade), na.rm=TRUE) ~ "Any missing grade",
+                                     .default="foobar"),,
       any_grade_sup_1 = ifelse(any(grade >= 1, na.rm=TRUE), "Grade ≥ 1", "foobar"), 
       any_grade_sup_2 = ifelse(any(grade >= 2, na.rm=TRUE), "Grade ≥ 2", "foobar"), 
       any_grade_sup_3 = ifelse(any(grade >= 3, na.rm=TRUE), "Grade ≥ 3", "foobar"), 
       any_grade_sup_4 = ifelse(any(grade >= 4, na.rm=TRUE), "Grade ≥ 4", "foobar"), 
       any_grade_sup_5 = ifelse(any(grade >= 5, na.rm=TRUE), "Grade = 5", "foobar"), 
-      any_grade_eq_na   = max_grade_na,
+      any_grade_eq_na   = any_grade_sup_na,
       any_grade_eq_1 = ifelse(any(grade == 1, na.rm=TRUE), "Grade 1", "foobar"), 
       any_grade_eq_2 = ifelse(any(grade == 2, na.rm=TRUE), "Grade 2", "foobar"), 
       any_grade_eq_3 = ifelse(any(grade == 3, na.rm=TRUE), "Grade 3", "foobar"), 
@@ -115,8 +118,8 @@ ae_table_grade = function(
       .id = str_remove(.id, "_[^_]*$") %>% factor(levels=variant),
       label = fct_reorder(label, as.numeric(.id)),
       variable = suppressWarnings(fct_relevel(variable, "Grade = 5", after=4)),
-      variable = suppressWarnings(fct_relevel(variable, "No declared AE", after=0)),
-      variable = suppressWarnings(fct_relevel(variable, "Grade missing", after=Inf)),
+      variable = suppressWarnings(fct_relevel(variable, lab_no_ae, after=0)),
+      variable = suppressWarnings(fct_relevel(variable, ~str_subset(.x, "missing"), after=Inf)),
     ) %>% 
     arrange(.id, label, variable)
   
