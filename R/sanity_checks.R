@@ -179,9 +179,9 @@ assert_no_duplicate = function(df, by=NULL, id_col=get_subjid_cols()){
 #' Use `edc_data_warnings()` to generate the table for such a file.
 #'
 #' @param df the filtered dataframe
-#' @param message the message. Can use [cli formats](https://cli.r-lib.org/reference/inline-markup.html#classes).
+#' @param message the message. Can use [cli formats](https://cli.r-lib.org/reference/inline-markup.html#classes). `df` can be accessed using the `.data` special keyword (see example)
 #' @param issue_n identifying row number
-#' @param write_to_csv a path to save `df` in a csv file that can be shared with the DM for more details.
+#' @param csv_path a path to save `df` in a csv file that can be shared with the DM for more details.
 #' @param max_subjid max number of subject ID to show in the message
 #' @param col_subjid column name for subject ID. Set to `NULL` to ignore.
 #' @param ... unused 
@@ -204,14 +204,18 @@ assert_no_duplicate = function(df, by=NULL, id_col=get_subjid_cols()){
 #' 
 #' db1 %>% 
 #'   filter(n()>1, .by=SUBJID) %>% 
-#'   edc_data_warn("There are duplicated patients in `db1`", issue_n=3)
+#'   edc_data_warn("There are duplicated patients in `db1` ({nrow(.data)} rows)", issue_n=3)
 #' 
+#' db0 %>% 
+#'   filter(age<25) %>% 
+#'   edc_data_warn("Age should not be <25", issue_n=NULL)
+#'   
 #' edc_data_warnings()
 #' 
 #' \dontrun{
 #' db0 %>% 
 #'   filter(age<25) %>% 
-#'   edc_data_warn("Age should not be <25", write_to_csv="check/check_age_25.csv")
+#'   edc_data_warn("Age should not be <25", csv_path="check/check_age_25.csv")
 #'   
 #' db0 %>% 
 #'   filter(age<25) %>% 
@@ -219,12 +223,12 @@ assert_no_duplicate = function(df, by=NULL, id_col=get_subjid_cols()){
 #' }
 edc_data_warn = function(df, message, ..., 
                          issue_n="xx", max_subjid=5, 
-                         write_to_csv=FALSE, 
+                         csv_path=FALSE, 
                          col_subjid=get_subjid_cols()){
   
   if (missing(max_subjid)) max_subjid = getOption("edc_warn_max_subjid", max_subjid)
   check_dots_empty()
-  edc_data_condition(df=df, message=message, issue_n=issue_n, write_to_csv=write_to_csv,
+  edc_data_condition(.data=df, message=message, issue_n=issue_n, csv_path=csv_path,
                      max_subjid=max_subjid, col_subjid=col_subjid, 
                      fun=cli_warn)
 }
@@ -235,12 +239,12 @@ edc_data_warn = function(df, message, ...,
 #' @importFrom rlang check_dots_empty
 edc_data_stop = function(df, message, ..., 
                          issue_n="xx", max_subjid=5, 
-                         write_to_csv=FALSE, 
+                         csv_path=FALSE, 
                          col_subjid=get_subjid_cols()){
   
   if (missing(max_subjid)) max_subjid = getOption("edc_warn_max_subjid", max_subjid)
   check_dots_empty()
-  edc_data_condition(df=df, message=message, issue_n=issue_n, write_to_csv=write_to_csv,
+  edc_data_condition(.data=df, message=message, issue_n=issue_n, csv_path=csv_path,
                      max_subjid=max_subjid, col_subjid=col_subjid, 
                      fun=cli_abort)
 }
@@ -271,16 +275,18 @@ edc_data_warnings = function(){
 #' @importFrom stringr str_pad
 #' @importFrom tibble tibble
 #' @importFrom utils write.csv2
-edc_data_condition = function(df, message, issue_n, max_subjid, 
-                              write_to_csv, 
+edc_data_condition = function(.data, message, issue_n, max_subjid, 
+                              csv_path, 
                               col_subjid, fun){
-  if(nrow(df)>0){
-    if(is.character(write_to_csv)){
-      write.csv2(df, write_to_csv)
+  if(nrow(.data)>0){
+    if(is.character(csv_path)){
+      assert(str_ends(csv_path, "\\.csv"), call=parent.frame())
+      write.csv2(.data, csv_path)
     }
-    message = format_inline(message, .envir=parent.frame())
+    message = format_inline(message)
     
     par_issue = par_subj = ""; subj=NULL
+    if(is.null(issue_n)) issue_n = NA
     
     if(!is.na(issue_n)){
       if(is.numeric(issue_n)) issue_n = str_pad(issue_n, width=2, pad="0")
@@ -288,7 +294,7 @@ edc_data_condition = function(df, message, issue_n, max_subjid,
     }
     
     if(!is.null(col_subjid)){
-      subj = df %>% pull(any_of2(col_subjid)) %>% unique() %>% sort()
+      subj = .data %>% pull(any_of2(col_subjid)) %>% unique() %>% sort()
       n_subj = length(subj)
       subj = paste0("#", subj) %>% 
         cli_vec(style=list("vec_trunc"=max_subjid, "vec-trunc-style"="head"))
@@ -300,7 +306,7 @@ edc_data_condition = function(df, message, issue_n, max_subjid,
     
     fun("{par_issue}{message}{par_subj}")
   }
-  invisible(df)
+  invisible(.data)
 }
 
 
