@@ -276,18 +276,23 @@ ae_plot_grade_sum = function(
   y_lab = "Count"; caption = NULL
   if(weighted){
     y_lab = "Weighted count"
-    caption = paste0("Weights: Grade ", 1:5, " = ", weights) %>% 
-      paste(collapse=", ")
+    caption = paste0("Grade ", 1:5, " = ", weights, collapse=", ")
+    caption = paste("Weights: ", caption)
   }
+  
+  pal = scales::pal_gradient_n(c(low, high))(seq(0, 1, length.out=5))
   
   rtn =
     df %>% 
     mutate(subjid = fct_infreq(factor(subjid), w=weight)) %>% 
     count(across(c(subjid, grade, any_of("arm"))), wt=weight) %>% 
-    mutate(n = ifelse(is.na(grade), 0.1, n)) %>% 
-    # ggplot(aes(x=subjid, y=n, fill=fct_rev(factor(grade)))) + geom_col() +
-    ggplot(aes(x=subjid, y=n, fill=grade)) + geom_col() + 
-    scale_fill_steps(low=low, high=high) +
+    mutate(
+      n = ifelse(is.na(grade), 0.1, n),
+      grade = fct_rev(factor(grade))
+    ) %>% 
+    ggplot(aes(x=subjid, y=n, fill=grade)) +
+    scale_fill_manual(values=rev(pal)) +
+    geom_col() + 
     theme(axis.text.x=element_blank(),
           axis.ticks.x=element_blank()) +
     labs(x="Patient", y=y_lab, fill="AE grade", caption=caption)
