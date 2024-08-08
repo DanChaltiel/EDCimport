@@ -8,7 +8,8 @@
 
 #' Summary tables for AE
 #' 
-#' @param type default to `c("max", "sup", "eq")`. `max` computes the maximum AE grade per patient, `sup` computes the number of patients having experienced at least one AE of grade higher than X, and `eq` computes the number of patients having experienced at least one AE of grade equal to X.
+#' @param type one or several of `c("max", "sup", "eq")`. `max` computes the maximum AE grade per patient, `sup` computes the number of patients having experienced at least one AE of grade higher or equal to X, and `eq` computes the number of patients having experienced at least one AE of grade equal to X.
+#' @param percent whether to show percentages with counts. Defaults to TRUE. Can also be "only" to not show counts.
 #' @inheritParams ae_table_soc
 #' @inherit ae_table_soc seealso
 #'

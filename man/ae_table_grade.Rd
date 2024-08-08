@@ -29,9 +29,11 @@ ae_table_grade(
 
 \item{subjid}{name of the patient ID in both \code{df_ae} and \code{df_enrol}. Case-insensitive.}
 
+\item{percent}{whether to show percentages with counts. Defaults to TRUE. Can also be "only" to not show counts.}
+
 \item{total}{whether to add a \code{total} column for each arm}
 
-\item{type}{default to \code{c("max", "sup", "eq")}. \code{max} computes the maximum AE grade per patient, \code{sup} computes the number of patients having experienced at least one AE of grade higher than X, and \code{eq} computes the number of patients having experienced at least one AE of grade equal to X.}
+\item{type}{one or several of \code{c("max", "sup", "eq")}. \code{max} computes the maximum AE grade per patient, \code{sup} computes the number of patients having experienced at least one AE of grade higher or equal to X, and \code{eq} computes the number of patients having experienced at least one AE of grade equal to X.}
 }
 \value{
 a crosstable
