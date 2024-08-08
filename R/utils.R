@@ -66,6 +66,15 @@ fct_last = function(f, ...) {
 }
 
 
+
+#' @noRd
+#' @keywords internal
+percent = function(x, digits=0){
+  stopifnot(abs(x)<=1)
+  x=round(x*100, digits)
+  paste0(x,"%")
+}
+
 #' adverb that adds a deprecated warning
 #' @noRd
 #' @keywords internal

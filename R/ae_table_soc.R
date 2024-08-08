@@ -125,7 +125,7 @@ ae_table_soc = function(
       across(c(matches("^G\\d$"), any_of(c("NA", "Tot"))), ~{
         n = sum(.x)
         n_arm = arm_count2[[cur_group()$arm_]]
-        label = glue("{n} ({p})", p=scales::percent(n/n_arm, 1))
+        label = glue("{n} ({p})", p=percent(n/n_arm, digits))
         label[n==0] = NA
         label
       }),
