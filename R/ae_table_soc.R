@@ -161,11 +161,12 @@ ae_table_soc = function(
 #'
 #' @param x a dataframe, resulting of `ae_table_soc()`
 #' @param arm_colors colors for the arm groups
+#' @param padding_v a numeric of lenght up to 2, giving the vertical padding of body (1) and header (2)
 #'
 #' @return a formatted flextable
 #' @rdname ae_table_soc
 #' @exportS3Method flextable::as_flextable
-
+#'
 #' @importFrom dplyr case_match lag lead transmute
 #' @importFrom purrr map map_int
 #' @importFrom rlang check_installed set_names
@@ -173,8 +174,10 @@ ae_table_soc = function(
 #' @importFrom tibble as_tibble_col
 #' @importFrom tidyr separate_wider_regex
 as_flextable.ae_table_soc = function(x, 
-                                     arm_colors=c("#f2dcdb", "#dbe5f1", "#ebf1dd", "#e5e0ec")){
+                                     arm_colors=c("#f2dcdb", "#dbe5f1", "#ebf1dd", "#e5e0ec"),
+                                     padding_v = NULL){
   check_installed("flextable")
+  if (missing(padding_v)) padding_v = getOption("crosstable_padding_v", padding_v)
   table_ae_header = attr(x, "header")
   if(FALSE){
     arm_cols = names(table_ae_header) %>% set_names() %>%
@@ -226,7 +229,12 @@ as_flextable.ae_table_soc = function(x,
     flextable::set_table_properties(layout="autofit") %>% 
     flextable::fontsize(size=8, part="all") %>%
     flextable::bold(part="header")
-  
+  if (length(padding_v) >= 1) {
+    rtn = flextable::padding(rtn, padding.top=padding_v[1], padding.bottom=padding_v[1], part="body")
+  }
+  if (length(padding_v) == 2) {
+    rtn = flextable::padding(rtn, padding.top=padding_v[2], padding.bottom=padding_v[2], part="header")
+  }
   # a = cumsum(colwidths)[-1]
   a = sep_cols
   for(i in seq_along(a)){

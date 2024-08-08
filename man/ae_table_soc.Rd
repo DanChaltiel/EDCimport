@@ -22,7 +22,11 @@ ae_table_soc(
   warn_miss = FALSE
 )
 
-\method{as_flextable}{ae_table_soc}(x, arm_colors = c("#f2dcdb", "#dbe5f1", "#ebf1dd", "#e5e0ec"))
+\method{as_flextable}{ae_table_soc}(
+  x,
+  arm_colors = c("#f2dcdb", "#dbe5f1", "#ebf1dd", "#e5e0ec"),
+  padding_v = NULL
+)
 }
 \arguments{
 \item{df_ae}{adverse event dataset, one row per AE, containing subjid, soc, and grade}
@@ -50,6 +54,8 @@ ae_table_soc(
 \item{x}{a dataframe, resulting of \code{ae_table_soc()}}
 
 \item{arm_colors}{colors for the arm groups}
+
+\item{padding_v}{a numeric of lenght up to 2, giving the vertical padding of body (1) and header (2)}
 
 \item{sort_by_ae}{should the table be sorted by number or alphabetically}
 }
