@@ -252,7 +252,7 @@ Ici, on considère comme sévères les AE de grade \>= 3 :
 #| out.width: "100%"
 ae %>% 
   dplyr::mutate(severe = aegr>=3) %>% 
-  ae_plot_soc(df_enrol=enrolres)
+  butterfly_plot(df_enrol=enrolres)
 ```
 
 :::

@@ -50,9 +50,9 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 -   New functions to describe adverse events:
 
-    -   `ae_table_grade_max()`, `ae_table_grade_n()`, and `ae_table_soc()` to generate standardized tables.  \
+    -   `ae_table_grade()` and `ae_table_soc()` to generate standardized tables.  \
         They all can be turned to flextables using `as_flextable()`.
-    -   `ae_plot_grade_max()`, `ae_plot_grade_n()`, and `ae_plot_soc()` to generate standardized plots.
+    -   `ae_plot_grade_max()`, `ae_plot_grade_n()`, and `butterfly_plot()` to generate standardized plots.
 
 
 ### Bug fixes & Improvements

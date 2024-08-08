@@ -243,7 +243,7 @@ as_flextable.ae_table_soc = function(x,
 #' 
 #' Produces a graphic representation of AE, counting the maximum grade each patient experienced, colored by treatment arm. Returns up to 3 representations if `arm!=NULL`.
 #' 
-#' The function `ae_plot_soc()` creates a summary table of the maximum AE grade experienced per each patient. 
+#' The function `butterfly_plot()` creates a summary table of the maximum AE grade experienced per each patient. 
 #' The resulting crosstable can be piped to `as_flextable()` to get a nicely formatted flextable.
 #' 
 #' @inheritParams ae_table_soc
@@ -271,9 +271,9 @@ as_flextable.ae_table_soc = function(x,
 #' tm$ae %>% 
 #'   #dplyr::mutate(ae_severe = aeser=="Yes") %>% 
 #'   dplyr::mutate(ae_severe = aegr>=3) %>% 
-#'   ae_plot_soc(df_enrol=tm$enrolres, severe="ae_severe")
-ae_plot_soc = function(
     df_ae, ..., df_enrol, severe, sort_by=c("total", "severe"), range_min=NULL,
+#'   butterfly_plot(df_enrol=tm$enrolres, severe="ae_severe") + 
+butterfly_plot = function(
     arm="ARM", subjid="SUBJID", soc="AESOC"
 ){
   check_dots_empty()
@@ -295,7 +295,7 @@ ae_plot_soc = function(
   
   arms = df_enrol$arm_ %>% unique() %>% na.omit()
   if(length(arms)!=2){
-    cli_abort(c("{.fn EDCimport::ae_plot_soc} needs exactly 2 arms.", 
+    cli_abort(c("{.fn EDCimport::butterfly_plot} needs exactly 2 arms.", 
                 i="Arms: {.val {arms}}"))
   }
   if(!is.logical(df_ae$severe_)){
@@ -351,10 +351,10 @@ ae_plot_soc = function(
 }
 
 
-#' @rdname ae_plot_soc
-#' @usage butterfly_plot(...)
+#' @rdname butterfly_plot
+#' @usage ae_plot_soc(...)
 #' @export
-butterfly_plot = ae_plot_soc
+ae_plot_soc = butterfly_plot
 
 
 # Utils ---------------------------------------------------------------------------------------
