@@ -11,15 +11,15 @@ ae_table_soc(
   df_enrol,
   variant = c("max", "sup", "eq"),
   arm = NULL,
-  grade = "AEGR",
-  soc = "AESOC",
   term = NULL,
-  subjid = "SUBJID",
   sort_by_count = TRUE,
   total = TRUE,
   showNA = TRUE,
   digits = 0,
-  warn_miss = FALSE
+  warn_miss = FALSE,
+  grade = "AEGR",
+  soc = "AESOC",
+  subjid = "SUBJID"
 )
 
 \method{as_flextable}{ae_table_soc}(
@@ -29,35 +29,39 @@ ae_table_soc(
 )
 }
 \arguments{
-\item{df_ae}{adverse event dataset, one row per AE, containing subjid, soc, and grade}
+\item{df_ae}{adverse event dataset, one row per AE, containing subjid, soc, and grade.}
 
 \item{...}{unused}
 
 \item{df_enrol}{enrollment dataset, one row per patient, containing subjid (and arm if needed). All patients should be in this dataset.}
 
-\item{arm}{name of the treatment column in \code{df_enrol}. Case-insensitive. Can be set to \code{NULL} to not group.}
+\item{variant}{one or several of \code{c("max", "sup", "eq")}. \code{max} computes the maximum AE grade per patient, \code{sup} computes the number of patients having experienced at least one AE of grade higher or equal to X, and \code{eq} computes the number of patients having experienced at least one AE of grade equal to X.}
 
-\item{grade}{name of the AE grade column in \code{df_ae}. Case-insensitive.}
-
-\item{soc}{name of the SOC column in \code{df_ae}. Case-insensitive. Grade will be considered 0 if missing(e.g. if patient if absent from \code{df_ae}).}
+\item{arm}{name of the treatment column in \code{df_enrol}. Case-insensitive. Can be set to \code{NULL}.}
 
 \item{term}{name of the the CTCAE term column in \code{df_ae}. Case-insensitive. Can be set to \code{NULL}.}
 
+\item{sort_by_count}{should the table be sorted by the number of AE or by SOC alphabetically.}
+
+\item{total}{whether to add a \code{total} column for each arm.}
+
+\item{showNA}{whether to display missing grades.}
+
+\item{digits}{significant digits for percentages.}
+
+\item{warn_miss}{whether to warn for missing values.}
+
+\item{grade}{name of the AE grade column in \code{df_ae}. Case-insensitive.}
+
+\item{soc}{name of the SOC column in \code{df_ae}. Case-insensitive. Grade will be considered 0 if missing (e.g. if patient if absent from \code{df_ae}).}
+
 \item{subjid}{name of the patient ID in both \code{df_ae} and \code{df_enrol}. Case-insensitive.}
-
-\item{total}{whether to add a \code{total} column for each arm}
-
-\item{digits}{significant digits for percentages}
-
-\item{warn_miss}{whether to warn for missing values}
 
 \item{x}{a dataframe, resulting of \code{ae_table_soc()}}
 
 \item{arm_colors}{colors for the arm groups}
 
 \item{padding_v}{a numeric of lenght up to 2, giving the vertical padding of body (1) and header (2)}
-
-\item{sort_by_ae}{should the table be sorted by number or alphabetically}
 }
 \value{
 a dataframe (\code{ae_table_soc()}) or a flextable (\code{as_flextable()}).
@@ -69,7 +73,6 @@ The function \code{ae_table_soc()} creates a summary table of maximum AE grades 
 The resulting dataframe can be piped to \code{as_flextable()} to get a nicely formatted flextable.
 }
 \examples{
-
 tm = edc_example_ae()
 ae_table_soc(df_ae=tm$ae, df_enrol=tm$enrolres, term=NULL)
 ae_table_soc(df_ae=tm$ae, df_enrol=tm$enrolres, term=NULL, arm=NULL)

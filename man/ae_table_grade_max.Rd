@@ -17,23 +17,23 @@ ae_table_grade_max(
 )
 }
 \arguments{
-\item{df_ae}{adverse event dataset, one row per AE, containing subjid, soc, and grade}
+\item{df_ae}{adverse event dataset, one row per AE, containing subjid, soc, and grade.}
 
 \item{...}{unused}
 
 \item{df_enrol}{enrollment dataset, one row per patient, containing subjid (and arm if needed). All patients should be in this dataset.}
 
-\item{arm}{name of the treatment column in \code{df_enrol}. Case-insensitive. Can be set to \code{NULL} to not group.}
+\item{arm}{name of the treatment column in \code{df_enrol}. Case-insensitive. Can be set to \code{NULL}.}
 
 \item{subjid}{name of the patient ID in both \code{df_ae} and \code{df_enrol}. Case-insensitive.}
 
-\item{soc}{name of the SOC column in \code{df_ae}. Case-insensitive. Grade will be considered 0 if missing(e.g. if patient if absent from \code{df_ae}).}
+\item{soc}{name of the SOC column in \code{df_ae}. Case-insensitive. Grade will be considered 0 if missing (e.g. if patient if absent from \code{df_ae}).}
 
 \item{grade}{name of the AE grade column in \code{df_ae}. Case-insensitive.}
 
-\item{total}{whether to add a \code{total} column for each arm}
+\item{total}{whether to add a \code{total} column for each arm.}
 
-\item{digits}{significant digits for percentages}
+\item{digits}{significant digits for percentages.}
 }
 \value{
 a crosstable (dataframe)

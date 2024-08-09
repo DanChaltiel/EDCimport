@@ -17,10 +17,10 @@ butterfly_plot(
   soc = "AESOC"
 )
 
-ae_plot_soc(...)
+ae_plot_soc(df_ae, ..., df_enrol, severe, sort_by, range_min, arm, subjid, soc)
 }
 \arguments{
-\item{df_ae}{adverse event dataset, one row per AE, containing subjid, soc, and grade}
+\item{df_ae}{adverse event dataset, one row per AE, containing subjid, soc, and grade.}
 
 \item{...}{unused}
 
@@ -32,11 +32,11 @@ ae_plot_soc(...)
 
 \item{range_min}{The minimum value for the upper limit of the x-axis range. Set to \code{1} to always include 100\%.}
 
-\item{arm}{name of the treatment column in \code{df_enrol}. Case-insensitive. Can be set to \code{NULL} to not group.}
+\item{arm}{name of the treatment column in \code{df_enrol}. Case-insensitive. Can be set to \code{NULL}.}
 
 \item{subjid}{name of the patient ID in both \code{df_ae} and \code{df_enrol}. Case-insensitive.}
 
-\item{soc}{name of the SOC column in \code{df_ae}. Case-insensitive. Grade will be considered 0 if missing(e.g. if patient if absent from \code{df_ae}).}
+\item{soc}{name of the SOC column in \code{df_ae}. Case-insensitive. Grade will be considered 0 if missing (e.g. if patient if absent from \code{df_ae}).}
 }
 \value{
 a crosstable (dataframe)
@@ -61,7 +61,7 @@ ae2 \%>\%
   
 ae2 \%>\% 
   butterfly_plot(df_enrol=enrolres, severe="serious") + 
-  labs(caption="Darker areas represent Serious Adverse Events")
+  ggplot2::labs(caption="Darker areas represent Serious Adverse Events")
 }
 \seealso{
 \code{\link[=ae_table_grade_max]{ae_table_grade_max()}}, \code{\link[=ae_table_grade_n]{ae_table_grade_n()}}, \code{\link[=ae_table_soc]{ae_table_soc()}}, \code{\link[=ae_plot_grade_max]{ae_plot_grade_max()}}, \code{\link[=ae_plot_grade_n]{ae_plot_grade_n()}}

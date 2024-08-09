@@ -8,27 +8,37 @@
 #' The function `ae_table_soc()` creates a summary table of maximum AE grades for each patient according to term and SOC CTCAE. 
 #' The resulting dataframe can be piped to `as_flextable()` to get a nicely formatted flextable.
 #' 
-#' @param df_ae adverse event dataset, one row per AE, containing subjid, soc, and grade
+#' @param df_ae adverse event dataset, one row per AE, containing subjid, soc, and grade.
 #' @param df_enrol enrollment dataset, one row per patient, containing subjid (and arm if needed). All patients should be in this dataset.
-#' @param subjid name of the patient ID in both `df_ae` and `df_enrol`. Case-insensitive.
-#' @param arm name of the treatment column in `df_enrol`. Case-insensitive. Can be set to `NULL` to not group.
-#' @param grade  name of the AE grade column in `df_ae`. Case-insensitive.
-#' @param soc name of the SOC column in `df_ae`. Case-insensitive. Grade will be considered 0 if missing(e.g. if patient if absent from `df_ae`).
+#' @param variant one or several of `c("max", "sup", "eq")`. `max` computes the maximum AE grade per patient, `sup` computes the number of patients having experienced at least one AE of grade higher or equal to X, and `eq` computes the number of patients having experienced at least one AE of grade equal to X.
+#' @param arm name of the treatment column in `df_enrol`. Case-insensitive. Can be set to `NULL`.
 #' @param term name of the the CTCAE term column in `df_ae`. Case-insensitive. Can be set to `NULL`.
-#' @param sort_by_ae should the table be sorted by number or alphabetically
-#' @param total whether to add a `total` column for each arm
-#' @param digits significant digits for percentages
-#' @param warn_miss whether to warn for missing values
+#' @param sort_by_count should the table be sorted by the number of AE or by SOC alphabetically.
+#' @param total whether to add a `total` column for each arm.
+#' @param showNA whether to display missing grades.
+#' @param digits significant digits for percentages.
+#' @param warn_miss whether to warn for missing values.
+#' @param grade  name of the AE grade column in `df_ae`. Case-insensitive.
+#' @param soc name of the SOC column in `df_ae`. Case-insensitive. Grade will be considered 0 if missing (e.g. if patient if absent from `df_ae`).
+#' @param subjid name of the patient ID in both `df_ae` and `df_enrol`. Case-insensitive.
 #' @param ... unused
 #'
 #' @return a dataframe (`ae_table_soc()`) or a flextable (`as_flextable()`).
 #' 
 #' @seealso [ae_table_grade_max()], [ae_table_grade_n()], [ae_table_soc()], [ae_plot_grade_max()], [ae_plot_grade_n()]
 #' 
+#' @importFrom cli cli_warn
+#' @importFrom dplyr across any_of arrange count cur_group filter full_join if_else mutate pull rename select summarise
+#' @importFrom forcats fct_infreq
+#' @importFrom glue glue
+#' @importFrom purrr iwalk keep map
+#' @importFrom rlang arg_match check_dots_empty ensym is_empty set_names
+#' @importFrom tibble deframe lst
+#' @importFrom tidyr build_wider_spec pivot_wider_spec unnest
+#' @importFrom tidyselect matches
 #' @export
 #'
-#' @examples
-#' 
+#' @examples 
 #' tm = edc_example_ae()
 #' ae_table_soc(df_ae=tm$ae, df_enrol=tm$enrolres, term=NULL)
 #' ae_table_soc(df_ae=tm$ae, df_enrol=tm$enrolres, term=NULL, arm=NULL)
@@ -46,20 +56,12 @@
 #'   as_flextable() %>% 
 #'   highlight(i=~soc=="Hepatobiliary disorders", j="all_patients_Tot")
 #' }
-#' @importFrom cli cli_warn
-#' @importFrom dplyr across any_of arrange count cur_group filter full_join if_else mutate pull rename select summarise
-#' @importFrom forcats fct_infreq
-#' @importFrom glue glue
-#' @importFrom purrr iwalk keep map
-#' @importFrom rlang arg_match check_dots_empty ensym is_empty set_names
-#' @importFrom tibble deframe lst
-#' @importFrom tidyr build_wider_spec pivot_wider_spec unnest
-#' @importFrom tidyselect matches
 ae_table_soc = function(
     df_ae, ..., df_enrol, 
     variant=c("max", "sup", "eq"), 
-    arm=NULL, grade="AEGR", soc="AESOC", term=NULL, subjid="SUBJID",
-    sort_by_count=TRUE, total=TRUE, showNA=TRUE, digits=0, warn_miss=FALSE
+    arm=NULL, term=NULL,
+    sort_by_count=TRUE, total=TRUE, showNA=TRUE, digits=0, warn_miss=FALSE, 
+    grade="AEGR", soc="AESOC", subjid="SUBJID"
 ){
   check_dots_empty()
   default_arm = set_label("All patients", "Treatment arm")
@@ -286,7 +288,7 @@ as_flextable.ae_table_soc = function(x,
 #'   
 #' ae2 %>% 
 #'   butterfly_plot(df_enrol=enrolres, severe="serious") + 
-#'   labs(caption="Darker areas represent Serious Adverse Events")
+#'   ggplot2::labs(caption="Darker areas represent Serious Adverse Events")
 butterfly_plot = function(
     df_ae, ..., df_enrol, severe=NULL, sort_by=c("total", "severe"), range_min=NULL,
     arm="ARM", subjid="SUBJID", soc="AESOC"
@@ -381,7 +383,7 @@ butterfly_plot = function(
 
 
 #' @rdname butterfly_plot
-#' @usage ae_plot_soc(...)
+#' @usage ae_plot_soc(df_ae, ..., df_enrol, severe, sort_by, range_min, arm, subjid, soc)
 #' @export
 ae_plot_soc = butterfly_plot
 

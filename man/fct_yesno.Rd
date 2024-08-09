@@ -51,7 +51,7 @@ x = tibble(
  
 x          
 #y and z are left untouched (or throw an error if fail=TRUE)   
-mutate_all(x, fct_yesno, fail=FALSE)
+sapply(x, fct_yesno, fail=FALSE)
 
 # as "1-Yes" is not in `input`, x$e is untouched/fails if strict=TRUE
 fct_yesno(x$e)

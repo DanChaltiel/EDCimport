@@ -8,7 +8,6 @@
 
 #' Summary tables for AE
 #' 
-#' @param type one or several of `c("max", "sup", "eq")`. `max` computes the maximum AE grade per patient, `sup` computes the number of patients having experienced at least one AE of grade higher or equal to X, and `eq` computes the number of patients having experienced at least one AE of grade equal to X.
 #' @param percent whether to show percentages with counts. Defaults to TRUE. Can also be "only" to not show counts.
 #' @inheritParams ae_table_soc
 #' @inherit ae_table_soc seealso
@@ -23,9 +22,10 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' tm = edc_example_ae()
 #' load_list(tm)
+#' 
+#' if(require(flextable)){
 #' 
 #' ae_table_grade(df_ae=ae, df_enrol=enrolres, arm=NULL) %>% 
 #'   as_flextable(header_show_n=TRUE)
@@ -38,8 +38,9 @@
 #' ae %>% 
 #'   filter(sae=="Yes") %>% 
 #'   ae_table_grade(df_enrol=enrolres, arm="ARM") %>% 
-#'   mutate_all(~str_replace(.x, "AE", "SAE")) %>% 
+#'   dplyr::mutate_all(~stringr::str_replace(.x, "AE", "SAE")) %>% 
 #'   as_flextable(header_show_n=TRUE) 
+#'   
 #' }
 ae_table_grade = function(
     df_ae, ..., df_enrol, 
@@ -94,10 +95,10 @@ ae_table_grade = function(
       any_grade_sup_na   = case_when(!cur_group()$subjid %in% df_ae$subjid ~ lab_no_ae,
                                      any(is.na(grade), na.rm=TRUE) ~ "Any missing grade",
                                      .default="foobar"),,
-      any_grade_sup_1 = ifelse(any(grade >= 1, na.rm=TRUE), "Grade ≥ 1", "foobar"), 
-      any_grade_sup_2 = ifelse(any(grade >= 2, na.rm=TRUE), "Grade ≥ 2", "foobar"), 
-      any_grade_sup_3 = ifelse(any(grade >= 3, na.rm=TRUE), "Grade ≥ 3", "foobar"), 
-      any_grade_sup_4 = ifelse(any(grade >= 4, na.rm=TRUE), "Grade ≥ 4", "foobar"), 
+      any_grade_sup_1 = ifelse(any(grade >= 1, na.rm=TRUE), "Grade \u2265 1", "foobar"), 
+      any_grade_sup_2 = ifelse(any(grade >= 2, na.rm=TRUE), "Grade \u2265 2", "foobar"), 
+      any_grade_sup_3 = ifelse(any(grade >= 3, na.rm=TRUE), "Grade \u2265 3", "foobar"), 
+      any_grade_sup_4 = ifelse(any(grade >= 4, na.rm=TRUE), "Grade \u2265 4", "foobar"), 
       any_grade_sup_5 = ifelse(any(grade >= 5, na.rm=TRUE), "Grade = 5", "foobar"), 
       any_grade_eq_na   = any_grade_sup_na,
       any_grade_eq_1 = ifelse(any(grade == 1, na.rm=TRUE), "Grade 1", "foobar"), 
@@ -472,6 +473,7 @@ ae_table_grade_max = function(
 #' 
 #' @inheritParams ae_table_soc 
 #' @inherit ae_table_soc seealso
+#' @param proportion display proportion instead of count.
 #' @param type the plots to be included. One of `c("stack", "dodge", "fill")`.
 #' @param drop_levels whether to drop unused grade levels.
 #'

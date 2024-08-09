@@ -11,6 +11,7 @@
 #' @param crfstat_lvls the CRF status levels, from "best" to "worst". The plot is ordered by the "worst" level. 
 #' @param x_label a glue pattern determining the tick label in the x axis. Available variables are `c("nrow", "ncol", "n_id", "rows_per_id", "crfname")`, taken from [edc_lookup()].
 #' @param treat_as_worst a regex for levels that should be treated as worst in the ordering
+#' @param ... unused
 #'
 #' @return a ggplot
 #' @export
@@ -83,7 +84,7 @@ crf_status_plot = function(crfstat_col="CRFSTAT",
 
 #' @rdname crf_status_plot
 #' @export
-#' @source ggsci:::ggsci_db$lancet[["lanonc"]] %>% dput()
+#' @source `ggsci:::ggsci_db$lancet[["lanonc"]] %>% dput()`
 edc_pal_crf = function(){
   c("Complete"="#000e8b", 
     "Complete Locked"="#0053a5", 

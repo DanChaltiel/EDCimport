@@ -14,6 +14,10 @@ search_for_newer_data(
 )
 }
 \arguments{
+\item{archive}{TM archive path, giving the project name and date}
+
+\item{...}{unused}
+
 \item{source}{the path vector to be searched, default to both "data" and the usual "Downloads" folder}
 
 \item{target}{the path where files should be copied}
@@ -21,8 +25,6 @@ search_for_newer_data(
 \item{ask}{whether to ask the user to move the file to "data"}
 
 \item{advice}{whether to advice how to move it instead, if \code{ask==FALSE}}
-
-\item{project}{archive path, giving the project name}
 }
 \value{
 the path to the newer file, invisibly.
@@ -32,6 +34,8 @@ Search in some folders if a TrialMaster database more recent than the current ex
 }
 \examples{
 \dontrun{
-
+  archive = "data/MYPROJECT_ExportTemplate_xxx_SAS_XPORT_2024_06_01_12_00.zip"
+  #tm = read_trialmaster(archive)
+  search_for_newer_data(archive)
 }
 }

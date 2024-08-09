@@ -17,7 +17,7 @@ edc_data_warn(
   col_subjid = get_subjid_cols()
 )
 
-edc_data_stop(...) #same arguments
+edc_data_stop(df, message, ..., issue_n, max_subjid, csv_path, col_subjid)
 
 edc_data_warnings()
 }

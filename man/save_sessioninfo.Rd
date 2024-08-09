@@ -18,5 +18,7 @@ nothing
 Save \code{sessionInfo()} output into a text file.
 }
 \examples{
-save_sessioninfo()
+\dontrun{
+   save_sessioninfo()
+}
 }

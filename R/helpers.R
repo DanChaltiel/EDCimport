@@ -108,7 +108,7 @@ find_keyword = function(keyword, data=edc_lookup(), ignore_case=TRUE){
 #'  
 #' x          
 #' #y and z are left untouched (or throw an error if fail=TRUE)   
-#' mutate_all(x, fct_yesno, fail=FALSE)
+#' sapply(x, fct_yesno, fail=FALSE)
 #' 
 #' # as "1-Yes" is not in `input`, x$e is untouched/fails if strict=TRUE
 #' fct_yesno(x$e)
@@ -316,11 +316,13 @@ edc_inform_code = function(main="main.R", Rdir="R/"){
 #'
 #' @return nothing
 #' @export
-#'
-#' @examples
-#' save_sessioninfo()
 #' @importFrom fs dir_create path path_dir path_ext path_ext_remove
 #' @importFrom utils capture.output sessionInfo
+#'
+#' @examples
+#' \dontrun{
+#'    save_sessioninfo()
+#' }
 save_sessioninfo = function(path="check/session_info.txt", with_date=TRUE){
   target = path %>% 
     path_ext_remove() %>% 

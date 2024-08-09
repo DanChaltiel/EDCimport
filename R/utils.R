@@ -91,7 +91,7 @@ deprecatedly = function(f, what, when, with=caller_arg(f), details=NULL, type="w
 #' @source https://github.com/r-lib/cli/issues/228#issuecomment-1453614104
 #' @importFrom rlang caller_env
 cli_menu <- function(prompt, not_interactive, choices, quit = integer(), .envir = caller_env()) {
-  if (!cli:::is_interactive()) {
+  if (!interactive()) {
     cli::cli_abort(c(prompt, not_interactive), .envir = .envir)
   }
   choices <- sapply(choices, cli::format_inline, .envir = .envir, USE.NAMES = FALSE)

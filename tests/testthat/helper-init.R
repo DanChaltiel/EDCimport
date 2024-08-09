@@ -36,7 +36,9 @@ library(fs, warn.conflicts=FALSE)
 library(usethis, warn.conflicts=FALSE)
 library(rlang, warn.conflicts=FALSE)
 library(cli, warn.conflicts=FALSE)
-library(tidyverse, warn.conflicts=FALSE)
+library(dplyr, warn.conflicts=FALSE)
+library(purrr, warn.conflicts=FALSE)
+# library(tidyverse, warn.conflicts=FALSE)
 
 
 # edc_options(

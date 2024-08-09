@@ -5,6 +5,7 @@ edc_options(edc_lookup_overwrite_warn=FALSE)
 
 
 test_that("no exports", {
+  skip_if(is_checking())
   testthat::test_path("../../R/utils.R") %>% 
     readLines() %>% str_subset("@export") %>% expect_length(0)
 })

@@ -1,9 +1,8 @@
 
-
+skip_if(is_checking())
 
 test_that("edc_new_project works", {
   path = tempdir() %>% paste0("/test/test_init_project.dir")
-  # browseURL(path)
   
   edc_new_project(path, open=FALSE)
   

@@ -5,7 +5,7 @@
 \alias{edc_pal_crf}
 \title{Show the current CRF status distribution}
 \source{
-ggsci:::ggsci_db$lancet[\link{"lanonc"}] \%>\% dput()
+\code{ggsci:::ggsci_db$lancet[["lanonc"]] \%>\% dput()}
 }
 \usage{
 crf_status_plot(
@@ -22,6 +22,8 @@ edc_pal_crf()
 }
 \arguments{
 \item{crfstat_col}{the column name of the CRF status}
+
+\item{...}{unused}
 
 \item{details}{whether to show all the CRF status levels. When \code{FALSE} (default), recode the status into "Complete", "Incomplete", or "No Data".}
 

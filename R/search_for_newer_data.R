@@ -4,11 +4,12 @@
 #' 
 #' Search in some folders if a TrialMaster database more recent than the current extration is present. By default, it will search the "data" folder and the OS usual "Downloads" folder. If a newer database is found, user will be asked if they want to move it to the "data" folder.
 #'
-#' @param project archive path, giving the project name
+#' @param archive TM archive path, giving the project name and date
 #' @param source the path vector to be searched, default to both "data" and the usual "Downloads" folder
 #' @param target the path where files should be copied
 #' @param ask whether to ask the user to move the file to "data"
 #' @param advice whether to advice how to move it instead, if `ask==FALSE`
+#' @param ... unused
 #'
 #' @return the path to the newer file, invisibly.
 #' @export
@@ -22,7 +23,9 @@
 #' 
 #' @examples
 #' \dontrun{
-#' 
+#'   archive = "data/MYPROJECT_ExportTemplate_xxx_SAS_XPORT_2024_06_01_12_00.zip"
+#'   #tm = read_trialmaster(archive)
+#'   search_for_newer_data(archive)
 #' }
 search_for_newer_data = function(archive, ..., 
                                  source=path_home("Downloads"), 

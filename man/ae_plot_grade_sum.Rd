@@ -18,7 +18,7 @@ ae_plot_grade_sum(
 )
 }
 \arguments{
-\item{df_ae}{adverse event dataset, one row per AE, containing subjid, soc, and grade}
+\item{df_ae}{adverse event dataset, one row per AE, containing subjid, soc, and grade.}
 
 \item{...}{unused}
 
@@ -30,7 +30,7 @@ ae_plot_grade_sum(
 
 \item{weights}{(optional) a length 5 numeric vector, giving the weights of each grade}
 
-\item{arm}{name of the treatment column in \code{df_enrol}. Case-insensitive. Can be set to \code{NULL} to not group.}
+\item{arm}{name of the treatment column in \code{df_enrol}. Case-insensitive. Can be set to \code{NULL}.}
 
 \item{grade}{name of the AE grade column in \code{df_ae}. Case-insensitive.}
 

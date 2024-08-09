@@ -34,7 +34,8 @@
 #' rc %>% 
 #'   left_join(enrolres, by="SUBJID") %>% #adds the ARM column
 #'   mutate(new_lesion = ifelse(RCNEW=="1-Yes", "New lesion", NA)) %>% 
-#'   waterfall_plot(rc_date="RCDT", rc_sum="RCTLSUM", rc_resp="RCRESP", arm="ARM", rc_star="new_lesion")
+#'   waterfall_plot(rc_date="RCDT", rc_sum="RCTLSUM", rc_resp="RCRESP", 
+#'                  arm="ARM", rc_star="new_lesion")
 #'}
 waterfall_plot = function(data_recist, rc_sum="RCTLSUM", rc_resp="RCRESP", rc_date="RCDT",
                           type = c("best_resp", "worst_resp"), 

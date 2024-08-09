@@ -17,13 +17,15 @@ ae_table_grade(
 )
 }
 \arguments{
-\item{df_ae}{adverse event dataset, one row per AE, containing subjid, soc, and grade}
+\item{df_ae}{adverse event dataset, one row per AE, containing subjid, soc, and grade.}
 
 \item{...}{unused}
 
 \item{df_enrol}{enrollment dataset, one row per patient, containing subjid (and arm if needed). All patients should be in this dataset.}
 
-\item{arm}{name of the treatment column in \code{df_enrol}. Case-insensitive. Can be set to \code{NULL} to not group.}
+\item{variant}{one or several of \code{c("max", "sup", "eq")}. \code{max} computes the maximum AE grade per patient, \code{sup} computes the number of patients having experienced at least one AE of grade higher or equal to X, and \code{eq} computes the number of patients having experienced at least one AE of grade equal to X.}
+
+\item{arm}{name of the treatment column in \code{df_enrol}. Case-insensitive. Can be set to \code{NULL}.}
 
 \item{grade}{name of the AE grade column in \code{df_ae}. Case-insensitive.}
 
@@ -31,9 +33,7 @@ ae_table_grade(
 
 \item{percent}{whether to show percentages with counts. Defaults to TRUE. Can also be "only" to not show counts.}
 
-\item{total}{whether to add a \code{total} column for each arm}
-
-\item{type}{one or several of \code{c("max", "sup", "eq")}. \code{max} computes the maximum AE grade per patient, \code{sup} computes the number of patients having experienced at least one AE of grade higher or equal to X, and \code{eq} computes the number of patients having experienced at least one AE of grade equal to X.}
+\item{total}{whether to add a \code{total} column for each arm.}
 }
 \value{
 a crosstable
@@ -42,9 +42,10 @@ a crosstable
 Summary tables for AE
 }
 \examples{
-\dontrun{
 tm = edc_example_ae()
 load_list(tm)
+
+if(require(flextable)){
 
 ae_table_grade(df_ae=ae, df_enrol=enrolres, arm=NULL) \%>\% 
   as_flextable(header_show_n=TRUE)
@@ -57,8 +58,9 @@ library(dplyr)
 ae \%>\% 
   filter(sae=="Yes") \%>\% 
   ae_table_grade(df_enrol=enrolres, arm="ARM") \%>\% 
-  mutate_all(~str_replace(.x, "AE", "SAE")) \%>\% 
+  dplyr::mutate_all(~stringr::str_replace(.x, "AE", "SAE")) \%>\% 
   as_flextable(header_show_n=TRUE) 
+  
 }
 }
 \seealso{
