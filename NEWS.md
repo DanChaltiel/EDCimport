@@ -57,6 +57,7 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 ### Bug fixes & Improvements
 
+-   `get_datasets()` will now work even if a dataset is named after a base function (#67).
 -   `read_trialmaster()` will output a readable error when no password is entered although one is needed.
 -   `read_trialmaster(split_mixed="TRUE")` will work as intended.
 -   `assert_no_duplicate()` has now a `by` argument to check for duplicate in groups, for example by visit (#17).

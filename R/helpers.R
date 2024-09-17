@@ -451,7 +451,7 @@ get_datasets = function(lookup=edc_lookup(), envir=parent.frame()){
     cli_abort("lookup cannot be NULL, did you forgot to import your database?")
   }
   rtn = lookup$dataset %>% 
-    mget(envir=envir, ifnotfound=list(NULL), inherits=TRUE)
+    mget(envir=envir, ifnotfound=list(NULL), mode="list", inherits=TRUE)
   a = rtn %>% keep(is.null) %>% names()
   if(length(a) > 5){
     cli_warn(c("Could not find {length(a)}/{length(rtn)} datasets from the lookup, did you forget to call {.fn load_list} on your import?",
