@@ -42,15 +42,15 @@ edc_db_to_excel = function(filename=tempfile(fileext=".xlsx"),
   assert(length(datasets)>0)
   assert(all(lengths(datasets)>0))
   assert(all(map_lgl(datasets, is.data.frame)))
-  if(file_exists(filename) && !overwrite){
-    cli_inform("Excel file {.path {filename}} already exists.")
-    edcimport_env$excel_db_path = filename
-    if(open) browseURL(filename)
-    return(invisible(filename))
-  }
     
   if(isTRUE(filename) && exists("date_extraction")){
     filename = glue("data/database_{str_replace_all(date_extraction,'/','-')}.xlsx")
+  }
+  if(file_exists(filename) && !overwrite){
+    cli_inform("Browse database at {.path {filename}}.")
+    edcimport_env$excel_db_path = filename
+    if(open) browseURL(filename)
+    return(invisible(filename))
   }
   assert(str_ends(filename, ".xlsx"))
   filename = clean_filename(filename)
@@ -62,6 +62,9 @@ edc_db_to_excel = function(filename=tempfile(fileext=".xlsx"),
   datasets %>% iwalk(~{
     if(get_subjid_cols() %in% names(.x)) .x = arrange(.x, !!sym(get_subjid_cols()))
     label_row = get_label(.x) %>% as.data.frame()
+    .x = .x %>% #in TM, the last char is sometimes invalid UTF-8
+      mutate(across(where(~any(is_invalid_utf8(.x))), ~str_sub(.x, end=-2)))
+
     openxlsx::addWorksheet(wb, sheetName=.y)
     openxlsx::writeData(wb, sheet=.y, x=label_row, startCol=2, startRow=2, colNames=FALSE)
     openxlsx::writeDataTable(wb, sheet=.y, x=.x, startCol=2, startRow=3)
