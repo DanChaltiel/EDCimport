@@ -4,12 +4,14 @@
 \alias{edc_new_project}
 \title{Create a clinical research project}
 \usage{
-edc_new_project(path, open = TRUE)
+edc_new_project(path, open = TRUE, verbose = TRUE)
 }
 \arguments{
 \item{path}{A path. If it does not exist, it is created.}
 
 \item{open}{If \code{TRUE}, opens the new project in RStudio.}
+
+\item{verbose}{If \code{TRUE}, shows diagnostics.}
 }
 \value{
 Path to the project, invisibly.
