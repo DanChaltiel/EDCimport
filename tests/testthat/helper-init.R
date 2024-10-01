@@ -21,13 +21,17 @@ options(
   testthat.progress.max_fails = 50
 )
 
-options(
-  tibble.print_max = Inf,
-  tibble.max_extra_cols = 0,
-  tibble.width = NULL, 
-  
-  warn=1
-)
+if(is_testing()){
+  options(
+    tibble.print_max = Inf,
+    tibble.max_extra_cols = 0
+  )
+} else {
+  options(
+    tibble.print_max = NULL,
+    tibble.max_extra_cols = NULL
+  )
+}
 
 # globalCallingHandlers(NULL)
 # rlang::global_entrace()

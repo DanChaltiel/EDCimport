@@ -50,7 +50,7 @@ waterfall_plot = function(data_recist, rc_sum="RCTLSUM", rc_resp="RCRESP", rc_da
   assert_class(arm, class="character")
   assert_class(warnings, class="logical")
   subjid = get_subjid_cols()
-  responses = c("Complete response"="#42B540FF", "Partial response"="#006dd8", 
+  responses = c("Complete response"="#42B540", "Partial response"="#006DD8", 
                 "Stable disease"="#925E9F", "Progressive disease"="#ED0000", "Missing"="white")
   
   if (type == "best_resp"){
