@@ -294,6 +294,10 @@ edc_data_condition = function(.data, message, issue_n, max_subjid,
     }
     
     if(!is.null(col_subjid)){
+      if(!tolower(col_subjid) %in% tolower(names(.data))){
+        cli_abort("Could not find column {col_subjid} in the input dataset.", 
+                  class="edc_data_condition_subjid_error", call=parent.frame())
+      }
       subj = .data %>% pull(any_of2(col_subjid)) %>% unique() %>% sort()
       n_subj = length(subj)
       subj = paste0("#", subj) %>% 
