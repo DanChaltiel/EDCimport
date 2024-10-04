@@ -36,7 +36,7 @@ read_all_xpt = function(directory, ..., format_file="procformat.sas",
                         key_columns="deprecated"){
   check_dots_empty()
   reset_manual_correction()
-  clean_names_fun = get_clean_names_fun(clean_names_fun)
+  clean_names_fun = .get_clean_names_fun(clean_names_fun)
   
   datasets = dir(directory, pattern = "\\.xpt$", full.names=TRUE)
   datasets_names = basename(datasets) %>% str_remove("\\.xpt")
@@ -62,7 +62,7 @@ read_all_xpt = function(directory, ..., format_file="procformat.sas",
         .x %>% 
           as_tibble() %>% 
           mutate(across(where(~is.character(.x)), ~try(na_if(.x, y=""), silent=TRUE))) %>% 
-          flatten_error_columns() %>% 
+          .flatten_error_columns() %>% 
           apply_sas_formats(sas_formats) %>%
           clean_names_fun() %>% 
           haven::as_factor()
@@ -160,30 +160,3 @@ read_all_xpt = function(directory, ..., format_file="procformat.sas",
 #' @export
 #' @usage NULL
 read_tm_all_xpt = read_all_xpt
-
-
-# Utils ---------------------------------------------------------------------------------------
-
-#' @noRd
-#' @keywords internal
-#' @importFrom cli cli_abort
-#' @importFrom rlang as_function is_formula
-get_clean_names_fun = function(f){
-  if(is.null(f)) return(identity)
-  if(is_formula(f)) f = as_function(f)
-  if(!is.function(f)) cli_abort("{.arg {caller_arg(f)}} should be a function or a lambda-function, not a {.cls {class(f)}}.")
-  f
-}
-
-
-#' Change a `try-error` column to a simpler character column of class "edc_error_col"
-#' @noRd
-#' @keywords internal
-#' @importFrom dplyr across mutate
-#' @importFrom tidyselect where
-flatten_error_columns = function(df){
-  df %>% 
-    mutate(across(where(~inherits(.x, "try-error")), ~{
-      attr(.x, "condition")$message %>% `class<-`("edc_error_col")
-    }))
-}
