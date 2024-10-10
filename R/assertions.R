@@ -31,7 +31,7 @@ assert = function(x, msg=NULL, call=parent.frame()){
 #' assert_file_exists("R/data.SAS")
 #' @importFrom fs file_exists
 assert_file_exists = function(x, msg=NULL){
-  assert(file_exists(x), msg, call=parent.frame())
+  assert(all(file_exists(x)), msg, call=parent.frame())
 }
 
 
