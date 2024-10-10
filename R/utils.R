@@ -259,7 +259,7 @@ min_narm = function(x, na.rm=TRUE) {
 
 
 add_class = function(x, value){
-  class(x) = c(value, class(x))
+  class(x) = unique(c(value, class(x)))
   x
 }
 #' @importFrom dplyr setdiff
