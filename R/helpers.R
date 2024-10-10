@@ -272,9 +272,9 @@ lastnews_table = function(except=NULL, with_ties=FALSE, numeric_id=TRUE,
   }
   
   if(exists("datetime_extraction")){
-    if(any(rtn$last_date > datetime_extraction) && warn_if_future) {
+    if(any(rtn$last_date > as.Date(datetime_extraction)) && warn_if_future) {
       rtn %>% 
-        filter(last_date>datetime_extraction) %>% 
+        filter(last_date>as.Date(datetime_extraction)) %>% 
         edc_data_warn("Date of last news after the extraction date", issue_n=NA)
     }
   }
