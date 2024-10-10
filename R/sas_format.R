@@ -7,7 +7,7 @@
 #' @importFrom stringr regex str_match str_remove_all str_split str_starts str_trim
 #' @noRd
 #' @keywords internal
-read_sas_format = function(file){
+.read_sas_format = function(file){
   if(!file_exists(file)){
     cli_abort("File {file} does not exist.")
   }
@@ -48,18 +48,43 @@ read_sas_format = function(file){
 }
 
 
-#' @importFrom purrr map_df
+
 #' @noRd
 #' @keywords internal
-apply_sas_formats = function(df, formats){
-  df %>% map_df(~{
-    fname = attr(.x, "format.sas")
-    if(!is.null(fname) && fname %in% names(formats)){
-      attr(.x, "labels") = formats[[fname]]
-      class(.x) = c("haven_labelled", class(.x)) %>% unique
-      .x
-    } else {
-      .x
-    }
-  })
+.format_sas_column =  function(x, formats){
+  fname = attr(x, "format.sas")
+  if (is.null(fname) || !fname %in% names(formats)){
+    return(x)
+  }
+  x %>% 
+    structure(labels = formats[[fname]]) %>% 
+    add_class("haven_labelled")
+}
+
+
+#' @noRd
+#' @keywords internal
+#' read a sas procformat file and apply it to a dataset list
+.apply_sas_format = function(datalist, format_file, directory){
+  if(is.null(format_file)) return(datalist)
+  if(!file_exists(format_file)) format_file = path(directory, format_file)
+  if(!file_exists(format_file)) {
+    cli_abort("File {.file {format_file}} does not exist.
+              Set {.arg format_file=NULL} to override.", 
+              class="edc_tm_no_procformat_error", 
+              .envir=parent.frame())
+  }
+  sas_formats = .read_sas_format(format_file)
+  datalist %>% 
+    map(~{
+      if(is_error(.x)) return(.x)
+      .x %>% 
+        as_tibble() %>% 
+        mutate(
+          across(where(~is.character(.x)), ~try(na_if(.x, ""), silent=TRUE)),
+          across(everything(), ~.format_sas_column(.x, sas_formats))
+          ) %>% 
+        .flatten_error_columns() %>% 
+        haven::as_factor()
+    })
 }
