@@ -117,6 +117,38 @@ cli_menu <- function(prompt, not_interactive, choices, quit = integer(), .envir 
   selected
 }
 
+
+
+#' @noRd
+#' @keywords internal
+#' @importFrom stringr str_sub
+#' @importFrom dplyr coalesce
+.repair_invalid_utf8 = function(x, warn=FALSE){
+  bad = is_invalid_utf8(x)
+  if(!any(bad)) return(x)
+  #most of the time, it is just the last character
+  x2 = ifelse(bad, str_sub(x, end=-2), x)
+  if(!any(is_invalid_utf8(x2))) return(x2)
+  
+  if(any(bad, na.rm=TRUE)){
+    #try main encodings
+    iconv2 = possibly(iconv, otherwise=NA)
+    xbad2 = iconv2(x[bad], from="", to="UTF-8")
+    xbad3 = iconv2(x[bad], from="latin1", to="UTF-8")
+    xbad4 = iconv2(x[bad], from="ASCII", to="UTF-8")
+    xbad5 = iconv2(x[bad], from="ASCII/TRANSLIT", to="UTF-8")
+    xgood = coalesce(xbad2, xbad3, xbad4, xbad5)
+    x[bad] = xgood
+    
+    if(isTRUE(warn)){
+      bad_utf8 = glue("{x$dataset}${x$names} ({x$valid_labels}) ") %>% set_names("i")
+      cli_warn(c("Found {length(bad_utf8)} invalid UTF-8 label{?s}:", bad_utf8))
+    }
+  }
+  x
+}
+
+
 # Parse zip name ------------------------------------------------------------------------------
 
 #' Parse a file name to get the date of data extraction

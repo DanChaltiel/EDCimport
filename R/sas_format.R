@@ -1,4 +1,6 @@
 
+#' Turn a procformat.sas file to a list of vectors with name=label, value=level
+#' 
 #' @importFrom cli cli_abort
 #' @importFrom fs file_exists
 #' @importFrom purrr compact map
@@ -26,7 +28,7 @@
   formats_values = calls %>% 
     sapply(function(.x){
       if(str_starts(tolower(.x), "value")){
-        format_name=str_match(.x, "value\\s+([$\\w]*)\\s+")[2]
+        format_name = str_match(.x, "value\\s+([$\\w]*)\\s+")[2]
         format_values = str_match(.x, regex("value\\s+[$\\w]*\\s+(.*)", dotall=TRUE))[2] %>% 
           str_split("[\\r\\n]{1,2}") %>%
           .[[1]]
@@ -52,7 +54,7 @@
 #' @noRd
 #' @keywords internal
 .format_sas_column =  function(x, formats){
-  fname = attr(x, "format.sas")
+  fname = attr(x, "format.sas") #set by haven::read_xpt
   if (is.null(fname) || !fname %in% names(formats)){
     return(x)
   }
@@ -62,9 +64,9 @@
 }
 
 
+#' Read a sas procformat file and apply it to a dataset list
 #' @noRd
 #' @keywords internal
-#' read a sas procformat file and apply it to a dataset list
 .apply_sas_format = function(datalist, format_file, directory){
   if(is.null(format_file)) return(datalist)
   if(!file_exists(format_file)) format_file = path(directory, format_file)
@@ -84,7 +86,6 @@
           across(where(~is.character(.x)), ~try(na_if(.x, ""), silent=TRUE)),
           across(everything(), ~.format_sas_column(.x, sas_formats))
           ) %>% 
-        .flatten_error_columns() %>% 
         haven::as_factor()
     })
 }

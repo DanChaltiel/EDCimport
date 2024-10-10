@@ -58,7 +58,7 @@ read_trialmaster = function(archive, ..., use_cache="write",
     a = rtn$.lookup %>% attr("split_mixed") %>% 
       identical(split_mixed)
     b = rtn$.lookup %>% attr("clean_names_fun") %>% 
-      identical(get_clean_names_fun(clean_names_fun), ignore.bytecode=TRUE)
+      identical(.get_clean_names_fun(clean_names_fun), ignore.bytecode=TRUE)
     if(!a || !b){
       cli_abort(c("Cannot use cache with different parameters, set `use_cache=FALSE` to continue.", 
                   i="Same parameter {.arg split_mixed}: {a}", 

@@ -36,55 +36,46 @@ read_all_xpt = function(directory, ..., format_file="procformat.sas",
                         key_columns="deprecated"){
   check_dots_empty()
   reset_manual_correction()
-  clean_names_fun = .get_clean_names_fun(clean_names_fun)
   
-  datasets = dir(directory, pattern = "\\.xpt$", full.names=TRUE)
-  datasets_names = basename(datasets) %>% str_remove("\\.xpt")
   if(is.null(datetime_extraction)) datetime_extraction=get_folder_datetime(directory)
   
-  # reading ----
-  rtn = datasets %>% 
-    set_names(tolower(datasets_names)) %>% 
-    imap(~tryCatch(read_xpt(.x), error=function(e) e))
+  rtn = dir_ls(directory, regexp="\\.xpt$") %>% 
+    .read_all(read_function=read_xpt) %>% 
+    .apply_sas_format(format_file, directory) %>%
+    .clean_names(clean_names_fun) %>% 
+    .clean_labels_utf8() %>% 
+    map(.flatten_error_columns)
   
-  # applying formats ----
-  if(!is.null(format_file)){
-    procformat = path(directory, format_file)
-    if(!file_exists(procformat)) procformat = format_file
-    if(!file_exists(procformat)) {
-      cli_abort("File {.file {format_file}} does not exist. Set {.arg format_file=NULL} to override.", 
-                class="edc_tm_no_procformat_error")
-    }
-    sas_formats = read_sas_format(procformat)
-    rtn = rtn %>% 
-      imap(~{
-        if(is_error(.x)) return(.x)
-        .x %>% 
-          as_tibble() %>% 
-          mutate(across(where(~is.character(.x)), ~try(na_if(.x, y=""), silent=TRUE))) %>% 
-          .flatten_error_columns() %>% 
-          apply_sas_formats(sas_formats) %>%
-          clean_names_fun() %>% 
-          haven::as_factor()
-      })
-  }
-  
-  # strip out non-UTF8 (and warn if needed) ----
-  .lookup = build_lookup(rtn)
-  bad_utf8 = check_invalid_utf8(.lookup, warn=verbose>1)
-  bad_utf8 %>%
-    pwalk(function(...) {
-      x = tibble(...)
-      attr(rtn[[x$dataset]][[x$names]], "label") <<- x$valid_labels
-    })
-  .lookup = build_lookup(rtn)
-  .lookup = .lookup %>% 
+  .lookup = build_lookup(rtn) %>% 
     structure(clean_names_fun=clean_names_fun, 
               split_mixed=split_mixed,
               datetime_extraction=datetime_extraction,
               EDCimport_version=packageVersion("EDCimport"))
   
-  # split mixed datasets (with short and long format) ----
+  rtn = .apply_split_mixed(rtn, split_mixed, .lookup)
+  .warn_bad(rtn)
+  
+  if(isTRUE(extend_lookup)){
+    .lookup = extend_lookup(.lookup, datasets=rtn)
+  }
+  set_lookup(.lookup)
+  
+  rtn$date_extraction = format_ymd(datetime_extraction)
+  rtn$datetime_extraction = datetime_extraction
+  rtn$.lookup = .lookup
+  
+  class(rtn) = "tm_database"
+  rtn
+}
+
+
+#' @rdname read_all_xpt
+#' @export
+#' @usage NULL
+read_tm_all_xpt = read_all_xpt
+
+
+.apply_split_mixed = function(rtn, split_mixed, .lookup){
   patient_id = get_subjid_cols(lookup=.lookup)
   id_found = map_lgl(rtn, ~any(tolower(patient_id) %in% tolower(names(.x))))
   
@@ -109,8 +100,14 @@ read_all_xpt = function(directory, ..., format_file="procformat.sas",
       cli_warn("Patient ID column {.val {patient_id}} was not found in any dataset")
     }
   }
-  
-  # faulty tables ----
+  rtn
+}
+
+
+#' @noRd
+#' @keywords internal
+.warn_bad = function(rtn){
+  # faulty tables
   errs = keep(rtn, is_error)
   if(length(errs)>0){
     cli_warn(c("SAS dataset{?s} {.val {names(errs)}} could not be read from 
@@ -120,7 +117,7 @@ read_all_xpt = function(directory, ..., format_file="procformat.sas",
              class="edc_tm_problem_warning")
   }
   
-  # faulty columns ----
+  # faulty columns
   rtn %>% 
     iwalk(function(data, name){
       if(is_error(data)) return(data)
@@ -139,24 +136,4 @@ read_all_xpt = function(directory, ..., format_file="procformat.sas",
           })
       }
     })
-  
-  # lookup ----
-  if(isTRUE(extend_lookup)){
-    .lookup = extend_lookup(.lookup, datasets=rtn)
-  }
-  set_lookup(.lookup)
-  
-  # out ----
-  rtn$date_extraction = format_ymd(datetime_extraction)
-  rtn$datetime_extraction = datetime_extraction
-  rtn$.lookup = .lookup
-  
-  class(rtn) = "tm_database"
-  rtn
 }
-
-
-#' @rdname read_all_xpt
-#' @export
-#' @usage NULL
-read_tm_all_xpt = read_all_xpt
