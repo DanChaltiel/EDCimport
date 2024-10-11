@@ -53,7 +53,8 @@ read_all_xpt = function(directory, ..., format_file="procformat.sas",
               EDCimport_version=packageVersion("EDCimport"))
   
   rtn = .apply_split_mixed(rtn, split_mixed, .lookup)
-  .warn_bad(rtn)
+  .warn_bad_tables(rtn)
+  .warn_bad_columns(rtn)
   
   if(isTRUE(extend_lookup)){
     .lookup = extend_lookup(.lookup, datasets=rtn)
@@ -106,8 +107,7 @@ read_tm_all_xpt = read_all_xpt
 
 #' @noRd
 #' @keywords internal
-.warn_bad = function(rtn){
-  # faulty tables
+.warn_bad_tables = function(rtn){
   errs = keep(rtn, is_error)
   if(length(errs)>0){
     cli_warn(c("SAS dataset{?s} {.val {names(errs)}} could not be read from 
@@ -116,8 +116,12 @@ read_tm_all_xpt = read_all_xpt
                run {.run print({names(errs[1])})})."), 
              class="edc_tm_problem_warning")
   }
-  
-  # faulty columns
+}
+
+
+#' @noRd
+#' @keywords internal
+.warn_bad_columns = function(rtn){
   rtn %>% 
     iwalk(function(data, name){
       if(is_error(data)) return(data)
