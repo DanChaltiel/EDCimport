@@ -61,7 +61,7 @@ edc_example_mixed = function(N=100, seed=42){
   rtn$date_extraction = "2022-08-25"
   rtn$datetime_extraction = as.POSIXct("2022-08-25 15:16:00 CEST")
   rtn$.lookup=build_lookup(rtn)
-  set_lookup(rtn$.lookup)
+  .set_lookup(rtn$.lookup)
   rtn
 }
 
@@ -101,7 +101,7 @@ edc_example = function(N=50, seed=42){
   rtn$datetime_extraction = structure(1704067200, class = c("POSIXct", "POSIXt"), 
                                       tzone = "Europe/Paris")
   rtn$.lookup=build_lookup(rtn)
-  set_lookup(rtn$.lookup)
+  .set_lookup(rtn$.lookup)
   rtn
 }
 
@@ -136,6 +136,6 @@ edc_example_ae = function(N=50, seed=42){
   rtn = lst(enrolres, ae) %>% 
     imap(~.x %>% mutate(crfname=.y %>% set_label("Form name")))
   rtn$.lookup = build_lookup(rtn)
-  set_lookup(rtn$.lookup)
+  .set_lookup(rtn$.lookup)
   rtn
 }

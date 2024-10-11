@@ -59,7 +59,7 @@ read_all_xpt = function(directory, ..., format_file="procformat.sas",
   if(isTRUE(extend_lookup)){
     .lookup = extend_lookup(.lookup, datasets=rtn)
   }
-  set_lookup(.lookup)
+  .set_lookup(.lookup)
   
   rtn$date_extraction = format_ymd(datetime_extraction)
   rtn$datetime_extraction = datetime_extraction
