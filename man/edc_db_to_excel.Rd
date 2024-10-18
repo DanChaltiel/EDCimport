@@ -16,7 +16,7 @@ edc_db_to_excel(
 edc_browse_excel()
 }
 \arguments{
-\item{filename}{the path to the Excel output file. Default to a temporary file. Use the special value \code{TRUE} to save in "data/database_{date_extraction}.xlsx".}
+\item{filename}{the path to the Excel output file. Default to a temporary file. Use the special value \code{TRUE} to save in "data/database_\{date_extraction\}.xlsx".}
 
 \item{...}{unused}
 

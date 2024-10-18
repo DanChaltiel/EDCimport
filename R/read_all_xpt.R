@@ -47,7 +47,7 @@ read_all_xpt = function(directory, ..., format_file="procformat.sas",
     map(.flatten_error_columns)
   
   .lookup = build_lookup(rtn) %>% 
-    structure(clean_names_fun=clean_names_fun, 
+    structure(clean_names_fun=.get_clean_names_fun(clean_names_fun), 
               split_mixed=split_mixed,
               datetime_extraction=datetime_extraction,
               EDCimport_version=packageVersion("EDCimport"))

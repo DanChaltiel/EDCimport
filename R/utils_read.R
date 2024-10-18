@@ -48,9 +48,8 @@
 
 #' clean all labels for non-UTF8 characters
 #' @noRd
-#' @noRd
 #' @keywords internal
-#' @importFrom purrr map
+#' @importFrom purrr map modify
 .clean_labels_utf8 = function(datalist, warn=FALSE){
   datalist %>% 
     map(function(df){

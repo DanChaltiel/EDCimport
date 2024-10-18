@@ -7,7 +7,7 @@
 #' into an Excel workbook, with one tab for each dataset.\cr
 #' Use `edc_db_to_excel()` to create the file and `edc_browse_excel()` to open it.
 #'
-#' @param filename the path to the Excel output file. Default to a temporary file. Use the special value `TRUE` to save in "data/database_{date_extraction}.xlsx".
+#' @param filename the path to the Excel output file. Default to a temporary file. Use the special value `TRUE` to save in "data/database_\{date_extraction\}.xlsx".
 #' @param datasets a named list of dataframes. Default to the TM export.
 #' @param overwrite whether to overwrite any existing file. Default to `FALSE`.
 #' @param open whether to open the Excel file afterward. Default to `FALSE`.

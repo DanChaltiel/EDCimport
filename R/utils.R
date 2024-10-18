@@ -123,6 +123,7 @@ cli_menu <- function(prompt, not_interactive, choices, quit = integer(), .envir 
 #' @keywords internal
 #' @importFrom stringr str_sub
 #' @importFrom dplyr coalesce
+#' @importFrom purrr possibly
 .repair_invalid_utf8 = function(x, warn=FALSE){
   bad = is_invalid_utf8(x)
   if(!any(bad)) return(x)
