@@ -41,7 +41,7 @@ read_all_xpt = function(directory, ..., format_file="procformat.sas",
   
   rtn = dir_ls(directory, regexp="\\.xpt$") %>% 
     .read_all(read_function=read_xpt) %>% 
-    .apply_sas_format(format_file, directory) %>%
+    .apply_sas_formats(format_file, directory) %>%
     .clean_names(clean_names_fun) %>% 
     .clean_labels_utf8() %>% 
     map(.flatten_error_columns)

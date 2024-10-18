@@ -9,7 +9,7 @@
 #' @importFrom stringr regex str_match str_remove_all str_split str_starts str_trim
 #' @noRd
 #' @keywords internal
-.read_sas_format = function(file){
+.read_proc_format = function(file){
   if(!file_exists(file)){
     cli_abort("File {file} does not exist.")
   }
@@ -50,7 +50,6 @@
 }
 
 
-
 #' @noRd
 #' @keywords internal
 .format_sas_column =  function(x, formats){
@@ -67,7 +66,7 @@
 #' Read a sas procformat file and apply it to a dataset list
 #' @noRd
 #' @keywords internal
-.apply_sas_format = function(datalist, format_file, directory){
+.apply_sas_formats = function(datalist, format_file, directory){
   if(is.null(format_file)) return(datalist)
   if(!file_exists(format_file)) format_file = path(directory, format_file)
   if(!file_exists(format_file)) {
@@ -76,7 +75,7 @@
               class="edc_tm_no_procformat_error", 
               .envir=parent.frame())
   }
-  sas_formats = .read_sas_format(format_file)
+  sas_formats = .read_proc_format(format_file)
   datalist %>% 
     map(~{
       if(is_error(.x)) return(.x)
