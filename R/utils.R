@@ -158,13 +158,22 @@ cli_menu <- function(prompt, not_interactive, choices, quit = integer(), .envir 
 #' @noRd
 #' @keywords internal
 #' @importFrom stringr str_match
-parse_file_datetime = function(x){
-  x %>% 
+parse_file_datetime = function(archive, warn=FALSE){
+  extract_datetime = archive %>% 
     basename() %>% 
     str_match("SAS_XPORT_(\\d{4}_\\d{2}_\\d{2}_\\d{2}_\\d{2})") %>% 
     .[,2] %>%
     strptime(format="%Y_%m_%d_%H_%M") %>% 
     as.POSIXct()
+  
+  if(isTRUE(warn) && is.na(extract_datetime)){
+    cli_warn(c("Extraction datetime could not be read from archive's name.", 
+               x="Archive's name should contain the datetime as {.code SAS_XPORT_yyyy_mm_dd_hh_MM}", 
+               i="Actual archive's name: {.val {archive}}"), 
+             class="edc_tm_bad_name")
+  }
+  
+  extract_datetime
 }
 
 #' Parse a file name to get the date of data extraction

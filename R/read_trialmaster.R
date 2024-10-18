@@ -27,82 +27,105 @@ read_trialmaster = function(archive, ..., use_cache="write",
                             pw=getOption("trialmaster_pw"), 
                             verbose=getOption("edc_read_verbose", 1),
                             key_columns="deprecated"){
-  # checks ----
+  
   check_dots_empty()
+  .check_use_cache(use_cache)
+  assert_file_exists(archive, msg="Archive {.val {archive}} does not exist.", 
+                     class="edc_tm_404")
+  
+  extract_datetime = parse_file_datetime(archive, warn=TRUE)
+  directory = path_dir(archive)
+  cache_file = .get_tm_cache(directory, extract_datetime)
+  if(file_exists(cache_file) && (isTRUE(use_cache) || use_cache=="read")){
+    rtn = .read_tm_cache(cache_file, split_mixed, clean_names_fun, verbose)
+  } else {
+    rtn = .read_tm_zip(archive, pw, extract_datetime, clean_names_fun, 
+                       split_mixed, extend_lookup, key_columns, use_cache, 
+                       cache_file, verbose)
+  }
+
+  if(verbose>0){
+    size = object.size(rtn) %>% format("auto")
+    cli_inform(c(v="Database loaded: {length(rtn)} tables, {size}"))
+  }
+  
+  rtn
+}
+
+
+# Utils ---------------------------------------------------------------------------------------
+
+#' @noRd
+#' @keywords internal
+.check_use_cache <- function(use_cache) {
   if(!missing(use_cache) && !use_cache %in% list(TRUE, FALSE, "read", "write")){
     cli_abort("{.arg use_cache} should be one of {.val c(TRUE, FALSE, 'read', 'write')}.")
   }
+}
+
+#' @noRd
+#' @keywords internal
+.get_tm_cache = function(directory, extract_datetime){
+  glue("{directory}/trialmaster_export_{format_ymdhm(extract_datetime)}.rds")
+}
+
+#' @noRd
+#' @keywords internal
+.read_tm_cache <- function(cache_file, split_mixed, clean_names_fun, verbose) {
+  if(verbose>0) cli_inform("Reading cache: {.file {cache_file}}", class="read_tm_cache")
+  rtn = readRDS(cache_file)
+  lookup_verbose = TRUE
   
-  if(!file_exists(archive)){
-    cli_abort("Archive {.val {archive}} does not exist.", 
-             class="edc_tm_404")
+  #TODO utiliser .lookup pour faire la comparaison
+  a = rtn$.lookup %>% attr("split_mixed") %>% 
+    identical(split_mixed)
+  b = rtn$.lookup %>% attr("clean_names_fun") %>% 
+    identical(.get_clean_names_fun(clean_names_fun), ignore.bytecode=TRUE)
+  if(!a || !b){
+    cli_abort(c("Cannot use cache with different parameters, set `use_cache=FALSE` to continue.", 
+                i="Same parameter {.arg split_mixed}: {a}", 
+                i="Same parameter {.arg clean_names_fun}: {b}"), 
+              class="read_tm_cache_bad_param")
   }
   
-  # parse datetime ----
-  extract_datetime = parse_file_datetime(archive)
-  if(is.na(extract_datetime)){
-    cli_warn(c("Extraction datetime could not be read from archive's name.", 
-               x="Archive's name should contain the datetime as {.code SAS_XPORT_yyyy_mm_dd_hh_MM}", 
-               i="Actual archive's name: {.val {archive}}"), 
-             class="edc_tm_bad_name")
-  }
+  .set_lookup(rtn$.lookup)
   
-  # read (+/-cache) ----
-  directory = path_dir(archive)
-  cache_file = glue("{directory}/trialmaster_export_{format_ymdhm(extract_datetime)}.rds")
-  if(file_exists(cache_file) && (isTRUE(use_cache) || use_cache=="read")){
-    if(verbose>0) cli_inform("Reading cache: {.file {cache_file}}", class="read_tm_cache")
-    rtn = readRDS(cache_file)
-    lookup_verbose = TRUE
-    
-    a = rtn$.lookup %>% attr("split_mixed") %>% 
-      identical(split_mixed)
-    b = rtn$.lookup %>% attr("clean_names_fun") %>% 
-      identical(.get_clean_names_fun(clean_names_fun), ignore.bytecode=TRUE)
-    if(!a || !b){
-      cli_abort(c("Cannot use cache with different parameters, set `use_cache=FALSE` to continue.", 
-                  i="Same parameter {.arg split_mixed}: {a}", 
-                  i="Same parameter {.arg clean_names_fun}: {b}"), 
-                class="read_tm_cache_bad_param")
-    }
-  } else {
-    if(verbose>0) cli_inform("Unzipping {.file {archive}}", class="read_tm_zip")
-    temp_folder = basename(archive) %>% str_remove("\\.zip") %>% path_temp()
-    dir_create(temp_folder, recurse=TRUE)
-    msg = extract_7z(archive, temp_folder, pw)
-    if(verbose>1) cli_inform(msg)
-    if(is.na(extract_datetime)) extract_datetime = get_folder_datetime(temp_folder)
-    format_file = path(temp_folder, "procformat.sas")
-    if(!file_exists(format_file)){
-      cli_warn("No file {.val procformat.sas} found in {.arg directory}. 
-             Data formats cannot be applied.", 
+  rtn
+}
+
+#' @noRd
+#' @keywords internal
+.read_tm_zip <- function(archive, pw, extract_datetime, clean_names_fun, split_mixed, extend_lookup, key_columns, use_cache, cache_file, verbose) {
+  
+  if(verbose>0) cli_inform("Unzipping {.file {archive}}", class="read_tm_zip")
+  temp_folder = basename(archive) %>% str_remove("\\.zip") %>% path_temp()
+  dir_create(temp_folder, recurse=TRUE)
+  msg = extract_7z(archive, temp_folder, pw)
+  if(verbose>1) cli_inform(msg)
+  if(is.na(extract_datetime)) extract_datetime = get_folder_datetime(temp_folder)
+  format_file = path(temp_folder, "procformat.sas")
+  if(!file_exists(format_file)){
+    cli_warn("No file {.val procformat.sas} found in {.arg directory}. 
+               Data formats cannot be applied.", 
              class="edc_tm_no_procformat_warning") 
-      format_file = NULL
-    }
-    rtn = read_all_xpt(temp_folder, format_file=format_file, 
-                       clean_names_fun=clean_names_fun, 
-                       split_mixed=split_mixed,
-                       extend_lookup=extend_lookup,
-                       key_columns=key_columns,
-                       datetime_extraction=extract_datetime, 
-                       verbose=verbose)
-    lookup_verbose = FALSE
-    
-    if(isTRUE(use_cache) || use_cache=="write"){
-      if(verbose>0) cli_inform("Writing cache file {.file {cache_file}}", class="read_tm_zip")
-      saveRDS(rtn, cache_file)
-    }
+    format_file = NULL
   }
+  rtn = read_all_xpt(temp_folder, sas_formats=format_file, 
+                     clean_names_fun=clean_names_fun, 
+                     split_mixed=split_mixed,
+                     extend_lookup=extend_lookup,
+                     key_columns=key_columns,
+                     datetime_extraction=extract_datetime, 
+                     verbose=verbose)
+  lookup_verbose = FALSE
   
-  # update lookup ----
   rtn$.lookup = rtn$.lookup %>% 
     structure(project_name = parse_file_projname(archive))
   .update_lookup(new=rtn$.lookup)
   
-  # out ----
-  if(verbose>0){
-    size = object.size(rtn) %>% format("auto")
-    cli_inform(c(v="Database loaded: {length(rtn)} tables, {size}"))
+  if(isTRUE(use_cache) || use_cache=="write"){
+    if(verbose>0) cli_inform("Writing cache file {.file {cache_file}}", class="read_tm_zip")
+    saveRDS(rtn, cache_file)
   }
   
   rtn
