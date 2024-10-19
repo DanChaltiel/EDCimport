@@ -86,11 +86,13 @@ edc_example = function(N=50, seed=42){
       set_label(paste0("Date at visit ",i))
   }
   
-  db0=db %>% select(SUBJID, 1:3) %>% mutate(group=ifelse(runif(n())>0.5, "A", "B") %>% set_label("Treatment"))
-  db1=db %>% select(SUBJID, 4:6) %>% mutate(x=ifelse(runif(n())>0.5, "X", "Y") %>% set_label("Covariate"))
-  db1=bind_rows(db1, db1) %>% copy_label_from(db1)
-  db2=db %>% select(SUBJID, 7:9)
-  db3=db %>% select(SUBJID, 10:13)
+  db0 = db %>% select(SUBJID, 1:3) %>%
+    mutate(group = ifelse(runif(n()) > 0.5, "A", "B") %>% set_label("Treatment"))
+  db1 = db %>% select(SUBJID, 4:6) %>%
+    mutate(x = ifelse(runif(n()) > 0.5, "X", "Y") %>% set_label("Covariate"))
+  db1 = rbind(db1, db1)
+  db2 = db %>% select(SUBJID, 7:9)
+  db3 = db %>% select(SUBJID, 10:13)
   
   .lookup = tibble(dataset=paste0("db", 0:3))
   # rtn$.lookup=build_lookup(rtn) %>% extend_lookup()
