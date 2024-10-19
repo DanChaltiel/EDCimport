@@ -268,6 +268,7 @@ set_label = function(x, lab){
 get_label = function(x, default=names(x)){
   if (is.list(x)) {
     if (is.null(default)) default = rep(NA, length(x))
+    if(inherits(x, "POSIXlt")) x = as.POSIXct(x)
     lab = x %>% map(get_label) %>% map2(default, ~{
       if (is.null(.x)) .y else .x
     })
