@@ -76,11 +76,12 @@ read_all_csv = function(path, ...,
 #' @noRd
 #' @keywords internal
 .apply_label_lookup = function(data, data_labels, name_from="name", label_from="label"){
-  data_labels = as.data.frame(data_labels) %>%
-    select(all_of(c(name_from, label_from))) %>%
-    deframe()
+  assert_class(data_labels, "data.frame")
+  label_vector = as.data.frame(data_labels) %>%
+    select(name=all_of(name_from), label=all_of(label_from)) %>%
+    pull(label, name=name)
   data %>% mutate(across(everything(), ~{
-    label = unname(data_labels[cur_column()])
+    label = unname(label_vector[cur_column()])
     attr(.x, "label") = label
     .x
   }))
