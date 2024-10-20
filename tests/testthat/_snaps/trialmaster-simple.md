@@ -1,6 +1,7 @@
 # Read a TM archive
 
     Code
+      filename = test_path("CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16.zip")
       w = read_trialmaster(filename, use_cache = "write", verbose = 9)
     Message
       Unzipping 'CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16.zip'
