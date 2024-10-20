@@ -2,11 +2,12 @@
 % Please edit documentation in R/read_all_csv.R
 \name{read_all_csv}
 \alias{read_all_csv}
-\title{Title}
+\title{Read all \code{.csv} files in a directory}
 \usage{
 read_all_csv(
   path,
   ...,
+  read_fun = utils::read.csv2,
   label_dict = NULL,
   clean_names_fun = NULL,
   datetime_extraction = "guess",
@@ -14,18 +15,20 @@ read_all_csv(
 )
 }
 \arguments{
-\item{path}{}
+\item{path}{[\code{character(1)}]\cr path to the directory containing \code{.csv} files.}
 
-\item{...}{}
+\item{...}{unused}
 
-\item{label_dict}{}
+\item{read_fun}{[\code{function}]\cr a function to read the files in path, e.g. \code{read.csv()}, \code{read.csv2()},...}
 
-\item{clean_names_fun}{}
+\item{label_dict}{[\code{character(1)}]\cr path to file containing the labels.}
 
-\item{datetime_extraction}{}
+\item{clean_names_fun}{[\code{function}]\cr a function to clean column names, e.g. \link{tolower}, \code{\link[janitor:clean_names]{janitor::clean_names()}},...}
 
-\item{verbose}{}
+\item{datetime_extraction}{[\code{dateish(1)}]\cr the datetime of database extraction (database lock). If "guess", the datetime will be inferred from the files modification time.}
+
+\item{verbose}{[\code{numeric(1)}]\cr the level of verbosity}
 }
 \description{
-Title
+Read all \code{.csv} files in a directory, with labels if specified.
 }

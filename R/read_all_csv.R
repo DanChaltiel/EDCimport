@@ -1,14 +1,24 @@
 
 
-
-#' TODO Documentation
+#' Read all `.csv` files in a directory
+#' 
+#' Read all `.csv` files in a directory, with labels if specified.
+#'
+#' @param path \[`character(1)`]\cr path to the directory containing `.csv` files.
+#' @param ... unused
+#' @param read_fun \[`function`]\cr a function to read the files in path, e.g. `read.csv()`, `read.csv2()`,...
+#' @param label_dict \[`character(1)`]\cr path to file containing the labels.
+#' @param clean_names_fun \[`function`]\cr a function to clean column names, e.g. [tolower], [janitor::clean_names()],...
+#' @param datetime_extraction \[`dateish(1)`]\cr the datetime of database extraction (database lock). If "guess", the datetime will be inferred from the files modification time.
+#' @param verbose \[`numeric(1)`]\cr the level of verbosity
 #'
 #' @export
 #' 
 #' @importFrom utils read.csv2
 #' @importFrom fs path_ext_remove
-read_all_csv = function(path, ..., label_dict=NULL, 
-                        read_fun=utils::read.csv2,
+read_all_csv = function(path, ..., 
+                        read_fun=utils::read.csv2, 
+                        label_dict=NULL,
                         clean_names_fun=NULL, 
                         datetime_extraction="guess", 
                         verbose=getOption("edc_read_verbose", 1)){
