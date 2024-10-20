@@ -31,10 +31,7 @@ read_all_csv = function(path, ...,
   }
   assert_class(read_fun, c("function"))
   rtn = files %>% 
-    set_names(~path_ext_remove(basename(.x))) %>% 
-    map(read_fun) %>% 
-    map(as_tibble) %>% 
-    map(clean_names_fun)
+    .read_all(read_fun, clean_names_fun=clean_names_fun) %>% 
   if(!is.null(label_dict)){
     label_df_name = path_ext_remove(basename(label_dict))
     if(label_df_name %in% names(rtn)) {

@@ -1,14 +1,23 @@
 
 
-#' Read all files using a specific read function, returning a named list
+#' Read all files using a specific read function, returning a named list of tibbles
+#' @param ... passed to `read_function`
 #' @noRd
 #' @keywords internal
-.read_all = function(files, read_function, ...){
+.read_all = function(files, read_function, clean_names_fun=NULL, ...){
   assert_file_exists(files)
-  file_names = basename(files) %>% str_remove("\\.[^.]*$") %>% tolower()
+  file_names = basename(files) %>% tolower() %>% path_ext_remove()
+  clean_names_fun = .get_clean_names_fun(clean_names_fun)
+  
   files %>% 
     set_names(file_names) %>% 
-    map(function(.x) tryCatch(read_function(.x, ...), error=function(e) e))
+    map(function(.x) {
+      tbl = tryCatch(read_function(.x, ...), 
+                     error = function(e) .flatten_error(e))
+      tbl %>% 
+        as_tibble() %>% 
+        clean_names_fun()
+    })
 }
 
 

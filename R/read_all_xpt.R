@@ -40,11 +40,8 @@ read_all_xpt = function(directory, ..., format_file="procformat.sas",
   if(is.null(datetime_extraction)) datetime_extraction=get_folder_datetime(directory)
   
   rtn = dir_ls(directory, regexp="\\.xpt$") %>% 
-    .read_all(read_function=read_xpt) %>% 
-    .apply_sas_formats(format_file, directory) %>%
-    .clean_names(clean_names_fun) %>% 
+    .read_all(read_xpt, clean_names_fun=clean_names_fun) %>%
     .clean_labels_utf8() %>% 
-    map(.flatten_error_columns)
   
   .lookup = build_lookup(rtn) %>% 
     structure(clean_names_fun=.get_clean_names_fun(clean_names_fun), 
