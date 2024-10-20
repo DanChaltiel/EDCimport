@@ -279,6 +279,24 @@ get_label = function(x, default=names(x)){
   lab
 }
 
+#' @noRd
+#' @keywords internal
+guess_read_function = function(file){
+  ext = path_ext(file)
+  if(ext=="xpt") return(haven::read_xpt)
+  if(ext=="sas7bdat") return(haven::read_sas)
+  if(ext=="csv"){
+    first_lines = readLines(file, n=2)
+    n_colons = unique(stringr::str_count(first_lines, ";"))
+    n_commas = unique(stringr::str_count(first_lines, ","))
+    
+    if(length(n_colons)==1 & length(n_commas)!=1) return(utils::read.csv2)
+    if(length(n_commas)==1 & length(n_colons)!=1) return(utils::read.csv)
+      
+    if(replace_na(var(n_colons), 0) < replace_na(var(n_commas), 0)) return(utils::read.csv2)
+    return(utils::read.csv)
+  }
+}
 
 # NA.RM ---------------------------------------------------------------------------------------
 

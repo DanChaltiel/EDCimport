@@ -20,11 +20,16 @@ read_all_csv = function(path, ...,
                         read_fun=utils::read.csv2, 
                         label_dict=NULL,
                         clean_names_fun=NULL, 
+                        read_fun="guess", 
                         datetime_extraction="guess", 
                         verbose=getOption("edc_read_verbose", 1)){
   
   clean_names_fun = .get_clean_names_fun(clean_names_fun)
   files = dir_ls(path, regexp="\\.csv")
+  if(identical(read_fun, "guess")){
+    read_fun = guess_read_function(files[1])
+  }
+  assert_class(read_fun, c("function"))
   rtn = files %>% 
     set_names(~path_ext_remove(basename(.x))) %>% 
     map(read_fun) %>% 
