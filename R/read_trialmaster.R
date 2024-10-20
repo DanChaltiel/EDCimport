@@ -110,7 +110,7 @@ read_trialmaster = function(archive, ..., use_cache="write",
              class="edc_tm_no_procformat_warning") 
     format_file = NULL
   }
-  rtn = read_all_xpt(temp_folder, sas_formats=format_file, 
+  rtn = read_all_xpt(temp_folder, format_file=format_file, 
                      clean_names_fun=clean_names_fun, 
                      split_mixed=split_mixed,
                      extend_lookup=extend_lookup,
