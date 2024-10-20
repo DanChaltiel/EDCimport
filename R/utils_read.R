@@ -21,16 +21,24 @@
 }
 
 
-#' Change all `try-error` columns to a simpler character column of class "edc_error_col"
+#' Apply `.flatten_error` to all `try-error` columns
 #' @noRd
 #' @keywords internal
 #' @importFrom dplyr across mutate
 #' @importFrom tidyselect where
 .flatten_error_columns = function(df){
   df %>% 
-    mutate(across(where(~inherits(.x, "try-error")), ~{
-      attr(.x, "condition")$message %>% `class<-`("edc_error_col")
-    }))
+    mutate(across(where(~inherits(.x, "try-error")), .flatten_error))
+}
+
+#' Change a `try-error` into a simpler character column of class "edc_error_col"
+#' @noRd
+#' @keywords internal
+.flatten_error = function(e){
+  assert_class(e, "try-error")
+  e = attr(e, "condition")$message
+  class(e) = "edc_error_col"
+  e
 }
 
 
