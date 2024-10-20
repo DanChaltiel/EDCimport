@@ -39,6 +39,8 @@
       4 visit       0    27    NA          NA <NA>                          
       5 vs          0    31    NA          NA <NA>                          
     Code
+      lu = edc_lookup()
+      expect_identical(lu, w$.lookup)
       df_list = w %>% keep(is.data.frame) %>% discard_at(".lookup")
       df_list %>% map(~ {
         .x %>% get_label() %>% unlist() %>% tibble::enframe()

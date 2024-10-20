@@ -21,7 +21,7 @@ example_to_csv = function(){
 
 
 test_that("read_all_csv() works", {
-  
+  clean_lookup()
   path = test_path("csv/")
   
   a = read_all_csv(path, label_dict="labels.csv", verbose=0)
@@ -45,6 +45,7 @@ test_that("read_all_csv() works", {
 })
 
 test_that("read_all_csv() works with external labels", {
+  clean_lookup()
   path = test_path("csv/")
   
   expect_snapshot({

@@ -16,20 +16,24 @@ test_that("Read a TM archive", {
     w$datetime_extraction
     w$.lookup
     
+    lu = edc_lookup()
+    expect_identical(lu, w$.lookup)
+    
     df_list = w %>% 
       keep(is.data.frame) %>% 
       discard_at(".lookup")
     
-    #print all labels
+    #print all **labels**
     df_list %>% 
       map(~{
         .x %>% get_label() %>% unlist() %>% tibble::enframe()
       })
     
-    #print all levels
-    df_list %>% map(~{
-      .x %>% select(where(is.factor)) %>% map(~head(levels(.x), 3))
-    })
+    #print all **levels**
+    df_list %>% 
+      map(~{
+        .x %>% select(where(is.factor)) %>% map(~head(levels(.x), 3))
+      })
   })
   
   clean_cache()
