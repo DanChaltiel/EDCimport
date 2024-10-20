@@ -49,13 +49,16 @@
     compact()
 }
 
-
 #' Turn a label lookup file into a list of vectors with `name=label`, `value=level`
 #' Default names from `formats.sas7bdat`
 #' @noRd
 #' @keywords internal
 .read_format_lookup = function(file, format_name="FMTNAME", level="START", label="LABEL"){
   read_fun = guess_read_function(file)
+  format_name = getOption("edc_col_format_name", default=format_name)
+  level = getOption("edc_col_level", default=level)
+  label = getOption("edc_col_label", default=label)
+  
   read_fun(file) %>% 
     select(name=all_of(format_name), level=all_of(level), label=all_of(label)) %>% 
     mutate(level=as.numeric(level)) %>% 
@@ -90,7 +93,8 @@
               class="edc_tm_no_procformat_error", 
               .envir=parent.frame())
   }
-  sas_formats = .read_proc_format(format_file)
+  
+  sas_formats = .read_sas_formats(format_file)
   datalist %>% 
     map(~{
       if(is_error(.x)) return(.x)
@@ -103,3 +107,18 @@
         haven::as_factor()
     })
 }
+
+
+#' @noRd
+#' @keywords internal
+.read_sas_formats = function(format_file){
+  ext = path_ext(format_file)
+  if(ext=="sas") {
+    sas_formats = .read_proc_format(format_file)
+  } else {
+    sas_formats = .read_format_lookup(format_file)
+  }
+  sas_formats
+}
+
+

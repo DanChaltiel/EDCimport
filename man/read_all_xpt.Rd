@@ -23,7 +23,7 @@ read_all_xpt(
 
 \item{...}{unused}
 
-\item{format_file}{[\code{character(1)}]\cr the path to the \code{procformat.sas} file that should be used to apply formats. Use \code{NULL} to not apply formats.}
+\item{format_file}{[\code{character(1)}]\cr the path to the file that should be used to apply formats. See details. Use \code{NULL} to not apply formats.}
 
 \item{clean_names_fun}{[\code{function}]\cr a function to clean column names, e.g. \link{tolower}, \code{\link[janitor:clean_names]{janitor::clean_names()}},...}
 
@@ -47,3 +47,13 @@ Read all \code{.xpt} files in a directory (unzipped TrialMaster archive). \cr
 If \verb{7zip} is installed, you should probably rather use \code{\link[=read_trialmaster]{read_trialmaster()}} instead. \cr
 If a \code{procformat.sas} file exists in the directory, formats will be applied.
 }
+\section{Format file}{
+
+\code{format_file} should contain the information about SAS formats. It can be either
+\itemize{
+\item a \code{procformat.sas} file, containing the whole PROC FORMAT
+\item or a data file (.csv or .sas7bdat) containing 3 columns: the format name (repeated),
+each level, and its associated label. Use \code{options(edc_col_format_name="xxx", edc_col_level="xxx", edc_col_label="xxx")} to specify the names of the columns.
+}
+}
+

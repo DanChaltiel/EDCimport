@@ -6,7 +6,7 @@
 #' If a `procformat.sas` file exists in the directory, formats will be applied.
 #'
 #' @param path \[`character(1)`]\cr the path to the unzipped archive using SAS_XPORT format. Will read the extraction date from the directory name.
-#' @param format_file \[`character(1)`]\cr the path to the `procformat.sas` file that should be used to apply formats. Use `NULL` to not apply formats.
+#' @param format_file \[`character(1)`]\cr the path to the file that should be used to apply formats. See details. Use `NULL` to not apply formats.
 #' @param datetime_extraction \[`POSIXt(1)`]\cr the datetime of the data extraction. Default to the most common date of last modification in `directory`.
 #' @param ... unused
 #' @param split_mixed \[`logical(1): FALSE`]\cr whether to split mixed datasets. See [split_mixed_datasets]. 
@@ -15,6 +15,12 @@
 #' @param verbose \[`logical(1)`]\cr one of `c(0, 1, 2)`. The higher, the more information will be printed.
 #' @param directory deprecated
 #' @param key_columns deprecated
+#' 
+#' @section Format file: 
+#' `format_file` should contain the information about SAS formats. It can be either 
+#'  - a `procformat.sas` file, containing the whole PROC FORMAT
+#'  - or a data file (.csv or .sas7bdat) containing 3 columns: the format name (repeated), 
+#'  each level, and its associated label. Use `options(edc_col_format_name="xxx", edc_col_level="xxx", edc_col_label="xxx")` to specify the names of the columns.
 #'
 #' @return a list containing one dataframe for each `.xpt` file in the folder, the extraction date (`datetime_extraction`), and a summary of all imported tables (`.lookup`). If not set yet, option `edc_lookup` is automatically set to `.lookup`.
 #' @export
