@@ -5,7 +5,7 @@
 #' If `7zip` is installed, you should probably rather use [read_trialmaster()] instead. \cr
 #' If a `procformat.sas` file exists in the directory, formats will be applied.
 #'
-#' @param directory \[`character(1)`]\cr the path to the unzipped archive using SAS_XPORT format. Will read the extraction date from the directory name.
+#' @param path \[`character(1)`]\cr the path to the unzipped archive using SAS_XPORT format. Will read the extraction date from the directory name.
 #' @param format_file \[`character(1)`]\cr the path to the `procformat.sas` file that should be used to apply formats. Use `NULL` to not apply formats.
 #' @param datetime_extraction \[`POSIXt(1)`]\cr the datetime of the data extraction. Default to the most common date of last modification in `directory`.
 #' @param ... unused
@@ -13,6 +13,7 @@
 #' @param extend_lookup \[`character(1): FALSE`]\cr whether to enrich the lookup table. See [extend_lookup].
 #' @param clean_names_fun \[`function`]\cr a function to clean column names, e.g. [tolower], [janitor::clean_names()],...
 #' @param verbose \[`logical(1)`]\cr one of `c(0, 1, 2)`. The higher, the more information will be printed.
+#' @param directory deprecated
 #' @param key_columns deprecated
 #'
 #' @return a list containing one dataframe for each `.xpt` file in the folder, the extraction date (`datetime_extraction`), and a summary of all imported tables (`.lookup`). If not set yet, option `edc_lookup` is automatically set to `.lookup`.
@@ -27,22 +28,26 @@
 #' @importFrom tibble as_tibble tibble
 #' @importFrom tidyselect where
 #' @importFrom utils packageVersion
-read_all_xpt = function(directory, ..., format_file="procformat.sas", 
+read_all_xpt = function(path, ..., 
+                        format_file="procformat.sas", 
                         clean_names_fun=NULL, 
                         split_mixed=FALSE,
                         extend_lookup=TRUE,
                         datetime_extraction=NULL, 
                         verbose=getOption("edc_read_verbose", 1),
+                        directory="deprecated",
                         key_columns="deprecated"){
   check_dots_empty()
   reset_manual_correction()
+  if(missing(path)) path = directory
+  assert(is_dir(path))
   
   if(is.null(datetime_extraction)) datetime_extraction=get_folder_datetime(directory)
   
-  rtn = dir_ls(directory, regexp="\\.xpt$") %>% 
+  rtn = dir_ls(path, regexp="\\.xpt$") %>% 
     .read_all(read_xpt, clean_names_fun=clean_names_fun) %>%
     .clean_labels_utf8() %>% 
-    .apply_sas_formats(format_file, directory) %>% 
+    .apply_sas_formats(format_file, path) %>% 
     .add_lookup_and_date(
       datetime_extraction=datetime_extraction,
       extend_lookup=extend_lookup,
