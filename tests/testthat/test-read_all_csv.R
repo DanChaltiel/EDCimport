@@ -1,5 +1,5 @@
 
-#run to copy example to csv files
+#run manually to copy example to csv files
 example_to_csv = function(){
   a = edc_example() %>% 
     keep_at(~str_detect(.x, "db"))
@@ -28,6 +28,12 @@ test_that("multiplication works", {
   
   expect_s3_class(a$datetime_extraction, "POSIXlt")
   expect_type(a$date_extraction, "character")
+  
+  expect_snapshot({
+    a %>% 
+      keep_at(~str_detect(.x, "db")) %>% 
+      map(head)
+  })
   
   expect_snapshot({
     a %>% 
