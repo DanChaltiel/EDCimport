@@ -33,7 +33,7 @@ read_all_xpt = function(path, ...,
                         clean_names_fun=NULL, 
                         split_mixed=FALSE,
                         extend_lookup=TRUE,
-                        datetime_extraction=NULL, 
+                        datetime_extraction="guess", 
                         verbose=getOption("edc_read_verbose", 1),
                         directory="deprecated",
                         key_columns="deprecated"){
@@ -42,7 +42,10 @@ read_all_xpt = function(path, ...,
   if(missing(path)) path = directory
   assert(is_dir(path))
   
-  if(is.null(datetime_extraction)) datetime_extraction=get_folder_datetime(directory)
+  if(identical(datetime_extraction, "guess") || is.null(datetime_extraction)){
+    datetime_extraction = get_folder_datetime(path, verbose=verbose)
+  }
+  assert_class(datetime_extraction, c("POSIXt", "Date"))
   
   rtn = dir_ls(path, regexp="\\.xpt$") %>% 
     .read_all(read_xpt, clean_names_fun=clean_names_fun) %>%
