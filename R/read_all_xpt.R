@@ -42,25 +42,19 @@ read_all_xpt = function(directory, ..., format_file="procformat.sas",
   rtn = dir_ls(directory, regexp="\\.xpt$") %>% 
     .read_all(read_xpt, clean_names_fun=clean_names_fun) %>%
     .clean_labels_utf8() %>% 
+    .apply_sas_formats(format_file, directory) %>% 
+    .add_lookup_and_date(
+      datetime_extraction=datetime_extraction,
+      extend_lookup=extend_lookup,
+      clean_names_fun=.get_clean_names_fun(clean_names_fun), 
+      split_mixed=split_mixed,
+      EDCimport_version=packageVersion("EDCimport")
+    ) %>% 
+    .apply_split_mixed(split_mixed)
   
-  .lookup = build_lookup(rtn) %>% 
-    structure(clean_names_fun=.get_clean_names_fun(clean_names_fun), 
-              split_mixed=split_mixed,
-              datetime_extraction=datetime_extraction,
-              EDCimport_version=packageVersion("EDCimport"))
-  
-  rtn = .apply_split_mixed(rtn, split_mixed, .lookup)
   .warn_bad_tables(rtn)
   .warn_bad_columns(rtn)
-  
-  if(isTRUE(extend_lookup)){
-    .lookup = extend_lookup(.lookup, datasets=rtn)
-  }
-  .set_lookup(.lookup)
-  
-  rtn$date_extraction = format_ymd(datetime_extraction)
-  rtn$datetime_extraction = datetime_extraction
-  rtn$.lookup = .lookup
+  .set_lookup(rtn$.lookup)
   
   class(rtn) = "tm_database"
   rtn
@@ -73,7 +67,8 @@ read_all_xpt = function(directory, ..., format_file="procformat.sas",
 read_tm_all_xpt = read_all_xpt
 
 
-.apply_split_mixed = function(rtn, split_mixed, .lookup){
+.apply_split_mixed = function(rtn, split_mixed){
+  .lookup = rtn$.lookup
   patient_id = get_subjid_cols(lookup=.lookup)
   id_found = map_lgl(rtn, ~any(tolower(patient_id) %in% tolower(names(.x))))
   
@@ -83,7 +78,7 @@ read_tm_all_xpt = read_all_xpt
   }
   if(!isFALSE(split_mixed)){
     split_mixed_names = split_mixed
-    if(isTRUE(split_mixed)) split_mixed_names = names(rtn)
+    if(isTRUE(split_mixed)) split_mixed_names = names(rtn) %>% setdiff(".lookup")
     if(any(id_found)){
       mixed = rtn %>% 
         keep_at(split_mixed_names) %>% 
@@ -120,6 +115,7 @@ read_tm_all_xpt = read_all_xpt
 #' @keywords internal
 .warn_bad_columns = function(rtn){
   rtn %>% 
+    keep(is.data.frame) %>% 
     iwalk(function(data, name){
       if(is_error(data)) return(data)
       a = data %>% 

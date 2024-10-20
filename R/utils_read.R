@@ -20,6 +20,25 @@
     })
 }
 
+#' Build and add lookup, add datetime_extraction, and add `...` as attributes
+#' @noRd
+#' @keywords internal
+.add_lookup_and_date = function(datalist, datetime_extraction, extend_lookup=FALSE, ...){
+  assert_class(datetime_extraction, c("POSIXt", "Date"))
+  .lookup = build_lookup(datalist)
+  if(!is.null(extend_lookup)){
+    .lookup = extend_lookup(.lookup, datasets=datalist)
+  }
+  .lookup = .lookup %>% 
+    structure(datetime_extraction=datetime_extraction,
+              ...)
+  
+  datalist$datetime_extraction = datetime_extraction
+  datalist$date_extraction = format_ymd(datetime_extraction)
+  datalist$.lookup = .lookup
+  
+  datalist
+}
 
 #' Apply `.flatten_error` to all `try-error` columns
 #' @noRd
