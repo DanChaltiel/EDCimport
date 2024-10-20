@@ -22,20 +22,23 @@ read_all_csv = function(path, ...,
                         read_fun="guess", 
                         datetime_extraction="guess", 
                         verbose=getOption("edc_read_verbose", 1)){
-  
   check_dots_empty()
-  files = dir_ls(path, regexp="\\.csv")
-  clean_names_fun = .get_clean_names_fun(clean_names_fun)
-  if(identical(datetime_extraction, "guess")){
+  reset_manual_correction()
+  assert(is_dir(path))
+  
+  if(identical(datetime_extraction, "guess") || is.null(datetime_extraction)){
     datetime_extraction = get_folder_datetime(path, verbose=verbose)
   }  
+  assert_class(datetime_extraction, c("POSIXt", "Date"))
+  
   if(identical(read_fun, "guess")){
+    files = dir_ls(path, regexp="\\.csv")
     read_fun = guess_read_function(files[1])
   }
-  assert_class(datetime_extraction, c("POSIXt", "Date"))
   assert_class(read_fun, c("function"))
   
-  rtn = files %>% 
+  clean_names_fun = .get_clean_names_fun(clean_names_fun)
+  rtn = dir_ls(path, regexp="\\.csv") %>% 
     .read_all(read_fun, clean_names_fun=clean_names_fun) %>% 
     .add_labels(label_dict, path, read_fun) %>% 
     .add_lookup_and_date(

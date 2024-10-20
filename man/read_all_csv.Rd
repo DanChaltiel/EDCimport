@@ -7,9 +7,9 @@
 read_all_csv(
   path,
   ...,
-  read_fun = utils::read.csv2,
   label_dict = NULL,
   clean_names_fun = NULL,
+  read_fun = "guess",
   datetime_extraction = "guess",
   verbose = getOption("edc_read_verbose", 1)
 )
@@ -19,11 +19,11 @@ read_all_csv(
 
 \item{...}{unused}
 
-\item{read_fun}{[\code{function}]\cr a function to read the files in path, e.g. \code{read.csv()}, \code{read.csv2()},...}
-
-\item{label_dict}{[\code{character(1)}]\cr path to file containing the labels.}
+\item{label_dict}{[\code{misc}]\cr list of path to file containing the labels.}
 
 \item{clean_names_fun}{[\code{function}]\cr a function to clean column names, e.g. \link{tolower}, \code{\link[janitor:clean_names]{janitor::clean_names()}},...}
+
+\item{read_fun}{[\code{function}]\cr a function to read the files in path, e.g. \code{read.csv()}, \code{read.csv2()},...}
 
 \item{datetime_extraction}{[\code{dateish(1)}]\cr the datetime of database extraction (database lock). If "guess", the datetime will be inferred from the files modification time.}
 
