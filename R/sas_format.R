@@ -1,5 +1,5 @@
 
-#' Turn a procformat.sas file to a list of vectors with name=label, value=level
+#' Turn a `procformat.sas` file to a list of vectors with `name=label`, `value=level`
 #' 
 #' @importFrom cli cli_abort
 #' @importFrom fs file_exists
@@ -47,6 +47,21 @@
   formats_values %>% 
     set_names(formats_names) %>% 
     compact()
+}
+
+
+#' Turn a label lookup file into a list of vectors with `name=label`, `value=level`
+#' Default names from `formats.sas7bdat`
+#' @noRd
+#' @keywords internal
+.read_format_lookup = function(file, format_name="FMTNAME", level="START", label="LABEL"){
+  read_fun = guess_read_function(file)
+  read_fun(file) %>% 
+    select(name=all_of(format_name), level=all_of(level), label=all_of(label)) %>% 
+    mutate(level=as.numeric(level)) %>% 
+    distinct() %>% 
+    split(.$name) %>% 
+    map(~pull(.x, level, name=label))
 }
 
 
