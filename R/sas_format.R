@@ -112,7 +112,8 @@
         as_tibble() %>% 
         mutate(
           across(where(~is.character(.x)), ~try(na_if(.x, ""), silent=TRUE)),
-          across(everything(), ~.format_sas_column(.x, sas_formats))
+          across(everything(), ~.format_sas_column(.x, sas_formats)),
+          across(where(~inherits(.x, c("try-error", "error"))), .flatten_error)
           ) %>% 
         haven::as_factor()
     })

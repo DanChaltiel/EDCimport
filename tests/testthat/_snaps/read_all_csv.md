@@ -131,7 +131,7 @@
 # read_all_csv() works with external labels
 
     Code
-      a = read_all_csv(path, label_dict = "external/external_labels.csv", verbose = 0)
+      a = read_all_csv(path, labels_from = "external/external_labels.csv", verbose = 0)
       head(a$labels)
     Output
       # A tibble: 6 x 2

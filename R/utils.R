@@ -328,11 +328,23 @@ min_narm = function(x, na.rm=TRUE) {
 
 # Classes -------------------------------------------------------------------------------------
 
+#' @noRd
+#' @keywords internal
+#' @examples
+#' iris %>% add_attributes(data_name="Iris") %>% attributes()
+add_attributes = function(x, ...){
+  if(is.null(x)) return(NULL)
+  structure(x, ...)
+}
 
+#' @noRd
+#' @keywords internal
 add_class = function(x, value){
   class(x) = unique(c(value, class(x)))
   x
 }
+#' @noRd
+#' @keywords internal
 #' @importFrom dplyr setdiff
 remove_class = function(x, value){
   class(x) = setdiff(class(x), value)
@@ -342,8 +354,12 @@ remove_class = function(x, value){
 # Dates ---------------------------------------------------------------------------------------
 
 
+#' @noRd
+#' @keywords internal
 NA_Date_ = structure(NA_real_, class = "Date")
 
+#' @noRd
+#' @keywords internal
 today_ymd = function(){
   format(Sys.Date(), "%Y-%m-%d")
 }
