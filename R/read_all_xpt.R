@@ -47,7 +47,7 @@ read_all_xpt = function(path, ...,
   assert_class(datetime_extraction, c("POSIXt", "Date"))
   
   rtn = dir_ls(path, regexp="\\.xpt$") %>% 
-    .read_all(read_xpt, clean_names_fun=clean_names_fun) %>%
+    .read_all(haven::read_xpt, clean_names_fun=clean_names_fun) %>%
     .clean_labels_utf8() %>% 
     .apply_sas_formats(format_file, path) %>% 
     .add_lookup_and_date(
