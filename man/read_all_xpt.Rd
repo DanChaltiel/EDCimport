@@ -40,7 +40,7 @@ read_all_xpt(
 \item{key_columns}{deprecated}
 }
 \value{
-a list containing one dataframe for each \code{.xpt} file in the folder, the extraction date (\code{datetime_extraction}), and a summary of all imported tables (\code{.lookup}). If not set yet, option \code{edc_lookup} is automatically set to \code{.lookup}.
+a list containing one dataframe for each \code{.xpt} file in the folder, the extraction date (\code{datetime_extraction}), and a summary of all imported tables (\code{.lookup}).
 }
 \description{
 Read all \code{.xpt} files in a directory (unzipped TrialMaster archive). \cr
@@ -52,8 +52,8 @@ If a \code{procformat.sas} file exists in the directory, formats will be applied
 \code{format_file} should contain the information about SAS formats. It can be either
 \itemize{
 \item a \code{procformat.sas} file, containing the whole PROC FORMAT
-\item or a data file (.csv or .sas7bdat) containing 3 columns: the format name (repeated),
-each level, and its associated label. Use \code{options(edc_col_format_name="xxx", edc_col_level="xxx", edc_col_label="xxx")} to specify the names of the columns.
+\item or a data file (.csv or .sas7bdat) containing 3 columns: the SAS format name (repeated),
+each level, and its associated label. Use \code{options(edc_var_format_name="xxx", edc_var_level="xxx", edc_var_label="xxx")} to specify the names of the columns.
 }
 }
 

@@ -7,7 +7,7 @@
 read_all_csv(
   path,
   ...,
-  label_dict = NULL,
+  labels_from = NULL,
   clean_names_fun = NULL,
   read_fun = "guess",
   datetime_extraction = "guess",
@@ -19,7 +19,7 @@ read_all_csv(
 
 \item{...}{unused}
 
-\item{label_dict}{[\code{misc}]\cr list of path to file containing the labels.}
+\item{labels_from}{[\code{misc}]\cr list of path to file containing the labels.}
 
 \item{clean_names_fun}{[\code{function}]\cr a function to clean column names, e.g. \link{tolower}, \code{\link[janitor:clean_names]{janitor::clean_names()}},...}
 
@@ -29,6 +29,14 @@ read_all_csv(
 
 \item{verbose}{[\code{numeric(1)}]\cr the level of verbosity}
 }
+\value{
+a list containing one dataframe for each \code{.csv} file in the folder, the extraction date (\code{datetime_extraction}), and a summary of all imported tables (\code{.lookup}).
+}
 \description{
 Read all \code{.csv} files in a directory, with labels if specified.
 }
+\section{Labels file}{
+
+\code{labels_from} should contain the information about column labels. It should be a data file (\code{.csv}) containing 2 columns: one for the column name and the other for its associated label. Use \code{options(edc_col_name="xxx", edc_col_label="xxx")} to specify the names of the columns.
+}
+
