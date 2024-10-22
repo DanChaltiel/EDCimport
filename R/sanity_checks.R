@@ -281,7 +281,7 @@ edc_data_condition = function(.data, message, issue_n, max_subjid,
   if(nrow(.data)>0){
     if(is.character(csv_path)){
       assert(str_ends(csv_path, "\\.csv"), call=parent.frame())
-      write.csv2(.data, csv_path)
+      write.csv2(.data, csv_path, row.names=FALSE)
     }
     message = format_inline(message)
     
