@@ -6,8 +6,11 @@ test_that("Read a TM archive", {
   clean_cache()
   clean_lookup()
   
-  f = function(x) str_remove(x, ",.*Kb") #dont snapshot the database size
-  
+  f = function(x) {
+    x %>% 
+      str_replace_all(",.*Kb", ", 000 Kb") %>%  #dont snapshot the database size
+      str_replace_all("v(\\d+\\.?)+", "v0.0.0") #dont snapshot the version
+  }
   expect_snapshot(transform=f, {
     #read
     filename = test_path("CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16.zip")

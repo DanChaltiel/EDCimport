@@ -22,7 +22,7 @@
       Size: 61533
       Compressed: 13576
       Writing cache file './trialmaster_export_2022-08-25 15h16.rds'
-      v Database loaded: 8 tables
+      v Database loaded: 8 tables, 000 Kb
     Code
       w$datetime_extraction
     Output
@@ -30,7 +30,7 @@
     Code
       w$.lookup
     Output
-      -- Lookup table - CRF (extraction of 2022-08-25) - EDCimport v0.4.1.9055 -------
+      -- Lookup table - CRF (extraction of 2022-08-25) - EDCimport v0.0.0 -------
         dataset  nrow  ncol  n_id rows_per_id crfname                       
         <chr>   <dbl> <dbl> <int>       <dbl> <chr>                         
       1 site        1    33    NA          NA Trial Site Setup & Information
