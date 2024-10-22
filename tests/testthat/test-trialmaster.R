@@ -4,10 +4,14 @@
 
 skip_on_cran()
 edc_options(edc_lookup_overwrite_warn=FALSE)
-# cachename = test_path("trialmaster_export_2022-08-25 15h16.rds")
-# filename = test_path("CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16.zip")
-# filename_noformat = test_path("CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16_noformat.zip")
-# filename_bad = test_path("CRF_Dan_Export.zip")
+
+if(FALSE){
+  cachename = test_path("trialmaster_export_2022-08-25 15h16.rds")
+  filename = test_path("CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16.zip")
+  filename_noformat = test_path("CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16_noformat.zip")
+  filename_bad = test_path("CRF_Dan_Export.zip")
+}
+
 
 test_that("Read TM with cache", {
   clean_cache()

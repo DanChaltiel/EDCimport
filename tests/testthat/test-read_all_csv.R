@@ -49,7 +49,7 @@ test_that("read_all_csv() works with external labels", {
   path = test_path("csv/")
   
   expect_snapshot({
-    a = read_all_csv(path, label_dict="external/external_labels.csv", verbose=0)
+    a = read_all_csv(path, labels_from="external/external_labels.csv", verbose=0)
     head(a$labels) #not NULL, considered as a normal dataset
     a %>% 
       keep_at(~str_detect(.x, "db")) %>% 

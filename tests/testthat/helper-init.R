@@ -98,7 +98,8 @@ temp_target = function(name){
 }
 
 compare2 = function(x, y){
-  waldo::compare(x, y, x_arg=caller_arg(x), y_arg=caller_arg(y))
+  f = get("compare", envir = asNamespace("waldo")) #avoir check error
+  f(x, y, x_arg=caller_arg(x), y_arg=caller_arg(y))
 }
 
 
