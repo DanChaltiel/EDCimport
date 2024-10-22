@@ -19,10 +19,10 @@
 #' @section Format file: 
 #' `format_file` should contain the information about SAS formats. It can be either 
 #'  - a `procformat.sas` file, containing the whole PROC FORMAT
-#'  - or a data file (.csv or .sas7bdat) containing 3 columns: the format name (repeated), 
-#'  each level, and its associated label. Use `options(edc_col_format_name="xxx", edc_col_level="xxx", edc_col_label="xxx")` to specify the names of the columns.
+#'  - or a data file (.csv or .sas7bdat) containing 3 columns: the SAS format name (repeated), 
+#'  each level, and its associated label. Use `options(edc_var_format_name="xxx", edc_var_level="xxx", edc_var_label="xxx")` to specify the names of the columns.
 #'
-#' @return a list containing one dataframe for each `.xpt` file in the folder, the extraction date (`datetime_extraction`), and a summary of all imported tables (`.lookup`). If not set yet, option `edc_lookup` is automatically set to `.lookup`.
+#' @return a list containing one dataframe for each `.xpt` file in the folder, the extraction date (`datetime_extraction`), and a summary of all imported tables (`.lookup`).
 #' @export
 #' @importFrom cli cli_abort cli_warn
 #' @importFrom dplyr across distinct mutate na_if select

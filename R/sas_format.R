@@ -55,9 +55,9 @@
 #' @keywords internal
 .read_format_lookup = function(file, format_name="FMTNAME", level="START", label="LABEL"){
   read_fun = guess_read_function(file)
-  format_name = getOption("edc_col_format_name", default=format_name)
-  level = getOption("edc_col_level", default=level)
-  label = getOption("edc_col_label", default=label)
+  format_name = getOption("edc_var_format_name", default=format_name)
+  level = getOption("edc_var_level", default=level)
+  label = getOption("edc_var_label", default=label)
   
   read_fun(file) %>% 
     select(name=all_of(format_name), level=all_of(level), label=all_of(label)) %>% 
