@@ -24,7 +24,7 @@ test_that("read_all_csv() works", {
   clean_lookup()
   path = test_path("csv/")
   
-  a = read_all_csv(path, label_dict="labels.csv", verbose=0)
+  a = read_all_csv(path, labels_from="labels.csv", verbose=0)
   
   expect_s3_class(a$datetime_extraction, "POSIXlt")
   expect_type(a$date_extraction, "character")
