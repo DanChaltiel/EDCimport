@@ -294,7 +294,14 @@ edc_data_condition = function(.data, message, issue_n, max_subjid,
     }
     
     if(!is.null(col_subjid)){
-      if(!tolower(col_subjid) %in% tolower(names(.data))){
+      col_found = tolower(col_subjid) %in% tolower(names(.data))
+      if(sum(col_found)>1){
+        cli_warn("Found {length(col_found)} subject identifiers in the input dataset:
+                 {.val {col_subjid[col_found]}}. Defaulting to the first one.", 
+                  class="edc_data_condition_subjid_multiple_warn", call=parent.frame())
+        col_subjid = col_subjid[col_found][1]
+      }
+      if(!any(col_found)){
         cli_abort("Could not find column {col_subjid} in the input dataset.", 
                   class="edc_data_condition_subjid_error", call=parent.frame())
       }
