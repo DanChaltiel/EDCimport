@@ -68,7 +68,7 @@ edc_example_mixed = function(N=100, seed=42){
 
 #' @rdname data_example
 #' @export
-#' @importFrom dplyr bind_rows mutate n select
+#' @importFrom dplyr mutate n select
 #' @importFrom purrr imap
 #' @importFrom stats rnorm runif
 #' @importFrom tibble lst tibble

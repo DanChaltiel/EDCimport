@@ -4,6 +4,10 @@
 #' @param ... passed to `read_function`
 #' @noRd
 #' @keywords internal
+#' @importFrom fs path_ext_remove
+#' @importFrom purrr map
+#' @importFrom rlang set_names
+#' @importFrom tibble as_tibble
 .read_all = function(files, read_function, clean_names_fun=NULL, ...){
   assert_file_exists(files)
   file_names = basename(files) %>% tolower() %>% path_ext_remove()
@@ -75,6 +79,7 @@
 #' clean all names using `clean_names_fun`, or do nothing if `NULL`
 #' @noRd
 #' @keywords internal
+#' @importFrom purrr map
 .clean_names = function(datalist, clean_names_fun){
   #TODO: merge with .get_clean_names_fun()
   clean_names_fun = .get_clean_names_fun(clean_names_fun)

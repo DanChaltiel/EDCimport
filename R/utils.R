@@ -78,6 +78,9 @@ percent = function(x, digits=0){
 #' adverb that adds a deprecated warning
 #' @noRd
 #' @keywords internal
+#' @importFrom lifecycle deprecate_warn
+#' @importFrom rlang caller_arg
+#' @importFrom stringr str_ends
 deprecatedly = function(f, what, when, with=caller_arg(f), details=NULL, type="warn"){
   if(!str_ends(with, "\\(\\)")) with=paste0(with,"()")
   function(...){
@@ -121,9 +124,12 @@ cli_menu <- function(prompt, not_interactive, choices, quit = integer(), .envir 
 
 #' @noRd
 #' @keywords internal
-#' @importFrom stringr str_sub
+#' @importFrom cli cli_warn
 #' @importFrom dplyr coalesce
+#' @importFrom glue glue
 #' @importFrom purrr possibly
+#' @importFrom rlang set_names
+#' @importFrom stringr str_sub
 .repair_invalid_utf8 = function(x, warn=FALSE){
   bad = is_invalid_utf8(x)
   if(!any(bad)) return(x)
@@ -157,6 +163,7 @@ cli_menu <- function(prompt, not_interactive, choices, quit = integer(), .envir 
 #' @param x a file
 #' @noRd
 #' @keywords internal
+#' @importFrom cli cli_warn
 #' @importFrom stringr str_match
 parse_file_datetime = function(archive, warn=FALSE){
   extract_datetime = archive %>% 
@@ -281,6 +288,9 @@ get_label = function(x, default=names(x)){
 
 #' @noRd
 #' @keywords internal
+#' @importFrom fs path_ext
+#' @importFrom stats var
+#' @importFrom tidyr replace_na
 guess_read_function = function(file){
   ext = path_ext(file)
   if(ext=="xpt") return(haven::read_xpt)

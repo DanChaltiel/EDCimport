@@ -16,7 +16,7 @@
 #' @importFrom dplyr arrange case_match case_when cur_group filter full_join mutate rename_with select summarise
 #' @importFrom forcats fct_relevel fct_reorder
 #' @importFrom rlang check_dots_empty check_installed
-#' @importFrom stringr str_remove str_starts
+#' @importFrom stringr str_remove str_starts str_subset
 #' @importFrom tibble lst
 #' @importFrom tidyselect matches
 #' @export
@@ -229,8 +229,8 @@ ae_plot_grade = function(
 #' @return a ggplot
 #' @export
 #' @importFrom dplyr across any_of arrange count full_join mutate rename_with select
-#' @importFrom forcats fct_infreq
-#' @importFrom ggplot2 aes element_blank facet_grid geom_col ggplot labs scale_fill_steps theme vars
+#' @importFrom forcats fct_infreq fct_rev
+#' @importFrom ggplot2 aes element_blank facet_grid geom_col ggplot labs scale_fill_manual theme vars
 #' @importFrom rlang check_dots_empty int
 #' @importFrom tibble deframe lst
 #' @importFrom tidyr replace_na

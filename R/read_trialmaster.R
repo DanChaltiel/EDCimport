@@ -14,11 +14,9 @@
 #' @inheritParams read_tm_all_xpt
 #' 
 #' @export
-#' @importFrom cli cli_abort cli_inform cli_warn
-#' @importFrom fs dir_create file_exists path path_dir path_temp
-#' @importFrom glue glue
+#' @importFrom cli cli_inform
+#' @importFrom fs file_exists path_dir
 #' @importFrom rlang check_dots_empty
-#' @importFrom stringr str_remove
 #' @importFrom utils object.size
 read_trialmaster = function(archive, ..., use_cache="write", 
                             clean_names_fun=NULL,
@@ -57,6 +55,7 @@ read_trialmaster = function(archive, ..., use_cache="write",
 
 #' @noRd
 #' @keywords internal
+#' @importFrom cli cli_abort
 .check_use_cache <- function(use_cache) {
   if(!missing(use_cache) && !use_cache %in% list(TRUE, FALSE, "read", "write")){
     cli_abort("{.arg use_cache} should be one of {.val c(TRUE, FALSE, 'read', 'write')}.")
@@ -65,12 +64,14 @@ read_trialmaster = function(archive, ..., use_cache="write",
 
 #' @noRd
 #' @keywords internal
+#' @importFrom glue glue
 .get_tm_cache = function(directory, extract_datetime){
   glue("{directory}/trialmaster_export_{format_ymdhm(extract_datetime)}.rds")
 }
 
 #' @noRd
 #' @keywords internal
+#' @importFrom cli cli_abort cli_inform
 .read_tm_cache <- function(cache_file, split_mixed, clean_names_fun, verbose) {
   if(verbose>0) cli_inform("Reading cache: {.file {cache_file}}", class="read_tm_cache")
   rtn = readRDS(cache_file)
@@ -95,6 +96,9 @@ read_trialmaster = function(archive, ..., use_cache="write",
 
 #' @noRd
 #' @keywords internal
+#' @importFrom cli cli_inform cli_warn
+#' @importFrom fs dir_create file_exists path path_temp
+#' @importFrom stringr str_remove
 .read_tm_zip <- function(archive, pw, extract_datetime, clean_names_fun, split_mixed, extend_lookup, key_columns, use_cache, cache_file, verbose) {
   
   if(verbose>0) cli_inform("Unzipping {.file {archive}}", class="read_tm_zip")

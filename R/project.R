@@ -10,10 +10,11 @@
 #'
 #' @return Path to the project, invisibly.
 #' @export
-#' @importFrom cli cli_abort cli_inform
+#' @importFrom cli cli_abort cli_inform cli_warn
+#' @importFrom dplyr setdiff
 #' @importFrom fs dir_create dir_ls file_copy is_dir path path_dir path_package
 #' @importFrom purrr walk
-#' @importFrom rlang check_installed is_installed
+#' @importFrom rlang is_installed
 #' @importFrom stringr fixed str_replace
 edc_new_project = function(path, open=TRUE, verbose=TRUE){
   # check_installed("usethis", "for `init_project()` to work.")

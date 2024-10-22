@@ -19,8 +19,9 @@
 #' @return a list containing one dataframe for each `.csv` file in the folder, the extraction date (`datetime_extraction`), and a summary of all imported tables (`.lookup`).
 #' 
 #' @export
-#' @importFrom utils read.csv2
-#' @importFrom fs path_ext_remove
+#' @importFrom fs dir_ls is_dir
+#' @importFrom rlang check_dots_empty
+#' @importFrom utils packageVersion
 read_all_csv = function(path, ..., 
                         labels_from=NULL,
                         clean_names_fun=NULL, 
@@ -60,6 +61,8 @@ read_all_csv = function(path, ...,
 
 #' @noRd
 #' @keywords internal
+#' @importFrom fs path path_ext_remove
+#' @importFrom purrr map
 .add_labels = function(datalist, labels_file, path, read_fun){
   if(!is.null(labels_file)){
     label_df_name = path_ext_remove(basename(labels_file))
@@ -80,6 +83,8 @@ read_all_csv = function(path, ...,
 
 #' @noRd
 #' @keywords internal
+#' @importFrom dplyr across cur_column mutate pull select
+#' @importFrom tidyselect all_of everything
 .apply_label_lookup = function(data, data_labels, name_from="name", label_from="label"){
   name_from  = getOption("edc_col_name", default=name_from)
   label_from = getOption("edc_col_label", default=label_from)

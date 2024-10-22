@@ -24,15 +24,8 @@
 #'
 #' @return a list containing one dataframe for each `.xpt` file in the folder, the extraction date (`datetime_extraction`), and a summary of all imported tables (`.lookup`).
 #' @export
-#' @importFrom cli cli_abort cli_warn
-#' @importFrom dplyr across distinct mutate na_if select
-#' @importFrom fs file_exists path
-#' @importFrom haven read_xpt
-#' @importFrom purrr imap iwalk keep keep_at map_lgl pwalk walk
-#' @importFrom rlang check_dots_empty is_error set_names
-#' @importFrom stringr str_remove
-#' @importFrom tibble as_tibble tibble
-#' @importFrom tidyselect where
+#' @importFrom fs dir_ls is_dir
+#' @importFrom rlang check_dots_empty
 #' @importFrom utils packageVersion
 read_all_xpt = function(path, ..., 
                         format_file="procformat.sas", 
@@ -81,6 +74,9 @@ read_all_xpt = function(path, ...,
 read_tm_all_xpt = read_all_xpt
 
 
+#' @importFrom cli cli_abort cli_warn
+#' @importFrom dplyr setdiff
+#' @importFrom purrr keep_at map_lgl
 .apply_split_mixed = function(rtn, split_mixed){
   .lookup = rtn$.lookup
   patient_id = get_subjid_cols(lookup=.lookup)
@@ -113,6 +109,8 @@ read_tm_all_xpt = read_all_xpt
 
 #' @noRd
 #' @keywords internal
+#' @importFrom cli cli_warn
+#' @importFrom purrr keep
 .warn_bad_tables = function(rtn){
   errs = keep(rtn, is_error)
   if(length(errs)>0){
@@ -127,6 +125,11 @@ read_tm_all_xpt = read_all_xpt
 
 #' @noRd
 #' @keywords internal
+#' @importFrom cli cli_warn
+#' @importFrom dplyr distinct select
+#' @importFrom purrr iwalk keep walk
+#' @importFrom rlang is_error
+#' @importFrom tidyselect where
 .warn_bad_columns = function(rtn){
   rtn %>% 
     keep(is.data.frame) %>% 

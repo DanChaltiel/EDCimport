@@ -264,7 +264,7 @@ as_flextable.ae_table_soc = function(x,
 #'
 #' @return a crosstable (dataframe)
 #' @export
-#' @importFrom cli cli_abort
+#' @importFrom cli cli_abort cli_warn
 #' @importFrom dplyr any_of arrange count filter full_join left_join mutate select summarise
 #' @importFrom forcats fct_reorder
 #' @importFrom ggplot2 aes facet_grid geom_blank geom_col ggplot labs scale_x_continuous theme unit vars
@@ -536,4 +536,3 @@ ae_table_soc_legacy = function(
   
   rtn
 }
-

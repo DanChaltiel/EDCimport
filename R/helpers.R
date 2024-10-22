@@ -184,6 +184,8 @@ fct_yesno = function(x,
 #' tm$ae %>% names
 #' tm$ae %>% select_distinct() %>% names
 #' tm$ae %>% select_distinct(.by=subjid) %>% names
+#' @importFrom dplyr across distinct n_distinct select summarise
+#' @importFrom tidyselect all_of everything where
 select_distinct = function(df, .by) {
   a = df %>% 
     summarise(across(everything(), function(.x) n_distinct(.x, na.rm=TRUE)), 
@@ -220,7 +222,7 @@ select_distinct = function(df, .by) {
 #' lastnews_table(except="db3$date9")
 #' lastnews_table(prefer="db2") 
 #' @importFrom cli cli_abort
-#' @importFrom dplyr arrange filter mutate select slice_max
+#' @importFrom dplyr arrange filter mutate rowwise select slice_max ungroup
 #' @importFrom purrr discard discard_at imap list_rbind
 #' @importFrom tidyr pivot_longer
 #' @importFrom tidyselect where

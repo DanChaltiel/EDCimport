@@ -53,6 +53,9 @@
 #' Default names from `formats.sas7bdat`
 #' @noRd
 #' @keywords internal
+#' @importFrom dplyr distinct mutate pull select
+#' @importFrom purrr map
+#' @importFrom tidyselect all_of
 .read_format_lookup = function(file, format_name="FMTNAME", level="START", label="LABEL"){
   read_fun = guess_read_function(file)
   format_name = getOption("edc_var_format_name", default=format_name)
@@ -84,6 +87,13 @@
 #' Read a sas procformat file and apply it to a dataset list
 #' @noRd
 #' @keywords internal
+#' @importFrom cli cli_abort
+#' @importFrom dplyr across mutate na_if
+#' @importFrom fs file_exists path
+#' @importFrom purrr map
+#' @importFrom rlang is_error
+#' @importFrom tibble as_tibble
+#' @importFrom tidyselect everything where
 .apply_sas_formats = function(datalist, format_file, directory){
   if(is.null(format_file)) return(datalist)
   if(!file_exists(format_file)) format_file = path(directory, format_file)
@@ -111,6 +121,7 @@
 
 #' @noRd
 #' @keywords internal
+#' @importFrom fs path_ext
 .read_sas_formats = function(format_file){
   ext = path_ext(format_file)
   if(ext=="sas") {
@@ -120,5 +131,3 @@
   }
   sas_formats
 }
-
-
