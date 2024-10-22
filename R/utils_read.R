@@ -58,8 +58,9 @@
 #' @noRd
 #' @keywords internal
 .flatten_error = function(e){
-  assert_class(e, "try-error")
-  e = attr(e, "condition")$message
+  if(!inherits(e, c("try-error", "error"))) return(e)
+  if(inherits(e, c("try-error"))) e = attr(e, "condition")
+  e = e$message
   class(e) = "edc_error_col"
   e
 }
