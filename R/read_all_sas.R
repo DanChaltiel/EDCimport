@@ -45,7 +45,7 @@ read_all_sas = function(path, ...,
   
   if(path_ext(format_file) %in% c("sas", "sas7bdat", "csv")){
     rtn = rtn %>% 
-      .apply_sas_formats(format_file, path)
+      .apply_sas_formats(format_file)
   }
   
   .warn_bad_tables(rtn)

@@ -5,7 +5,7 @@
       w = read_trialmaster(filename, use_cache = "write", verbose = 9)
     Message
       Unzipping 'CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16.zip'
-      7-Zip [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+      7-Zip Copyright 1999-2016 Igor Pavlov
       
       Scanning the drive for archives:
       1 file, 13576 bytes (14 KiB)
