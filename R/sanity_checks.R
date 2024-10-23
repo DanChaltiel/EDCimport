@@ -339,6 +339,12 @@ save_warn_list_item = function(item){
   edcimport_env$warn_list[[issue_key]] = item
 }
 
+#' @noRd
+#' @keywords internal
+reset_warn_list = function(){
+  edcimport_env$warn_list = list()
+}
+
 
 #' @noRd
 #' @keywords internal
