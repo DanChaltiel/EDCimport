@@ -94,15 +94,9 @@
 #' @importFrom rlang is_error
 #' @importFrom tibble as_tibble
 #' @importFrom tidyselect everything where
-.apply_sas_formats = function(datalist, format_file, directory){
+.apply_sas_formats = function(datalist, format_file){
   if(is.null(format_file)) return(datalist)
-  if(!file_exists(format_file)) format_file = path(directory, format_file)
-  if(!file_exists(format_file)) {
-    cli_abort("File {.file {format_file}} does not exist.
-              Set {.arg format_file=NULL} to override.", 
-              class="edc_tm_no_procformat_error", 
-              .envir=parent.frame())
-  }
+  assert_file_exists(format_file)
   
   sas_formats = .read_sas_formats(format_file)
   datalist %>% 

@@ -45,11 +45,12 @@ read_all_xpt = function(path, ...,
     datetime_extraction = get_folder_datetime(path, verbose=verbose)
   }
   assert_class(datetime_extraction, c("POSIXt", "Date"))
+  format_file = .locate_file(format_file, path)
   
   rtn = dir_ls(path, regexp="\\.xpt$") %>% 
     .read_all(haven::read_xpt, clean_names_fun=clean_names_fun) %>%
     .clean_labels_utf8() %>% 
-    .apply_sas_formats(format_file, path) %>% 
+    .apply_sas_formats(format_file) %>% 
     .add_lookup_and_date(
       datetime_extraction=datetime_extraction,
       extend_lookup=extend_lookup,
