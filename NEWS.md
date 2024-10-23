@@ -6,6 +6,12 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 ### New features
 
+#### Read functions
+
+-   New function `read_all_sas()` to read a database of `.sas7bdat` files.
+
+-   New function `read_all_csv()` to read a database of `.csv` files.
+
 #### Sanity checks alerts
 
 -   New functions `edc_data_warn()` and `edc_data_stop()`, to alert if data has inconsistencies (#29, #39, #43).
@@ -16,6 +22,8 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
     #> Warning: Issue #13: Grade is missing (8 patients: #21, #28, #39, #95, #97, ...)
     ```
 
+-   New function `edc_data_warnings()`, to get a dataframe of all warnings thrown by `edc_data_warn()`.
+
 -   New function `edc_warn_extraction_date()`, to alert if data is too old.
 
 #### Miscellaneous utils
@@ -24,11 +32,9 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 -   New function `edc_population_plot()` to visualize which patient is in which analysis population (#56).
 
--   New function `edc_db_to_excel()` to export the whole database to an Excel file, easier to browse than RStudio table viewer (#55). Use `edc_browse_excel()` to browse the file without knowing its name.
+-   New function `edc_db_to_excel()` to export the whole database to an Excel file, easier to browse than RStudio's table viewer (#55). Use `edc_browse_excel()` to browse the file without knowing its name.
 
--   New function `edc_new_project()` to create an empty, standardized project (#54).
-
--   New function `edc_inform_code()` to show how many code you wrote (#49).
+-   New function `edc_inform_code()` to show how much code your project contains (#49).
 
 -   New function `search_for_newer_data()` to search a path (e.g. Downloads) for a newer data archive (#46).
 
@@ -38,22 +44,11 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 -   New function `fct_yesno()`, to easily format Yes/No columns (#19, #23, #40).
 
+-   New function `lastnews_table()` to find the last date an information has been entered for each patient (#37). Useful for survival analyses.
+
 -   New function `save_plotly()`, to save a `plotly` to an HTML file (#15).
 
 -   New experimental functions `table_format()`, `get_common_cols()` and `get_meta_cols()` that might become useful to find keys to pivot or summarise data.
-
-#### Clinical research (might be moved to another package)
-
--   New function `lastnews_table()` to find the last date an information has been entered for each patient (#37). Useful for survival.
-
--   New function `waterfall_plot()` to plot RECIST response for target lesions by percentage of tumor reduction (#27).
-
--   New functions to describe adverse events:
-
-    -   `ae_table_grade()` and `ae_table_soc()` to generate standardized tables.  \
-        They all can be turned to flextables using `as_flextable()`.
-    -   `ae_plot_grade_max()`, `ae_plot_grade_n()`, and `butterfly_plot()` to generate standardized plots.
-
 
 ### Bug fixes & Improvements
 
