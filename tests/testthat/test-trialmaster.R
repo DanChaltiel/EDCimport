@@ -96,9 +96,10 @@ test_that("Use cache only if permitted", {
   clean_lookup()
   w  = read_trialmaster(filename, use_cache="write", verbose=0)
   
+  f = function(df) dplyr::rename_with(df, tolower)
   clean_lookup()
   w2 = read_trialmaster(filename, use_cache="read", verbose=0) %>% expect_silent()
-  w2 = read_trialmaster(filename, use_cache="read", verbose=0, clean_names_fun=tolower, split_mixed=TRUE) %>% 
+  w2 = read_trialmaster(filename, use_cache="read", verbose=0, clean_names_fun=f, split_mixed=TRUE) %>% 
     expect_error(class="read_tm_cache_bad_param")
   clean_cache()
 })

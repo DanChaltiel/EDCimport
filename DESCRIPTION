@@ -35,7 +35,6 @@ Imports:
 Suggests: 
     callr,
     crosstable,
-    flextable,
     gtools,
     htmlwidgets,
     janitor,
@@ -60,8 +59,6 @@ VignetteBuilder: knitr, rmarkdown, quarto
 Collate: 
     '7zip.R'
     'EDCimport-package.R'
-    'ae_table_grade.R'
-    'ae_table_soc.R'
     'assertions.R'
     'burgled.R'
     'crf_status.R'
@@ -71,7 +68,6 @@ Collate:
     'lookup.R'
     'options.R'
     'population_plot.R'
-    'project.R'
     'read_all_csv.R'
     'read_all_sas.R'
     'read_all_xpt.R'
@@ -83,4 +79,3 @@ Collate:
     'split_mixed.R'
     'swimmerplot.R'
     'utils_read.R'
-    'waterfall_plot.R'
