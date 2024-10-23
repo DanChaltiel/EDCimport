@@ -73,6 +73,7 @@ Collate:
     'population_plot.R'
     'project.R'
     'read_all_csv.R'
+    'read_all_sas.R'
     'read_all_xpt.R'
     'read_trialmaster.R'
     'sanity_checks.R'

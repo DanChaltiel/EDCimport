@@ -5,7 +5,7 @@
 #' If `7zip` is installed, you should probably rather use [read_trialmaster()] instead. \cr
 #' If a `procformat.sas` file exists in the directory, formats will be applied.
 #'
-#' @param path \[`character(1)`]\cr the path to the unzipped archive using SAS_XPORT format. Will read the extraction date from the directory name.
+#' @param path \[`character(1)`]\cr the path to the directory containing all `.xpt` files.
 #' @param format_file \[`character(1)`]\cr the path to the file that should be used to apply formats. See details. Use `NULL` to not apply formats.
 #' @param datetime_extraction \[`POSIXt(1)`]\cr the datetime of the data extraction. Default to the most common date of last modification in `directory`.
 #' @param ... unused

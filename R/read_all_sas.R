@@ -1,13 +1,26 @@
 
+#' Read all `.sas7bdat` files in a directory
+#' 
+#' Read all `.sas7bdat` files in a directory. Formats can be applied from a `procformat.sas` SAS file, from a .
+#'
+#' @param path \[`character(1)`]\cr the path to the directory containing all `.sas7bdat` files.
+#' @inheritParams read_all_xpt
+#' 
+#' @section Format file: 
+#' `format_file` should contain the information about SAS formats. It can be either 
+#'  - a `procformat.sas` file, containing the whole PROC FORMAT
+#'  - a catalog file (`.sas7bcat`)
+#'  - or a data file (`.csv` or `.sas7bdat`) containing 3 columns: the SAS format name (repeated), 
+#'  each level, and its associated label. Use `options(edc_var_format_name="xxx", edc_var_level="xxx", edc_var_label="xxx")` to specify the names of the columns.
+#'
+#'
+#' @return a list containing one dataframe for each `.xpt` file in the folder, the extraction date (`datetime_extraction`), and a summary of all imported tables (`.lookup`).
+#' @export
 read_all_sas = function(path, ..., 
-                        format_file=NULL, 
+                        format_file="procformat.sas", 
                         clean_names_fun=NULL, 
-                        split_mixed=FALSE,
-                        extend_lookup=TRUE,
                         datetime_extraction="guess", 
-                        verbose=getOption("edc_read_verbose", 1),
-                        directory="deprecated",
-                        key_columns="deprecated"){
+                        verbose=getOption("edc_read_verbose", 1)){
   check_dots_empty()
   reset_manual_correction()
   if(missing(path)) path = directory
@@ -27,9 +40,7 @@ read_all_sas = function(path, ...,
     .clean_labels_utf8() %>% 
     .add_lookup_and_date(
       datetime_extraction=datetime_extraction,
-      extend_lookup=extend_lookup,
       clean_names_fun=.get_clean_names_fun(clean_names_fun), 
-      split_mixed=split_mixed,
       EDCimport_version=packageVersion("EDCimport")
     )
   
