@@ -23,7 +23,6 @@ read_all_sas = function(path, ...,
                         verbose=getOption("edc_read_verbose", 1)){
   check_dots_empty()
   reset_manual_correction()
-  if(missing(path)) path = directory
   assert(is_dir(path))
   
   if(identical(datetime_extraction, "guess") || is.null(datetime_extraction)){

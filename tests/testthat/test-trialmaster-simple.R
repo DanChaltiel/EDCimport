@@ -8,8 +8,9 @@ test_that("Read a TM archive", {
   
   f = function(x) {
     x %>% 
-      str_replace_all(",.*Kb", ", 000 Kb") %>%  #dont snapshot the database size
-      str_replace_all("v(\\d+\\.?)+", "v0.0.0") #dont snapshot the version
+      str_replace_all("^7-Zip.*$", "7-Zip Copyright 1999-2016 Igor Pavlov") %>%  #7-Zip version
+      str_replace_all(",.*Kb", ", 000 Kb") %>%  #database size
+      str_replace_all("v(\\d+\\.?)+", "v0.0.0") #EDCimport version
   }
   expect_snapshot(transform=f, {
     #read
