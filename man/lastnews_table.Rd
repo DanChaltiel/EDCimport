@@ -19,7 +19,7 @@ lastnews_table(
 
 \item{numeric_id}{set to FALSE if the patient ID column is not numeric}
 
-\item{prefer}{origins to be favoured in case of ties. Usually the followup table.}
+\item{prefer}{preferred origins in the event of a tie. Usually the followup table.}
 
 \item{warn_if_future}{whether to show a warning about dates that are after the extraction date}
 }

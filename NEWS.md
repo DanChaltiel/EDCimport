@@ -59,7 +59,7 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 -   `read_trialmaster(split_mixed="TRUE")` will work as intended.
 -   `assert_no_duplicate()` has now a `by` argument to check for duplicate in groups, for example by visit (#17).
 -   `find_keyword()` is more robust and inform on the proportion of missing if possible.
--   `edc_lookup()` will now retreive the lookup table. Use `build_lookup()` to build one from a table list.
+-   `edc_lookup()` will now retrieve the lookup table. Use `build_lookup()` to build one from a table list.
 -   `extend_lookup()` will not fail anymore when the database has a faulty table.
 
 ### Deprecations

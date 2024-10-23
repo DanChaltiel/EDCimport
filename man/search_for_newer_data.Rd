@@ -30,7 +30,7 @@ search_for_newer_data(
 the path to the newer file, invisibly.
 }
 \description{
-Search in some folders if a TrialMaster database more recent than the current extration is present. By default, it will search the "data" folder and the OS usual "Downloads" folder. If a newer database is found, user will be asked if they want to move it to the "data" folder.
+Search in some folders if a TrialMaster database more recent than the current extraction is present. By default, it will search the "data" folder and the OS usual "Downloads" folder. If a newer database is found, user will be asked if they want to move it to the "data" folder.
 }
 \examples{
 \dontrun{

@@ -2,7 +2,7 @@
   
 #' Search for newer data
 #' 
-#' Search in some folders if a TrialMaster database more recent than the current extration is present. By default, it will search the "data" folder and the OS usual "Downloads" folder. If a newer database is found, user will be asked if they want to move it to the "data" folder.
+#' Search in some folders if a TrialMaster database more recent than the current extraction is present. By default, it will search the "data" folder and the OS usual "Downloads" folder. If a newer database is found, user will be asked if they want to move it to the "data" folder.
 #'
 #' @param archive TM archive path, giving the project name and date
 #' @param source the path vector to be searched, default to both "data" and the usual "Downloads" folder

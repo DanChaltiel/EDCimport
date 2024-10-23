@@ -208,7 +208,7 @@ select_distinct = function(df, .by) {
 #' @param except the datasets/columns that should not be searched. Example: a scheduled visit for which the patient may have died before attending should not be considered.
 #' @param with_ties in case of tie, whether to return the first `origin` (FALSE) or all the origins that share this tie (TRUE).
 #' @param numeric_id set to FALSE if the patient ID column is not numeric
-#' @param prefer origins to be favoured in case of ties. Usually the followup table.
+#' @param prefer preferred origins in the event of a tie. Usually the followup table.
 #' @param warn_if_future whether to show a warning about dates that are after the extraction date
 #'
 #' @return a dataframe
