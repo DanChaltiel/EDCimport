@@ -19,9 +19,7 @@ read_all_sas = function(path, ...,
   assert_class(datetime_extraction, c("POSIXt", "Date"))
   
   format_file = .locate_file(format_file, path)
-  catalog_file = NULL
-  
-  if(path_ext(format_file)=="sas7bcat") catalog_file=format_file
+  catalog_file = if(path_ext(format_file)=="sas7bcat") format_file else NULL
   
   rtn = dir_ls(path, regexp="\\.sas7bdat$") %>% 
     .read_all(haven::read_sas, clean_names_fun=clean_names_fun, 
