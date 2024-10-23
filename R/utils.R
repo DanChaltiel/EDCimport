@@ -155,6 +155,23 @@ cli_menu <- function(prompt, not_interactive, choices, quit = integer(), .envir 
   x
 }
 
+#' Locate a file in a path if it doesn't exist in the working directory
+#' @noRd
+#' @keywords internal
+.locate_file = function(file, path, error=TRUE, call=parent.frame()){
+  if(is.null(file)) return(NULL)
+  if(file_exists(file)) return(file)
+  file_inpath = path(path, file)
+  if(file_exists(file_inpath)) return(file_inpath)
+  if(isTRUE(error)){
+        cli_abort("File {.path {file}} exists neither in working directory
+                nor in {.path {path}}.", 
+                  class="edc_404_file_not_found", 
+                  call=call)
+  }
+  invisible(path)
+}
+
 
 # Parse zip name ------------------------------------------------------------------------------
 
