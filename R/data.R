@@ -61,14 +61,14 @@ edc_example_mixed = function(N=100, seed=42){
   rtn$date_extraction = "2022-08-25"
   rtn$datetime_extraction = as.POSIXct("2022-08-25 15:16:00 CEST")
   rtn$.lookup=build_lookup(rtn)
-  set_lookup(rtn$.lookup)
+  .set_lookup(rtn$.lookup)
   rtn
 }
 
 
 #' @rdname data_example
 #' @export
-#' @importFrom dplyr bind_rows mutate n select
+#' @importFrom dplyr mutate n select
 #' @importFrom purrr imap
 #' @importFrom stats rnorm runif
 #' @importFrom tibble lst tibble
@@ -86,11 +86,13 @@ edc_example = function(N=50, seed=42){
       set_label(paste0("Date at visit ",i))
   }
   
-  db0=db %>% select(SUBJID, 1:3) %>% mutate(group=ifelse(runif(n())>0.5, "A", "B") %>% set_label("Treatment"))
-  db1=db %>% select(SUBJID, 4:6) %>% mutate(x=ifelse(runif(n())>0.5, "X", "Y") %>% set_label("Covariate"))
-  db1=bind_rows(db1, db1) %>% copy_label_from(db1)
-  db2=db %>% select(SUBJID, 7:9)
-  db3=db %>% select(SUBJID, 10:13)
+  db0 = db %>% select(SUBJID, 1:3) %>%
+    mutate(group = ifelse(runif(n()) > 0.5, "A", "B") %>% set_label("Treatment"))
+  db1 = db %>% select(SUBJID, 4:6) %>%
+    mutate(x = ifelse(runif(n()) > 0.5, "X", "Y") %>% set_label("Covariate"))
+  db1 = rbind(db1, db1)
+  db2 = db %>% select(SUBJID, 7:9)
+  db3 = db %>% select(SUBJID, 10:13)
   
   .lookup = tibble(dataset=paste0("db", 0:3))
   # rtn$.lookup=build_lookup(rtn) %>% extend_lookup()
@@ -101,7 +103,7 @@ edc_example = function(N=50, seed=42){
   rtn$datetime_extraction = structure(1704067200, class = c("POSIXct", "POSIXt"), 
                                       tzone = "Europe/Paris")
   rtn$.lookup=build_lookup(rtn)
-  set_lookup(rtn$.lookup)
+  .set_lookup(rtn$.lookup)
   rtn
 }
 
@@ -136,6 +138,6 @@ edc_example_ae = function(N=50, seed=42){
   rtn = lst(enrolres, ae) %>% 
     imap(~.x %>% mutate(crfname=.y %>% set_label("Form name")))
   rtn$.lookup = build_lookup(rtn)
-  set_lookup(rtn$.lookup)
+  .set_lookup(rtn$.lookup)
   rtn
 }

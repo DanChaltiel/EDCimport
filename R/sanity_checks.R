@@ -269,10 +269,10 @@ edc_data_warnings = function(){
 
 #' @noRd
 #' @keywords internal
-#' @importFrom cli cli_vec format_inline
+#' @importFrom cli cli_abort cli_vec format_inline
 #' @importFrom dplyr pull
 #' @importFrom rlang caller_arg
-#' @importFrom stringr str_pad
+#' @importFrom stringr str_ends str_pad
 #' @importFrom tibble tibble
 #' @importFrom utils write.csv2
 edc_data_condition = function(.data, message, issue_n, max_subjid, 
@@ -337,6 +337,12 @@ save_warn_list_item = function(item){
     }
   }
   edcimport_env$warn_list[[issue_key]] = item
+}
+
+#' @noRd
+#' @keywords internal
+reset_warn_list = function(){
+  edcimport_env$warn_list = list()
 }
 
 

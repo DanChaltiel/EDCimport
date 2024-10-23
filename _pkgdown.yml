@@ -20,7 +20,9 @@ reference:
 - title: "Reading databases"
 - contents:
   - read_trialmaster
-  - read_tm_all_xpt
+  - read_all_xpt
+  - read_all_sas
+  - read_all_csv
 - title: "Checking databases"
 - contents:
   - edc_data_warn

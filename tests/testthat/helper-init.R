@@ -77,6 +77,7 @@ filename_bad = test_path("CRF_Dan_Export.zip")
 
 clean_cache = function(){
   if(file.exists(cachename)) file.remove(cachename)
+  if(file.exists(cachename)) stop("ERROR")
   invisible(TRUE)
 }
 v=utils::View
@@ -95,6 +96,12 @@ temp_target = function(name){
   dir_create(target)
   target
 }
+
+compare2 = function(x, y){
+  f = get("compare", envir = asNamespace("waldo")) #avoir check error
+  f(x, y, x_arg=caller_arg(x), y_arg=caller_arg(y))
+}
+
 
 is_testing_in_buildpane = function(){
   # Sys.getenv("RSTUDIO_CHILD_PROCESS_PANE") =="build"
@@ -147,6 +154,7 @@ expect_classed_conditions = function(expr, message_class=NULL, warning_class=NUL
   f(es, error_class)
   f(ws, warning_class)
   f(ms, message_class)
+  expect_true(TRUE)
   x
 }
 

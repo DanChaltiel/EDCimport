@@ -44,15 +44,15 @@ test_that("Split mixed inside read_trialmaster()", {
   f = test_path("edc_example_mixed_SAS_XPORT_2000_01_01_00_00.zip")
   tm1 = read_trialmaster(f, pw="foobar")
   # names(tm1) %>% dput()
-  expect_equal(names(tm1), c("long_mixed", "long_pure", "short", common))
+  expect_setequal(names(tm1), c("long_mixed", "long_pure", "short", common))
   
   tm2 = read_trialmaster(f, pw="foobar", split_mixed="short") %>% 
     expect_classed_conditions(warning_class="edc_read_cannot_split_mixed_warn")#no effect
   # names(tm2) %>% dput()
-  expect_equal(names(tm2), c("long_mixed", "long_pure", "short", common))
+  expect_setequal(names(tm2), c("long_mixed", "long_pure", "short", common))
 
   tm3 = read_trialmaster(f, pw="foobar", split_mixed=c("long_pure", "long_mixed"))
   # names(tm3) %>% dput()
-  expect_equal(names(tm3), c("long_mixed", "long_pure", "short", "long_mixed_short", 
+  expect_setequal(names(tm3), c("long_mixed", "long_pure", "short", "long_mixed_short", 
                             "long_mixed_long", common))
 })

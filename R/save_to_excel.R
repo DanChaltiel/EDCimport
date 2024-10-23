@@ -7,7 +7,7 @@
 #' into an Excel workbook, with one tab for each dataset.\cr
 #' Use `edc_db_to_excel()` to create the file and `edc_browse_excel()` to open it.
 #'
-#' @param filename the path to the Excel output file. Default to a temporary file. Use the special value `TRUE` to save in "data/database_{date_extraction}.xlsx".
+#' @param filename the path to the Excel output file. Default to a temporary file. Use the special value `TRUE` to save in "data/database_\{date_extraction\}.xlsx".
 #' @param datasets a named list of dataframes. Default to the TM export.
 #' @param overwrite whether to overwrite any existing file. Default to `FALSE`.
 #' @param open whether to open the Excel file afterward. Default to `FALSE`.
@@ -23,12 +23,13 @@
 #'   edc_db_to_excel(filename=TRUE)
 #' }
 #' @importFrom cli cli_abort cli_inform
-#' @importFrom dplyr arrange
+#' @importFrom dplyr across arrange mutate
 #' @importFrom fs dir_create file_exists file_size
 #' @importFrom glue glue
-#' @importFrom purrr iwalk
+#' @importFrom purrr iwalk map_lgl
 #' @importFrom rlang check_dots_empty check_installed is_named sym
-#' @importFrom stringr str_ends
+#' @importFrom stringr str_ends str_sub
+#' @importFrom tidyselect where
 #' @importFrom utils browseURL
 edc_db_to_excel = function(filename=tempfile(fileext=".xlsx"),
                            ..., 

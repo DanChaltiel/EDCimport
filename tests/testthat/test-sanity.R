@@ -1,6 +1,7 @@
 
 test_that("edc_data_warn snapshot", {
   clean_lookup()
+  reset_warn_list()
   tm = edc_example()
   attach(tm)
   

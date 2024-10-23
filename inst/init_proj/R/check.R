@@ -14,5 +14,5 @@ find_keyword("age")
 iris %>%
   mutate(subjid=row_number()) %>%
   filter(Sepal.Length>7.5) %>%
-  edc_data_warn("I don't know about flowers but 7.5 isn't a lot?", issue_n=1)
+  edc_data_warn("I don't know about flowers but isn't 7.5 a lot?", issue_n=1)
 

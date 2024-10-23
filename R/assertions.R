@@ -12,13 +12,12 @@
 #' @importFrom cli cli_abort
 #' @importFrom glue glue
 #' @importFrom rlang caller_arg
-assert = function(x, msg=NULL, call=parent.frame()){
+assert = function(x, msg=NULL, call=parent.frame(), class=NULL){
   if(is.null(msg)){
-    x_str = caller_arg(x)
-    msg = glue("`{x_str}` is FALSE")
+    msg = glue("`{x_str}` is FALSE", x_str=caller_arg(x))
   }
-  if(!x){
-    cli_abort(msg, call=call)
+  if(isFALSE(as.logical(x))){
+    cli_abort(msg, .envir=call, class=class)
   }
   invisible(TRUE)
 }
@@ -30,8 +29,8 @@ assert = function(x, msg=NULL, call=parent.frame()){
 #' assert_file_exists("R/data.R")
 #' assert_file_exists("R/data.SAS")
 #' @importFrom fs file_exists
-assert_file_exists = function(x, msg=NULL){
-  assert(file_exists(x), msg, call=parent.frame())
+assert_file_exists = function(x, msg=NULL, class=NULL){
+  assert(all(file_exists(x)), msg, call=parent.frame(), class=class)
 }
 
 
