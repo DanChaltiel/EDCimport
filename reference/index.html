@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1.9048</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1.9060</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -16,13 +16,6 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/aaaaa_test_1.html">quarto vignettes</a></li>
-    <li><a class="dropdown-item" href="../articles/aaaaa_test_2.html">Adverse Events</a></li>
-    <li><a class="dropdown-item" href="../articles/aaaaa_test_3.html">Adverse Events</a></li>
-    <li><a class="dropdown-item" href="../articles/adverse_events.html">Adverse Events</a></li>
-  </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -62,6 +55,18 @@
 
         </dt>
         <dd>Read all <code>.xpt</code> files in a directory</dd>
+      </dl><dl><dt>
+
+          <code><a href="read_all_sas.html">read_all_sas()</a></code>
+
+        </dt>
+        <dd>Read all <code>.sas7bdat</code> files in a directory</dd>
+      </dl><dl><dt>
+
+          <code><a href="read_all_csv.html">read_all_csv()</a></code>
+
+        </dt>
+        <dd>Read all <code>.csv</code> files in a directory</dd>
       </dl></div><div class="section level2">
       <h2 id="checking-databases">Checking databases<a class="anchor" aria-label="anchor" href="#checking-databases"></a></h2>
 
@@ -122,12 +127,6 @@
 
       <dl><dt>
 
-          <code><a href="edc_new_project.html">edc_new_project()</a></code>
-
-        </dt>
-        <dd>Create a clinical research project</dd>
-      </dl><dl><dt>
-
           <code><a href="edc_inform_code.html">edc_inform_code()</a></code>
 
         </dt>
@@ -179,59 +178,6 @@
           <span class="badge lifecycle lifecycle-experimental">experimental</span>
         </dt>
         <dd>Get columns that are common to multiple datasets</dd>
-      </dl></div><div class="section level2">
-      <h2 id="clinical-utils">Clinical Utils<a class="anchor" aria-label="anchor" href="#clinical-utils"></a></h2>
-
-
-
-
-    </div><div class="section level2">
-
-
-
-
-      <dl><dt>
-
-          <code><a href="ae_table_grade_max.html">ae_table_grade_max()</a></code>
-
-        </dt>
-        <dd>Summary tables for AE by grade max</dd>
-      </dl><dl><dt>
-
-          <code><a href="ae_table_grade_n.html">ae_table_grade_n()</a></code>
-
-        </dt>
-        <dd>Summary tables for AE</dd>
-      </dl><dl><dt>
-
-          <code><a href="ae_table_soc.html">ae_table_soc()</a></code> <code><a href="ae_table_soc.html">as_flextable(<i>&lt;ae_table_soc&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Summary tables for AE by SOC</dd>
-      </dl><dl><dt>
-
-          <code><a href="ae_plot_grade_max.html">ae_plot_grade_max()</a></code>
-
-        </dt>
-        <dd>Graphic representation of AEs by grade max</dd>
-      </dl><dl><dt>
-
-          <code><a href="ae_plot_grade_n.html">ae_plot_grade_n()</a></code>
-
-        </dt>
-        <dd>Graphic representation of AEs</dd>
-      </dl><dl><dt>
-
-          <code><a href="ae_plot_soc.html">ae_plot_soc()</a></code>
-
-        </dt>
-        <dd>Graphic representation of AEs by soc (Butterfly plot)</dd>
-      </dl><dl><dt>
-
-          <code><a href="waterfall_plot.html">waterfall_plot()</a></code>
-
-        </dt>
-        <dd>Generate a waterfall plot</dd>
       </dl></div><div class="section level2">
       <h2 id="options">Options<a class="anchor" aria-label="anchor" href="#options"></a></h2>
 
@@ -313,6 +259,18 @@
 
         </dt>
         <dd>Save a plotly to an HTML file</dd>
+      </dl><dl><dt>
+
+          <code><a href="select_distinct.html">select_distinct()</a></code>
+
+        </dt>
+        <dd>Select only distinct columns</dd>
+      </dl><dl><dt>
+
+          <code><a href="harmonize_subjid.html">harmonize_subjid()</a></code>
+
+        </dt>
+        <dd>Harmonize the subject ID of the database</dd>
       </dl><dl><dt>
 
           <code><a href="get_datasets.html">get_datasets()</a></code>
@@ -445,7 +403,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer></div>

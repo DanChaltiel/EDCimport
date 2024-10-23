@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1.9048</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1.9060</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -16,13 +16,6 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/aaaaa_test_1.html">quarto vignettes</a></li>
-    <li><a class="dropdown-item" href="../articles/aaaaa_test_2.html">Adverse Events</a></li>
-    <li><a class="dropdown-item" href="../articles/aaaaa_test_3.html">Adverse Events</a></li>
-    <li><a class="dropdown-item" href="../articles/adverse_events.html">Adverse Events</a></li>
-  </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -64,13 +57,12 @@
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="extend_lookup.html">extend_lookup()</a></code>, <code><a href="edc_lookup.html">get_lookup()</a></code></p></div>
+    <div class="dont-index"><p><code><a href="extend_lookup.html">extend_lookup()</a></code>, <code><a href="edc_lookup.html">edc_lookup()</a></code></p></div>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="data_example.html">edc_example</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Option <span style="color: #0000BB;">"edc_lookup"</span> has been overwritten.</span>
 <span class="r-in"><span><span class="va">x</span><span class="op">$</span><span class="va">.lookup</span><span class="op">=</span><span class="cn">NULL</span></span></span>
 <span class="r-in"><span><span class="va">lk</span> <span class="op">=</span> <span class="fu">build_lookup</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">lk</span></span></span>
@@ -83,18 +75,18 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> db1       100     6</span>
 <span class="r-in"><span><span class="va">lk</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/unnest.html" class="external-link">unnest</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">names</span>, <span class="va">labels</span><span class="op">)</span><span class="op">)</span>  </span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 22 × 5</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    dataset  nrow  ncol names          labels         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> db0        50     5 SUBJID         Subject ID     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> db0        50     5 age            Age (years)    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> db0        50     5 date_naissance Date of birth  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> db0        50     5 group          Treatment      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> db0        50     5 crfname        Form name      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> db2        50     5 SUBJID         Subject ID     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> db2        50     5 date4          Date at visit 4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> db2        50     5 date5          Date at visit 5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> db2        50     5 date6          Date at visit 6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> db2        50     5 crfname        Form name      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    dataset  nrow  ncol names          labels      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;named list&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> db0        50     5 SUBJID         <span style="color: #949494;">&lt;chr [1]&gt;</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> db0        50     5 age            <span style="color: #949494;">&lt;chr [1]&gt;</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> db0        50     5 date_naissance <span style="color: #949494;">&lt;chr [1]&gt;</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> db0        50     5 group          <span style="color: #949494;">&lt;chr [1]&gt;</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> db0        50     5 crfname        <span style="color: #949494;">&lt;chr [1]&gt;</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> db2        50     5 SUBJID         <span style="color: #949494;">&lt;chr [1]&gt;</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> db2        50     5 date4          <span style="color: #949494;">&lt;chr [1]&gt;</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> db2        50     5 date5          <span style="color: #949494;">&lt;chr [1]&gt;</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> db2        50     5 date6          <span style="color: #949494;">&lt;chr [1]&gt;</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> db2        50     5 crfname        <span style="color: #949494;">&lt;chr [1]&gt;</span>   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 12 more rows</span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
@@ -108,7 +100,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer></div>

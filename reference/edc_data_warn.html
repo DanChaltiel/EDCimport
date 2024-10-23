@@ -21,7 +21,7 @@ Use edc_data_warnings() to generate the table for such a file."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1.9048</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1.9060</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,13 +30,6 @@ Use edc_data_warnings() to generate the table for such a file."></head><body>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/aaaaa_test_1.html">quarto vignettes</a></li>
-    <li><a class="dropdown-item" href="../articles/aaaaa_test_2.html">Adverse Events</a></li>
-    <li><a class="dropdown-item" href="../articles/aaaaa_test_3.html">Adverse Events</a></li>
-    <li><a class="dropdown-item" href="../articles/adverse_events.html">Adverse Events</a></li>
-  </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -71,11 +64,11 @@ Use <code>edc_data_warnings()</code> to generate the table for such a file.</p>
 <span>  <span class="va">...</span>,</span>
 <span>  issue_n <span class="op">=</span> <span class="st">"xx"</span>,</span>
 <span>  max_subjid <span class="op">=</span> <span class="fl">5</span>,</span>
-<span>  write_to_csv <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  csv_path <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  col_subjid <span class="op">=</span> <span class="fu"><a href="get_subjid_cols.html">get_subjid_cols</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">edc_data_stop</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="co">#same arguments</span></span>
+<span><span class="fu">edc_data_stop</span><span class="op">(</span><span class="va">df</span>, <span class="va">message</span>, <span class="va">...</span>, <span class="va">issue_n</span>, <span class="va">max_subjid</span>, <span class="va">csv_path</span>, <span class="va">col_subjid</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">edc_data_warnings</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -89,7 +82,7 @@ Use <code>edc_data_warnings()</code> to generate the table for such a file.</p>
 
 
 <dt id="arg-message">message<a class="anchor" aria-label="anchor" href="#arg-message"></a></dt>
-<dd><p>the message. Can use <a href="https://cli.r-lib.org/reference/inline-markup.html#classes" class="external-link">cli formats</a>.</p></dd>
+<dd><p>the message. Can use <a href="https://cli.r-lib.org/reference/inline-markup.html#classes" class="external-link">cli formats</a>. <code>df</code> can be accessed using the <code>.data</code> special keyword (see example)</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
@@ -104,7 +97,7 @@ Use <code>edc_data_warnings()</code> to generate the table for such a file.</p>
 <dd><p>max number of subject ID to show in the message</p></dd>
 
 
-<dt id="arg-write-to-csv">write_to_csv<a class="anchor" aria-label="anchor" href="#arg-write-to-csv"></a></dt>
+<dt id="arg-csv-path">csv_path<a class="anchor" aria-label="anchor" href="#arg-csv-path"></a></dt>
 <dd><p>a path to save <code>df</code> in a csv file that can be shared with the DM for more details.</p></dd>
 
 
@@ -143,22 +136,28 @@ Use <code>edc_data_warnings()</code> to generate the table for such a file.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">db1</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">&gt;</span><span class="fl">1</span>, .by<span class="op">=</span><span class="va">SUBJID</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
-<span class="r-in"><span>  <span class="fu">edc_data_warn</span><span class="op">(</span><span class="st">"There are duplicated patients in `db1`"</span>, issue_n<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Issue #<span style="color: #00BB00;">03</span>: There are duplicated patients in `db1` (50 patients: #1, #2, #3, #4,</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> #5, …)</span>
+<span class="r-in"><span>  <span class="fu">edc_data_warn</span><span class="op">(</span><span class="st">"There are duplicated patients in `db1` ({nrow(.data)} rows)"</span>, issue_n<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Issue #<span style="color: #00BB00;">03</span>: There are duplicated patients in `db1` (100 rows) (50 patients: #1,</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> #2, #3, #4, #5, …)</span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">db0</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">age</span><span class="op">&lt;</span><span class="fl">25</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
+<span class="r-in"><span>  <span class="fu">edc_data_warn</span><span class="op">(</span><span class="st">"Age should not be &lt;25"</span>, issue_n<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Age should not be &lt;25 (1 patient: #18)</span>
+<span class="r-in"><span>  </span></span>
 <span class="r-in"><span><span class="fu">edc_data_warnings</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 4</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   issue_n message                                subjid     fun     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 01      Age should not be &gt;70                  <span style="color: #949494;">&lt;chr [2]&gt;</span>  cli_warn</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> 02      Age should not be &lt;25                  <span style="color: #949494;">&lt;chr [1]&gt;</span>  cli_warn</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> 03      There are duplicated patients in `db1` <span style="color: #949494;">&lt;chr [50]&gt;</span> cli_warn</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 4</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   issue_n message                                           subjid     fun     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                             <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 01      Age should not be &gt;70                             <span style="color: #949494;">&lt;chr [2]&gt;</span>  cli_warn</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> 02      Age should not be &lt;25                             <span style="color: #949494;">&lt;chr [1]&gt;</span>  cli_warn</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> 03      There are duplicated patients in `db1` (100 rows) <span style="color: #949494;">&lt;chr [50]&gt;</span> cli_warn</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> <span style="color: #BB0000;">NA</span>      Age should not be &lt;25                             <span style="color: #949494;">&lt;chr [1]&gt;</span>  cli_warn</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="va">db0</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">age</span><span class="op">&lt;</span><span class="fl">25</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
-<span class="r-in"><span>  <span class="fu">edc_data_warn</span><span class="op">(</span><span class="st">"Age should not be &lt;25"</span>, write_to_csv<span class="op">=</span><span class="st">"check/check_age_25.csv"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu">edc_data_warn</span><span class="op">(</span><span class="st">"Age should not be &lt;25"</span>, csv_path<span class="op">=</span><span class="st">"check/check_age_25.csv"</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  </span></span>
 <span class="r-in"><span><span class="va">db0</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">age</span><span class="op">&lt;</span><span class="fl">25</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
@@ -175,7 +174,7 @@ Use <code>edc_data_warnings()</code> to generate the table for such a file.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer></div>

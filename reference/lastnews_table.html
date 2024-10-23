@@ -11,7 +11,7 @@ the right censoring time."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1.9048</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1.9060</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,13 +20,6 @@ the right censoring time."></head><body>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/aaaaa_test_1.html">quarto vignettes</a></li>
-    <li><a class="dropdown-item" href="../articles/aaaaa_test_2.html">Adverse Events</a></li>
-    <li><a class="dropdown-item" href="../articles/aaaaa_test_3.html">Adverse Events</a></li>
-    <li><a class="dropdown-item" href="../articles/adverse_events.html">Adverse Events</a></li>
-  </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -57,6 +50,7 @@ the right censoring time.</p>
 <span>  except <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  with_ties <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  numeric_id <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  prefer <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  warn_if_future <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -77,6 +71,10 @@ the right censoring time.</p>
 <dd><p>set to FALSE if the patient ID column is not numeric</p></dd>
 
 
+<dt id="arg-prefer">prefer<a class="anchor" aria-label="anchor" href="#arg-prefer"></a></dt>
+<dd><p>origins to be favoured in case of ties. Usually the followup table.</p></dd>
+
+
 <dt id="arg-warn-if-future">warn_if_future<a class="anchor" aria-label="anchor" href="#arg-warn-if-future"></a></dt>
 <dd><p>whether to show a warning about dates that are after the extraction date</p></dd>
 
@@ -92,26 +90,65 @@ the right censoring time.</p>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Option <span style="color: #0000BB;">"edc_lookup"</span> has been overwritten.</span>
 <span class="r-in"><span><span class="fu"><a href="load_list.html">load_list</a></span><span class="op">(</span><span class="va">tm</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">lastnews_table</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in map2(.x, vec_index(.x), .f, ...):</span> <span style="color: #00BBBB;">ℹ</span> In index: 1.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> With name: db0.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `mutate()`:</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> In argument: `label = unlist(get_label(.x)[name])`.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `map2()`:</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> could not find function "map2"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 50 × 5</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    subjid last_date           origin_data origin_col origin_label    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>      1 2010-08-01 <span style="color: #949494;">18:59:37</span> db3         date10     Date at visit 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      2 2010-07-31 <span style="color: #949494;">15:32:45</span> db3         date10     Date at visit 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      3 2010-07-22 <span style="color: #949494;">11:24:37</span> db3         date10     Date at visit 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>      4 2010-07-23 <span style="color: #949494;">20:38:32</span> db3         date10     Date at visit 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>      5 2010-07-15 <span style="color: #949494;">07:09:47</span> db3         date10     Date at visit 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      6 2010-07-20 <span style="color: #949494;">12:27:00</span> db3         date10     Date at visit 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>      7 2010-07-28 <span style="color: #949494;">16:24:09</span> db3         date9      Date at visit 9 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>      8 2010-07-19 <span style="color: #949494;">15:24:18</span> db3         date9      Date at visit 9 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      9 2010-08-11 <span style="color: #949494;">03:48:27</span> db3         date9      Date at visit 9 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>     10 2010-07-30 <span style="color: #949494;">20:41:23</span> db3         date10     Date at visit 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 40 more rows</span></span>
 <span class="r-in"><span><span class="fu">lastnews_table</span><span class="op">(</span>except<span class="op">=</span><span class="st">"db3"</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in map2(.x, vec_index(.x), .f, ...):</span> <span style="color: #00BBBB;">ℹ</span> In index: 1.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> With name: db0.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `mutate()`:</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> In argument: `label = unlist(get_label(.x)[name])`.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `map2()`:</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> could not find function "map2"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 50 × 5</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    subjid last_date           origin_data origin_col origin_label   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>      1 2010-06-12 <span style="color: #949494;">10:53:27</span> db2         date6      Date at visit 6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      2 2010-06-20 <span style="color: #949494;">02:27:29</span> db2         date6      Date at visit 6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      3 2010-06-12 <span style="color: #949494;">21:21:28</span> db2         date6      Date at visit 6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>      4 2010-06-19 <span style="color: #949494;">20:25:02</span> db2         date6      Date at visit 6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>      5 2010-06-15 <span style="color: #949494;">11:26:57</span> db2         date5      Date at visit 5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      6 2010-06-11 <span style="color: #949494;">22:06:25</span> db2         date6      Date at visit 6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>      7 2010-06-17 <span style="color: #949494;">07:46:07</span> db2         date6      Date at visit 6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>      8 2010-06-22 <span style="color: #949494;">10:18:23</span> db2         date6      Date at visit 6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      9 2010-05-31 <span style="color: #949494;">00:51:54</span> db2         date6      Date at visit 6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>     10 2010-06-12 <span style="color: #949494;">03:57:46</span> db2         date6      Date at visit 6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 40 more rows</span></span>
 <span class="r-in"><span><span class="fu">lastnews_table</span><span class="op">(</span>except<span class="op">=</span><span class="st">"db3$date9"</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in map2(.x, vec_index(.x), .f, ...):</span> <span style="color: #00BBBB;">ℹ</span> In index: 1.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> With name: db0.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `mutate()`:</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> In argument: `label = unlist(get_label(.x)[name])`.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `map2()`:</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> could not find function "map2"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 50 × 5</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    subjid last_date           origin_data origin_col origin_label    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>      1 2010-08-01 <span style="color: #949494;">18:59:37</span> db3         date10     Date at visit 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      2 2010-07-31 <span style="color: #949494;">15:32:45</span> db3         date10     Date at visit 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      3 2010-07-22 <span style="color: #949494;">11:24:37</span> db3         date10     Date at visit 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>      4 2010-07-23 <span style="color: #949494;">20:38:32</span> db3         date10     Date at visit 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>      5 2010-07-15 <span style="color: #949494;">07:09:47</span> db3         date10     Date at visit 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      6 2010-07-20 <span style="color: #949494;">12:27:00</span> db3         date10     Date at visit 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>      7 2010-07-12 <span style="color: #949494;">04:59:23</span> db3         date10     Date at visit 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>      8 2010-07-12 <span style="color: #949494;">19:55:50</span> db3         date10     Date at visit 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      9 2010-07-17 <span style="color: #949494;">06:26:31</span> db3         date8      Date at visit 8 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>     10 2010-07-30 <span style="color: #949494;">20:41:23</span> db3         date10     Date at visit 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 40 more rows</span></span>
+<span class="r-in"><span><span class="fu">lastnews_table</span><span class="op">(</span>prefer<span class="op">=</span><span class="st">"db2"</span><span class="op">)</span> </span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 50 × 5</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    subjid last_date           origin_data origin_col origin_label    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>      1 2010-08-01 <span style="color: #949494;">18:59:37</span> db3         date10     Date at visit 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      2 2010-07-31 <span style="color: #949494;">15:32:45</span> db3         date10     Date at visit 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      3 2010-07-22 <span style="color: #949494;">11:24:37</span> db3         date10     Date at visit 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>      4 2010-07-23 <span style="color: #949494;">20:38:32</span> db3         date10     Date at visit 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>      5 2010-07-15 <span style="color: #949494;">07:09:47</span> db3         date10     Date at visit 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      6 2010-07-20 <span style="color: #949494;">12:27:00</span> db3         date10     Date at visit 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>      7 2010-07-28 <span style="color: #949494;">16:24:09</span> db3         date9      Date at visit 9 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>      8 2010-07-19 <span style="color: #949494;">15:24:18</span> db3         date9      Date at visit 9 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      9 2010-08-11 <span style="color: #949494;">03:48:27</span> db3         date9      Date at visit 9 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>     10 2010-07-30 <span style="color: #949494;">20:41:23</span> db3         date10     Date at visit 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 40 more rows</span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -123,7 +160,7 @@ the right censoring time.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer></div>
