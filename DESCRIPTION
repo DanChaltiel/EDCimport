@@ -54,7 +54,6 @@ RoxygenNote: 7.3.2
 Config/testthat/edition: 3
 Config/testthat/parallel: true
 Config/testthat/start-first: local, trialmaster, utils
-VignetteBuilder: knitr, rmarkdown, quarto
 Collate: 
     '7zip.R'
     'EDCimport-package.R'

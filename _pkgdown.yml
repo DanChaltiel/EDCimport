@@ -33,7 +33,6 @@ reference:
   - edc_population_plot
 - title: "Project management"
 - contents:
-  - edc_new_project
   - edc_inform_code
   - search_for_newer_data
   - save_sessioninfo
@@ -43,14 +42,6 @@ reference:
   - lastnews_table
   - edc_db_to_excel
   - get_common_cols
-- title: "Clinical Utils"
-- contents:
-  - ae_table_grade
-  - ae_table_soc
-  - ae_plot_grade
-  - ae_plot_grade_sum
-  - butterfly_plot
-  - waterfall_plot
 - title: "Options"
 - contents:
   - edc_options
@@ -66,6 +57,7 @@ reference:
   - table_format
   - save_plotly
   - select_distinct
+  - harmonize_subjid
   - get_datasets
   - get_meta_cols
   - get_subjid_cols
@@ -90,10 +82,4 @@ reference:
 - contents:
   - manual_correction
   - reset_manual_correction
-- title: "Deprecated"
-- contents:
-  - ae_plot_grade_max
-  - ae_plot_grade_n
-  - ae_table_grade_max
-  - ae_table_grade_n
   
