@@ -2,8 +2,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - 'main'
-
+      - main
 name: Bump dev version
 
 jobs:
