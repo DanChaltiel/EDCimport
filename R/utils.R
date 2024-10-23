@@ -305,6 +305,21 @@ get_label = function(x, default=names(x)){
 
 #' @noRd
 #' @keywords internal
+remove_labels = function(x){
+  if(is.null(x)) return(x)
+  if(is.list(x)){
+    for (each in seq_along(x)){
+      x[[each]] = remove_labels(x[[each]])
+    }
+    return(x)
+  }
+  attr(x, "label") = NULL
+  class(x) = setdiff(class(x), c("labelled"))
+  x
+}
+
+#' @noRd
+#' @keywords internal
 #' @importFrom fs path_ext
 #' @importFrom stats var
 #' @importFrom tidyr replace_na

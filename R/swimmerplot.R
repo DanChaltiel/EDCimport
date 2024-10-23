@@ -38,7 +38,6 @@
 #' @importFrom forcats as_factor
 #' @importFrom ggplot2 aes facet_wrap geom_line geom_point ggplot labs
 #' @importFrom glue glue
-#' @importFrom labelled var_label
 #' @importFrom purrr discard imap list_rbind map
 #' @importFrom rlang check_dots_empty check_installed is_installed set_names sym
 #' @importFrom stringr str_detect str_ends str_remove str_replace_all
@@ -95,7 +94,7 @@ edc_swimmerplot = function(.lookup=edc_lookup(), ...,
       .x %>% 
         pivot_longer(-id) %>% 
         mutate(
-          label=unlist(var_label(.x)[name]) %||% name,
+          label=unlist(get_label(.x)[name]) %||% name,
           dataset=.y,
           variable=paste0(toupper(dataset), " - ", toupper(name))
         )

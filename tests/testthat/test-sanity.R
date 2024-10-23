@@ -77,7 +77,7 @@ test_that("edc_data_warn CSV", {
     as.data.frame() %>% 
     filter(age>70) %>%
     select(SUBJID, age, group) %>% 
-    labelled::remove_labels()
+    remove_labels()
   
   input %>% 
     edc_data_warn("Age should not be >70", issue_n=99, csv_path=path) %>% 

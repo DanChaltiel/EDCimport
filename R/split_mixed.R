@@ -250,7 +250,6 @@ split_mixed_datasets = function(datasets=get_datasets(), id=get_subjid_cols(), .
 #' @return a vector of length 1
 #' @export
 #' @importFrom cli cli_warn
-#' @importFrom labelled var_label
 #' @importFrom stats na.omit
 #'
 #' @examples
@@ -269,7 +268,7 @@ unify = function(x){
     cli_warn(c("Unifying multiple values in {.val {caller_arg(x)}}, returning the first one ({.val {rtn})}", 
                i="Unique values: {.val {unique(na.omit(x))}}"))
   }
-  rtn_label = var_label(x)
+  rtn_label = get_label(x)
   if(!is.null(rtn_label)) attr(rtn, "label") = rtn_label
   rtn
 }

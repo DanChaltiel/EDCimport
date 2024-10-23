@@ -17,7 +17,6 @@
 #' 
 #' @importFrom cli cli_abort
 #' @importFrom dplyr arrange mutate
-#' @importFrom labelled var_label
 #' @importFrom purrr map map_dbl
 #' @importFrom rlang caller_arg is_named
 #' @importFrom tibble lst tibble
@@ -46,7 +45,7 @@ build_lookup = function(data_list){
       nrow=map_dbl(data_list, ~f(.x, nrow(.x), 0)), 
       ncol=map_dbl(data_list, ~f(.x, ncol(.x), 0)), 
       names=map(data_list, ~f(.x, names(.x), NULL)), 
-      labels=map(data_list, ~f(.x, var_label(.x, unlist=TRUE), NULL)), 
+      labels=map(data_list, ~f(.x, get_label(.x), NULL)), 
     ) %>% 
     arrange(nrow) %>% 
     add_class("edc_lookup")
