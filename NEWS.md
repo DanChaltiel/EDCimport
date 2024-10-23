@@ -46,6 +46,8 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 -   New function `lastnews_table()` to find the last date an information has been entered for each patient (#37). Useful for survival analyses.
 
+-   New function `harmonize_subjid()`, to have the same structure for subject IDs in all the datasets of the database (#30).
+
 -   New function `save_plotly()`, to save a `plotly` to an HTML file (#15).
 
 -   New experimental functions `table_format()`, `get_common_cols()` and `get_meta_cols()` that might become useful to find keys to pivot or summarise data.

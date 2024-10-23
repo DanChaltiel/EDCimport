@@ -335,6 +335,54 @@ save_sessioninfo = function(path="check/session_info.txt", with_date=TRUE){
   invisible(TRUE)
 }
 
+#' Harmonize the subject ID of the database
+#' 
+#' Turns the subject ID columns of all datasets into a factor containing levels for all 
+#' the subjects of the database. Avoid problems when joining tables, and some checks can
+#' be performed on the levels.
+#'
+#' @param datalist a list of dataframes
+#' @param preprocess an optional function to modify the subject ID column, for example `as.numeric()`. See examples.
+#' @param col_subjid the names of the columns holding the subject ID (as character)
+#'
+#' @return datalist, with subject id modified
+#' @export
+#' @importFrom purrr modify
+#'
+#' @examples
+#' db = edc_example()
+#' db$db0 = head(db$db0, 10)
+#' db$db0$SUBJID %>% head()
+#' db = harmonize_subjid(db)
+#' db$db0$SUBJID %>% head()
+#' db = harmonize_subjid(db, preprocess=function(x) paste0("#", x))
+#' db$db0$SUBJID %>% head()
+harmonize_subjid = function(datalist, preprocess=NULL, 
+                            col_subjid=get_subjid_cols()){
+  if(is.null(preprocess)) preprocess = identity
+  assert_class(preprocess, "function")
+  
+  all_subjid = datalist %>% 
+    keep(is.data.frame) %>% 
+    discard_at(".lookup") %>% 
+    map(~select(.x, any_of(col_subjid))) %>% 
+    unlist() %>% 
+    as.character() %>% 
+    preprocess() %>% 
+    unique() %>% 
+    mixedsort()
+  
+  a= datalist %>% 
+    modify(function(df){
+      if(!is.data.frame(df)) return(df)
+      df %>% 
+        mutate(across(any_of(get_subjid_cols()), 
+                      ~factor(preprocess(.x), levels=all_subjid)))
+    })
+  
+  a
+}
+
 
 # Manual correction ---------------------------------------------------------------------------
 
