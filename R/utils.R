@@ -394,3 +394,19 @@ format_ymdhm = function(x){
   stopifnot(inherits(x, "POSIXct") || inherits(x, "Date"))
   format(x, "%Y-%m-%d %Hh%M")
 }
+
+#' @noRd
+#' @keywords internal
+bad_hms = function(x){
+  inherits(x, c("hms", "difftime")) && !typeof(x) %in% c("integer", "double")
+}
+
+#' TM sometimes creates hms/difftime columns of type character instead of double
+#' @noRd
+#' @keywords internal
+fix_hms = function(x){
+  if(!bad_hms(x)) return(x)
+  y = as.numeric(unclass(x))
+  attributes(y) = attributes(x)
+  y
+}

@@ -20,7 +20,8 @@
                      error = function(e) .flatten_error(e))
       tbl %>% 
         as_tibble() %>% 
-        clean_names_fun()
+        clean_names_fun() %>% 
+        mutate(across(where(bad_hms), fix_hms))
     })
 }
 
