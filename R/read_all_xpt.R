@@ -74,7 +74,8 @@ read_all_xpt = function(path, ...,
 #' @usage NULL
 read_tm_all_xpt = read_all_xpt
 
-
+#' @noRd
+#' @keywords internal
 #' @importFrom cli cli_abort cli_warn
 #' @importFrom dplyr setdiff
 #' @importFrom purrr keep_at map_lgl

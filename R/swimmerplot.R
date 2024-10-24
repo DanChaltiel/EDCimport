@@ -182,6 +182,7 @@ edc_swimmerplot = function(.lookup=edc_lookup(), ...,
 #' @param ... passed on to [htmlwidgets::saveWidget]
 #'
 #' @export
+#' @return nothing, used for side effect
 #'
 #' @examples
 #' \dontrun{

@@ -8,13 +8,13 @@
   "codeRepository": "https://github.com/DanChaltiel/EDCimport",
   "issueTracker": "https://github.com/DanChaltiel/EDCimport/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.3.1 (2023-06-16 ucrt)",
+  "runtimePlatform": "R version 4.4.1 (2024-06-14 ucrt)",
   "provider": {
     "@id": "https://cran.r-project.org",
     "@type": "Organization",
@@ -54,6 +54,18 @@
     },
     {
       "@type": "SoftwareApplication",
+      "identifier": "crosstable",
+      "name": "crosstable",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=crosstable"
+    },
+    {
+      "@type": "SoftwareApplication",
       "identifier": "gtools",
       "name": "gtools",
       "provider": {
@@ -63,6 +75,18 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=gtools"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "htmlwidgets",
+      "name": "htmlwidgets",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=htmlwidgets"
     },
     {
       "@type": "SoftwareApplication",
@@ -90,6 +114,30 @@
     },
     {
       "@type": "SoftwareApplication",
+      "identifier": "openxlsx",
+      "name": "openxlsx",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=openxlsx"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "patchwork",
+      "name": "patchwork",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=patchwork"
+    },
+    {
+      "@type": "SoftwareApplication",
       "identifier": "plotly",
       "name": "plotly",
       "provider": {
@@ -99,6 +147,42 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=plotly"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "quarto",
+      "name": "quarto",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=quarto"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "rmarkdown",
+      "name": "rmarkdown",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=rmarkdown"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "rstudioapi",
+      "name": "rstudioapi",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=rstudioapi"
     },
     {
       "@type": "SoftwareApplication",
@@ -112,6 +196,18 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=testthat"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "usethis",
+      "name": "usethis",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=usethis"
     },
     {
       "@type": "SoftwareApplication",
@@ -183,6 +279,18 @@
     },
     "5": {
       "@type": "SoftwareApplication",
+      "identifier": "fs",
+      "name": "fs",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=fs"
+    },
+    "6": {
+      "@type": "SoftwareApplication",
       "identifier": "glue",
       "name": "glue",
       "provider": {
@@ -193,7 +301,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=glue"
     },
-    "6": {
+    "7": {
       "@type": "SoftwareApplication",
       "identifier": "ggplot2",
       "name": "ggplot2",
@@ -205,7 +313,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=ggplot2"
     },
-    "7": {
+    "8": {
       "@type": "SoftwareApplication",
       "identifier": "haven",
       "name": "haven",
@@ -216,18 +324,6 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=haven"
-    },
-    "8": {
-      "@type": "SoftwareApplication",
-      "identifier": "labelled",
-      "name": "labelled",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=labelled"
     },
     "9": {
       "@type": "SoftwareApplication",
@@ -267,6 +363,18 @@
     },
     "12": {
       "@type": "SoftwareApplication",
+      "identifier": "scales",
+      "name": "scales",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=scales"
+    },
+    "13": {
+      "@type": "SoftwareApplication",
       "identifier": "stringr",
       "name": "stringr",
       "provider": {
@@ -277,7 +385,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=stringr"
     },
-    "13": {
+    "14": {
       "@type": "SoftwareApplication",
       "identifier": "tibble",
       "name": "tibble",
@@ -289,7 +397,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=tibble"
     },
-    "14": {
+    "15": {
       "@type": "SoftwareApplication",
       "identifier": "tidyr",
       "name": "tidyr",
@@ -301,7 +409,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=tidyr"
     },
-    "15": {
+    "16": {
       "@type": "SoftwareApplication",
       "identifier": "tidyselect",
       "name": "tidyselect",
@@ -313,14 +421,26 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=tidyselect"
     },
-    "16": {
+    "17": {
       "@type": "SoftwareApplication",
       "identifier": "utils",
       "name": "utils"
     },
+    "18": {
+      "@type": "SoftwareApplication",
+      "identifier": "lifecycle",
+      "name": "lifecycle",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=lifecycle"
+    },
     "SystemRequirements": null
   },
-  "fileSize": "1152.631KB",
+  "fileSize": "676.638KB",
   "releaseNotes": "https://github.com/DanChaltiel/EDCimport/blob/master/NEWS.md",
   "readme": "https://github.com/DanChaltiel/EDCimport/blob/main/README.md",
   "contIntegration": "https://github.com/DanChaltiel/EDCimport/actions/workflows/check-standard.yaml",

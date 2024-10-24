@@ -46,7 +46,8 @@ assert_class = function(x, class, null.ok=TRUE){
   invisible(TRUE)
 }
 
-
+#' @noRd
+#' @keywords internal
 #' @importFrom cli cli_abort
 #' @importFrom purrr discard
 #' @importFrom rlang caller_arg

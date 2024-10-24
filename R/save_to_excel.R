@@ -97,7 +97,8 @@ edc_browse_excel = function(){
   browseURL(edcimport_env$excel_db_path)
 }
 
-
+#' @noRd
+#' @keywords internal
 #' @importFrom fs path path_sanitize
 clean_filename = function(filename){
   a = dirname(filename)

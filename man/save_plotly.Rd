@@ -13,6 +13,9 @@ save_plotly(p, file, ...)
 
 \item{...}{passed on to \link[htmlwidgets:saveWidget]{htmlwidgets::saveWidget}}
 }
+\value{
+nothing, used for side effect
+}
 \description{
 Save a plotly to an HTML file
 }
