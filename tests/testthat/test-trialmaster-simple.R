@@ -5,6 +5,7 @@ edc_options(edc_lookup_overwrite_warn=FALSE)
 test_that("Read a TM archive", {
   clean_cache()
   clean_lookup()
+  local_reproducible_output(width=125)
   
   f = function(x) {
     x %>% 

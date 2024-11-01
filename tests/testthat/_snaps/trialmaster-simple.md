@@ -30,7 +30,7 @@
     Code
       w$.lookup
     Output
-      -- Lookup table - CRF (extraction of 2022-08-25) - EDCimport v0.0.0 ------------
+      -- Lookup table - CRF (extraction of 2022-08-25) - EDCimport v0.0.0 ---------------------------------------------------------
         dataset  nrow  ncol  n_id rows_per_id crfname                       
         <chr>   <dbl> <dbl> <int>       <dbl> <chr>                         
       1 site        1    33    NA          NA Trial Site Setup & Information
@@ -247,8 +247,7 @@
       [1] "AFGHANISTAN"   "ALAND ISLANDS" "ALBANIA"      
       
       $site$STTMZN
-      [1] "(GMT+00:00) Dublin, Edinburgh, Lisbon, London"
-      [2] "(GMT+00:00) Monrovia, Reykjavik"              
+      [1] "(GMT+00:00) Dublin, Edinburgh, Lisbon, London" "(GMT+00:00) Monrovia, Reykjavik"              
       [3] "(GMT+00:00) Sao Tome"                         
       
       $site$INCLSITE
@@ -257,8 +256,7 @@
       
       $trial
       $trial$TRTMZN
-      [1] "(GMT+00:00) Dublin, Edinburgh, Lisbon, London"
-      [2] "(GMT+00:00) Monrovia, Reykjavik"              
+      [1] "(GMT+00:00) Dublin, Edinburgh, Lisbon, London" "(GMT+00:00) Monrovia, Reykjavik"              
       [3] "(GMT+00:00) Sao Tome"                         
       
       $trial$INCLTRIA

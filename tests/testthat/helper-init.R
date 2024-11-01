@@ -36,12 +36,16 @@ if(is_testing()){
 # globalCallingHandlers(NULL)
 # rlang::global_entrace()
 
-library(fs, warn.conflicts=FALSE)
-library(usethis, warn.conflicts=FALSE)
-library(rlang, warn.conflicts=FALSE)
-library(cli, warn.conflicts=FALSE)
-library(dplyr, warn.conflicts=FALSE)
-library(purrr, warn.conflicts=FALSE)
+shhh = function(x){
+  if(rlang::is_installed(x)) library(x, character.only=TRUE, warn.conflicts=FALSE)
+}
+
+shhh("fs")
+shhh("usethis")
+shhh("rlang")
+shhh("cli")
+shhh("dplyr")
+shhh("purrr")
 # library(tidyverse, warn.conflicts=FALSE)
 
 
