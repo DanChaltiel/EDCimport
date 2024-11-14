@@ -2,6 +2,11 @@
 
 EDCimport is a package designed to easily import data from EDC software TrialMaster. Browse code at <https://github.com/DanChaltiel/EDCimport> and read the doc at <https://danchaltiel.github.io/EDCimport/>.
 
+# EDCimport 0.5.2
+
+-   Fixed a bug in `lastnews_table()` when subjid is not numeric
+-   Fixed a bug in `read_all_sas()` causing metadata (e.g. `date_extraction`) being converted to dataframes
+
 # EDCimport 0.5.1
 
 -   Internal fix for CRAN check
