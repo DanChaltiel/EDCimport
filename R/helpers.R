@@ -248,8 +248,8 @@ lastnews_table = function(except=NULL, with_ties=FALSE, numeric_id=TRUE,
   if(nrow(rtn)==0){
     cli_abort("No data with dates could be found, verify your export settings.")
   }
-  if(numeric_id) {
-    rtn$subjid = as.numeric(rtn$subjid)
+  if(numeric_id && can_be_numeric(rtn$subjid)) {
+    rtn$subjid = as.numeric(as.character(rtn$subjid))
   }
   
   rtn = rtn %>% 
