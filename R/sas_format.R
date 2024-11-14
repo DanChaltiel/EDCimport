@@ -96,7 +96,7 @@
   sas_formats = .read_sas_formats(format_file)
   datalist %>% 
     map(~{
-      if(is_error(.x)) return(.x)
+      if(!is.data.frame(.x)) return(.x)
       .x %>% 
         as_tibble() %>% 
         mutate(
