@@ -118,9 +118,8 @@ edc_warn_extraction_date = function(max_days=30){
 #'
 #' @return the `df` dataset, unchanged
 #' @importFrom cli cli_abort
-#' @importFrom dplyr across count filter select
+#' @importFrom dplyr across count everything filter select
 #' @importFrom rlang current_env
-#' @importFrom tidyselect everything
 #' @importFrom utils head
 #' @export
 #'
@@ -269,7 +268,7 @@ edc_data_warnings = function(){
 
 #' @noRd
 #' @keywords internal
-#' @importFrom cli cli_abort cli_vec format_inline
+#' @importFrom cli cli_abort cli_vec cli_warn format_inline
 #' @importFrom dplyr pull
 #' @importFrom rlang caller_arg
 #' @importFrom stringr str_ends str_pad

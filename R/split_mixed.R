@@ -35,10 +35,9 @@ table_format = function(df, id=get_subjid_cols(), ...,
 #' @noRd
 #' @keywords internal
 #' @importFrom cli cli_abort cli_warn
-#' @importFrom dplyr across select summarise
+#' @importFrom dplyr across everything select summarise
 #' @importFrom purrr map_dbl
 #' @importFrom rlang check_dots_empty
-#' @importFrom tidyselect everything
 .table_format = function(df, id=get_subjid_cols(), ..., 
                          ignore_cols=get_meta_cols(0.95), 
                          na_rm=FALSE,
@@ -81,12 +80,10 @@ table_format = function(df, id=get_subjid_cols(), ...,
 #' @return a list of the new long and short tables. Use [load_list()] to load them into the global environment.
 #' @export
 #' @importFrom cli cli_bullets cli_warn
-#' @importFrom dplyr across group_by select summarise summarise_all ungroup
+#' @importFrom dplyr across all_of everything group_by lst select summarise summarise_all ungroup
 #' @importFrom glue glue
 #' @importFrom purrr discard discard_at imap keep list_flatten map_chr
 #' @importFrom rlang check_dots_empty
-#' @importFrom tibble lst
-#' @importFrom tidyselect all_of everything
 #' @importFrom utils head
 #'
 #' @examples

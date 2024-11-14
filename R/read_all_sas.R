@@ -16,6 +16,9 @@
 #'
 #' @return a list containing one dataframe for each `.xpt` file in the folder, the extraction date (`datetime_extraction`), and a summary of all imported tables (`.lookup`).
 #' @export
+#' @importFrom fs dir_ls is_dir path_ext
+#' @importFrom rlang check_dots_empty
+#' @importFrom utils packageVersion
 read_all_sas = function(path, ..., 
                         format_file="procformat.sas", 
                         clean_names_fun=NULL, 

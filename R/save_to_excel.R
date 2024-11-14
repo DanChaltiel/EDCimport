@@ -23,13 +23,12 @@
 #'   edc_db_to_excel(filename=TRUE)
 #' }
 #' @importFrom cli cli_abort cli_inform
-#' @importFrom dplyr across arrange mutate
+#' @importFrom dplyr across arrange mutate sym where
 #' @importFrom fs dir_create file_exists file_size
 #' @importFrom glue glue
 #' @importFrom purrr iwalk map_lgl
-#' @importFrom rlang check_dots_empty check_installed is_named sym
+#' @importFrom rlang check_dots_empty check_installed is_named
 #' @importFrom stringr str_ends str_sub
-#' @importFrom tidyselect where
 #' @importFrom utils browseURL
 edc_db_to_excel = function(filename=tempfile(fileext=".xlsx"),
                            ..., 

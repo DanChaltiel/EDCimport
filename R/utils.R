@@ -158,6 +158,8 @@ cli_menu <- function(prompt, not_interactive, choices, quit = integer(), .envir 
 #' Locate a file in a path if it doesn't exist in the working directory
 #' @noRd
 #' @keywords internal
+#' @importFrom cli cli_abort
+#' @importFrom fs file_exists path
 .locate_file = function(file, path, error=TRUE, call=parent.frame()){
   if(is.null(file)) return(NULL)
   if(file_exists(file)) return(file)
@@ -260,9 +262,8 @@ get_data_name = function(df, crfname=getOption("edc_cols_crfname", "crfname")){
 
 #' @noRd
 #' @keywords internal
-#' @importFrom dplyr across cur_column mutate
+#' @importFrom dplyr across cur_column everything mutate
 #' @importFrom purrr map_chr
-#' @importFrom tidyselect everything
 copy_label_from = function(x, from){
   if(!is.list(x)){
     from_label = attr(from, "label")
@@ -305,6 +306,7 @@ get_label = function(x, default=names(x)){
 
 #' @noRd
 #' @keywords internal
+#' @importFrom dplyr setdiff
 remove_labels = function(x){
   if(is.null(x)) return(x)
   if(is.list(x)){

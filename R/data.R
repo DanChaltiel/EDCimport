@@ -42,10 +42,10 @@ sample_soc = c(
 #' @export
 #' @name data_example
 #' @rdname data_example
-#' @importFrom dplyr mutate
+#' @importFrom dplyr lst mutate
 #' @importFrom purrr imap
 #' @importFrom stats rnorm
-#' @importFrom tibble lst tibble
+#' @importFrom tibble tibble
 edc_example_mixed = function(N=100, seed=42){
   set.seed(seed)
   
@@ -68,10 +68,10 @@ edc_example_mixed = function(N=100, seed=42){
 
 #' @rdname data_example
 #' @export
-#' @importFrom dplyr mutate n select
+#' @importFrom dplyr lst mutate n select
 #' @importFrom purrr imap
 #' @importFrom stats rnorm runif
-#' @importFrom tibble lst tibble
+#' @importFrom tibble tibble
 edc_example = function(N=50, seed=42){
   set.seed(seed)
   start = ISOdate(2010, 04, 13)
@@ -115,10 +115,10 @@ edc_example_plot = edc_example
 
 #' @rdname data_example
 #' @export
-#' @importFrom dplyr mutate n select
+#' @importFrom dplyr lst mutate n select
 #' @importFrom purrr imap map
 #' @importFrom stats rbinom runif
-#' @importFrom tibble lst tibble
+#' @importFrom tibble tibble
 #' @importFrom tidyr unnest
 edc_example_ae = function(N=50, seed=42){
   set.seed(seed)

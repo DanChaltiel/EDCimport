@@ -16,10 +16,10 @@
 #' @seealso [extend_lookup()], [edc_lookup()]
 #' 
 #' @importFrom cli cli_abort
-#' @importFrom dplyr arrange mutate
+#' @importFrom dplyr arrange lst mutate
 #' @importFrom purrr map map_dbl
 #' @importFrom rlang caller_arg is_named
-#' @importFrom tibble lst tibble
+#' @importFrom tibble tibble
 build_lookup = function(data_list){
   if(is.data.frame(data_list)) data_list = lst(!!caller_arg(data_list):=data_list)
   if(!is.list(data_list)){
@@ -61,8 +61,7 @@ build_lookup = function(data_list){
 #' @export
 #' @seealso [build_lookup()], [extend_lookup()]
 #' @importFrom cli cli_abort
-#' @importFrom dplyr arrange
-#' @importFrom rlang enquos
+#' @importFrom dplyr arrange enquos
 #' 
 #' @examples
 #' tm = edc_example()
@@ -126,10 +125,9 @@ get_lookup = deprecatedly(edc_lookup, "0.5.0", "edc_lookup()")
 #' @seealso [build_lookup()], [edc_lookup()]
 #' 
 #' @importFrom cli cli_abort cli_warn
-#' @importFrom dplyr arrange desc filter mutate relocate select
+#' @importFrom dplyr arrange desc filter last_col mutate relocate select
 #' @importFrom purrr keep map map_chr map_dbl map_int map_lgl
 #' @importFrom rlang check_dots_empty
-#' @importFrom tidyselect last_col
 #' @examples
 #' #tm = read_trialmaster("filename.zip", pw="xx")
 #' tm = edc_example_mixed()

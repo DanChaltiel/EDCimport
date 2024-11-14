@@ -4,10 +4,10 @@
 #' @param ... passed to `read_function`
 #' @noRd
 #' @keywords internal
+#' @importFrom dplyr across as_tibble mutate where
 #' @importFrom fs path_ext_remove
 #' @importFrom purrr map
 #' @importFrom rlang set_names
-#' @importFrom tibble as_tibble
 .read_all = function(files, read_function, clean_names_fun=NULL, ...){
   assert_file_exists(files)
   file_names = basename(files) %>% tolower() %>% path_ext_remove()
@@ -48,8 +48,7 @@
 #' Apply `.flatten_error` to all `try-error` columns
 #' @noRd
 #' @keywords internal
-#' @importFrom dplyr across mutate
-#' @importFrom tidyselect where
+#' @importFrom dplyr across mutate where
 .flatten_error_columns = function(df){
   df %>% 
     mutate(across(where(~inherits(.x, "try-error")), .flatten_error))

@@ -83,8 +83,7 @@ read_all_csv = function(path, ...,
 
 #' @noRd
 #' @keywords internal
-#' @importFrom dplyr across cur_column mutate pull select
-#' @importFrom tidyselect all_of everything
+#' @importFrom dplyr across all_of cur_column everything mutate pull select
 .apply_label_lookup = function(data, data_labels, name_from="name", label_from="label"){
   name_from  = getOption("edc_col_name", default=name_from)
   label_from = getOption("edc_col_label", default=label_from)

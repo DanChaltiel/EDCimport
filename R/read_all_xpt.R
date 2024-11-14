@@ -128,10 +128,9 @@ read_tm_all_xpt = read_all_xpt
 #' @noRd
 #' @keywords internal
 #' @importFrom cli cli_warn
-#' @importFrom dplyr distinct select
+#' @importFrom dplyr distinct select where
 #' @importFrom purrr iwalk keep walk
 #' @importFrom rlang is_error
-#' @importFrom tidyselect where
 .warn_bad_columns = function(rtn){
   rtn %>% 
     keep(is.data.frame) %>% 

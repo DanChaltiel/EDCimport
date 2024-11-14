@@ -29,11 +29,10 @@
 #' find_keyword("\\(") #you need to escape special characters
 #' }
 #' @importFrom cli cli_warn
-#' @importFrom dplyr any_of filter mutate pull select
+#' @importFrom dplyr any_of filter mutate pull select where
 #' @importFrom purrr map2_chr map2_dbl
 #' @importFrom stringr str_detect str_trim
 #' @importFrom tidyr unite unnest
-#' @importFrom tidyselect where
 find_keyword = function(keyword, data=edc_lookup(), ignore_case=TRUE){
   invalid=names2=labels2=x=NULL
   f = if(isTRUE(ignore_case)) tolower else identity
@@ -184,8 +183,7 @@ fct_yesno = function(x,
 #' tm$ae %>% names
 #' tm$ae %>% select_distinct() %>% names
 #' tm$ae %>% select_distinct(.by=subjid) %>% names
-#' @importFrom dplyr across distinct n_distinct select summarise
-#' @importFrom tidyselect all_of everything where
+#' @importFrom dplyr across all_of distinct everything n_distinct select summarise where
 select_distinct = function(df, .by) {
   a = df %>% 
     summarise(across(everything(), function(.x) n_distinct(.x, na.rm=TRUE)), 
@@ -222,10 +220,9 @@ select_distinct = function(df, .by) {
 #' lastnews_table(except="db3$date9")
 #' lastnews_table(prefer="db2") 
 #' @importFrom cli cli_abort
-#' @importFrom dplyr arrange filter mutate rowwise select slice_max ungroup
+#' @importFrom dplyr arrange filter mutate rowwise select slice_max ungroup where
 #' @importFrom purrr discard discard_at imap list_rbind
 #' @importFrom tidyr pivot_longer
-#' @importFrom tidyselect where
 lastnews_table = function(except=NULL, with_ties=FALSE, numeric_id=TRUE, 
                           prefer=NULL,
                           warn_if_future=TRUE) {
@@ -347,7 +344,8 @@ save_sessioninfo = function(path="check/session_info.txt", with_date=TRUE){
 #'
 #' @return datalist, with subject id modified
 #' @export
-#' @importFrom purrr modify
+#' @importFrom dplyr across any_of mutate select
+#' @importFrom purrr discard_at keep map modify
 #'
 #' @examples
 #' db = edc_example()
@@ -404,8 +402,9 @@ harmonize_subjid = function(datalist, preprocess=NULL,
 #'
 #' @return Nothing, used for side effects
 #' @importFrom cli cli_abort cli_inform cli_warn
+#' @importFrom dplyr enquo
 #' @importFrom glue glue
-#' @importFrom rlang as_name caller_arg enquo set_names
+#' @importFrom rlang as_name caller_arg set_names
 #' @export
 #'
 #' @examples
@@ -528,11 +527,10 @@ get_datasets = function(lookup=edc_lookup(), envir=parent.frame()){
 #' 
 #' @export
 #' @importFrom cli cli_warn
-#' @importFrom dplyr mutate select
+#' @importFrom dplyr lst mutate select
 #' @importFrom lifecycle deprecate_warn
 #' @importFrom purrr map map_chr
 #' @importFrom stats na.omit
-#' @importFrom tibble lst
 get_key_cols = function(lookup=edc_lookup()){
   patient_id = get_subjid_cols()
   
