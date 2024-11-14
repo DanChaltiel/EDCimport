@@ -30,7 +30,7 @@
     Code
       w$.lookup
     Output
-      -- Lookup table - CRF (extraction of 2022-08-25) - EDCimport v0.0.0 ---------------------------------------------------------
+      -- Lookup table - CRF (extraction of 2022-08-25) - EDCimport v0.0.0 ----------------------------------------------------
         dataset  nrow  ncol  n_id rows_per_id crfname                       
         <chr>   <dbl> <dbl> <int>       <dbl> <chr>                         
       1 site        1    33    NA          NA Trial Site Setup & Information
