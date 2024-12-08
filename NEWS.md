@@ -47,7 +47,7 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 -   New function `search_for_newer_data()` to search a path (e.g. Downloads) for a newer data archive (#46).
 
--   New function `crf_status_plot()` to show the current database completion status (#48).
+-   New function `edc_crf_plot()` to show the current database completion status (#48).
 
 -   New function `save_sessioninfo()`, to save `sessionInfo()` into a text file (#42).
 

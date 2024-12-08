@@ -19,12 +19,12 @@
 #' @examples
 #' \dontrun{
 #' #import a TM database and use load_list(), then:
-#' crf_status_plot() + ggtitle(date_extraction)
-#' crf_status_plot(pal=rev(edc_pal_crf()))
-#' crf_status_plot(details=TRUE, treat_as_worst="No Data")
-#' crf_status_plot(x_label="{crfname} (N={n_id}, n={nrow})")
+#' edc_crf_plot() + ggtitle(date_extraction)
+#' edc_crf_plot(pal=rev(edc_pal_crf()))
+#' edc_crf_plot(details=TRUE, treat_as_worst="No Data")
+#' edc_crf_plot(x_label="{crfname} (N={n_id}, n={nrow})")
 #' 
-#' p = crf_status_plot(details=TRUE)
+#' p = edc_crf_plot(details=TRUE)
 #' p$data$crfstat %>% unique()
 #' #> [1] "Incomplete"        "No Data Locked"    "No Data"           "Signed"           
 #' #> [5] "Partial Monitored" "Monitored"         "Complete Locked"   "Complete" 
@@ -38,7 +38,7 @@
 #' @importFrom scales label_percent
 #' @importFrom stringr str_subset
 #' @importFrom tibble tibble
-crf_status_plot = function(crfstat_col="CRFSTAT", 
+edc_crf_plot = function(crfstat_col="CRFSTAT", 
                            ..., 
                            details=FALSE,
                            pal = edc_pal_crf(), 
@@ -80,9 +80,12 @@ crf_status_plot = function(crfstat_col="CRFSTAT",
     labs(x=NULL, y="Dataset", fill="CRF Status")
 }
 
+#' @rdname edc_crf_plot
+#' @usage NULL
+#' @export
+crf_status_plot = edc_crf_plot
 
-
-#' @rdname crf_status_plot
+#' @rdname edc_crf_plot
 #' @export
 #' @source `ggsci:::ggsci_db$lancet[["lanonc"]] %>% dput()`
 edc_pal_crf = function(){

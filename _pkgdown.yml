@@ -29,7 +29,8 @@ reference:
   - assert_no_duplicate
   - edc_warn_patient_diffs
   - edc_warn_extraction_date
-  - crf_status_plot
+  - edc_crf_plot
+  - edc_patient_gridplot
   - edc_population_plot
 - title: "Project management"
 - contents:
