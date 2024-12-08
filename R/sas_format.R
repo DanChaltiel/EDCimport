@@ -88,7 +88,6 @@
 #' @keywords internal
 #' @importFrom dplyr across as_tibble everything mutate na_if where
 #' @importFrom purrr map
-#' @importFrom rlang is_error
 .apply_sas_formats = function(datalist, format_file){
   if(is.null(format_file)) return(datalist)
   assert_file_exists(format_file)
