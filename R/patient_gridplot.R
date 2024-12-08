@@ -11,6 +11,7 @@
 #' @param axes_flip whether to flip the axes, so that patients are on the Y axis and datasets on the X axis
 #' @param show_grid whether to show the grid
 #' @param preprocess a function to preprocess the patient ID, e.g. `as.numeric`, or a custom function with string replacement
+#' @param palette the colors to use
 #'
 #' @return a `ggplot` object
 #' @export

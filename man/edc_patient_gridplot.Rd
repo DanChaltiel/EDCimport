@@ -23,6 +23,8 @@ edc_patient_gridplot(
 \item{show_grid}{whether to show the grid}
 
 \item{preprocess}{a function to preprocess the patient ID, e.g. \code{as.numeric}, or a custom function with string replacement}
+
+\item{palette}{the colors to use}
 }
 \value{
 a \code{ggplot} object
