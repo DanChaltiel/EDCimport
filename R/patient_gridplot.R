@@ -57,20 +57,17 @@ edc_patient_gridplot = function(sort_rows=TRUE, sort_cols=TRUE,
     mutate(included = ifelse(included>0, 1, 0)) %>% 
     mutate(subjid_sum = sum(included), .by=subjid) %>% 
     mutate(dataset_sum = sum(included), .by=dataset)
-  
   stopifnot(nrow(df) == nrow_rslt)
-  
   
   l = edc_lookup()
   extraction = attr(l, "datetime_extraction")
   project_name = attr(l, "project_name")
-  par_extraction = par_projname = NULL
+  par_projname = plot_subtitle = NULL
   if(!is.null(project_name)) 
     par_projname = format_inline(" - {project_name}")
   if(!is.null(extraction)) 
-    par_extraction = format_inline(" (extraction of {format_ymd(extraction)}) ")
+    plot_subtitle = format_inline(" (extraction of {format_ymd(extraction)}) ")
   plot_title = format_inline("Patient gridplot{par_projname}")
-  plot_subtitle = format_inline("(extraction of {format_ymd(extraction)})")
   
   
   df = df %>% 
@@ -114,6 +111,8 @@ edc_patient_gridplot = function(sort_rows=TRUE, sort_cols=TRUE,
 }
 
 
+#' @importFrom dplyr as_tibble select
+#' @importFrom tibble tibble
 .get_subjid_vector = function(df, subjid_cols){
   rtn = df %>% 
     select(subjid=any_of2(subjid_cols)) %>% 
@@ -121,5 +120,3 @@ edc_patient_gridplot = function(sort_rows=TRUE, sort_cols=TRUE,
   if(ncol(rtn) == 0) rtn = tibble(subjid=character(0))
   rtn
 }
-
-
