@@ -7,6 +7,7 @@
 edc_patient_gridplot(
   sort_rows = TRUE,
   sort_cols = TRUE,
+  gradient = FALSE,
   axes_flip = FALSE,
   show_grid = TRUE,
   preprocess = NULL,
@@ -17,6 +18,8 @@ edc_patient_gridplot(
 \item{sort_rows}{whether to sort patients from "present in most datasets" to "present in least datasets"}
 
 \item{sort_cols}{whether to sort datasets from "containing the most patients" to "containing the least patients"}
+
+\item{gradient}{whether to add a color gradient for repeating measures}
 
 \item{axes_flip}{whether to flip the axes, so that patients are on the Y axis and datasets on the X axis}
 

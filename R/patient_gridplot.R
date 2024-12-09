@@ -8,6 +8,7 @@
 #'
 #' @param sort_rows whether to sort patients from "present in most datasets" to "present in least datasets"
 #' @param sort_cols whether to sort datasets from "containing the most patients" to "containing the least patients"
+#' @param gradient whether to add a color gradient for repeating measures
 #' @param axes_flip whether to flip the axes, so that patients are on the Y axis and datasets on the X axis
 #' @param show_grid whether to show the grid
 #' @param preprocess a function to preprocess the patient ID, e.g. `as.numeric`, or a custom function with string replacement
@@ -27,11 +28,11 @@
 #' @importFrom cli format_inline
 #' @importFrom dplyr arrange bind_rows mutate
 #' @importFrom forcats fct_reorder
-#' @importFrom ggplot2 aes coord_equal element_text geom_tile ggplot labs scale_fill_manual scale_x_discrete theme theme_minimal
+#' @importFrom ggplot2 aes coord_equal element_text geom_tile ggplot labs scale_fill_gradientn scale_x_discrete theme theme_minimal
 #' @importFrom purrr map map_dbl
 #' @importFrom rlang as_function is_formula
 #' @importFrom tibble tibble
-edc_patient_gridplot = function(sort_rows=TRUE, sort_cols=TRUE, 
+edc_patient_gridplot = function(sort_rows=TRUE, sort_cols=TRUE, gradient=FALSE,
                                 axes_flip=FALSE, show_grid=TRUE, preprocess=NULL,
                                 palette=c("Yes"="#00468BFF", "No"="#ED0000FF")){
   
@@ -42,20 +43,22 @@ edc_patient_gridplot = function(sort_rows=TRUE, sort_cols=TRUE,
   
   subjid_list = data_list %>% 
     map(~{
-      .get_subjid_vector(.x, subjid_cols)$subjid %>% unique() %>% preprocess()
+      tmp = .get_subjid_vector(.x, subjid_cols)$subjid %>% preprocess()
+      if(!gradient) tmp = unique(tmp)
+      tmp
     })
   
   all_subjid = subjid_list %>% unlist() %>% unique() %>% sort()
   
   nrow_rslt = length(all_subjid) * length(data_list)
   df = subjid_list %>% 
-    map(~{
+    imap(~{
       tibble(subjid=all_subjid,
-             included=map_dbl(all_subjid, function(s) sum(s==.x)))
+             included_sum=map_dbl(all_subjid, function(s) sum(s==.x)))
     }) %>% 
     bind_rows(.id="dataset") %>% 
     arrange(dataset) %>% 
-    mutate(included = ifelse(included>0, 1, 0)) %>% 
+    mutate(included = ifelse(included_sum>0, 1, 0)) %>% 
     mutate(subjid_sum = sum(included), .by=subjid) %>% 
     mutate(dataset_sum = sum(included), .by=dataset)
   stopifnot(nrow(df) == nrow_rslt)
@@ -71,22 +74,29 @@ edc_patient_gridplot = function(sort_rows=TRUE, sort_cols=TRUE,
   plot_title = format_inline("Patient gridplot{par_projname}")
   
   
-  df = df %>% 
-    arrange(dataset) %>% 
-    mutate(included = ifelse(included>0, 1, 0)) %>% 
-    mutate(subjid_sum = sum(included), .by=subjid) %>% 
-    mutate(dataset_sum = sum(included), .by=dataset)
-  
-  cur_aes = aes(x=subjid, y=dataset, fill=included)
-  custom_desc = TRUE
-  if(axes_flip) {
-    cur_aes = aes(x=dataset, y=subjid, fill=included)
-    custom_desc = FALSE
-  }
-  
   if(isFALSE(show_grid)) show_grid = 0
   if(isTRUE(show_grid)) show_grid = "black"
-  
+  if(isTRUE(axes_flip)) {
+    aes_x = "dataset"
+    aes_y = "subjid"
+    custom_desc = FALSE
+  } else {
+    aes_x = "subjid"
+    aes_y = "dataset"
+    custom_desc = TRUE
+  }
+  if(isTRUE(gradient)){
+    aes_fill = "included_sum"
+    fill_name = "Number of forms per patient"
+    val1 = 1/max(df$included_sum)
+    scale_fill = scale_fill_gradientn(colours = c(palette["No"], palette["Yes"], "black"),
+                                      values = c(0, val1, 1))
+  } else {
+    aes_fill = "included"
+    fill_name = "Patient included"
+    scale_fill = scale_fill_manual(values=palette)
+  }
+
   df %>% 
     mutate(
       included = factor(included, levels=c(0,1), labels=c("No", "Yes")),
@@ -96,11 +106,11 @@ edc_patient_gridplot = function(sort_rows=TRUE, sort_cols=TRUE,
       dataset = if(sort_cols) fct_reorder(dataset, dataset_sum, .desc=!custom_desc) else dataset,
     ) %>% 
     ggplot() +
-    cur_aes +
+    aes(x=.data[[aes_x]], y=.data[[aes_y]], fill=.data[[aes_fill]]) +
     geom_tile(color=show_grid) +
     scale_x_discrete(position = "top") +
-    scale_fill_manual(values=palette) +
-    labs(y="Patient ID", x=NULL, fill="Included", color="Included",
+    scale_fill +
+    labs(y="Patient ID", x=NULL, fill=fill_name, color="Included",
          title=plot_title, subtitle=plot_subtitle) +
     coord_equal() +
     theme_minimal() +
