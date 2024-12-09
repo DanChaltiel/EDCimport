@@ -9,7 +9,7 @@ patient is present in the dataset. Data are drawn from get_datasets."></head><bo
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9002</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9003</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,6 +46,7 @@ patient is present in the dataset. Data are drawn from <a href="get_datasets.htm
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">edc_patient_gridplot</span><span class="op">(</span></span>
 <span>  sort_rows <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  sort_cols <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  gradient <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  axes_flip <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  show_grid <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  preprocess <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -63,6 +64,10 @@ patient is present in the dataset. Data are drawn from <a href="get_datasets.htm
 
 <dt id="arg-sort-cols">sort_cols<a class="anchor" aria-label="anchor" href="#arg-sort-cols"></a></dt>
 <dd><p>whether to sort datasets from "containing the most patients" to "containing the least patients"</p></dd>
+
+
+<dt id="arg-gradient">gradient<a class="anchor" aria-label="anchor" href="#arg-gradient"></a></dt>
+<dd><p>whether to add a color gradient for repeating measures</p></dd>
 
 
 <dt id="arg-axes-flip">axes_flip<a class="anchor" aria-label="anchor" href="#arg-axes-flip"></a></dt>
