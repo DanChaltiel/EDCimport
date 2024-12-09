@@ -1,8 +1,6 @@
 Sys.setenv(LANGUAGE = "en")
 Sys.setenv(TZ="Europe/Paris")
 
-Sys.setenv("TESTTHAT_CPUS" = 5)
-
 options(
   encoding="UTF-8",
   # warn=0, #default, stacks
@@ -46,7 +44,6 @@ shhh("rlang")
 shhh("cli")
 shhh("dplyr")
 shhh("purrr")
-# library(tidyverse, warn.conflicts=FALSE)
 
 
 # edc_options(
@@ -85,6 +82,7 @@ clean_cache = function(){
   invisible(TRUE)
 }
 v=utils::View
+wd=function()browseURL(".")
 
 snapshot_review_bg = function(...){
   # brw = function(url) .Call("rs_browseURL", url, PACKAGE="(embedding)")
