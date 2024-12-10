@@ -26,7 +26,7 @@ read_all_sas = function(path, ...,
                         verbose=getOption("edc_read_verbose", 1)){
   check_dots_empty()
   reset_manual_correction()
-  assert(is_dir(path))
+  assert(dir_exists(path), msg="Directory {.path {path}} does not exist.")
   
   if(identical(datetime_extraction, "guess") || is.null(datetime_extraction)){
     datetime_extraction = get_folder_datetime(path, verbose=verbose)
