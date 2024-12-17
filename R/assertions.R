@@ -30,7 +30,13 @@ assert = function(x, msg=NULL, call=parent.frame(), class=NULL){
 #' assert_file_exists("R/data.SAS")
 #' @importFrom fs file_exists
 assert_file_exists = function(x, msg=NULL, class=NULL){
-  assert(all(file_exists(x)), msg, call=parent.frame(), class=class)
+  missing_files = !file_exists(x)
+  if(is.null(msg)){
+    msg = "Missing file{?s}: {.path {x[missing_files]}}"
+  }
+  if(any(missing_files)){
+    cli_abort(msg, call=parent.frame(), class=class)
+  }
 }
 
 
@@ -45,6 +51,7 @@ assert_class = function(x, class, null.ok=TRUE){
   }
   invisible(TRUE)
 }
+
 
 #' @noRd
 #' @keywords internal
