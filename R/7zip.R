@@ -47,17 +47,17 @@ get_7z_dir = function(){
 #' @return the success/error message. Mainly used for its side effect of extracting the archive.
 #' @seealso https://info.nrao.edu/computing/guide/file-access-and-archiving/7zip/7z-7za-command-line-guide#section-17
 #' @importFrom cli cli_abort cli_warn
-#' @importFrom fs dir_exists file_exists
+#' @importFrom fs dir_create dir_exists file_exists
 #' @importFrom glue glue
 #' @importFrom stringr str_detect
 #' @noRd
 #' @keywords internal
-extract_7z = function(archive, target_dir, password=NULL, path_7zip=NULL){
+extract_7z = function(archive, target_dir, password=NULL, preserve_dirs=TRUE, path_7zip=NULL){
   if(!file_exists(archive)){
     cli_abort("Archive file {.val {archive}} does not exist.")
   }
-  if(!dir_exists(target_dir)){
-    cli_abort("Target directory {.val {target_dir}} does not exist.")
+  if(!dir_exists(target_dir)){ 
+    dir_create(target_dir)
   }
   cur_path = Sys.getenv("PATH")
   if(!str_detect(cur_path, "7-Zip")){
@@ -65,8 +65,9 @@ extract_7z = function(archive, target_dir, password=NULL, path_7zip=NULL){
     Sys.setenv(PATH=paste0(cur_path, ";", path_7zip))
   }
   
+  read_arg = if(isTRUE(preserve_dirs)) "x" else "e"
   pwc = if(is.null(password)) "" else glue('-p"{password}"')
-  cmd = glue('7z e -o"{target_dir}" "{archive}" {pwc} -aoa')
+  cmd = glue('7z {read_arg} -o"{target_dir}" "{archive}" {pwc} -aoa')
   msg = try(system(cmd, intern=TRUE), 
             silent=TRUE) %>% 
     suppressWarnings()

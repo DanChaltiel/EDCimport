@@ -108,8 +108,20 @@ test_that("find_keyword() works with read_trialmaster()", {
 test_that("Extract zip without password", {
   #This would actually work as well with a random password
   target = temp_target("test_7z1")
+  unlink(target, recursive=TRUE)
   extract_7z(filename, target)
   expect_true("procformat.sas" %in% dir(target))
+})
+
+
+test_that("Extract zip subdir", {
+  target = temp_target("test_7z2")
+  unlink(target, recursive=TRUE)
+  src = test_path("CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16_subdir.zip")
+  extract_7z(src, target)
+  expect_true("procformat.sas" %in% dir(target))
+  expect_true(!"PAT.xpt" %in% dir(target))
+  expect_true("PAT.xpt" %in% dir(path(target, "sub")))
 })
 
 
