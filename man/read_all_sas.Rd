@@ -24,7 +24,7 @@ read_all_sas(
 
 \item{datetime_extraction}{[\code{POSIXt(1)}]\cr the datetime of the data extraction. Default to the most common date of last modification in \code{directory}.}
 
-\item{verbose}{[\code{logical(1)}]\cr one of \code{c(0, 1, 2)}. The higher, the more information will be printed.}
+\item{verbose}{[\code{numeric(1)}]\cr one of \code{c(0, 1, 2)}. The higher, the more information will be printed.}
 }
 \value{
 a list containing one dataframe for each \code{.xpt} file in the folder, the extraction date (\code{datetime_extraction}), and a summary of all imported tables (\code{.lookup}).

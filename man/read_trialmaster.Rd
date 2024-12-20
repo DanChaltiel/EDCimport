@@ -11,6 +11,7 @@ read_trialmaster(
   clean_names_fun = NULL,
   split_mixed = FALSE,
   extend_lookup = TRUE,
+  subdirectories = FALSE,
   pw = getOption("trialmaster_pw"),
   verbose = getOption("edc_read_verbose", 1),
   key_columns = "deprecated"
@@ -29,9 +30,11 @@ read_trialmaster(
 
 \item{extend_lookup}{[\code{character(1): FALSE}]\cr whether to enrich the lookup table. See \link{extend_lookup}.}
 
+\item{subdirectories}{[\code{logical(1)}]\cr whether to read subdirectories}
+
 \item{pw}{[\code{character(1)}]\cr The password if the archive is protected. To avoid writing passwords in plain text, it is probably better to use \code{options(trialmaster_pw="xxx")} instead though.}
 
-\item{verbose}{[\code{logical(1)}]\cr one of \code{c(0, 1, 2)}. The higher, the more information will be printed.}
+\item{verbose}{[\code{numeric(1)}]\cr one of \code{c(0, 1, 2)}. The higher, the more information will be printed.}
 
 \item{key_columns}{deprecated}
 }
