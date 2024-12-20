@@ -41,5 +41,5 @@ a list containing one dataframe for each \code{.xpt} file in the folder, the ext
 \description{
 Import the \code{.zip} archive of a TrialMaster trial export as a list of dataframes. The archive filename should be leaved untouched as it contains the project name and the date of extraction. \cr
 Generate a \code{.rds} cache file for future reads. \cr
-If \verb{7zip} is not installed or available, use \code{\link[=read_tm_all_xpt]{read_tm_all_xpt()}} instead.
+If \verb{7zip} is not installed or available, use \code{\link[=read_all_xpt]{read_all_xpt()}} instead.
 }

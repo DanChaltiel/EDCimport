@@ -3,15 +3,15 @@
 #' 
 #' Import the `.zip` archive of a TrialMaster trial export as a list of dataframes. The archive filename should be leaved untouched as it contains the project name and the date of extraction. \cr
 #' Generate a `.rds` cache file for future reads. \cr
-#' If `7zip` is not installed or available, use [read_tm_all_xpt()] instead.
+#' If `7zip` is not installed or available, use [read_all_xpt()] instead.
 #'
 #' @param archive \[`character(1)`]\cr the path to the archive
 #' @param use_cache \[`mixed(1)`: "write"]\cr controls the `.rds` cache. If `TRUE`, read the cache if any or extract the archive and create a cache. If `FALSE` extract the archive without creating a cache file. Can also be `"read"` or `"write"`.
 #' @param pw \[`character(1)`]\cr The password if the archive is protected. To avoid writing passwords in plain text, it is probably better to use `options(trialmaster_pw="xxx")` instead though.
 #' @param ... unused
 #'
-#' @inherit read_tm_all_xpt return
-#' @inheritParams read_tm_all_xpt
+#' @inherit read_all_xpt return
+#' @inheritParams read_all_xpt
 #' 
 #' @export
 #' @importFrom cli cli_inform

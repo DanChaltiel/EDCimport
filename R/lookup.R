@@ -118,7 +118,7 @@ get_lookup = deprecatedly(edc_lookup, "0.5.0", "edc_lookup()")
 #' @param lookup \[`data.frame(1)`]\cr the lookup table
 #' @param id_cols,crf_cols \[`character(n)`]\cr for experts only
 #' @param datasets \[`data.frame(n)`]\cr for experts only
-#' @inheritParams read_tm_all_xpt
+#' @inheritParams read_all_xpt
 #'
 #' @return the lookup, extended
 #' @export

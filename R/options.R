@@ -17,7 +17,7 @@
 #' @param edc_cols_id,edc_cols_crfname deprecated
 #' @param edc_warn_max_subjid The max number of subject IDs to show in [edc_data_warn]
 #' @param edc_meta_cols_pct The minimal proportion of datasets a column has to reach to be considered "meta"
-#' @param edc_read_verbose,edc_correction_verbose,edc_get_key_cols_verbose the verbosity of the output of functions [read_trialmaster] and [read_tm_all_xpt], [manual_correction], and [get_key_cols]. For example, set `edc_options(edc_read_verbose=0)` to silence the first 2.
+#' @param edc_read_verbose,edc_correction_verbose,edc_get_key_cols_verbose the verbosity of the output of functions [read_trialmaster] and [read_all_xpt], [manual_correction], and [get_key_cols]. For example, set `edc_options(edc_read_verbose=0)` to silence the first 2.
 #' @param edc_lookup_overwrite_warn default to TRUE. Whether there should be warning when overwriting `.lookup` (like when reading 2 databases successively)
 #' @param .local  if TRUE, the effect will only apply to the local frame (internally using `rlang::local_options()`)
 #'
