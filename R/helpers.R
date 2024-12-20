@@ -207,7 +207,7 @@ select_distinct = function(df, .by) {
 #' @param with_ties in case of tie, whether to return the first `origin` (FALSE) or all the origins that share this tie (TRUE).
 #' @param numeric_id set to FALSE if the patient ID column is not numeric
 #' @param prefer preferred origins in the event of a tie. Usually the followup table.
-#' @param warn_if_future whether to show a warning about dates that are after the extraction date
+#' @param warn_if_future whether to show a warning about dates that are after the extraction date. Can also be a csv file path to save the warning as csv (see [edc_data_warn(csv_path)]).
 #'
 #' @return a dataframe
 #' @export
@@ -218,7 +218,7 @@ select_distinct = function(df, .by) {
 #' lastnews_table()
 #' lastnews_table(except="db3")
 #' lastnews_table(except="db3$date9")
-#' lastnews_table(prefer="db2") 
+#' lastnews_table(prefer="db2", warn_if_future="check/check_db2.csv") 
 #' @importFrom cli cli_abort
 #' @importFrom dplyr arrange filter mutate rowwise select slice_max ungroup where
 #' @importFrom purrr discard discard_at imap list_rbind
@@ -270,17 +270,27 @@ lastnews_table = function(except=NULL, with_ties=FALSE, numeric_id=TRUE,
       arrange(order(mixedorder(subjid)))
   }
   
-  if(exists("datetime_extraction")){
-    if(any(rtn$last_date > as.Date(datetime_extraction)) && warn_if_future) {
+  datetime_extraction = .get_extraction_date()
+  if(!is.null(datetime_extraction)){
+    if(warn_if_future) {
       rtn %>% 
         filter(last_date>as.Date(datetime_extraction)) %>% 
-        edc_data_warn("Date of last news after the extraction date", issue_n=NA)
+        mutate(txt=paste0(origin_data,"$",origin_col)) %>% 
+        edc_data_warn("Date of last news after the extraction date on 
+                      column{?s} {.val {unique(.data$txt)}}",
+                      issue_n=NA)
     }
   }
   
   rtn
 }
 
+.get_extraction_date = function(){
+  l = edc_lookup()
+  rtn = attr(l, "datetime_extraction")
+  if(is.null(rtn) && exists("datetime_extraction")) rtn = datetime_extraction
+  rtn
+}
 
 #' Shows how many code you wrote
 #'
