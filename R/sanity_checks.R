@@ -172,7 +172,7 @@ assert_no_duplicate = function(df, by=NULL, id_col=get_subjid_cols()){
 #' When checking your data, filter your dataset to get only problematic rows. \cr
 #' Then, use either:
 #'  * `edc_data_warn()` to generate a standardized warning that can be forwarded to the datamanager 
-#'  * `edc_data_warn()` to abort the script if the problem is too serious
+#'  * `edc_data_stop()` to abort the script if the problem is too serious
 #'  
 #' Database issues should be traced in a separate file, each with an identifying row number, and the file should be shared with the data-manager. \cr
 #' Use `edc_data_warnings()` to generate the table for such a file.

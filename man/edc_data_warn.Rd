@@ -44,7 +44,7 @@ When checking your data, filter your dataset to get only problematic rows. \cr
 Then, use either:
 \itemize{
 \item \code{edc_data_warn()} to generate a standardized warning that can be forwarded to the datamanager
-\item \code{edc_data_warn()} to abort the script if the problem is too serious
+\item \code{edc_data_stop()} to abort the script if the problem is too serious
 }
 
 Database issues should be traced in a separate file, each with an identifying row number, and the file should be shared with the data-manager. \cr
