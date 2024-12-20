@@ -90,6 +90,18 @@ test_that("Read TM with a bad name", {
   clean_cache()
 })
 
+test_that("Read TM with an internal structure", {
+  local_options(edc_lookup_overwrite_warn=FALSE)
+  tm = read_trialmaster(test_path("CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16_subdir.zip"),
+                        use_cache=FALSE, verbose=0, subdirectories=FALSE)
+  tm2 = read_trialmaster(test_path("CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16_subdir.zip"),
+                         use_cache=FALSE, verbose=0, subdirectories=TRUE)
+  expect_contains(names(tm), c("vs", "visit"))
+  expect_contains(names(tm2), c("vs", "visit", "sub_vs"))
+  expect_false(any(names(tm) == "sub_vs"))
+  clean_cache()
+})
+
 
 test_that("Use cache only if permitted", {
   clean_cache()
