@@ -2,6 +2,13 @@
 
 EDCimport is a package designed to easily import data from EDC software TrialMaster. Browse code at <https://github.com/DanChaltiel/EDCimport> and read the doc at <https://danchaltiel.github.io/EDCimport/>.
 
+# EDCimport 0.6.0 (dev)
+
+### New features
+
+-   New function `edc_patient_gridplot()`, which creates a ggplot matrix giving the presence of all patients in all datasets 
+-   New argument `subdirectories` to all reading functions (`read_trialmaster()`, `read_all_xpt()`,  `read_all_sas()`, and `read_all_csv()`), to control whether to read sub-directories. Note that until now, those subdirectories were read and could overwrite root files.
+
 # EDCimport 0.5.2
 
 -   Fixed a bug in `lastnews_table()` when subjid is not numeric
