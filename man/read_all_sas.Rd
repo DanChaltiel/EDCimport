@@ -9,6 +9,7 @@ read_all_sas(
   ...,
   format_file = "procformat.sas",
   clean_names_fun = NULL,
+  subdirectories = FALSE,
   datetime_extraction = "guess",
   verbose = getOption("edc_read_verbose", 1)
 )
@@ -21,6 +22,8 @@ read_all_sas(
 \item{format_file}{[\code{character(1)}]\cr the path to the file that should be used to apply formats. See details. Use \code{NULL} to not apply formats.}
 
 \item{clean_names_fun}{[\code{function}]\cr a function to clean column names, e.g. \link{tolower}, \code{\link[janitor:clean_names]{janitor::clean_names()}},...}
+
+\item{subdirectories}{[\code{logical(1)}]\cr whether to read subdirectories}
 
 \item{datetime_extraction}{[\code{POSIXt(1)}]\cr the datetime of the data extraction. Default to the most common date of last modification in \code{directory}.}
 

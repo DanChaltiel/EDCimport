@@ -9,8 +9,9 @@
 #' @param read_fun \[`function`]\cr a function to read the files in path, e.g. `read.csv()`, `read.csv2()`,...
 #' @param labels_from \[`misc`]\cr list of path to file containing the labels.
 #' @param clean_names_fun \[`function`]\cr a function to clean column names, e.g. [tolower], [janitor::clean_names()],...
+#' @param subdirectories \[`logical(1)`]\cr whether to read subdirectories.
 #' @param datetime_extraction \[`dateish(1)`]\cr the datetime of database extraction (database lock). If "guess", the datetime will be inferred from the files modification time.
-#' @param verbose \[`numeric(1)`]\cr the level of verbosity
+#' @param verbose \[`logical(1)`]\cr the level of verbosity
 #'
 #' @section Labels file: 
 #' `labels_from` should contain the information about column labels. It should be a data file (`.csv`) containing 2 columns: one for the column name and the other for its associated label. Use `options(edc_col_name="xxx", edc_col_label="xxx")` to specify the names of the columns.
@@ -26,6 +27,7 @@ read_all_csv = function(path, ...,
                         labels_from=NULL,
                         clean_names_fun=NULL, 
                         read_fun="guess", 
+                        subdirectories=FALSE,
                         datetime_extraction="guess", 
                         verbose=getOption("edc_read_verbose", 1)){
   check_dots_empty()
@@ -38,14 +40,13 @@ read_all_csv = function(path, ...,
   assert_class(datetime_extraction, c("POSIXt", "Date"))
   
   if(identical(read_fun, "guess")){
-    files = dir_ls(path, regexp="\\.csv")
     read_fun = guess_read_function(files[1])
   }
   assert_class(read_fun, c("function"))
 
   clean_names_fun = .get_clean_names_fun(clean_names_fun)
-  rtn = dir_ls(path, regexp="\\.csv") %>% 
-    .read_all(read_fun, clean_names_fun=clean_names_fun) %>% 
+  rtn = dir_ls(path, regexp="\\.csv", recurse=subdirectories) %>% 
+    .read_all(read_fun, clean_names_fun=clean_names_fun, path=path) %>% 
     .add_labels(labels_file=labels_from, path, read_fun) %>% 
     .add_lookup_and_date(
       datetime_extraction=datetime_extraction,

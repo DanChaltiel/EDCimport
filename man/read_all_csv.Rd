@@ -10,6 +10,7 @@ read_all_csv(
   labels_from = NULL,
   clean_names_fun = NULL,
   read_fun = "guess",
+  subdirectories = FALSE,
   datetime_extraction = "guess",
   verbose = getOption("edc_read_verbose", 1)
 )
@@ -25,9 +26,11 @@ read_all_csv(
 
 \item{read_fun}{[\code{function}]\cr a function to read the files in path, e.g. \code{read.csv()}, \code{read.csv2()},...}
 
+\item{subdirectories}{[\code{logical(1)}]\cr whether to read subdirectories.}
+
 \item{datetime_extraction}{[\code{dateish(1)}]\cr the datetime of database extraction (database lock). If "guess", the datetime will be inferred from the files modification time.}
 
-\item{verbose}{[\code{numeric(1)}]\cr the level of verbosity}
+\item{verbose}{[\code{logical(1)}]\cr the level of verbosity}
 }
 \value{
 a list containing one dataframe for each \code{.csv} file in the folder, the extraction date (\code{datetime_extraction}), and a summary of all imported tables (\code{.lookup}).

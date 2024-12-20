@@ -22,6 +22,7 @@
 read_all_sas = function(path, ..., 
                         format_file="procformat.sas", 
                         clean_names_fun=NULL, 
+                        subdirectories=FALSE,
                         datetime_extraction="guess", 
                         verbose=getOption("edc_read_verbose", 1)){
   check_dots_empty()
@@ -36,9 +37,9 @@ read_all_sas = function(path, ...,
   format_file = .locate_file(format_file, path)
   catalog_file = if(path_ext(format_file)=="sas7bcat") format_file else NULL
   
-  rtn = dir_ls(path, regexp="\\.sas7bdat$") %>% 
+  rtn = dir_ls(path, regexp="\\.sas7bdat$", recurse=subdirectories) %>% 
     .read_all(haven::read_sas, clean_names_fun=clean_names_fun, 
-              catalog_file=catalog_file) %>%
+              catalog_file=catalog_file, path=path) %>%
     .clean_labels_utf8() %>% 
     .add_lookup_and_date(
       datetime_extraction=datetime_extraction,
