@@ -314,7 +314,7 @@ edc_data_condition = function(.data, message, issue_n, max_subjid,
     item = tibble(issue_n, message, subjid=list(subj), fun=fun_name)
     save_warn_list_item(item)
     
-    fun("{par_issue}{message}{par_subj}")
+    fun("{par_issue}{message}{par_subj}", class="edc_data_condition")
   }
   invisible(.data)
 }

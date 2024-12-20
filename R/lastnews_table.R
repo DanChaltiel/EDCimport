@@ -62,7 +62,7 @@ lastnews_table = function(except=NULL, with_ties=FALSE, numeric_id=TRUE,
     slice_max(last_date, by=subjid, with_ties=TRUE) %>% 
     arrange(order(mixedorder(subjid)))
   
-  if(!with_ties){
+  if(!isTRUE(with_ties)){
     rtn = rtn %>% 
       rowwise() %>%  
       mutate(prefered = which(prefer %in% c(origin, origin_data, origin_col)) %0% Inf) %>% 
@@ -75,12 +75,14 @@ lastnews_table = function(except=NULL, with_ties=FALSE, numeric_id=TRUE,
   
   datetime_extraction = .get_extraction_date()
   if(!is.null(datetime_extraction)){
-    if(warn_if_future) {
+    if(!isFALSE(warn_if_future)){
+      csv_path = if(!isTRUE(warn_if_future)) warn_if_future else FALSE
       rtn %>% 
-        filter(last_date>as.Date(datetime_extraction)) %>% 
-        mutate(txt=paste0(origin_data,"$",origin_col)) %>% 
+        filter(as.Date(last_date)>as.Date(datetime_extraction)) %>% 
+        mutate(origin=paste0(origin_data,"$",origin_col)) %>% 
         edc_data_warn("Date of last news after the extraction date on 
-                      column{?s} {.val {unique(.data$txt)}}",
+                      column{?s} {.val {unique(.data$origin)}}",
+                      csv_path=csv_path,
                       issue_n=NA)
     }
   }
