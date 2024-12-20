@@ -8,11 +8,16 @@
 #' @importFrom fs path_ext_remove
 #' @importFrom purrr map
 #' @importFrom rlang set_names
-.read_all = function(files, read_function, clean_names_fun=NULL, ...){
+#' @importFrom stringr fixed
+.read_all = function(files, read_function, clean_names_fun=NULL, path=NULL, ...){
   assert_file_exists(files)
-  file_names = basename(files) %>% tolower() %>% path_ext_remove()
   clean_names_fun = .get_clean_names_fun(clean_names_fun)
-  
+  if(!is.null(path)){
+    file_names = files %>% str_remove(fixed(as.character(path))) %>% str_remove("^/") %>% 
+      str_replace_all("/", "_") %>% tolower() %>% path_ext_remove()
+  } else {
+    file_names = basename(files) %>% tolower() %>% path_ext_remove()
+  }
   files %>% 
     set_names(file_names) %>% 
     map(function(.x) {

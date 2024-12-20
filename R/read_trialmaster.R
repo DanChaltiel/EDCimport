@@ -22,6 +22,7 @@ read_trialmaster = function(archive, ..., use_cache="write",
                             clean_names_fun=NULL,
                             split_mixed=FALSE,
                             extend_lookup=TRUE,
+                            subdirectories=FALSE,
                             pw=getOption("trialmaster_pw"), 
                             verbose=getOption("edc_read_verbose", 1),
                             key_columns="deprecated"){
@@ -35,11 +36,15 @@ read_trialmaster = function(archive, ..., use_cache="write",
   directory = path_dir(archive)
   cache_file = .get_tm_cache(directory, extract_datetime)
   if(file_exists(cache_file) && (isTRUE(use_cache) || use_cache=="read")){
-    rtn = .read_tm_cache(cache_file, split_mixed, clean_names_fun, verbose)
+    rtn = .read_tm_cache(cache_file, split_mixed, clean_names_fun, verbose) %>% 
+      structure(source="cache")
   } else {
-    rtn = .read_tm_zip(archive, pw, extract_datetime, clean_names_fun, 
-                       split_mixed, extend_lookup, key_columns, use_cache, 
-                       cache_file, verbose)
+    rtn = .read_tm_zip(archive=archive, pw=pw, extract_datetime=extract_datetime,
+                       clean_names_fun=clean_names_fun, split_mixed=split_mixed, 
+                       extend_lookup=extend_lookup, key_columns=key_columns, 
+                       subdirectories=subdirectories, use_cache=use_cache, 
+                       cache_file=cache_file, verbose=verbose) %>% 
+      structure(source="zip")
   }
 
   if(verbose>0){
@@ -99,7 +104,9 @@ read_trialmaster = function(archive, ..., use_cache="write",
 #' @importFrom cli cli_inform cli_warn
 #' @importFrom fs dir_create file_exists path path_temp
 #' @importFrom stringr str_remove
-.read_tm_zip <- function(archive, pw, extract_datetime, clean_names_fun, split_mixed, extend_lookup, key_columns, use_cache, cache_file, verbose) {
+.read_tm_zip <- function(archive, pw, extract_datetime, clean_names_fun, split_mixed,
+                         extend_lookup, key_columns, subdirectories, use_cache, cache_file, 
+                         verbose) {
   
   if(verbose>0) cli_inform("Unzipping {.file {archive}}", class="read_tm_zip")
   temp_folder = basename(archive) %>% str_remove("\\.zip") %>% path_temp()
@@ -119,6 +126,7 @@ read_trialmaster = function(archive, ..., use_cache="write",
                      split_mixed=split_mixed,
                      extend_lookup=extend_lookup,
                      key_columns=key_columns,
+                     subdirectories=subdirectories,
                      datetime_extraction=extract_datetime, 
                      verbose=verbose)
   lookup_verbose = FALSE

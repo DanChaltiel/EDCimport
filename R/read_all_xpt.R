@@ -12,8 +12,9 @@
 #' @param split_mixed \[`logical(1): FALSE`]\cr whether to split mixed datasets. See [split_mixed_datasets]. 
 #' @param extend_lookup \[`character(1): FALSE`]\cr whether to enrich the lookup table. See [extend_lookup].
 #' @param clean_names_fun \[`function`]\cr a function to clean column names, e.g. [tolower], [janitor::clean_names()],...
-#' @param verbose \[`logical(1)`]\cr one of `c(0, 1, 2)`. The higher, the more information will be printed.
-#' @param directory deprecated
+#' @param subdirectories \[`logical(1)`]\cr whether to read subdirectories
+#' @param verbose \[`numeric(1)`]\cr one of `c(0, 1, 2)`. The higher, the more information will be printed.
+#' @param directory deprecated in favour for `path`
 #' @param key_columns deprecated
 #' 
 #' @section Format file: 
@@ -33,6 +34,7 @@ read_all_xpt = function(path, ...,
                         split_mixed=FALSE,
                         extend_lookup=TRUE,
                         datetime_extraction="guess", 
+                        subdirectories=FALSE,
                         verbose=getOption("edc_read_verbose", 1),
                         directory="deprecated",
                         key_columns="deprecated"){
@@ -46,9 +48,8 @@ read_all_xpt = function(path, ...,
   }
   assert_class(datetime_extraction, c("POSIXt", "Date"))
   format_file = .locate_file(format_file, path)
-  
-  rtn = dir_ls(path, regexp="\\.xpt$") %>% 
-    .read_all(haven::read_xpt, clean_names_fun=clean_names_fun) %>%
+  rtn = dir_ls(path, regexp="\\.xpt$", recurse=subdirectories) %>% 
+    .read_all(haven::read_xpt, clean_names_fun=clean_names_fun, path=path) %>%
     .clean_labels_utf8() %>% 
     .apply_sas_formats(format_file) %>% 
     .add_lookup_and_date(
