@@ -7,7 +7,7 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 ### New features
 
 -   New function `edc_patient_gridplot()`, which creates a ggplot matrix giving the presence of all patients in all datasets (#77)
--   Improved `lastnews_table()`: improved warning message and allow saving as csv (#78)
+-   Improved `lastnews_table()`: allow regex in except & prefer, improved warning message, and allow saving warning as csv (#78)
 -   New argument `subdirectories` to all reading functions (`read_trialmaster()`, `read_all_xpt()`,  `read_all_sas()`, and `read_all_csv()`), to control whether to read sub-directories. Note that until now, those subdirectories were read and could overwrite root files.
 
 # EDCimport 0.5.2

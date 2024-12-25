@@ -10,71 +10,70 @@
 #' @param with_ties in case of tie, whether to return the first `origin` (FALSE) or all the origins that share this tie (TRUE).
 #' @param numeric_id set to FALSE if the patient ID column is not numeric
 #' @param prefer preferred origins in the event of a tie. Usually the followup table.
+#' @param regex whether to consider `except` and `prefer` as regex.
 #' @param warn_if_future whether to show a warning about dates that are after the extraction date. Can also be a csv file path to save the warning as csv (see [edc_data_warn(csv_path)]).
 #'
 #' @return a dataframe
 #' @export
-#'
-#' @examples
-#' tm = edc_example_plot()
-#' load_list(tm)
-#' lastnews_table()
-#' lastnews_table(except="db3")
-#' lastnews_table(except="db3$date9")
-#' lastnews_table(prefer="db2", warn_if_future="check/check_db2.csv") 
 #' @importFrom cli cli_abort
 #' @importFrom dplyr arrange filter mutate rowwise select slice_max ungroup where
 #' @importFrom purrr discard discard_at imap list_rbind
 #' @importFrom tidyr pivot_longer
+#'
+#' @examples
+#' tm = edc_example()
+#' load_list(tm)
+#' lastnews_table()
+#' lastnews_table(except="db3")
+#' lastnews_table(except="db3$date9")
+#' 
+#' csv_file = tempfile(fileext=".csv")
+#' lastnews_table(prefer="date9", warn_if_future=csv_file) 
 lastnews_table = function(except=NULL, with_ties=FALSE, numeric_id=TRUE, 
-                          prefer=NULL,
-                          warn_if_future=TRUE) {
+                          prefer=NULL, regex=FALSE, warn_if_future=TRUE) {
   subjid_cols = get_subjid_cols()
+  except = regexify(except, regex)
+  
   rtn = get_datasets(envir=parent.frame()) %>% 
-    discard_at(as.character(except)) %>% 
-    imap(~{
-      if(!is.data.frame(.x) || !any(subjid_cols %in% names(.x))) return(NULL)
-      a = .x %>% 
-        select(subjid = any_of2(subjid_cols), where(is.Date)) %>% 
-        mutate(subjid = as.character(subjid))
-      if(ncol(a)<=1) return(NULL) #only subjid
-      a %>% 
-        pivot_longer(-subjid) %>% 
-        filter(!is.na(value)) %>% 
-        mutate(origin_label=unlist(get_label(.x)[name]),
-               dataset=.y)
-    }) %>% 
+    discard_at(~str_detect(.x, except)) %>% 
+    imap(~.extract_date_columns(.x, .y)) %>% 
     discard(is.null) %>% 
-    list_rbind()  %>% 
-    select(subjid, last_date=value, origin_data=dataset, origin_col=name, origin_label) %>% 
-    mutate(origin = paste0(origin_data, "$", origin_col))
+    list_rbind()
+  
   if(nrow(rtn)==0){
-    cli_abort("No data with dates could be found, verify your export settings.")
+    cli_abort("No data with dates could be found, verify your export settings.",
+              class="edc_no_columns_error")
   }
+  
+  rtn = rtn %>% 
+    select(subjid, last_date=value, origin_data=dataset, origin_col=name, origin_label) %>% 
+    mutate(origin = paste0(origin_data, "$", origin_col)) %>% 
+    filter(!str_detect(origin, except)) %>% 
+    filter(!str_detect(origin_data , except)) %>% 
+    filter(!str_detect(origin_col, except)) %>% 
+    slice_max(last_date, by=subjid, with_ties=TRUE) %>% 
+    arrange(order(mixedorder(subjid)))
+  
   if(numeric_id && can_be_numeric(rtn$subjid)) {
     rtn$subjid = as.numeric(as.character(rtn$subjid))
   }
   
-  rtn = rtn %>% 
-    filter(!origin %in% except) %>% 
-    filter(!origin_data %in% except) %>% 
-    filter(!origin_col %in% except) %>% 
-    slice_max(last_date, by=subjid, with_ties=TRUE) %>% 
-    arrange(order(mixedorder(subjid)))
-  
   if(!isTRUE(with_ties)){
+    # browser()
     rtn = rtn %>% 
       rowwise() %>%  
-      mutate(prefered = which(prefer %in% c(origin, origin_data, origin_col)) %0% Inf) %>% 
+      mutate(prefered = .get_prefered(c(origin, origin_data, origin_col),
+                                     needle=prefer, regex=regex)) %>%
       ungroup() %>% 
       arrange((prefered)) %>% 
-      select(-prefered, -origin) %>% 
+      select(-prefered, -origin) %>%
       slice_max(last_date, by=subjid, with_ties=FALSE) %>% 
       arrange(order(mixedorder(subjid)))
   }
   
   datetime_extraction = .get_extraction_date()
   if(!is.null(datetime_extraction)){
+    # browser()
     if(!isFALSE(warn_if_future)){
       csv_path = if(!isTRUE(warn_if_future)) warn_if_future else FALSE
       rtn %>% 
@@ -93,6 +92,33 @@ lastnews_table = function(except=NULL, with_ties=FALSE, numeric_id=TRUE,
 
 # Utils ---------------------------------------------------------------------------------------
 
+
+#' @noRd
+#' @keywords internal
+.get_prefered = function(input, needle, regex) {
+  f = if(!isTRUE(regex)) fixed else identity
+  x = map_lgl(needle, ~any(str_detect(input, f(.x))))
+  suppressWarnings(min(which(x), na.rm=TRUE))
+}
+
+
+#' @noRd
+#' @keywords internal
+.extract_date_columns = function(data, data_name) {
+  subjid_cols = get_subjid_cols()
+  if(!is.data.frame(data) || !any(subjid_cols %in% names(data))) return(NULL)
+  a = data %>% 
+    select(subjid = any_of2(subjid_cols), where(is.Date)) %>% 
+    mutate(subjid = as.character(subjid))
+  if(ncol(a)<=1) return(NULL) #only subjid
+  a %>% 
+    pivot_longer(-subjid) %>% 
+    filter(!is.na(value)) %>% 
+    mutate(origin_label=unlist(get_label(data)[name]),
+           dataset=data_name)
+}
+
+
 #' @noRd
 #' @keywords internal
 .get_extraction_date = function(){
@@ -100,4 +126,15 @@ lastnews_table = function(except=NULL, with_ties=FALSE, numeric_id=TRUE,
   rtn = attr(l, "datetime_extraction")
   if(is.null(rtn) && exists("datetime_extraction")) rtn = datetime_extraction
   rtn
+}
+
+
+#' @noRd
+#' @keywords internal
+#' @importFrom stringr str_escape
+regexify = function(x, regex){
+  if(is.null(x)) return("$^") #impossible pattern
+  if(!isTRUE(regex)) x = str_escape(x)
+  x = paste(x, collapse="|")
+  x
 }
