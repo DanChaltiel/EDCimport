@@ -40,6 +40,7 @@ read_all_csv = function(path, ...,
   assert_class(datetime_extraction, c("POSIXt", "Date"))
   
   if(identical(read_fun, "guess")){
+    files = dir_ls(path, regexp="\\.csv")
     read_fun = guess_read_function(files[1])
   }
   assert_class(read_fun, c("function"))
