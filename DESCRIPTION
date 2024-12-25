@@ -62,6 +62,7 @@ Collate:
     'crf_status.R'
     'data.R'
     'helpers.R'
+    'lastnews_table.R'
     'utils.R'
     'lookup.R'
     'options.R'
