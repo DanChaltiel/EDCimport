@@ -1,9 +1,7 @@
-# lastnews_table() works
+# lastnews_table() snapshot
 
     Code
-      tm = edc_example()
-      tm$datetime_extraction = as.POSIXct("2010-08-10 18:58:36 GMT")
-      attr(edcimport_env$lookup, "datetime_extraction") = tm$datetime_extraction
+      tm = lastnews_example(warn = TRUE)
       load_list(tm)
       csv_file = tempfile(fileext = ".csv")
       lastnews_table(warn_if_future = csv_file) %>% head(10)
@@ -14,9 +12,9 @@
       # A tibble: 10 x 5
          subjid last_date           origin_data origin_col origin_label    
           <dbl> <dttm>              <chr>       <chr>      <chr>           
-       1      1 2010-08-01 18:59:37 db3         date10     Date at visit 10
-       2      2 2010-07-31 15:32:45 db3         date10     Date at visit 10
-       3      3 2010-07-22 11:24:37 db3         date10     Date at visit 10
+       1      1 2010-08-01 18:59:37 db2         date4      Date at visit 4 
+       2      2 2010-07-31 15:32:45 db2         date4      Date at visit 4 
+       3      3 2010-07-22 11:24:37 db2         date5      Date at visit 5 
        4      4 2010-07-23 20:38:32 db3         date10     Date at visit 10
        5      5 2010-07-15 07:09:47 db3         date10     Date at visit 10
        6      6 2010-07-20 12:27:00 db3         date10     Date at visit 10
