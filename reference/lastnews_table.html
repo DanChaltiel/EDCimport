@@ -11,7 +11,7 @@ the right censoring time."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9006</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9008</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,7 +34,7 @@ the right censoring time."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Get a table with the latest date for each patient</h1>
-      <small class="dont-index">Source: <a href="https://github.com/DanChaltiel/EDCimport/blob/main/R/helpers.R" class="external-link"><code>R/helpers.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/DanChaltiel/EDCimport/blob/main/R/lastnews_table.R" class="external-link"><code>R/lastnews_table.R</code></a></small>
       <div class="d-none name"><code>lastnews_table.Rd</code></div>
     </div>
 
@@ -51,6 +51,7 @@ the right censoring time.</p>
 <span>  with_ties <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  numeric_id <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  prefer <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  regex <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  warn_if_future <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -75,8 +76,12 @@ the right censoring time.</p>
 <dd><p>preferred origins in the event of a tie. Usually the followup table.</p></dd>
 
 
+<dt id="arg-regex">regex<a class="anchor" aria-label="anchor" href="#arg-regex"></a></dt>
+<dd><p>whether to consider <code>except</code> and <code>prefer</code> as regex.</p></dd>
+
+
 <dt id="arg-warn-if-future">warn_if_future<a class="anchor" aria-label="anchor" href="#arg-warn-if-future"></a></dt>
-<dd><p>whether to show a warning about dates that are after the extraction date</p></dd>
+<dd><p>whether to show a warning about dates that are after the extraction date. Can also be a csv file path to save the warning as csv (see <code>csv_path</code> argument in <a href="edc_data_warn.html">edc_data_warn</a>).</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -86,16 +91,16 @@ the right censoring time.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">tm</span> <span class="op">=</span> <span class="fu"><a href="data_example.html">edc_example_plot</a></span><span class="op">(</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">tm</span> <span class="op">=</span> <span class="fu"><a href="data_example.html">edc_example</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Option <span style="color: #0000BB;">"edc_lookup"</span> has been overwritten.</span>
 <span class="r-in"><span><span class="fu"><a href="load_list.html">load_list</a></span><span class="op">(</span><span class="va">tm</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">lastnews_table</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 50 × 5</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    subjid last_date           origin_data origin_col origin_label    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>      1 2010-08-01 <span style="color: #949494;">18:59:37</span> db3         date10     Date at visit 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      2 2010-07-31 <span style="color: #949494;">15:32:45</span> db3         date10     Date at visit 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      3 2010-07-22 <span style="color: #949494;">11:24:37</span> db3         date10     Date at visit 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>      1 2010-08-01 <span style="color: #949494;">18:59:37</span> db2         date4      Date at visit 4 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      2 2010-07-31 <span style="color: #949494;">15:32:45</span> db2         date4      Date at visit 4 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      3 2010-07-22 <span style="color: #949494;">11:24:37</span> db2         date5      Date at visit 5 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>      4 2010-07-23 <span style="color: #949494;">20:38:32</span> db3         date10     Date at visit 10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>      5 2010-07-15 <span style="color: #949494;">07:09:47</span> db3         date10     Date at visit 10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      6 2010-07-20 <span style="color: #949494;">12:27:00</span> db3         date10     Date at visit 10</span>
@@ -108,9 +113,9 @@ the right censoring time.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 50 × 5</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    subjid last_date           origin_data origin_col origin_label   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>      1 2010-06-12 <span style="color: #949494;">10:53:27</span> db2         date6      Date at visit 6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      2 2010-06-20 <span style="color: #949494;">02:27:29</span> db2         date6      Date at visit 6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      3 2010-06-12 <span style="color: #949494;">21:21:28</span> db2         date6      Date at visit 6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>      1 2010-08-01 <span style="color: #949494;">18:59:37</span> db2         date4      Date at visit 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      2 2010-07-31 <span style="color: #949494;">15:32:45</span> db2         date4      Date at visit 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      3 2010-07-22 <span style="color: #949494;">11:24:37</span> db2         date5      Date at visit 5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>      4 2010-06-19 <span style="color: #949494;">20:25:02</span> db2         date6      Date at visit 6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>      5 2010-06-15 <span style="color: #949494;">11:26:57</span> db2         date5      Date at visit 5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      6 2010-06-11 <span style="color: #949494;">22:06:25</span> db2         date6      Date at visit 6</span>
@@ -123,9 +128,9 @@ the right censoring time.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 50 × 5</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    subjid last_date           origin_data origin_col origin_label    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>      1 2010-08-01 <span style="color: #949494;">18:59:37</span> db3         date10     Date at visit 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      2 2010-07-31 <span style="color: #949494;">15:32:45</span> db3         date10     Date at visit 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      3 2010-07-22 <span style="color: #949494;">11:24:37</span> db3         date10     Date at visit 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>      1 2010-08-01 <span style="color: #949494;">18:59:37</span> db2         date4      Date at visit 4 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      2 2010-07-31 <span style="color: #949494;">15:32:45</span> db2         date4      Date at visit 4 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      3 2010-07-22 <span style="color: #949494;">11:24:37</span> db2         date5      Date at visit 5 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>      4 2010-07-23 <span style="color: #949494;">20:38:32</span> db3         date10     Date at visit 10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>      5 2010-07-15 <span style="color: #949494;">07:09:47</span> db3         date10     Date at visit 10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      6 2010-07-20 <span style="color: #949494;">12:27:00</span> db3         date10     Date at visit 10</span>
@@ -134,13 +139,15 @@ the right censoring time.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      9 2010-07-17 <span style="color: #949494;">06:26:31</span> db3         date8      Date at visit 8 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>     10 2010-07-30 <span style="color: #949494;">20:41:23</span> db3         date10     Date at visit 10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 40 more rows</span></span>
-<span class="r-in"><span><span class="fu">lastnews_table</span><span class="op">(</span>prefer<span class="op">=</span><span class="st">"db2"</span><span class="op">)</span> </span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">csv_file</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext<span class="op">=</span><span class="st">".csv"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">lastnews_table</span><span class="op">(</span>prefer<span class="op">=</span><span class="st">"date9"</span>, warn_if_future<span class="op">=</span><span class="va">csv_file</span><span class="op">)</span> </span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 50 × 5</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    subjid last_date           origin_data origin_col origin_label    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>      1 2010-08-01 <span style="color: #949494;">18:59:37</span> db3         date10     Date at visit 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      2 2010-07-31 <span style="color: #949494;">15:32:45</span> db3         date10     Date at visit 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      3 2010-07-22 <span style="color: #949494;">11:24:37</span> db3         date10     Date at visit 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>      1 2010-08-01 <span style="color: #949494;">18:59:37</span> db2         date4      Date at visit 4 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      2 2010-07-31 <span style="color: #949494;">15:32:45</span> db2         date4      Date at visit 4 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      3 2010-07-22 <span style="color: #949494;">11:24:37</span> db2         date5      Date at visit 5 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>      4 2010-07-23 <span style="color: #949494;">20:38:32</span> db3         date10     Date at visit 10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>      5 2010-07-15 <span style="color: #949494;">07:09:47</span> db3         date10     Date at visit 10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      6 2010-07-20 <span style="color: #949494;">12:27:00</span> db3         date10     Date at visit 10</span>

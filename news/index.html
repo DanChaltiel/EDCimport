@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9006</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9008</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,7 +37,8 @@
 <h2 class="pkg-version" data-toc-text="0.6.0" id="edcimport-060-dev">EDCimport 0.6.0 (dev)<a class="anchor" aria-label="anchor" href="#edcimport-060-dev"></a></h2>
 <div class="section level4">
 <h4 id="new-features-0-6-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-6-0"></a></h4>
-<ul><li>New function <code><a href="../reference/edc_patient_gridplot.html">edc_patient_gridplot()</a></code>, which creates a ggplot matrix giving the presence of all patients in all datasets</li>
+<ul><li>New function <code><a href="../reference/edc_patient_gridplot.html">edc_patient_gridplot()</a></code>, which creates a ggplot matrix giving the presence of all patients in all datasets (<a href="https://github.com/DanChaltiel/EDCimport/issues/77" class="external-link">#77</a>)</li>
+<li>Improved <code><a href="../reference/lastnews_table.html">lastnews_table()</a></code>: allow regex in except &amp; prefer, improved warning message, and allow saving warning as csv (<a href="https://github.com/DanChaltiel/EDCimport/issues/78" class="external-link">#78</a>)</li>
 <li>New argument <code>subdirectories</code> to all reading functions (<code><a href="../reference/read_trialmaster.html">read_trialmaster()</a></code>, <code><a href="../reference/read_all_xpt.html">read_all_xpt()</a></code>, <code><a href="../reference/read_all_sas.html">read_all_sas()</a></code>, and <code><a href="../reference/read_all_csv.html">read_all_csv()</a></code>), to control whether to read sub-directories. Note that until now, those subdirectories were read and could overwrite root files.</li>
 </ul></div>
 </div>
