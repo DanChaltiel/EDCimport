@@ -30,8 +30,7 @@ sample_soc = c(
 #' 
 #' List of tables used in EDCimport examples: 
 #' \itemize{
-#'   \item `edc_example()` can be used as the result of [read_trialmaster()]
-#'   \item `edc_example_plot()` can be used to test [edc_swimmerplot()] 
+#'   \item `edc_example()` can be used as the result of reading functions (such as [read_trialmaster()] or [read_all_sas()]) and to test [edc_swimmerplot()] 
 #'   \item `edc_example_mixed()` can be used to test [split_mixed_datasets()]
 #' }
 #'
@@ -100,19 +99,15 @@ edc_example = function(N=50, seed=42, outdated=FALSE){
   db2$date4[1:2] = db3$date10[1:2]
   db2$date5[2:3] = db3$date10[2:3]
   
-  .lookup = tibble(dataset=paste0("db", 0:3))
-  # rtn$.lookup=build_lookup(rtn) %>% extend_lookup()
+
   rtn = lst(db0, db1, db2, db3) %>% 
     imap(~.x %>% mutate(crfname=.y %>% set_label("Form name")))
-  # rtn$.lookup = build_lookup(rtn) %>% extend_lookup()
-  rtn$datetime_extraction = as.POSIXct("2024-01-01 01:00:00 CET")
-  if(isTRUE(outdated)){
-    rtn$datetime_extraction = as.POSIXct("2010-08-10 18:58:36 CET")
-  }
+  date1 = as.POSIXct("2024-01-01 01:00:00 CET")
+  date2 = as.POSIXct("2010-08-10 18:58:36 CET")
+  rtn$datetime_extraction = if(isTRUE(outdated)) date2 else date1
   rtn$date_extraction = format(rtn$datetime_extraction, "%Y/%m/%d")
   
-  rtn$.lookup = build_lookup(rtn) %>% 
-    structure(datetime_extraction=rtn$datetime_extraction)
+  rtn$.lookup = build_lookup(rtn)
   .set_lookup(rtn$.lookup)
   class(rtn) = "edc_database"
   rtn

@@ -27,11 +27,13 @@ build_lookup = function(data_list){
                 i="{.code class(data_list)}: {.cls {class(data_list)}}"), 
               class="edc_lookup_not_list")
   }
-  data_list_n = format(names(data_list))
-  data_list[".lookup"] = data_list["date_extraction"] = data_list["datetime_extraction"] = NULL
+  datetime_extraction = data_list[["datetime_extraction"]]
+  data_list_nm = names(data_list)
+  exclude = c(".lookup", "date_extraction", "datetime_extraction")
+  data_list = data_list %>% discard_at(exclude)
   if(length(data_list)==0){
     cli_abort(c("{.code data_list} is empty or contains only non-dataframe elements.", 
-                i="{.code names(data_list)}: {.val {data_list_n}}"), 
+                i="{.code names(data_list)}: {.val {data_list_nm}}"), 
               class="edc_lookup_empty")
   }
   if(!is_named(data_list)){
@@ -40,7 +42,7 @@ build_lookup = function(data_list){
   }
   f = function(.x, expr, default) if(is.data.frame(.x)) expr else default
   
-  tibble(dataset=tolower(names(data_list))) %>% 
+  rtn = tibble(dataset=tolower(names(data_list))) %>% 
     mutate(
       nrow=map_dbl(data_list, ~f(.x, nrow(.x), 0)), 
       ncol=map_dbl(data_list, ~f(.x, ncol(.x), 0)), 
@@ -48,7 +50,10 @@ build_lookup = function(data_list){
       labels=map(data_list, ~f(.x, get_label(.x), NULL)), 
     ) %>% 
     arrange(nrow) %>% 
+    structure(datetime_extraction=datetime_extraction) %>% 
     add_class("edc_lookup")
+  
+  rtn
 }
 
 #' Retrieve the lookup table from options

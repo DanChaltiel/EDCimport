@@ -27,8 +27,7 @@ a list of tables
 \description{
 List of tables used in EDCimport examples:
 \itemize{
-\item \code{edc_example()} can be used as the result of \code{\link[=read_trialmaster]{read_trialmaster()}}
-\item \code{edc_example_plot()} can be used to test \code{\link[=edc_swimmerplot]{edc_swimmerplot()}}
+\item \code{edc_example()} can be used as the result of reading functions (such as \code{\link[=read_trialmaster]{read_trialmaster()}} or \code{\link[=read_all_sas]{read_all_sas()}}) and to test \code{\link[=edc_swimmerplot]{edc_swimmerplot()}}
 \item \code{edc_example_mixed()} can be used to test \code{\link[=split_mixed_datasets]{split_mixed_datasets()}}
 }
 }
