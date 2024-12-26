@@ -62,6 +62,7 @@ edc_example_mixed = function(N=100, seed=42){
   rtn$datetime_extraction = as.POSIXct("2022-08-25 15:16:00 CEST")
   rtn$.lookup=build_lookup(rtn)
   .set_lookup(rtn$.lookup)
+  class(rtn) = "edc_database"
   rtn
 }
 
@@ -104,6 +105,7 @@ edc_example = function(N=50, seed=42){
                                       tzone = "Europe/Paris")
   rtn$.lookup=build_lookup(rtn)
   .set_lookup(rtn$.lookup)
+  class(rtn) = "edc_database"
   rtn
 }
 
@@ -139,5 +141,6 @@ edc_example_ae = function(N=50, seed=42){
     imap(~.x %>% mutate(crfname=.y %>% set_label("Form name")))
   rtn$.lookup = build_lookup(rtn)
   .set_lookup(rtn$.lookup)
+  class(rtn) = "edc_database"
   rtn
 }

@@ -56,6 +56,6 @@ read_all_sas = function(path, ...,
   .warn_bad_columns(rtn)
   .set_lookup(rtn$.lookup)
   
-  class(rtn) = "tm_database"
+  class(rtn) = "edc_database"
   rtn
 }

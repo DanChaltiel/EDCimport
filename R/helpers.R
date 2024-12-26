@@ -718,7 +718,7 @@ save_list = function(x, filename){
 #' @export
 #' @importFrom cli cat_rule cli_bullets cli_vec
 #' @importFrom purrr discard_at keep
-print.tm_database = function(x, ...){
+print.edc_database = function(x, ...){
   x = x %>% keep(is.data.frame) %>% discard_at(".lookup")
   cat_rule("Trialmaster database", col = "violet")
   nms = cli_vec(names(x), list("vec-trunc"=3))
@@ -728,3 +728,6 @@ print.tm_database = function(x, ...){
     i="Use {.code print(tm$.lookup)} to see the summary table"
   ))
 }
+
+#' @export
+print.tm_database = print.edc_database

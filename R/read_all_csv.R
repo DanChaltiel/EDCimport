@@ -57,6 +57,7 @@ read_all_csv = function(path, ...,
   
   .set_lookup(rtn$.lookup)
   
+  class(rtn) = "edc_database"
   rtn
 }
 

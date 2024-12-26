@@ -140,5 +140,6 @@ read_trialmaster = function(archive, ..., use_cache="write",
     saveRDS(rtn, cache_file)
   }
   
+  class(rtn) = "edc_database"
   rtn
 }
