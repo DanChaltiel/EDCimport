@@ -720,12 +720,12 @@ save_list = function(x, filename){
 #' @importFrom purrr discard_at keep
 print.edc_database = function(x, ...){
   x = x %>% keep(is.data.frame) %>% discard_at(".lookup")
-  cat_rule("Trialmaster database", col = "violet")
+  cat_rule("EDCimport database", col = "violet")
   nms = cli_vec(names(x), list("vec-trunc"=3))
   cli_bullets(c(
-    "{length(x)} tables: {.arg {nms}}",
-    i="Use {.code EDCimport::load_list(tm)} to load the tables in the global environment",
-    i="Use {.code print(tm$.lookup)} to see the summary table"
+    "Contains {length(x)} table{?s}: {.arg {nms}}",
+    i="Use {.run EDCimport::load_list(tm)} to load the tables in the global environment.",
+    i="Use {.run EDCimport::edc_lookup()} to see the summary table."
   ))
 }
 
