@@ -70,6 +70,7 @@ build_lookup = function(data_list){
 #' edc_lookup(dataset)
 edc_lookup = function(..., check=TRUE){
   lookup = edcimport_env$lookup
+  check = getOption("edc_lookup_check", check)
   if(isTRUE(check)){
     if(is.null(lookup)){
       cli_abort("Lookup is {.val NULL}. It will be created after using {.fn EDCimport::read_trialmaster},  {.fn EDCimport::read_trialmaster}, or any other {.pkg EDCimport} reading function.")

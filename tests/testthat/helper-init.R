@@ -16,7 +16,8 @@ options(
   tidyselect_verbosity ="verbose",#quiet or verbose
   lifecycle_verbosity="warning", #NULL, "quiet", "warning" or "error"
   rlang_backtrace_on_error = "full",
-  testthat.progress.max_fails = 50
+  testthat.progress.max_fails = 50,
+  edc_lookup_check = FALSE
 )
 
 if(is_testing()){
