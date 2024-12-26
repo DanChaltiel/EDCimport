@@ -1,18 +1,9 @@
 
-lastnews_example = function(warn=FALSE){
+lastnews_example = function(outdated=FALSE){
   local_options(edc_lookup_overwrite_warn=FALSE)
-  tm = edc_example()
-  #add ties for patients 1:3
-  tm$db2$date4[1:2] = tm$db3$date10[1:2]
-  tm$db2$date5[2:3] = tm$db3$date10[2:3]
-  if(isTRUE(warn)){
-    tm$datetime_extraction = as.POSIXct("2010-08-10 18:58:36 GMT")
-    attr(edcimport_env$lookup, "datetime_extraction") = tm$datetime_extraction
-  }
-  tm
+  edc_example(outdated=outdated)
 }
 
-#TODO add ties in edc_example() directly
 
 test_that("lastnews_table() default", {
   tm = lastnews_example()
@@ -71,7 +62,7 @@ test_that("lastnews_table() with ties", {
 test_that("lastnews_table() snapshot", {
   #snapshot for the default, with warning and csv output
   expect_snapshot({
-    tm = lastnews_example(warn=TRUE)
+    tm = lastnews_example(outdated=TRUE)
     load_list(tm)
     csv_file = tempfile(fileext=".csv")
     lastnews_table(warn_if_future=csv_file) %>% head(10)

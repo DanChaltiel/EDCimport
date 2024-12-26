@@ -37,6 +37,7 @@ sample_soc = c(
 #'
 #' @param N the number of patients
 #' @param seed the random seed
+#' @param outdated simulate times after the data extraction date
 #'
 #' @return a list of tables
 #' @export
@@ -73,7 +74,7 @@ edc_example_mixed = function(N=100, seed=42){
 #' @importFrom purrr imap
 #' @importFrom stats rnorm runif
 #' @importFrom tibble tibble
-edc_example = function(N=50, seed=42){
+edc_example = function(N=50, seed=42, outdated=FALSE){
   set.seed(seed)
   start = ISOdate(2010, 04, 13)
   day = 3600*24
@@ -95,15 +96,23 @@ edc_example = function(N=50, seed=42){
   db2 = db %>% select(SUBJID, 7:9)
   db3 = db %>% select(SUBJID, 10:13)
   
+  #add ties for patients 1:3 (for `lastnews_table()`)
+  db2$date4[1:2] = db3$date10[1:2]
+  db2$date5[2:3] = db3$date10[2:3]
+  
   .lookup = tibble(dataset=paste0("db", 0:3))
   # rtn$.lookup=build_lookup(rtn) %>% extend_lookup()
   rtn = lst(db0, db1, db2, db3) %>% 
     imap(~.x %>% mutate(crfname=.y %>% set_label("Form name")))
   # rtn$.lookup = build_lookup(rtn) %>% extend_lookup()
-  rtn$date_extraction = "2024/01/01"
-  rtn$datetime_extraction = structure(1704067200, class = c("POSIXct", "POSIXt"), 
-                                      tzone = "Europe/Paris")
-  rtn$.lookup=build_lookup(rtn)
+  rtn$datetime_extraction = as.POSIXct("2024-01-01 01:00:00 CET")
+  if(isTRUE(outdated)){
+    rtn$datetime_extraction = as.POSIXct("2010-08-10 18:58:36 CET")
+  }
+  rtn$date_extraction = format(rtn$datetime_extraction, "%Y/%m/%d")
+  
+  rtn$.lookup = build_lookup(rtn) %>% 
+    structure(datetime_extraction=rtn$datetime_extraction)
   .set_lookup(rtn$.lookup)
   class(rtn) = "edc_database"
   rtn
@@ -112,6 +121,7 @@ edc_example = function(N=50, seed=42){
 
 #' @rdname data_example
 #' @export
+#' @usage NULL
 edc_example_plot = edc_example
 
 

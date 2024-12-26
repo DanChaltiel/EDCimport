@@ -1,7 +1,7 @@
 # lastnews_table() snapshot
 
     Code
-      tm = lastnews_example(warn = TRUE)
+      tm = lastnews_example(outdated = TRUE)
       load_list(tm)
       csv_file = tempfile(fileext = ".csv")
       lastnews_table(warn_if_future = csv_file) %>% head(10)

@@ -10,9 +10,7 @@
 \usage{
 edc_example_mixed(N = 100, seed = 42)
 
-edc_example(N = 50, seed = 42)
-
-edc_example_plot(N = 50, seed = 42)
+edc_example(N = 50, seed = 42, outdated = FALSE)
 
 edc_example_ae(N = 50, seed = 42)
 }
@@ -20,6 +18,8 @@ edc_example_ae(N = 50, seed = 42)
 \item{N}{the number of patients}
 
 \item{seed}{the random seed}
+
+\item{outdated}{simulate times after the data extraction date}
 }
 \value{
 a list of tables
