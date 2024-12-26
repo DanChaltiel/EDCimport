@@ -71,7 +71,21 @@ build_lookup = function(data_list){
 edc_lookup = function(..., check_null=TRUE){
   lookup = edcimport_env$lookup
   if(is.null(lookup) & isTRUE(check_null)){
-    cli_abort("Lookup is NULL. Did you forget to import your data?")
+    cli_abort("Lookup is {.val NULL}. It will be created after using {.fn EDCimport::read_trialmaster},  {.fn EDCimport::read_trialmaster}, or any other {.pkg EDCimport} reading function.")
+  }
+  caller = parent.frame()
+  missing_dataset = lookup$dataset %>% discard(~exists(.x, where=caller))
+  if(length(missing_dataset) > 0){
+    msg = NULL
+    if(length(missing_dataset) < nrow(lookup)) {
+      msg = c(i=format_inline("Missing datasets: {.val {missing_dataset}}."))
+    }
+    cli_warn(c("Datasets from this lookup are not available in the global environment.",
+               msg,
+               i="Did you forget to use {.run EDCimport::load_list(tm)} to load the tables?"),
+             class="edc_lookup_missing_dataset_warning",
+             .frequency="once"
+             )
   }
   if(!is.null(lookup)){
     lookup = lookup %>% arrange(!!!enquos(...))
