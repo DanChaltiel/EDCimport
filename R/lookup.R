@@ -54,7 +54,7 @@ build_lookup = function(data_list){
 #' Retrieve the lookup table from options
 #' 
 #' @param ... passed on to [dplyr::arrange()]
-#' @param check_null whether to stop if lookup is NULL
+#' @param check whether to check for internal consistency
 #'
 #' @return the lookup dataframe summarizing the database import 
 #' 
@@ -68,24 +68,27 @@ build_lookup = function(data_list){
 #' load_list(tm)
 #' edc_lookup()
 #' edc_lookup(dataset)
-edc_lookup = function(..., check_null=TRUE){
+edc_lookup = function(..., check=TRUE){
   lookup = edcimport_env$lookup
-  if(is.null(lookup) & isTRUE(check_null)){
-    cli_abort("Lookup is {.val NULL}. It will be created after using {.fn EDCimport::read_trialmaster},  {.fn EDCimport::read_trialmaster}, or any other {.pkg EDCimport} reading function.")
-  }
-  caller = parent.frame()
-  missing_dataset = lookup$dataset %>% discard(~exists(.x, where=caller))
-  if(length(missing_dataset) > 0){
-    msg = NULL
-    if(length(missing_dataset) < nrow(lookup)) {
-      msg = c(i=format_inline("Missing datasets: {.val {missing_dataset}}."))
+  if(isTRUE(check)){
+    if(is.null(lookup)){
+      cli_abort("Lookup is {.val NULL}. It will be created after using {.fn EDCimport::read_trialmaster},  {.fn EDCimport::read_trialmaster}, or any other {.pkg EDCimport} reading function.")
     }
-    cli_warn(c("Datasets from this lookup are not available in the global environment.",
-               msg,
-               i="Did you forget to use {.run EDCimport::load_list(tm)} to load the tables?"),
-             class="edc_lookup_missing_dataset_warning",
-             .frequency="once"
-             )
+    caller = parent.frame()
+    missing_dataset = lookup$dataset %>% discard(~exists(.x, where=caller))
+    if(length(missing_dataset) > 0){
+      msg = NULL
+      if(length(missing_dataset) < nrow(lookup)) {
+        msg = c(i=format_inline("Missing datasets: {.val {missing_dataset}}."))
+      }
+      cli_warn(c("Datasets from this lookup are not available in the global environment.",
+                 msg,
+                 i="Did you forget to use {.run EDCimport::load_list(tm)} to load the tables?"),
+               class="edc_lookup_missing_dataset_warning",
+               .frequency="once",
+               .frequency_id="edc_lookup"
+      )
+    }
   }
   if(!is.null(lookup)){
     lookup = lookup %>% arrange(!!!enquos(...))
@@ -105,7 +108,7 @@ get_lookup = deprecatedly(edc_lookup, what="get_lookup()", when="0.5.0")
 #' @importFrom cli cli_warn
 .set_lookup = function(lookup, verbose=TRUE){
   verbose = getOption("edc_lookup_overwrite_warn", verbose)
-  if(verbose && !is.null(edc_lookup(check_null=FALSE))){
+  if(verbose && !is.null(edc_lookup(check=FALSE))){
     cli_warn("Option {.val edc_lookup} has been overwritten.", 
              class="edc_lookup_overwrite_warn")
   }
