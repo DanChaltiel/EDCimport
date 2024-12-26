@@ -11,7 +11,7 @@
 #' @param numeric_id set to FALSE if the patient ID column is not numeric
 #' @param prefer preferred origins in the event of a tie. Usually the followup table.
 #' @param regex whether to consider `except` and `prefer` as regex.
-#' @param warn_if_future whether to show a warning about dates that are after the extraction date. Can also be a csv file path to save the warning as csv (see [edc_data_warn(csv_path)]).
+#' @param warn_if_future whether to show a warning about dates that are after the extraction date. Can also be a csv file path to save the warning as csv (see `csv_path` argument in [edc_data_warn]).
 #'
 #' @return a dataframe
 #' @export

@@ -24,7 +24,7 @@ lastnews_table(
 
 \item{regex}{whether to consider \code{except} and \code{prefer} as regex.}
 
-\item{warn_if_future}{whether to show a warning about dates that are after the extraction date. Can also be a csv file path to save the warning as csv (see \link{edc_data_warn(csv_path)}).}
+\item{warn_if_future}{whether to show a warning about dates that are after the extraction date. Can also be a csv file path to save the warning as csv (see \code{csv_path} argument in \link{edc_data_warn}).}
 }
 \value{
 a dataframe
