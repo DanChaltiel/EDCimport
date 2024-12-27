@@ -177,13 +177,15 @@ fct_yesno = function(x,
 #'
 #' @return `df` with less columns
 #' @export
+#' @importFrom dplyr across all_of distinct everything n_distinct select summarise where
 #'
 #' @examples
-#' tm = edc_example_ae()
-#' tm$ae %>% names
-#' tm$ae %>% select_distinct() %>% names
-#' tm$ae %>% select_distinct(.by=subjid) %>% names
-#' @importFrom dplyr across all_of distinct everything n_distinct select summarise where
+#' db = edc_example()
+#' db$ae %>% colnames()
+#' #`crfname` has one level for the whole dataset
+#' db$ae %>% select_distinct() %>% colnames()
+#' #`n_ae` has one level per patient
+#' db$ae %>% select_distinct(.by=subjid) %>% colnames()
 select_distinct = function(df, .by) {
   a = df %>% 
     summarise(across(everything(), function(.x) n_distinct(.x, na.rm=TRUE)), 
