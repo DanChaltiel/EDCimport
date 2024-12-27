@@ -32,12 +32,12 @@ test_that("edc_data_warn snapshot", {
     #warning, multiple subjid found
     enrol %>%
       filter(age>70) %>%
-      edc_data_warn("Age should not be >70", issue_n=2, col_subjid=c("subjid", "group"))
+      edc_data_warn("Age should not be >70", issue_n=2, col_subjid=c("subjid", "arm"))
     
     #warning, multiple subjid found, reverse order
     enrol %>%
       filter(age>70) %>%
-      edc_data_warn("Age should not be >70", issue_n=3, col_subjid=c("group", "subjid"))
+      edc_data_warn("Age should not be >70", issue_n=3, col_subjid=c("arm", "subjid"))
   
     
     edc_data_warnings()
@@ -54,7 +54,7 @@ test_that("edc_data_warn errors", {
   enrol %>%
     filter(age>70) %>%
     edc_data_stop("Age should never be >70", issue_n=99) %>% 
-    expect_error()
+    expect_error(class="edc_data_condition")
   
   #error subjid not found
   enrol %>%
@@ -76,7 +76,7 @@ test_that("edc_data_warn CSV", {
   input = enrol %>%
     as.data.frame() %>% 
     filter(age>70) %>%
-    select(subjid, age, group) %>% 
+    select(subjid, age, arm) %>% 
     remove_labels()
   
   input %>% 
