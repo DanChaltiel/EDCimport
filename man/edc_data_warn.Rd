@@ -54,30 +54,30 @@ Use \code{edc_data_warnings()} to generate the table for such a file.
 library(dplyr)
 tm = edc_example()
 load_list(tm)
-db0 \%>\% 
+enrol \%>\% 
   filter(age>70) \%>\% 
   edc_data_warn("Age should not be >70", issue_n=1)
 
-db0 \%>\% 
+enrol \%>\% 
   filter(age<25) \%>\% 
   edc_data_warn("Age should not be <25", issue_n=2)
 
 db1 \%>\% 
-  filter(n()>1, .by=SUBJID) \%>\% 
+  filter(n()>1, .by=subjid) \%>\% 
   edc_data_warn("There are duplicated patients in `db1` ({nrow(.data)} rows)", issue_n=3)
 
-db0 \%>\% 
+enrol \%>\% 
   filter(age<25) \%>\% 
   edc_data_warn("Age should not be <25", issue_n=NULL)
   
 edc_data_warnings()
 
 \dontrun{
-db0 \%>\% 
+enrol \%>\% 
   filter(age<25) \%>\% 
   edc_data_warn("Age should not be <25", csv_path="check/check_age_25.csv")
   
-db0 \%>\% 
+enrol \%>\% 
   filter(age<25) \%>\% 
   edc_data_stop("Age should *never* be <25")
 }

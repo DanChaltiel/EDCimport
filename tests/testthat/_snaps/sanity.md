@@ -1,43 +1,43 @@
 # edc_data_warn snapshot
 
     Code
-      db0 %>% filter(age > 60) %>% edc_data_warn("Age should not be >60")
+      enrol %>% filter(age > 60) %>% edc_data_warn("Age should not be >60")
     Condition
       Warning:
       Issue #xx: Age should not be >60 (10 patients: #1, #7, #9, #11, #12, ...)
     Code
-      db0 %>% filter(age > 70) %>% edc_data_warn("Age should not be >70", issue_n = NULL)
+      enrol %>% filter(age > 70) %>% edc_data_warn("Age should not be >70", issue_n = NULL)
     Condition
       Warning:
       Age should not be >70 (2 patients: #9 and #12)
     Code
-      db0 %>% filter(age > 20) %>% edc_data_warn("Age should not be >20", issue_n = 1,
+      enrol %>% filter(age > 20) %>% edc_data_warn("Age should not be >20", issue_n = 1,
         max_subjid = 2)
     Condition
       Warning:
       Issue #01: Age should not be >20 (50 patients: #1, #2, ...)
     Code
-      db0 %>% filter(age > 70) %>% edc_data_warn("Age should not be >70", issue_n = NULL,
-        col_subjid = c("SUBJID", "PATNO"))
+      enrol %>% filter(age > 70) %>% edc_data_warn("Age should not be >70", issue_n = NULL,
+        col_subjid = c("subjid", "PATNO"))
     Condition
       Warning:
       Age should not be >70 (2 patients: #9 and #12)
     Code
-      db0 %>% filter(age > 70) %>% edc_data_warn("Age should not be >70", issue_n = 2,
-        col_subjid = c("SUBJID", "group"))
+      enrol %>% filter(age > 70) %>% edc_data_warn("Age should not be >70", issue_n = 2,
+        col_subjid = c("subjid", "arm"))
     Condition
       Warning in `edc_data_warn()`:
-      Found 2 subject identifiers in the input dataset: "SUBJID" and "group". Defaulting to the first one.
+      Found 2 subject identifiers in the input dataset: "subjid" and "arm". Defaulting to the first one.
       Warning:
       Issue #02: Age should not be >70 (2 patients: #9 and #12)
     Code
-      db0 %>% filter(age > 70) %>% edc_data_warn("Age should not be >70", issue_n = 3,
-        col_subjid = c("group", "SUBJID"))
+      enrol %>% filter(age > 70) %>% edc_data_warn("Age should not be >70", issue_n = 3,
+        col_subjid = c("arm", "subjid"))
     Condition
       Warning in `edc_data_warn()`:
-      Found 2 subject identifiers in the input dataset: "group" and "SUBJID". Defaulting to the first one.
+      Found 2 subject identifiers in the input dataset: "arm" and "subjid". Defaulting to the first one.
       Warning:
-      Issue #03: Age should not be >70 (2 patients: #A and #B)
+      Issue #03: Age should not be >70 (2 patients: #Ctl and #Trt)
     Code
       edc_data_warnings()
     Output

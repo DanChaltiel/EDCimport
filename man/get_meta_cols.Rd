@@ -18,7 +18,7 @@ meta-data that are often irrelevant to the point. This function identifies the c
 that are present in at least 95\% of datasets (by default)
 }
 \examples{
-tm = edc_example_mixed()
+tm = edc_example()
 load_list(tm)
 meta_cols = get_meta_cols()
 long_mixed \%>\% dplyr::select(-dplyr::any_of(meta_cols))

@@ -54,15 +54,15 @@ edc_population_plot = function(x, id_per_row=50, ref="first"){
   range_sup = ceiling(max(ref) / id_per_row) * id_per_row
   breaks=seq(0, range_sup, by=id_per_row)
   
-  df = tibble(SUBJID=ref, !!!y) %>% 
-    pivot_longer(-SUBJID) %>% 
-    mutate(group=cut(SUBJID, breaks=breaks),
+  df = tibble(subjid=ref, !!!y) %>% 
+    pivot_longer(-subjid) %>% 
+    mutate(group=cut(subjid, breaks=breaks),
            name=factor(name, levels=rev(names(x))),
            value=fct_yesno(value))
-  dummy = tibble(SUBJID=range_sup, name=last(df$name), 
+  dummy = tibble(subjid=range_sup, name=last(df$name), 
                  value=last(df$value), group=last(df$group))
   df %>% 
-    ggplot(aes(x=SUBJID, y=name, fill=value)) +
+    ggplot(aes(x=subjid, y=name, fill=value)) +
     geom_tile(color="black") +
     geom_tile(data=dummy, fill="transparent") +
     facet_wrap(~group, ncol=1, scales="free_x", strip.position="right") +

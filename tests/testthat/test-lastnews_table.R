@@ -75,6 +75,6 @@ test_that("lastnews_table() snapshot", {
 test_that("lastnews_table() error", {
   tm = lastnews_example()
   load_list(tm)
-  lastnews_table(except=c("\\d"), regex=TRUE) %>% 
+  lastnews_table(except=c("enrol", "\\d"), regex=TRUE) %>% 
     expect_error(class="edc_no_columns_error")
 })

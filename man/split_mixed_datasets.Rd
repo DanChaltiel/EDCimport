@@ -16,7 +16,7 @@ split_mixed_datasets(
 \arguments{
 \item{datasets}{a dataframe or a list of dataframes to split. Default to all the datasets from \code{.lookup}.}
 
-\item{id}{the patient identifier, probably "SUBJID". Should be shared by all datasets. Case-insensitive.}
+\item{id}{the patient identifier, probably "subjid". Should be shared by all datasets. Case-insensitive.}
 
 \item{...}{not used}
 
@@ -34,7 +34,7 @@ Split mixed tables, i.e. tables that hold both long data (N values per patient) 
 }
 \examples{
 #tm = read_trialmaster("filename.zip", pw="xx")
-tm = edc_example_mixed()
+tm = edc_example()
 names(tm)
 #load_list(tm)
 print(tm$long_mixed) #`val1` and `val2` are long but `val3` is short
@@ -45,8 +45,8 @@ print(long_mixed_short)
 print(long_mixed_long) 
 
 #alternatively, get the code and only use the datasets you need
-split_mixed_datasets(tm, id="SUBJID", output_code=TRUE)
+split_mixed_datasets(tm, id="subjid", output_code=TRUE)
 filename = tempfile("mixed_code", fileext=".R")
-split_mixed_datasets(tm, id="SUBJID", output_code=filename)
+split_mixed_datasets(tm, id="subjid", output_code=filename)
 readLines(filename)
 }

@@ -177,13 +177,15 @@ fct_yesno = function(x,
 #'
 #' @return `df` with less columns
 #' @export
+#' @importFrom dplyr across all_of distinct everything n_distinct select summarise where
 #'
 #' @examples
-#' tm = edc_example_ae()
-#' tm$ae %>% names
-#' tm$ae %>% select_distinct() %>% names
-#' tm$ae %>% select_distinct(.by=subjid) %>% names
-#' @importFrom dplyr across all_of distinct everything n_distinct select summarise where
+#' db = edc_example()
+#' db$ae %>% colnames()
+#' #`crfname` has one level for the whole dataset
+#' db$ae %>% select_distinct() %>% colnames()
+#' #`n_ae` has one level per patient
+#' db$ae %>% select_distinct(.by=subjid) %>% colnames()
 select_distinct = function(df, .by) {
   a = df %>% 
     summarise(across(everything(), function(.x) n_distinct(.x, na.rm=TRUE)), 
@@ -264,12 +266,12 @@ save_sessioninfo = function(path="check/session_info.txt", with_date=TRUE){
 #'
 #' @examples
 #' db = edc_example()
-#' db$db0 = head(db$db0, 10)
-#' db$db0$SUBJID %>% head()
+#' db$enrol = head(db$enrol, 10)
+#' db$enrol$subjid %>% head()
 #' db = harmonize_subjid(db)
-#' db$db0$SUBJID %>% head()
+#' db$enrol$subjid %>% head()
 #' db = harmonize_subjid(db, preprocess=function(x) paste0("#", x))
-#' db$db0$SUBJID %>% head()
+#' db$enrol$subjid %>% head()
 harmonize_subjid = function(datalist, preprocess=NULL, 
                             col_subjid=get_subjid_cols()){
   if(is.null(preprocess)) preprocess = identity
@@ -548,7 +550,7 @@ get_crfname_cols = function(lookup=edc_lookup()){
 #' @export
 #'
 #' @examples
-#' tm = edc_example_mixed()
+#' tm = edc_example()
 #' load_list(tm)
 #' meta_cols = get_meta_cols()
 #' long_mixed %>% dplyr::select(-dplyr::any_of(meta_cols))
