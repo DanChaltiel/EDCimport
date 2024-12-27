@@ -267,11 +267,11 @@ save_sessioninfo = function(path="check/session_info.txt", with_date=TRUE){
 #' @examples
 #' db = edc_example()
 #' db$db0 = head(db$db0, 10)
-#' db$db0$SUBJID %>% head()
+#' db$db0$subjid %>% head()
 #' db = harmonize_subjid(db)
-#' db$db0$SUBJID %>% head()
+#' db$db0$subjid %>% head()
 #' db = harmonize_subjid(db, preprocess=function(x) paste0("#", x))
-#' db$db0$SUBJID %>% head()
+#' db$db0$subjid %>% head()
 harmonize_subjid = function(datalist, preprocess=NULL, 
                             col_subjid=get_subjid_cols()){
   if(is.null(preprocess)) preprocess = identity

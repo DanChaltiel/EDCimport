@@ -24,7 +24,7 @@ test_that("edc_data_warn snapshot", {
     #multiple subjid proposals
     db0 %>%
       filter(age>70) %>%
-      edc_data_warn("Age should not be >70", issue_n=NULL, col_subjid=c("SUBJID", "PATNO"))
+      edc_data_warn("Age should not be >70", issue_n=NULL, col_subjid=c("subjid", "PATNO"))
     
     
     ## WARNINGS
@@ -32,12 +32,12 @@ test_that("edc_data_warn snapshot", {
     #warning, multiple subjid found
     db0 %>%
       filter(age>70) %>%
-      edc_data_warn("Age should not be >70", issue_n=2, col_subjid=c("SUBJID", "group"))
+      edc_data_warn("Age should not be >70", issue_n=2, col_subjid=c("subjid", "group"))
     
     #warning, multiple subjid found, reverse order
     db0 %>%
       filter(age>70) %>%
-      edc_data_warn("Age should not be >70", issue_n=3, col_subjid=c("group", "SUBJID"))
+      edc_data_warn("Age should not be >70", issue_n=3, col_subjid=c("group", "subjid"))
   
     
     edc_data_warnings()
@@ -76,7 +76,7 @@ test_that("edc_data_warn CSV", {
   input = db0 %>%
     as.data.frame() %>% 
     filter(age>70) %>%
-    select(SUBJID, age, group) %>% 
+    select(subjid, age, group) %>% 
     remove_labels()
   
   input %>% 

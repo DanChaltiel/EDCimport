@@ -29,7 +29,7 @@ if(FALSE){
 test_that("Split mixed outside read_trialmaster()", {
   tm = edc_example_mixed()
   # local_options(edc_override_ignore_cols = "crfname")
-  mixed_data = split_mixed_datasets(tm, id="SUBJID", verbose=FALSE)
+  mixed_data = split_mixed_datasets(tm, id="subjid", verbose=FALSE)
   mixed_data %>% names() %>% expect_equal(c("long_mixed_short", "long_mixed_long" ))
   mixed_data %>% map_dbl(nrow) %>% expect_equal(c(long_mixed_short=100, long_mixed_long=200))
   mixed_data %>% map_dbl(ncol) %>% expect_equal(c(long_mixed_short=3, long_mixed_long=3))

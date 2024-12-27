@@ -22,12 +22,12 @@
 #' @examples
 #' tm = edc_example()
 #' load_list(tm)
-#' options(edc_subjid_ref=db0$SUBJID)
+#' options(edc_subjid_ref=db0$subjid)
 #' #usually, you set something like:
 #' #options(edc_subjid_ref=enrolres$subjid)
 #' edc_warn_patient_diffs(db1)
-#' db1 %>% dplyr::filter(SUBJID>1) %>% edc_warn_patient_diffs()
-#' edc_warn_patient_diffs(c(db1$SUBJID, 99, 999))
+#' db1 %>% dplyr::filter(subjid>1) %>% edc_warn_patient_diffs()
+#' edc_warn_patient_diffs(c(db1$subjid, 99, 999))
 edc_warn_patient_diffs = function(x, ref=getOption("edc_subjid_ref"), 
                                   issue_n="xx", data_name=NULL, 
                                   col_subjid=get_subjid_cols()){
@@ -202,7 +202,7 @@ assert_no_duplicate = function(df, by=NULL, id_col=get_subjid_cols()){
 #'   edc_data_warn("Age should not be <25", issue_n=2)
 #' 
 #' db1 %>% 
-#'   filter(n()>1, .by=SUBJID) %>% 
+#'   filter(n()>1, .by=subjid) %>% 
 #'   edc_data_warn("There are duplicated patients in `db1` ({nrow(.data)} rows)", issue_n=3)
 #' 
 #' db0 %>% 

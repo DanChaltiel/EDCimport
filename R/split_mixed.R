@@ -71,7 +71,7 @@ table_format = function(df, id=get_subjid_cols(), ...,
 #' Split mixed tables, i.e. tables that hold both long data (N values per patient) and short data (one value per patient, duplicated on N lines), into one long table and one short table.
 #'
 #' @param datasets a dataframe or a list of dataframes to split. Default to all the datasets from `.lookup`.
-#' @param id the patient identifier, probably "SUBJID". Should be shared by all datasets. Case-insensitive.
+#' @param id the patient identifier, probably "subjid". Should be shared by all datasets. Case-insensitive.
 #' @param ignore_cols columns to ignore when considering a table as long. Default to `getOption("edc_cols_crfname", "CRFNAME")`. Case-insensitive.
 #' @param output_code whether to print the code to explicitly write. Can also be a file path.
 #' @param verbose whether to print informations about the process.
@@ -99,9 +99,9 @@ table_format = function(df, id=get_subjid_cols(), ...,
 #' print(long_mixed_long) 
 #' 
 #' #alternatively, get the code and only use the datasets you need
-#' split_mixed_datasets(tm, id="SUBJID", output_code=TRUE)
+#' split_mixed_datasets(tm, id="subjid", output_code=TRUE)
 #' filename = tempfile("mixed_code", fileext=".R")
-#' split_mixed_datasets(tm, id="SUBJID", output_code=filename)
+#' split_mixed_datasets(tm, id="subjid", output_code=filename)
 #' readLines(filename)
 split_mixed_datasets = function(datasets=get_datasets(), id=get_subjid_cols(), ..., 
                                 ignore_cols=get_meta_cols(0.95), 
