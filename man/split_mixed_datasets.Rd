@@ -16,7 +16,7 @@ split_mixed_datasets(
 \arguments{
 \item{datasets}{a dataframe or a list of dataframes to split. Default to all the datasets from \code{.lookup}.}
 
-\item{id}{the patient identifier, probably "SUBJID". Should be shared by all datasets. Case-insensitive.}
+\item{id}{the patient identifier, probably "subjid". Should be shared by all datasets. Case-insensitive.}
 
 \item{...}{not used}
 
@@ -45,8 +45,8 @@ print(long_mixed_short)
 print(long_mixed_long) 
 
 #alternatively, get the code and only use the datasets you need
-split_mixed_datasets(tm, id="SUBJID", output_code=TRUE)
+split_mixed_datasets(tm, id="subjid", output_code=TRUE)
 filename = tempfile("mixed_code", fileext=".R")
-split_mixed_datasets(tm, id="SUBJID", output_code=filename)
+split_mixed_datasets(tm, id="subjid", output_code=filename)
 readLines(filename)
 }

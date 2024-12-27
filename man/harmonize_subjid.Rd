@@ -23,10 +23,10 @@ be performed on the levels.
 }
 \examples{
 db = edc_example()
-db$db0 = head(db$db0, 10)
-db$db0$SUBJID \%>\% head()
+db$enrol = head(db$enrol, 10)
+db$enrol$subjid \%>\% head()
 db = harmonize_subjid(db)
-db$db0$SUBJID \%>\% head()
+db$enrol$subjid \%>\% head()
 db = harmonize_subjid(db, preprocess=function(x) paste0("#", x))
-db$db0$SUBJID \%>\% head()
+db$enrol$subjid \%>\% head()
 }
