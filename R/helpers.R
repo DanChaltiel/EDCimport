@@ -550,7 +550,7 @@ get_crfname_cols = function(lookup=edc_lookup()){
 #' @export
 #'
 #' @examples
-#' tm = edc_example_mixed()
+#' tm = edc_example()
 #' load_list(tm)
 #' meta_cols = get_meta_cols()
 #' long_mixed %>% dplyr::select(-dplyr::any_of(meta_cols))

@@ -18,7 +18,7 @@
 #' @export
 #' 
 #' @examples
-#' tm = edc_example_mixed()
+#' tm = edc_example()
 #' sapply(tm, table_format, warn=FALSE) 
 table_format = function(df, id=get_subjid_cols(), ..., 
                         ignore_cols=get_meta_cols(0.95), 
@@ -88,7 +88,7 @@ table_format = function(df, id=get_subjid_cols(), ...,
 #'
 #' @examples
 #' #tm = read_trialmaster("filename.zip", pw="xx")
-#' tm = edc_example_mixed()
+#' tm = edc_example()
 #' names(tm)
 #' #load_list(tm)
 #' print(tm$long_mixed) #`val1` and `val2` are long but `val3` is short

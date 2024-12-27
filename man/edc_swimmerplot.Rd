@@ -46,12 +46,12 @@ Join all tables from \code{.lookup$dataset} on \code{id}
 }
 \examples{
 #tm = read_trialmaster("filename.zip", pw="xx")
-tm = edc_example_plot()
+tm = edc_example()
 load_list(tm)
 p = edc_swimmerplot(.lookup, id_lim=c(5,45))
 p2 = edc_swimmerplot(.lookup, origin="enrol$date_naissance", time_unit="weeks", 
                      exclude=c("DB1$DATE2", "db3$.*"))
-p3 = edc_swimmerplot(.lookup, group="enrol$group", aes_color="label")
+p3 = edc_swimmerplot(.lookup, group="enrol$arm", aes_color="label")
 \dontrun{
 #save the plotly plot as HTML to share it
 save_plotly(p, "edc_swimmerplot.html")

@@ -34,7 +34,7 @@ Split mixed tables, i.e. tables that hold both long data (N values per patient) 
 }
 \examples{
 #tm = read_trialmaster("filename.zip", pw="xx")
-tm = edc_example_mixed()
+tm = edc_example()
 names(tm)
 #load_list(tm)
 print(tm$long_mixed) #`val1` and `val2` are long but `val3` is short

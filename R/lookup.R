@@ -153,7 +153,7 @@ get_lookup = deprecatedly(edc_lookup, what="get_lookup()", when="0.5.0")
 #' @importFrom rlang check_dots_empty
 #' @examples
 #' #tm = read_trialmaster("filename.zip", pw="xx")
-#' tm = edc_example_mixed()
+#' tm = edc_example()
 #' load_list(tm)
 #' .lookup
 #' .lookup = extend_lookup(.lookup)

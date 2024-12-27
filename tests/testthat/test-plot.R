@@ -6,7 +6,7 @@ test_that("edc_swimmerplot", {
   skip("SVG is painful")
   edc_options(edc_lookup_overwrite_warn=FALSE)
 
-  e = edc_example_plot()
+  e = edc_example()
   load_list(e)
   
   p = edc_swimmerplot(.lookup, plotly=FALSE)
