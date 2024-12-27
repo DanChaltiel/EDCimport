@@ -11,11 +11,9 @@
 #' @return A list of tables of class `edc_database`.
 #' @export
 edc_example = function(N=50, seed=42, outdated=FALSE){
-  set.seed(seed)
-  
-  x1 = .example_dates(N)
-  x2 = .example_mixed(N)
-  x3 = .example_ae(N)
+  x1 = .example_dates(N, seed)
+  x2 = .example_mixed(N, seed)
+  x3 = .example_ae(N, seed)
   rtn = c(x1, x2, x3)
   
   ext1 = as.POSIXct("2024-01-01 01:00:00 CET")
@@ -47,7 +45,8 @@ edc_example_plot = edc_example
 #' @importFrom purrr imap
 #' @importFrom stats rnorm runif
 #' @importFrom tibble tibble
-.example_dates = function(N){
+.example_dates = function(N, seed){
+  set.seed(seed)
   start = ISOdate(2010, 04, 13, tz="CET")
   day = 3600*24
   db = tibble(subjid=1:N, age=rnorm(N, 50, 10), date_naissance=start-age*day)
@@ -82,15 +81,19 @@ edc_example_plot = edc_example
 #' @importFrom purrr imap
 #' @importFrom stats rnorm
 #' @importFrom tibble tibble
-.example_mixed = function(N){
+.example_mixed = function(N, seed){
+  set.seed(seed)
   
-  short = tibble(subjid=1:N, crfname="short data", 
+  short = tibble(subjid=1:N,
+                 crfname="short data", 
                  val1=rnorm(N), val2=rnorm(N)+10)
   
-  long_pure = tibble(subjid=rep(1:N, each=3), crfname="long data", 
+  long_pure = tibble(subjid=rep(1:N, each=3), 
+                     crfname="long data", 
                      val1a=rnorm(3*N), val2a=rnorm(3*N)+10)
   
-  long_mixed = tibble(subjid=rep(1:N, each=2), crfname="both short and long data", 
+  long_mixed = tibble(subjid=rep(1:N, each=2), 
+                      crfname="both short and long data", 
                       val1b=rnorm(2*N), val2b=rnorm(2*N)+10, 
                       val3b=LETTERS[subjid%%26+1])
   
@@ -108,7 +111,8 @@ edc_example_plot = edc_example
 #' @importFrom stats rnorm rbinom
 #' @importFrom tibble tibble
 #' @importFrom tidyr unnest
-.example_ae = function(N){
+.example_ae = function(N, seed){
+  set.seed(seed)
   
   ae = tibble(subjid=1:N, n_ae=rbinom(n=N, size=15, prob=0.2)) %>% 
     mutate(x = map(n_ae, ~seq_len(.x))) %>% 
