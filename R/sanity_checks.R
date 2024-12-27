@@ -22,7 +22,7 @@
 #' @examples
 #' tm = edc_example()
 #' load_list(tm)
-#' options(edc_subjid_ref=db0$subjid)
+#' options(edc_subjid_ref=enrol$subjid)
 #' #usually, you set something like:
 #' #options(edc_subjid_ref=enrolres$subjid)
 #' edc_warn_patient_diffs(db1)
@@ -193,11 +193,11 @@ assert_no_duplicate = function(df, by=NULL, id_col=get_subjid_cols()){
 #' library(dplyr)
 #' tm = edc_example()
 #' load_list(tm)
-#' db0 %>% 
+#' enrol %>% 
 #'   filter(age>70) %>% 
 #'   edc_data_warn("Age should not be >70", issue_n=1)
 #' 
-#' db0 %>% 
+#' enrol %>% 
 #'   filter(age<25) %>% 
 #'   edc_data_warn("Age should not be <25", issue_n=2)
 #' 
@@ -205,18 +205,18 @@ assert_no_duplicate = function(df, by=NULL, id_col=get_subjid_cols()){
 #'   filter(n()>1, .by=subjid) %>% 
 #'   edc_data_warn("There are duplicated patients in `db1` ({nrow(.data)} rows)", issue_n=3)
 #' 
-#' db0 %>% 
+#' enrol %>% 
 #'   filter(age<25) %>% 
 #'   edc_data_warn("Age should not be <25", issue_n=NULL)
 #'   
 #' edc_data_warnings()
 #' 
 #' \dontrun{
-#' db0 %>% 
+#' enrol %>% 
 #'   filter(age<25) %>% 
 #'   edc_data_warn("Age should not be <25", csv_path="check/check_age_25.csv")
 #'   
-#' db0 %>% 
+#' enrol %>% 
 #'   filter(age<25) %>% 
 #'   edc_data_stop("Age should *never* be <25")
 #' }
