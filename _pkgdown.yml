@@ -76,8 +76,6 @@ reference:
   - save_list
 - title: "Examples"
 - contents:
-  - edc_example_mixed
-  - edc_example_plot
   - edc_example
 - title: "Manual correction"
 - contents:
