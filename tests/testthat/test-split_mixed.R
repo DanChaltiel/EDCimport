@@ -5,10 +5,10 @@ edc_options(edc_lookup_overwrite_warn=FALSE)
 
 # Zip generation ------------------------------------------------------------------------------
 
-#copy edc_example_mixed() to a dirname. Need to manually turn it to zip for now.
+#copy edc_example() to a dirname. Need to manually turn it to zip for now.
 if(FALSE){
-  tm = edc_example_mixed()
-  path = test_path("edc_example_mixed_SAS_XPORT_2000_01_01_00_00")
+  tm = edc_example() %>% keep_at(c("short", "long_pure", "long_mixed"))
+  path = test_path("edc_example_mixed_SAS_XPORT_2000_01_01_00_00.zip")
   for(i in names(tm)){
     x = tm[[i]]
     if(!is.data.frame(x) || i==".lookup") next
@@ -27,9 +27,8 @@ if(FALSE){
 
 
 test_that("Split mixed outside read_trialmaster()", {
-  tm = edc_example_mixed()
-  # local_options(edc_override_ignore_cols = "crfname")
-  mixed_data = split_mixed_datasets(tm, id="SUBJID", verbose=FALSE)
+  tm = edc_example(N=100) %>% keep_at(c("short", "long_pure", "long_mixed"))
+  mixed_data = split_mixed_datasets(tm, id="subjid", verbose=FALSE)
   mixed_data %>% names() %>% expect_equal(c("long_mixed_short", "long_mixed_long" ))
   mixed_data %>% map_dbl(nrow) %>% expect_equal(c(long_mixed_short=100, long_mixed_long=200))
   mixed_data %>% map_dbl(ncol) %>% expect_equal(c(long_mixed_short=3, long_mixed_long=3))

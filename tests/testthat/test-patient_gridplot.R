@@ -5,12 +5,12 @@ skip_on_ci()
 test_that("edc_patient_gridplot", {
   set.seed(42)
   local_options(edc_lookup_overwrite_warn=FALSE)
-  e = edc_example_plot() %>% 
+  e = edc_example() %>% 
     map(~{
-      if(is.data.frame(.x) && !is.null(.x[["SUBJID"]])){
-        included = sample(.x$SUBJID, size=0.8*n_distinct(.x$SUBJID))
-        .x = .x %>% filter(.x$SUBJID %in% included) %>% 
-          mutate(SUBJID=paste0("#", SUBJID))
+      if(is.data.frame(.x) && !is.null(.x[["subjid"]])){
+        included = sample(.x$subjid, size=0.8*n_distinct(.x$subjid))
+        .x = .x %>% filter(.x$subjid %in% included) %>% 
+          mutate(subjid=paste0("#", subjid))
       }
       .x
     })

@@ -62,14 +62,13 @@ test_that("get_folder_datetime() works", {
 # build_lookup() & find_keyword() ---------------------------------------------------------------
 
 test_that("build_lookup() works", {
+  excluded = c(".lookup", "date_extraction", "datetime_extraction")
+  x = edc_example() %>% discard_at(excluded)
+  lookup = build_lookup(x) %>% arrange(dataset)
+  xnames = x[sort(names(x))] %>% map(names)
   
-  x = edc_example()
-  x$.lookup=NULL
-  lookup = build_lookup(x)
-  expect_equal(lengths(lookup$names), c(db0=5,db2=5,db3=6,db1=6))
-  expect_true(all(nzchar(lookup$labels$i)))
-  expect_false(any(nzchar(lookup$labels$m)))
-  # lookup %>% unnest(everything())
+  expect_equal(lookup$names, xnames)
+  expect_true(all(nzchar(unlist(lookup$labels))))
   
   x = list(i=iris, mtcars)
   build_lookup(x) %>% 
@@ -84,9 +83,9 @@ test_that("find_keyword() works", {
   # x$.lookup %>% unnest() %>% v
   x1=find_keyword("visit", data=x$.lookup)
   expect_setequal(x1$names, paste0("date", 1:10))
-  x2=find_keyword("id|\\(", data=x$.lookup)
-  expect_equal(unique(x2$names), c("SUBJID", "age"))
-  x3=find_keyword("id|\\(", data=x$.lookup, ignore_case=FALSE)
+  x2=find_keyword("SUBJ|\\(", data=x$.lookup)
+  expect_equal(unique(x2$names), c("subjid", "age"))
+  x3=find_keyword("SUBJ|\\(", data=x$.lookup, ignore_case=FALSE)
   expect_equal(unique(x3$names), "age")
 })
 

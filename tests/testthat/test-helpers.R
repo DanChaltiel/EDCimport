@@ -5,17 +5,17 @@ edc_options(edc_lookup_overwrite_warn=FALSE)
 
 
 test_that("assert_no_duplicate works", {
-  tm = edc_example()
+  tm = edc_example() #to set up the lookup and the subjid column
   
   tibble(subjid=c(1:10)) %>% assert_no_duplicate() %>% expect_silent()
   
   tibble(subjid=c(1:10, 1)) %>% assert_no_duplicate() %>% 
     expect_error(class="edcimport_assert_no_duplicate")
-  tibble(ptno=c(1:10, 1:3)) %>% assert_no_duplicate(id_col=c("SUBJID","PTNO")) %>% 
+  tibble(ptno=c(1:10, 1:3)) %>% assert_no_duplicate(id_col=c("subjid","PTNO")) %>% 
     expect_error(class="edcimport_assert_no_duplicate")
   tibble(not_subjid=c(1:10)) %>% assert_no_duplicate() %>% 
     expect_error(class="edcimport_assert_no_duplicate_no_col")
-  tibble(subjid=c(1:10, 4), ptno=c(1:10, 3)) %>% assert_no_duplicate(id_col=c("SUBJID","PTNO")) %>% 
+  tibble(subjid=c(1:10, 4), ptno=c(1:10, 3)) %>% assert_no_duplicate(id_col=c("subjid","PTNO")) %>% 
     expect_error(class="edcimport_assert_no_duplicate_many_col")
   
   #By groups

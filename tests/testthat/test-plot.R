@@ -6,20 +6,20 @@ test_that("edc_swimmerplot", {
   skip("SVG is painful")
   edc_options(edc_lookup_overwrite_warn=FALSE)
 
-  e = edc_example_plot()
+  e = edc_example()
   load_list(e)
   
   p = edc_swimmerplot(.lookup, plotly=FALSE)
-  p2 = edc_swimmerplot(.lookup, origin="db0$date_naissance", time_unit="months", plotly=FALSE)
-  p3 = edc_swimmerplot(.lookup, group="db0$group", plotly=FALSE)
-  p4 = edc_swimmerplot(.lookup, origin="db0$date_naissance", group="db0$group", plotly=FALSE)
+  p2 = edc_swimmerplot(.lookup, origin="enrol$date_naissance", time_unit="months", plotly=FALSE)
+  p3 = edc_swimmerplot(.lookup, group="enrol$group", plotly=FALSE)
+  p4 = edc_swimmerplot(.lookup, origin="enrol$date_naissance", group="enrol$group", plotly=FALSE)
   p5 = edc_swimmerplot(.lookup, aes_color="label", plotly=FALSE)
   
   expect_error(edc_swimmerplot(.lookup, origin="aaaaa", plotly=FALSE), 
                class="edc_swimplot_parse")
   expect_error(edc_swimmerplot(.lookup, origin="xxx$date_naissance", plotly=FALSE), 
                class="edc_swimplot_parse_dataset")
-  expect_error(edc_swimmerplot(.lookup, origin="db0$date_xxxxxxxxx", plotly=FALSE), 
+  expect_error(edc_swimmerplot(.lookup, origin="enrol$date_xxxxxxxxx", plotly=FALSE), 
                class="edc_swimplot_parse_column")
   
   expect_error(edc_swimmerplot(.lookup, group="aaaaa", plotly=FALSE), 

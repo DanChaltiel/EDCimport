@@ -19,8 +19,10 @@ Select all columns that has only one level for a given grouping scope.
 Useful when dealing with mixed datasets containing both long data and repeated short data.
 }
 \examples{
-tm = edc_example_ae()
-tm$ae \%>\% names
-tm$ae \%>\% select_distinct() \%>\% names
-tm$ae \%>\% select_distinct(.by=subjid) \%>\% names
+db = edc_example()
+db$ae \%>\% colnames()
+#`crfname` has one level for the whole dataset
+db$ae \%>\% select_distinct() \%>\% colnames()
+#`n_ae` has one level per patient
+db$ae \%>\% select_distinct(.by=subjid) \%>\% colnames()
 }

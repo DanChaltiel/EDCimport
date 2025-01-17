@@ -27,7 +27,23 @@ edcimport_env = rlang::new_environment()
 edcimport_env$warn_list = list()
 edcimport_env$lookup = NULL
 
-utils::globalVariables(c(".", ":=", "!!", ".data", ".env", "SUBJID", "age", "dataset", "n_id", "name", "value", ".id", "aegr", "aesoc", "best_resp", "case_when", "diff_first", "element_blank", "facet_grid", "first_sum", "grade2", "grade_max", "last_sum", "min_sum", "n_ae", "n_arm", "n_soc", "n_term", "replace_na", "resp", "resp_num", "sae", "scale_fill_steps", "star", "star_txt", "subjid", "variable", "vars", "x", "column", "last_date", "origin", "pct_datasets", "arm_", "grade_", "soc_", "subjid_", "term_", "any_ae", "any_severe", "label", "label_percent_positive", "n_severe", "pct_ae", "pct_severe", "severe_", "unit", ".name", "Tot", "any_grade_sup_na", "calc", "col_keys", "crfstat", "datetime_extraction", "first_date", "h1", "h2", "origin_col", "origin_data", "origin_label", "prefered", "resp2", "showNA", "sort_by_count", "title", "weight", "dataset_sum", "included", "included_sum", "subjid_sum"))
+
+globals = c("!!", ".", ".data", ".env", ".id", ".name", ":=", "aegr", "aesoc", 
+            "age", "any_ae", "any_grade_sup_na", "any_severe", "arm_", "best_resp", 
+            "calc", "case_when", "col_keys", "column", "crfname", "crfstat", 
+            "dataset", "dataset_sum", "date_naissance", "datetime_extraction", 
+            "diff_first", "element_blank", "facet_grid", "first_date", "first_sum", 
+            "grade_", "grade_max", "grade2", "h1", "h2", "included", "included_sum", 
+            "label", "label_percent_positive", "last_date", "last_sum", "min_sum", 
+            "n_ae", "n_arm", "n_id", "n_severe", "n_soc", "n_term", "name", 
+            "origin", "origin_col", "origin_data", "origin_label", "pct_ae", 
+            "pct_datasets", "pct_severe", "prefered", "replace_na", "resp", 
+            "resp_num", "resp2", "sae", "scale_fill_steps", "severe_", "showNA", 
+            "soc_", "sort_by_count", "star", "star_txt", "subjid", "subjid", 
+            "subjid_", "subjid_sum", "term_", "title", "Tot", "unit", "value", 
+            "variable", "vars", "weight", "x")
+# dput(sort(globals))
+utils::globalVariables(globals)
 
 
 
