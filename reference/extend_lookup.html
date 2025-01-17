@@ -17,7 +17,7 @@ crfname the actual name of the dataset
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9010</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9011</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -93,24 +93,34 @@ crfname the actual name of the dataset
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">#tm = read_trialmaster("filename.zip", pw="xx")</span></span></span>
-<span class="r-in"><span><span class="va">tm</span> <span class="op">=</span> <span class="fu"><a href="data_example.html">edc_example_mixed</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">tm</span> <span class="op">=</span> <span class="fu"><a href="edc_example.html">edc_example</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Option <span style="color: #0000BB;">"edc_lookup"</span> has been overwritten.</span>
 <span class="r-in"><span><span class="fu"><a href="load_list.html">load_list</a></span><span class="op">(</span><span class="va">tm</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">.lookup</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #FFAFFF;">──</span> <span style="color: #FFAFFF;">Lookup table (extraction of 2022-08-25) </span> <span style="color: #FFAFFF;">────────────────────────────────────</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #FFAFFF;">──</span> <span style="color: #FFAFFF;">Lookup table (extraction of 2024-01-01) </span> <span style="color: #FFAFFF;">────────────────────────────────────</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   dataset     nrow  ncol</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> short        100     4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> long_mixed   200     5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> long_pure    300     4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> enrol         50     5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> db2           50     5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> db3           50     6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> short         50     4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> db1          100     6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> long_mixed   100     5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> long_pure    150     4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> ae           175     6</span>
 <span class="r-in"><span><span class="va">.lookup</span> <span class="op">=</span> <span class="fu">extend_lookup</span><span class="op">(</span><span class="va">.lookup</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">.lookup</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #FFAFFF;">──</span> <span style="color: #FFAFFF;">Lookup table (extraction of 2022-08-25) </span> <span style="color: #FFAFFF;">────────────────────────────────────</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   dataset     nrow  ncol  n_id rows_per_id crfname   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> long_pure    300     4   100           3 long_pure </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> long_mixed   200     5   100           2 long_mixed</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> short        100     4   100           1 short     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #FFAFFF;">──</span> <span style="color: #FFAFFF;">Lookup table (extraction of 2024-01-01) </span> <span style="color: #FFAFFF;">────────────────────────────────────</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   dataset     nrow  ncol  n_id rows_per_id crfname                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> ae           175     6    48         3.6 Adverse events          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> long_pure    150     4    50         3   long data               </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> db1          100     6    50         2   db1                     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> long_mixed   100     5    50         2   both short and long data</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> enrol         50     5    50         1   enrol                   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> db2           50     5    50         1   db2                     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> db3           50     6    50         1   db3                     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> short         50     4    50         1   short data              </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
