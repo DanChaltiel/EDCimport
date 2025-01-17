@@ -28,9 +28,9 @@
 #' tm = edc_example()
 #' load_list(tm)
 #' p = edc_swimmerplot(id_lim=c(5,45))
-#' p2 = edc_swimmerplot(origin="db0$date_naissance", time_unit="weeks", 
+#' p2 = edc_swimmerplot(origin="enrol$date_naissance", time_unit="weeks", 
 #'                      exclude=c("DB1$DATE2", "db3$.*"))
-#' p3 = edc_swimmerplot(group="db0$group", aes_color="label")
+#' p3 = edc_swimmerplot(group="enrol$group", aes_color="label")
 #' \dontrun{
 #' #save the plotly plot as HTML to share it
 #' save_plotly(p, "edc_swimmerplot.html")
