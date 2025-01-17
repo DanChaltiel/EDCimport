@@ -20,7 +20,6 @@ edc_example = function(N=50, seed=42, outdated=FALSE){
   ext2 = as.POSIXct("2010-08-10 18:58:36 CET")
   rtn$datetime_extraction = if(isTRUE(outdated)) ext2 else ext1
   rtn$date_extraction = format(rtn$datetime_extraction, "%Y/%m/%d")
-  # rtn$datetime_extraction = as.POSIXct("2022-08-25 15:16:00 CEST")
   
   rtn$.lookup = build_lookup(rtn)
   .set_lookup(rtn$.lookup)
