@@ -361,12 +361,12 @@ harmonize_subjid = function(datalist, preprocess=NULL,
 edc_left_join = .edc_join(type="left")
 
 #' @rdname edc_left_join
-#' @usage edc_right_join(...)
+#' @usage NULL
 #' @export
 edc_right_join = .edc_join(type="right")
 
 #' @rdname edc_left_join
-#' @usage edc_full_join(...)
+#' @usage NULL
 #' @export
 edc_full_join = .edc_join(type="full")
 

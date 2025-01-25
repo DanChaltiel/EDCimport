@@ -14,10 +14,6 @@ edc_left_join(
   cols = everything(),
   remove_dups = TRUE
 )
-
-edc_right_join(...)
-
-edc_full_join(...)
 }
 \arguments{
 \item{x, y}{Data frames to join}

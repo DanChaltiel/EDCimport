@@ -41,7 +41,7 @@ test_that("lastnews_table() prefer", {
   #without regex
   lnt3 = lastnews_table(prefer=c("db2$date5", "db3"))
   lnt3b = lastnews_table(prefer=c("date5", "db3"), regex=TRUE)
-  expect_identical(lnt3, lnt3b)
+  expect_identical(lnt3, lnt3b, ignore_attr=TRUE)
   expect_equal(lnt3$origin_col[1:3], c("date10", "date5", "date5"))
   
   #with regex

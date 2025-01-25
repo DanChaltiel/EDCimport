@@ -41,7 +41,7 @@ globals = c("!!", ".", ".data", ".env", ".id", ".name", ":=", "aegr", "aesoc",
             "resp_num", "resp2", "sae", "scale_fill_steps", "severe_", "showNA", 
             "soc_", "sort_by_count", "star", "star_txt", "subjid", "subjid", 
             "subjid_", "subjid_sum", "term_", "title", "Tot", "unit", "value", 
-            "variable", "vars", "weight", "x")
+            "variable", "vars", "weight", "x", "preferred", "preferred_last_date")
 # dput(sort(globals))
 utils::globalVariables(globals)
 
