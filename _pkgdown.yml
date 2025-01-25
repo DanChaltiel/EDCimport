@@ -64,6 +64,7 @@ reference:
   - get_subjid_cols
   - get_key_cols
   - split_mixed_datasets
+  - edc_left_join
 - title: "Lookup Utils"
 - contents:
   - get_lookup
