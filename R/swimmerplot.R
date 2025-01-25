@@ -35,16 +35,13 @@
 #' #save the plotly plot as HTML to share it
 #' save_plotly(p, "edc_swimmerplot.html")
 #' }
-#' @importFrom cli cli_abort cli_warn
-#' @importFrom dplyr between filter left_join mutate rename select slice sym where
-#' @importFrom forcats as_factor
+#' @importFrom cli cli_abort
+#' @importFrom dplyr arrange left_join mutate sym
 #' @importFrom ggplot2 aes facet_wrap geom_line geom_point ggplot labs
 #' @importFrom glue glue
-#' @importFrom purrr discard imap list_rbind map
-#' @importFrom rlang check_dots_empty check_installed is_installed set_names
-#' @importFrom stringr str_detect str_ends str_remove str_replace_all
-#' @importFrom tidyr pivot_longer
-#' @importFrom tidyselect matches
+#' @importFrom purrr list_rbind
+#' @importFrom rlang check_dots_empty check_installed
+#' @importFrom stringr str_ends str_remove
 edc_swimmerplot = function(..., 
                            group=NULL, origin=NULL, 
                            id_lim=NULL,
@@ -121,6 +118,8 @@ edc_swimmerplot = function(...,
 
 #' @noRd
 #' @keywords internal
+#' @importFrom cli cli_abort
+#' @importFrom purrr map map_lgl
 .discard_if_no_id = function(datasets, id){
   has_id = datasets %>% 
     map(~tolower(names(.x))) %>% 
@@ -137,6 +136,9 @@ edc_swimmerplot = function(...,
 
 #' @noRd
 #' @keywords internal
+#' @importFrom cli cli_abort
+#' @importFrom dplyr rename select where
+#' @importFrom purrr discard map
 .select_dates = function(datasets, id){
   data_dates = datasets %>% 
     map(~{
@@ -152,6 +154,9 @@ edc_swimmerplot = function(...,
   data_dates
 }
 
+#' @importFrom dplyr mutate
+#' @importFrom purrr imap
+#' @importFrom tidyr pivot_longer
 .pivot_dates = function(datasets, id){
   datasets %>% 
     imap(~{
@@ -165,6 +170,8 @@ edc_swimmerplot = function(...,
     })
 }
 
+#' @importFrom dplyr filter
+#' @importFrom stringr str_detect str_replace_all
 .exclude_columns = function(data, exclude) {
   if(!is.null(exclude)){
     excl = exclude %>% paste(collapse="|") %>% tolower() %>% 
@@ -175,6 +182,11 @@ edc_swimmerplot = function(...,
   data
 }
 
+#' @importFrom cli cli_abort cli_warn
+#' @importFrom dplyr filter mutate slice
+#' @importFrom forcats as_factor
+#' @importFrom rlang is_installed
+#' @importFrom stringr str_detect
 .parse_id_to_numeric = function (data, id, id_lim) {
   if(is.null(id_lim)) id_lim =c(-Inf, Inf)
   if(!is.numeric(id_lim) && length(id_lim)!=2) {

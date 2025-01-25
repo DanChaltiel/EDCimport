@@ -16,9 +16,9 @@
 #' @return a dataframe
 #' @export
 #' @importFrom cli cli_abort
-#' @importFrom dplyr arrange filter mutate rowwise select slice_max ungroup where
+#' @importFrom dplyr arrange filter mutate rowwise select slice_max ungroup
 #' @importFrom purrr discard discard_at imap list_rbind
-#' @importFrom tidyr pivot_longer
+#' @importFrom stringr str_detect
 #'
 #' @examples
 #' tm = edc_example()
@@ -95,6 +95,8 @@ lastnews_table = function(except=NULL, with_ties=FALSE, numeric_id=TRUE,
 
 #' @noRd
 #' @keywords internal
+#' @importFrom purrr map_lgl
+#' @importFrom stringr str_detect
 .get_prefered = function(input, needle, regex) {
   f = if(!isTRUE(regex)) fixed else identity
   x = map_lgl(needle, ~any(str_detect(input, f(.x))))
@@ -104,6 +106,8 @@ lastnews_table = function(except=NULL, with_ties=FALSE, numeric_id=TRUE,
 
 #' @noRd
 #' @keywords internal
+#' @importFrom dplyr filter mutate select where
+#' @importFrom tidyr pivot_longer
 .extract_date_columns = function(data, data_name) {
   subjid_cols = get_subjid_cols()
   if(!is.data.frame(data) || !any(subjid_cols %in% names(data))) return(NULL)

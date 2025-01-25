@@ -17,7 +17,7 @@
 #' 
 #' @importFrom cli cli_abort
 #' @importFrom dplyr arrange lst mutate
-#' @importFrom purrr map map_dbl
+#' @importFrom purrr discard_at map map_dbl
 #' @importFrom rlang caller_arg is_named
 #' @importFrom tibble tibble
 build_lookup = function(data_list){
@@ -65,8 +65,9 @@ build_lookup = function(data_list){
 #' 
 #' @export
 #' @seealso [build_lookup()], [extend_lookup()]
-#' @importFrom cli cli_abort
+#' @importFrom cli cli_abort cli_warn format_inline
 #' @importFrom dplyr arrange enquos
+#' @importFrom purrr discard
 #' 
 #' @examples
 #' tm = edc_example()

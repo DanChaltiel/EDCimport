@@ -28,8 +28,8 @@
 #' @importFrom cli format_inline
 #' @importFrom dplyr arrange bind_rows mutate
 #' @importFrom forcats fct_reorder
-#' @importFrom ggplot2 aes coord_equal element_text geom_tile ggplot labs scale_fill_gradientn scale_x_discrete theme theme_minimal
-#' @importFrom purrr map map_dbl
+#' @importFrom ggplot2 aes coord_equal element_text geom_tile ggplot labs scale_fill_gradientn scale_fill_manual scale_x_discrete theme theme_minimal
+#' @importFrom purrr imap map map_dbl
 #' @importFrom rlang as_function is_formula
 #' @importFrom tibble tibble
 edc_patient_gridplot = function(sort_rows=TRUE, sort_cols=TRUE, gradient=FALSE,

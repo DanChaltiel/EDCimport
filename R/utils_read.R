@@ -8,7 +8,7 @@
 #' @importFrom fs path_ext_remove
 #' @importFrom purrr map
 #' @importFrom rlang set_names
-#' @importFrom stringr fixed
+#' @importFrom stringr fixed str_remove str_replace_all
 .read_all = function(files, read_function, clean_names_fun=NULL, path=NULL, ...){
   assert_file_exists(files)
   clean_names_fun = .get_clean_names_fun(clean_names_fun)

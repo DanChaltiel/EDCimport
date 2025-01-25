@@ -76,8 +76,7 @@ edc_example_plot = edc_example
 
 #' @noRd
 #' @keywords internal
-#' @importFrom dplyr lst mutate
-#' @importFrom purrr imap
+#' @importFrom dplyr lst
 #' @importFrom stats rnorm
 #' @importFrom tibble tibble
 .example_mixed = function(N, seed){
@@ -105,9 +104,9 @@ edc_example_plot = edc_example
 
 #' @noRd
 #' @keywords internal
-#' @importFrom dplyr lst mutate
-#' @importFrom purrr imap
-#' @importFrom stats rnorm rbinom
+#' @importFrom dplyr lst mutate n select
+#' @importFrom purrr map
+#' @importFrom stats rbinom runif
 #' @importFrom tibble tibble
 #' @importFrom tidyr unnest
 .example_ae = function(N, seed){

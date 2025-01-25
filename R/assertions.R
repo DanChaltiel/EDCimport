@@ -28,6 +28,7 @@ assert = function(x, msg=NULL, call=parent.frame(), class=NULL){
 #' @examples
 #' assert_file_exists("R/data.R")
 #' assert_file_exists("R/data.SAS")
+#' @importFrom cli cli_abort
 #' @importFrom fs file_exists
 assert_file_exists = function(x, msg=NULL, class=NULL){
   missing_files = !file_exists(x)
