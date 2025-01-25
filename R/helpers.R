@@ -299,6 +299,78 @@ harmonize_subjid = function(datalist, preprocess=NULL,
 }
 
 
+# Joins ---------------------------------------------------------------------------------------
+
+
+#' @noRd
+#' @keywords internal
+#' @importFrom cli cli_abort
+#' @importFrom dplyr all_of everything select setdiff
+#' @importFrom purrr keep
+.edc_join = function(type){
+  dplyr_join = switch(type, 
+                left=dplyr::left_join, right=dplyr::right_join, 
+                full=dplyr::full_join, inner=dplyr::inner_join)
+  
+  function(x, y, by=NULL, suffix=NULL, cols=everything(), remove_dups=TRUE){
+    subjid_col = get_subjid_cols() %>% intersect(names(x)) %>% intersect(names(y))
+    if(length(subjid_col)==0){
+      cli_abort(c("Could not find a common primary key for {.arg x} and {.arg y}",
+                  i="Primary key in current database: {.val {get_subjid_cols()}}"),
+                class="edc_subjid_not_found")
+    }
+    y = y %>% select(subjid_col, !!cols)
+    if(isTRUE(remove_dups)){
+      common_col = intersect(names(x), names(y)) %>% 
+        setdiff(subjid_col) %>% 
+        keep(~setequal(x[[.x]], y[[.x]]))
+      y = y %>% select(-all_of(common_col))
+    }
+    if(is.null(by)) by = subjid_col
+    if(is.null(suffix)) suffix = c("", paste0("_", rlang::caller_arg(y)))
+    
+    dplyr_join(x, y, by=by, suffix=suffix)
+  }
+}
+
+#' Join within the EDCimport framework
+#' 
+#' Perform a join with default `by` to the Subject ID and default suffix to the 
+#' name of the `y` dataset. See `[dplyr::mutate-joins]` for the description of the
+#' join logic.
+#'
+#' @param x,y Data frames to join
+#' @param by The key to join on. Defaults to `get_subjid_cols()`
+#' @param suffix The disambiguation suffix. Defaults to the actual name of the `y` dataset.
+#' @param cols The columns to select in `y` before joining.
+#' @param remove_dups Whether to remove columns in `y` that already exist in `x`.
+#'
+#' @returns a dataframe
+#' @export
+#'
+#' @examples
+#' tm = edc_example()
+#' attach(tm)
+#' db2$common = db1$common = "Common"
+#' x = enrol %>% 
+#'   edc_left_join(db2) %>% 
+#'   edc_right_join(db1)
+#'   
+#' #crfname get a suffix, common 
+#' names(x)
+edc_left_join = .edc_join(type="left")
+
+#' @rdname edc_left_join
+#' @usage edc_right_join(...)
+#' @export
+edc_right_join = .edc_join(type="right")
+
+#' @rdname edc_left_join
+#' @usage edc_full_join(...)
+#' @export
+edc_full_join = .edc_join(type="full")
+
+
 # Manual correction ---------------------------------------------------------------------------
 
 
