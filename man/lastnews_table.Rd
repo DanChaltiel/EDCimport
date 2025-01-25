@@ -7,6 +7,7 @@
 lastnews_table(
   except = NULL,
   with_ties = FALSE,
+  show_delta = FALSE,
   numeric_id = TRUE,
   prefer = NULL,
   regex = FALSE,
@@ -17,6 +18,8 @@ lastnews_table(
 \item{except}{the datasets/columns that should not be searched. Example: a scheduled visit for which the patient may have died before attending should not be considered.}
 
 \item{with_ties}{in case of tie, whether to return the first \code{origin} (FALSE) or all the origins that share this tie (TRUE).}
+
+\item{show_delta}{whether to compute the difference between the last \code{prefer} date and the actual last date}
 
 \item{numeric_id}{set to FALSE if the patient ID column is not numeric}
 
@@ -40,6 +43,8 @@ load_list(tm)
 lastnews_table()
 lastnews_table(except="db3")
 lastnews_table(except="db3$date9")
+
+lastnews_table(prefer="date10", show_delta=TRUE) 
 
 csv_file = tempfile(fileext=".csv")
 lastnews_table(prefer="date9", warn_if_future=csv_file) 

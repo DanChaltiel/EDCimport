@@ -8,6 +8,7 @@
 #'
 #' @param except the datasets/columns that should not be searched. Example: a scheduled visit for which the patient may have died before attending should not be considered.
 #' @param with_ties in case of tie, whether to return the first `origin` (FALSE) or all the origins that share this tie (TRUE).
+#' @param show_delta whether to compute the difference between the last `prefer` date and the actual last date 
 #' @param numeric_id set to FALSE if the patient ID column is not numeric
 #' @param prefer preferred origins in the event of a tie. Usually the followup table.
 #' @param regex whether to consider `except` and `prefer` as regex.
@@ -27,9 +28,11 @@
 #' lastnews_table(except="db3")
 #' lastnews_table(except="db3$date9")
 #' 
+#' lastnews_table(prefer="date10", show_delta=TRUE) 
+#' 
 #' csv_file = tempfile(fileext=".csv")
 #' lastnews_table(prefer="date9", warn_if_future=csv_file) 
-lastnews_table = function(except=NULL, with_ties=FALSE, numeric_id=TRUE, 
+lastnews_table = function(except=NULL, with_ties=FALSE, show_delta=FALSE, numeric_id=TRUE, 
                           prefer=NULL, regex=FALSE, warn_if_future=TRUE) {
   subjid_cols = get_subjid_cols()
   except = regexify(except, regex)
@@ -45,6 +48,35 @@ lastnews_table = function(except=NULL, with_ties=FALSE, numeric_id=TRUE,
               class="edc_no_columns_error")
   }
   
+  if(numeric_id && can_be_numeric(rtn$subjid)) {
+    rtn$subjid = as.numeric(as.character(rtn$subjid))
+  }
+  
+  if(isTRUE(show_delta)){
+    f = if(!isTRUE(regex)) fixed else identity
+    rtn_delta =
+      rtn %>% 
+      arrange(order(mixedorder(subjid))) %>%
+      select(subjid, last_date=value, origin_data=dataset, origin_col=name, origin_label) %>%
+      mutate(origin = paste0(origin_data, "$", origin_col)) %>%
+      filter(!str_detect(origin, except)) %>%
+      filter(!str_detect(origin_data , except)) %>%
+      filter(!str_detect(origin_col, except))
+    
+    rtn_delta = rtn_delta %>%
+      slice_max(last_date, by=c(subjid, origin), with_ties=TRUE) %>%
+      mutate(
+        preferred = map_dbl(origin, ~which(str_detect(.x, f(prefer)))[1]) %>% 
+          replace_na(Inf)
+      ) 
+    rtn_delta = rtn_delta %>% 
+      filter(!is.infinite(preferred)) %>%
+      arrange(preferred) %>% 
+      slice_max(last_date, by=subjid, with_ties=FALSE) %>% 
+      select(subjid, preferred_last_date=last_date, preferred_origin=origin) %>% 
+      arrange(order(mixedorder(subjid)))
+  }
+  
   rtn = rtn %>% 
     select(subjid, last_date=value, origin_data=dataset, origin_col=name, origin_label) %>% 
     mutate(origin = paste0(origin_data, "$", origin_col)) %>% 
@@ -54,26 +86,28 @@ lastnews_table = function(except=NULL, with_ties=FALSE, numeric_id=TRUE,
     slice_max(last_date, by=subjid, with_ties=TRUE) %>% 
     arrange(order(mixedorder(subjid)))
   
-  if(numeric_id && can_be_numeric(rtn$subjid)) {
-    rtn$subjid = as.numeric(as.character(rtn$subjid))
-  }
-  
   if(!isTRUE(with_ties)){
-    # browser()
     rtn = rtn %>% 
       rowwise() %>%  
-      mutate(prefered = .get_prefered(c(origin, origin_data, origin_col),
+      mutate(preferred = .get_preferred(c(origin, origin_data, origin_col),
                                      needle=prefer, regex=regex)) %>%
       ungroup() %>% 
-      arrange((prefered)) %>% 
-      select(-prefered, -origin) %>%
+      arrange((preferred)) %>% 
+      select(-preferred, -origin) %>%
       slice_max(last_date, by=subjid, with_ties=FALSE) %>% 
       arrange(order(mixedorder(subjid)))
   }
   
+  if(isTRUE(show_delta)){
+    rtn = rtn %>% 
+      left_join(rtn_delta, by="subjid") %>% 
+      mutate(delta = last_date-preferred_last_date)
+  }
+  
+  
+  
   datetime_extraction = .get_extraction_date()
   if(!is.null(datetime_extraction)){
-    # browser()
     if(!isFALSE(warn_if_future)){
       csv_path = if(!isTRUE(warn_if_future)) warn_if_future else FALSE
       rtn %>% 
@@ -85,7 +119,8 @@ lastnews_table = function(except=NULL, with_ties=FALSE, numeric_id=TRUE,
                       issue_n=NA)
     }
   }
-  
+  class(rtn) = c("edc_lastnews_table", class(rtn))
+  attr(rtn, "prefer") = prefer
   rtn
 }
 
@@ -97,7 +132,7 @@ lastnews_table = function(except=NULL, with_ties=FALSE, numeric_id=TRUE,
 #' @keywords internal
 #' @importFrom purrr map_lgl
 #' @importFrom stringr str_detect
-.get_prefered = function(input, needle, regex) {
+.get_preferred = function(input, needle, regex) {
   f = if(!isTRUE(regex)) fixed else identity
   x = map_lgl(needle, ~any(str_detect(input, f(.x))))
   suppressWarnings(min(which(x), na.rm=TRUE))
