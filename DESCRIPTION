@@ -79,3 +79,4 @@ Collate:
     'split_mixed.R'
     'swimmerplot.R'
     'utils_read.R'
+    'viewer.R'
