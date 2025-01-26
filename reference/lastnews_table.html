@@ -11,7 +11,7 @@ the right censoring time."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9011</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9013</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,6 +49,7 @@ the right censoring time.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">lastnews_table</span><span class="op">(</span></span>
 <span>  except <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  with_ties <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  show_delta <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  numeric_id <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  prefer <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  regex <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -66,6 +67,10 @@ the right censoring time.</p>
 
 <dt id="arg-with-ties">with_ties<a class="anchor" aria-label="anchor" href="#arg-with-ties"></a></dt>
 <dd><p>in case of tie, whether to return the first <code>origin</code> (FALSE) or all the origins that share this tie (TRUE).</p></dd>
+
+
+<dt id="arg-show-delta">show_delta<a class="anchor" aria-label="anchor" href="#arg-show-delta"></a></dt>
+<dd><p>whether to compute the difference between the last <code>prefer</code> date and the actual last date</p></dd>
 
 
 <dt id="arg-numeric-id">numeric_id<a class="anchor" aria-label="anchor" href="#arg-numeric-id"></a></dt>
@@ -139,6 +144,24 @@ the right censoring time.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      9 2010-07-17 <span style="color: #949494;">06:26:31</span> db3         date8      Date at visit 8 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>     10 2010-07-30 <span style="color: #949494;">20:41:23</span> db3         date10     Date at visit 10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 40 more rows</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">lastnews_table</span><span class="op">(</span>prefer<span class="op">=</span><span class="st">"date10"</span>, show_delta<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span> </span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 50 × 8</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    subjid last_date           origin_data origin_col origin_label    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>      1 2010-08-01 <span style="color: #949494;">18:59:37</span> db3         date10     Date at visit 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      2 2010-07-31 <span style="color: #949494;">15:32:45</span> db3         date10     Date at visit 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      3 2010-07-22 <span style="color: #949494;">11:24:37</span> db3         date10     Date at visit 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>      4 2010-07-23 <span style="color: #949494;">20:38:32</span> db3         date10     Date at visit 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>      5 2010-07-15 <span style="color: #949494;">07:09:47</span> db3         date10     Date at visit 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      6 2010-07-20 <span style="color: #949494;">12:27:00</span> db3         date10     Date at visit 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>      7 2010-07-28 <span style="color: #949494;">16:24:09</span> db3         date9      Date at visit 9 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>      8 2010-07-19 <span style="color: #949494;">15:24:18</span> db3         date9      Date at visit 9 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      9 2010-08-11 <span style="color: #949494;">03:48:27</span> db3         date9      Date at visit 9 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>     10 2010-07-30 <span style="color: #949494;">20:41:23</span> db3         date10     Date at visit 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 40 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 3 more variables: preferred_last_date &lt;dttm&gt;, preferred_origin &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   delta &lt;drtn&gt;</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">csv_file</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext<span class="op">=</span><span class="st">".csv"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">lastnews_table</span><span class="op">(</span>prefer<span class="op">=</span><span class="st">"date9"</span>, warn_if_future<span class="op">=</span><span class="va">csv_file</span><span class="op">)</span> </span></span>

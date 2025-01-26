@@ -11,7 +11,7 @@ outliers to be easily identified."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9011</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9013</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -116,24 +116,9 @@ outliers to be easily identified.</p>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Option <span style="color: #0000BB;">"edc_lookup"</span> has been overwritten.</span>
 <span class="r-in"><span><span class="fu"><a href="load_list.html">load_list</a></span><span class="op">(</span><span class="va">tm</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">p</span> <span class="op">=</span> <span class="fu">edc_swimmerplot</span><span class="op">(</span>id_lim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>,<span class="fl">45</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Could not find 8/8 datasets from the lookup, did you forget to call</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> `load_list()` on your import?</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #0000BB;">"enrol"</span>, <span style="color: #0000BB;">"db2"</span>, <span style="color: #0000BB;">"db3"</span>, <span style="color: #0000BB;">"short"</span>, <span style="color: #0000BB;">"db1"</span>, <span style="color: #0000BB;">"long_mixed"</span>, <span style="color: #0000BB;">"long_pure"</span>, and <span style="color: #0000BB;">"ae"</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> None of the datasets contains an identifier column</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> `id`=<span style="color: #0000BB;">"subjid"</span></span>
 <span class="r-in"><span><span class="va">p2</span> <span class="op">=</span> <span class="fu">edc_swimmerplot</span><span class="op">(</span>origin<span class="op">=</span><span class="st">"enrol$date_naissance"</span>, time_unit<span class="op">=</span><span class="st">"weeks"</span>, </span></span>
 <span class="r-in"><span>                     exclude<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"DB1$DATE2"</span>, <span class="st">"db3$.*"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Could not find 8/8 datasets from the lookup, did you forget to call</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> `load_list()` on your import?</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #0000BB;">"enrol"</span>, <span style="color: #0000BB;">"db2"</span>, <span style="color: #0000BB;">"db3"</span>, <span style="color: #0000BB;">"short"</span>, <span style="color: #0000BB;">"db1"</span>, <span style="color: #0000BB;">"long_mixed"</span>, <span style="color: #0000BB;">"long_pure"</span>, and <span style="color: #0000BB;">"ae"</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> None of the datasets contains an identifier column</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> `id`=<span style="color: #0000BB;">"subjid"</span></span>
 <span class="r-in"><span><span class="va">p3</span> <span class="op">=</span> <span class="fu">edc_swimmerplot</span><span class="op">(</span>group<span class="op">=</span><span class="st">"enrol$arm"</span>, aes_color<span class="op">=</span><span class="st">"label"</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Could not find 8/8 datasets from the lookup, did you forget to call</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> `load_list()` on your import?</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #0000BB;">"enrol"</span>, <span style="color: #0000BB;">"db2"</span>, <span style="color: #0000BB;">"db3"</span>, <span style="color: #0000BB;">"short"</span>, <span style="color: #0000BB;">"db1"</span>, <span style="color: #0000BB;">"long_mixed"</span>, <span style="color: #0000BB;">"long_pure"</span>, and <span style="color: #0000BB;">"ae"</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> None of the datasets contains an identifier column</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> `id`=<span style="color: #0000BB;">"subjid"</span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="co">#save the plotly plot as HTML to share it</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="save_plotly.html">save_plotly</a></span><span class="op">(</span><span class="va">p</span>, <span class="st">"edc_swimmerplot.html"</span><span class="op">)</span></span></span>
