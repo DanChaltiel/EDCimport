@@ -2,8 +2,22 @@
 #TODO: height en % plutôt qu'en px?
 #TODO: layout plutôt que dom (mettre tous les widgets en haut si possible)
 
+#'@examples
+#'import_to_list("#' @importFrom bslib card card_body sidebar")
+#'import_to_list("shiny actionButton selectInput actionLink tags textOutput")
+import_to_list = function(x){
+  x = str_remove(x, "#' @importFrom ") %>% stringr::str_split_1(" ")
+  paste0(x[-1], "=", x[1], "::", x[-1]) %>% paste(collapse=";")
+}
+
+
+#' @importFrom cli format_inline
+#' @importFrom purrr map_dbl
 edc_viewer_ui = function(datasets, lookup){
   datasets = datasets[rev(order(map_dbl(datasets, nrow)))]
+  card=bslib::card;card_body=bslib::card_body;card_header=bslib::card_header;card_title=bslib::card_title;page_sidebar=bslib::page_sidebar;sidebar=bslib::sidebar
+  DTOutput=DT::DTOutput
+  actionButton=shiny::actionButton;selectInput=shiny::selectInput;actionLink=shiny::actionLink;tags=shiny::tags;textOutput=shiny::textOutput
   
   extraction = attr(lookup, "datetime_extraction")
   EDCimport_version = attr(lookup, "EDCimport_version")
@@ -61,7 +75,13 @@ edc_viewer_ui = function(datasets, lookup){
 }
 
 # Serveur
+#' @importFrom dplyr arrange filter if_any lst pick relocate select setdiff
+#' @importFrom glue glue
+#' @importFrom purrr map map_chr map_dbl
 edc_viewer_server = function(datasets, lookup) {
+  datatable=DT::datatable;formatStyle=DT::formatStyle;renderDT=DT::renderDT
+  observe=shiny::observe;observeEvent=shiny::observeEvent;reactiveVal=shiny::reactiveVal;renderText=shiny::renderText;req=shiny::req;updateSelectInput=shiny::updateSelectInput
+  
   .set_lookup(lookup, verbose=FALSE)
   subjid_cols = get_subjid_cols(lookup)
   datasets = datasets
@@ -163,10 +183,12 @@ edc_viewer_server = function(datasets, lookup) {
   }
 }
 
+#' @importFrom glue glue
+#' @importFrom purrr map_lgl
 dt_ellipsis = function(data, n){
   list(list(
     targets = unname(which(map_lgl(data, ~is.character(.x)||is.factor(.x)))),
-    render = JS(glue(
+    render = DT::JS(glue(
       "function(data, type, row, meta) {{",
       "if(data==null || data==undefined) return ' ';",
       "console.log(data);",
@@ -183,17 +205,13 @@ dt_ellipsis = function(data, n){
 #' @param background should the app run in a background process
 #'
 #' @export
+#' @importFrom rlang check_installed
+#' @importFrom utils browseURL
 edc_viewer = function(background=TRUE){
   lookup = edc_lookup()
   datasets = get_datasets()
+  
   launch_shiny = function(datasets, lookup){
-    suppressPackageStartupMessages({
-      library(shiny)
-      # library(shinyWidgets)
-      # library(shinyjs)
-      library(bslib)
-      library(DT)
-    })
     app = shiny::shinyApp(EDCimport:::edc_viewer_ui(datasets, lookup), 
                           EDCimport:::edc_viewer_server(datasets, lookup))
     shiny::runApp(app, launch.browser=FALSE, port=1231)

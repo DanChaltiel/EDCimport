@@ -25,6 +25,7 @@ Imports:
     readr,
     rlang,
     scales,
+    stats,
     stringr,
     tibble,
     tidyr,
@@ -32,8 +33,10 @@ Imports:
     utils,
     lifecycle
 Suggests: 
+    bslib,
     callr,
     crosstable,
+    DT,
     gtools,
     htmlwidgets,
     janitor,
@@ -45,6 +48,7 @@ Suggests:
     rmarkdown,
     rstudioapi,
     testthat (>= 3.1.8),
+    shiny,
     usethis,
     vdiffr,
     withr
