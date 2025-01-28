@@ -99,7 +99,6 @@ edc_viewer_server = function(datasets, lookup) {
     })
     
     output$dataset_name = renderText({
-      # req(dataset_selected())
       data = datasets[[dataset_selected()]]
       glue("Dataset selected: {name} ({nrow(data)} x {ncol(data)})", name=dataset_selected())
     })
@@ -177,11 +176,14 @@ dt_ellipsis = function(data, n){
   ))
 }
 
-#' Title
+#' Shiny data explorer
+#' 
+#' Run a Shiny application that allows to browse the datasets.
+#' 
+#' @param background should the app run in a background process
 #'
-#' @returns
 #' @export
-edc_viewer = function(background=T){
+edc_viewer = function(background=TRUE){
   lookup = edc_lookup()
   datasets = get_datasets()
   launch_shiny = function(datasets, lookup){
