@@ -29,6 +29,7 @@
 #' lastnews_table(except="db3$date9")
 #' 
 #' lastnews_table(prefer="date10", show_delta=TRUE) 
+#' lastnews %>% dplyr::count(origin = glue::glue("{origin_data}${origin_col}"), sort=TRUE)
 #' 
 #' csv_file = tempfile(fileext=".csv")
 #' lastnews_table(prefer="date9", warn_if_future=csv_file) 
