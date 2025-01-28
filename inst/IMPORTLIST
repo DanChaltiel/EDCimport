@@ -20,6 +20,7 @@ intersect = base
 is_formula = rlang
 is_null = rlang
 isFALSE = base
+JS = DT
 lag = dplyr
 last = dplyr
 last_col = dplyr
