@@ -1,5 +1,26 @@
 
 
+
+#' EDCimport Database
+#' 
+#' This class of object represents a database, as the result of an EDCimport reading function.
+#' It has its own `print()` method.
+#' 
+#' @section Functions returning `edc_database` objects:
+#' As per now, reading functions are: [read_trialmaster()], [read_all_sas()], [read_all_xpt()], and [read_all_csv()].
+#' 
+#' @section Structure:
+#' While it is not usually usefull to query them, an `edc_database` object is a named list containing:
+#' - all the datasets from the source files
+#' - `datetime_extraction` and `date_extraction` the inferred date of data extraction
+#' - `.lookup` a temporary copy of the lookup table
+#' 
+#' @seealso [read_trialmaster()]
+#' 
+#' @name edc_database
+#' @docType class
+NULL
+
 #' Read all files using a specific read function, returning a named list of tibbles
 #' @param ... passed to `read_function`
 #' @noRd
