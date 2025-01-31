@@ -4,17 +4,17 @@
 \alias{harmonize_subjid}
 \title{Harmonize the subject ID of the database}
 \usage{
-harmonize_subjid(datalist, preprocess = NULL, col_subjid = get_subjid_cols())
+harmonize_subjid(database, preprocess = NULL, col_subjid = NULL)
 }
 \arguments{
-\item{datalist}{a list of dataframes}
+\item{database}{an \link{edc_database} object, from \code{\link[=read_trialmaster]{read_trialmaster()}} or other EDCimport reading functions.}
 
-\item{preprocess}{an optional function to modify the subject ID column, for example \code{as.numeric()}. See examples.}
+\item{preprocess}{an optional function to modify the subject ID column. Default to \code{as.numeric()} if applicable and \code{identity()} otherwise. See examples.}
 
 \item{col_subjid}{the names of the columns holding the subject ID (as character)}
 }
 \value{
-datalist, with subject id modified
+database, with subject id modified
 }
 \description{
 Turns the subject ID columns of all datasets into a factor containing levels for all

@@ -255,14 +255,14 @@ save_sessioninfo = function(path="check/session_info.txt", with_date=TRUE){
 #' the subjects of the database. Avoid problems when joining tables, and some checks can
 #' be performed on the levels.
 #'
-#' @param datalist a list of dataframes
-#' @param preprocess an optional function to modify the subject ID column, for example `as.numeric()`. See examples.
+#' @param database an [edc_database] object, from [read_trialmaster()] or other EDCimport reading functions.
+#' @param preprocess an optional function to modify the subject ID column. Default to `as.numeric()` if applicable and `identity()` otherwise. See examples.
 #' @param col_subjid the names of the columns holding the subject ID (as character)
 #'
-#' @return datalist, with subject id modified
+#' @return database, with subject id modified
 #' @export
 #' @importFrom dplyr across any_of mutate select
-#' @importFrom purrr discard_at keep map modify
+#' @importFrom purrr discard_at keep map map_lgl modify_if
 #'
 #' @examples
 #' db = edc_example()
@@ -272,28 +272,34 @@ save_sessioninfo = function(path="check/session_info.txt", with_date=TRUE){
 #' db$enrol$subjid %>% head()
 #' db = harmonize_subjid(db, preprocess=function(x) paste0("#", x))
 #' db$enrol$subjid %>% head()
-harmonize_subjid = function(datalist, preprocess=NULL, 
-                            col_subjid=get_subjid_cols()){
-  if(is.null(preprocess)) preprocess = identity
-  assert_class(preprocess, "function")
+harmonize_subjid = function(database, preprocess=NULL, col_subjid=NULL){
+  if(is.null(col_subjid)) col_subjid=get_subjid_cols()
   
-  all_subjid = datalist %>% 
+  all_subjid = database %>% 
     keep(is.data.frame) %>% 
     discard_at(".lookup") %>% 
-    map(~select(.x, any_of(col_subjid))) %>% 
-    unlist() %>% 
-    as.character() %>% 
-    preprocess() %>% 
-    unique() %>% 
+    map(~select(.x, any_of(col_subjid)) %>% unlist(use.names=FALSE) %>% unique()) %>% 
+    keep(~length(.x)>0)
+
+  all_numeric = all_subjid %>% map_lgl(can_be_numeric) %>% all()
+  if(is.null(preprocess)) preprocess = identity
+  else if(all_numeric) preprocess = as.numeric
+  assert_class(preprocess, "function")
+  
+  all_subjid = all_subjid %>% 
+    unlist() %>%
+    as.character() %>%
+    preprocess() %>%
+    unique() %>%
     mixedsort()
   
-  a= datalist %>% 
-    modify(function(df){
-      if(!is.data.frame(df)) return(df)
+  a = database %>% 
+    modify_if(is.data.frame, function(df){
       df %>% 
-        mutate(across(any_of(get_subjid_cols()), 
-                      ~factor(preprocess(.x), levels=all_subjid)))
-    })
+        mutate(across(any_of(col_subjid), 
+                      ~factor(.x, levels=all_subjid)))
+    }) %>% 
+    structure(all_subjid=all_subjid)
   
   a
 }
