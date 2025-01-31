@@ -740,25 +740,6 @@ load_list = function(x, env=parent.frame(), remove=TRUE){
   }
 }
 
-#' Load a `.RData` file as a list
-#' 
-#' Instead of loading a `.RData` file in the global environment, extract every object into a list.
-#'
-#' @param filename the filename, with the `.RData` extension.
-#'
-#' @return a list
-#' @export
-#'
-#' @examples 
-#' x = list(a=1, b=mtcars)
-#' save_list(x, "test.RData")
-#' y = load_as_list("test.RData")
-#' print(y$a)
-load_as_list = function(filename){
-  temp_env = new.env()
-  load(filename, temp_env)
-  as.list(temp_env)
-}
 
 #' Save a list as `.RData` file
 #'
