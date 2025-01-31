@@ -46,3 +46,12 @@ Import the \code{.zip} archive of a TrialMaster trial export as a list of datafr
 Generate a \code{.rds} cache file for future reads. \cr
 If \verb{7zip} is not installed or available, use \code{\link[=read_all_xpt]{read_all_xpt()}} instead.
 }
+\seealso{
+Other EDCimport read functions: \code{\link[=read_trialmaster]{read_trialmaster()}}, \code{\link[=read_all_sas]{read_all_sas()}}, \code{\link[=read_all_xpt]{read_all_xpt()}}, and \code{\link[=read_all_csv]{read_all_csv()}}.
+
+Other EDCimport reading functions: 
+\code{\link{read_all_csv}()},
+\code{\link{read_all_sas}()},
+\code{\link{read_all_xpt}()}
+}
+\concept{EDCimport reading functions}

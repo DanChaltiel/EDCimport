@@ -43,3 +43,12 @@ Read all \code{.csv} files in a directory, with labels if specified.
 \code{labels_from} should contain the information about column labels. It should be a data file (\code{.csv}) containing 2 columns: one for the column name and the other for its associated label. Use \code{options(edc_col_name="xxx", edc_col_label="xxx")} to specify the names of the columns.
 }
 
+\seealso{
+Other EDCimport read functions: \code{\link[=read_trialmaster]{read_trialmaster()}}, \code{\link[=read_all_sas]{read_all_sas()}}, \code{\link[=read_all_xpt]{read_all_xpt()}}, and \code{\link[=read_all_csv]{read_all_csv()}}.
+
+Other EDCimport reading functions: 
+\code{\link{read_all_sas}()},
+\code{\link{read_all_xpt}()},
+\code{\link{read_trialmaster}()}
+}
+\concept{EDCimport reading functions}

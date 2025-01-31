@@ -18,6 +18,8 @@
 #'  
 #'  
 #' @return a list containing one dataframe for each `.csv` file in the folder, the extraction date (`datetime_extraction`), and a summary of all imported tables (`.lookup`).
+#' @family EDCimport reading functions
+#' @seealso Other EDCimport read functions: [read_trialmaster()], [read_all_sas()], [read_all_xpt()], and [read_all_csv()].
 #' 
 #' @export
 #' @importFrom fs dir_ls is_dir
