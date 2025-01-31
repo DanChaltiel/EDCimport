@@ -131,3 +131,10 @@ can_be_numeric = function(x){
 is.Date = function (x) {
   inherits(x, "POSIXt") || inherits(x, "POSIXct") || inherits(x, "Date")
 }
+
+
+#' @noRd
+#' @keywords internal
+is_edc_error = function(x){
+  inherits(x, "edc_error") || inherits(x, "edc_error_col") || inherits(x, "edc_error_data")
+}

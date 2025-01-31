@@ -246,7 +246,7 @@ get_folder_datetime = function(folder, verbose=TRUE){
 #' @importFrom rlang is_error
 get_data_name = function(df, crfname=getOption("edc_cols_crfname", "crfname")){
   if(is_error(df) || is.null(df)) return(NA)
-  if(inherits(df, "edc_error_data")) return("** Error in source file **")
+  if(is_edc_error(df)) return("** Error in source file **")
   sel = select(df, any_of2(crfname))
   if(!is.null(attr(df, "data_name"))){
     attr(df, "data_name")

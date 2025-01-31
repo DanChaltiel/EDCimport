@@ -117,7 +117,7 @@ read_tm_all_xpt = read_all_xpt
 #' @importFrom cli cli_warn
 #' @importFrom purrr keep
 .warn_bad_tables = function(rtn){
-  errs = keep(rtn, ~inherits(.x, "edc_error_data"))
+  errs = keep(rtn, is_edc_error)
   if(length(errs)>0){
     cli_warn(c("SAS dataset{?s} {.val {names(errs)}} could not be read from 
                the archive using {.fun haven::read_xpt}.",
@@ -140,7 +140,7 @@ read_tm_all_xpt = read_all_xpt
     iwalk(function(data, name){
       if(is_error(data)) return(data)
       a = data %>% 
-        select(where(~inherits(.x, "edc_error_col"))) %>% 
+        select(where(is_edc_error)) %>% 
         distinct()
       if(nrow(a)>1) cli_warn("Error 489 ({name}), please contact the developer.")
       if(nrow(a)>0){

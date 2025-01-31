@@ -44,7 +44,7 @@ NULL
     map(function(.x) {
       tbl = tryCatch(read_function(.x, ...), 
                      error = function(e) .flatten_error(e, class="edc_error_data"))
-      if(inherits(tbl, "edc_error_data")) return(tbl)
+      if(is_edc_error(tbl)) return(tbl)
       tbl %>% 
         as_tibble() %>% 
         clean_names_fun() %>% 
