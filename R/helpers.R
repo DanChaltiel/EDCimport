@@ -282,8 +282,9 @@ harmonize_subjid = function(database, preprocess=NULL, col_subjid=NULL){
     keep(~length(.x)>0)
 
   all_numeric = all_subjid %>% map_lgl(can_be_numeric) %>% all()
-  if(is.null(preprocess)) preprocess = identity
-  else if(all_numeric) preprocess = as.numeric
+  if(is.null(preprocess)){
+    if(all_numeric) preprocess = as.numeric else preprocess = as.character
+  }
   assert_class(preprocess, "function")
   
   all_subjid = all_subjid %>% 
@@ -297,7 +298,7 @@ harmonize_subjid = function(database, preprocess=NULL, col_subjid=NULL){
     modify_if(is.data.frame, function(df){
       df %>% 
         mutate(across(any_of(col_subjid), 
-                      ~factor(.x, levels=all_subjid)))
+                      ~factor(preprocess(.x), levels=all_subjid)))
     }) %>% 
     structure(all_subjid=all_subjid)
   

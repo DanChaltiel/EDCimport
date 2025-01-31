@@ -5,8 +5,10 @@
 #' @noRd
 #' @keywords internal 
 mixedsort = function (x, decreasing = FALSE, na.last = TRUE, blank.last = FALSE, 
+                      ignore_hyphens = TRUE,
                       roman.case = c("upper", "lower", "both"), scientific = TRUE) {
-  ord <- mixedorder(x, decreasing = decreasing, na.last = na.last, 
+  if(isTRUE(ignore_hyphens)) x2 = str_remove_all(x, "-") else x2=x #modif Dan
+  ord <- mixedorder(x2, decreasing = decreasing, na.last = na.last, 
                     blank.last = blank.last, roman.case = roman.case, scientific = scientific)
   x[ord]
 }

@@ -1,9 +1,6 @@
 
 edc_options(edc_lookup_overwrite_warn=FALSE)
 
-# Helpers -------------------------------------------------------------------------------------
-
-
 test_that("assert_no_duplicate works", {
   tm = edc_example() #to set up the lookup and the subjid column
   
@@ -42,6 +39,28 @@ test_that("edc_warn_patient_diffs works", {
   
   edc_warn_patient_diffs(1:48) %>% expect_warning(class="edc_edc_patient_diffs_warning")
   edc_warn_patient_diffs(1:52) %>% expect_warning(class="edc_edc_patient_diffs_warning")
+})
+
+
+
+test_that("harmonize_subjid works", {
+  #numeric subjid
+  db = list(x=data.frame(subjid=c("1", "2", "3", "005"), a=1))
+  h = harmonize_subjid(db, col_subjid="subjid")
+  expect_identical(h$x$subjid, factor(c("1", "2", "3", "5")))
+  h = harmonize_subjid(db, col_subjid="subjid", preprocess=identity)
+  expect_identical(h$x$subjid, factor(c("1", "2", "3", "005"), 
+                                      levels = c("1", "2", "3", "005")))
+  
+  #factor subjid
+  db = list(x=data.frame(subjid=as_factor(c("1", "2", "7", "5")), a=1))
+  h = harmonize_subjid(db, col_subjid="subjid")
+  expect_identical(h$x$subjid, factor(c("1", "2", "7", "5")))
+  
+  #character subjid
+  db = list(x=data.frame(subjid=c("pat-1", "pat-3", "pat-2"), a=1))
+  h = harmonize_subjid(db, col_subjid="subjid")
+  expect_identical(h$x$subjid, factor(c("pat-1", "pat-3", "pat-2")))
 })
 
 

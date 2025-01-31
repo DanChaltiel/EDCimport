@@ -7,7 +7,7 @@
 edc_population_plot(x, id_per_row = 50, ref = "first")
 }
 \arguments{
-\item{x}{a named list of subject ID.}
+\item{x}{a named list of subject ID, as numeric or factor.}
 
 \item{id_per_row}{number of patients per rows.}
 
