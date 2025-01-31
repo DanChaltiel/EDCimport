@@ -163,19 +163,25 @@ extend_lookup = function(lookup, ...,
                          id_cols = get_subjid_cols(lookup), 
                          crf_cols = get_crfname_cols(lookup), 
                          datasets = get_datasets(lookup, envir=parent.frame())){
-  check_dots_empty()
+  check_dots_empty()  
+
   #case-insensitive column selection (cf. `any_of2`)
   f = function(x, colname){
+    if(!is.data.frame(datasets[[x]])) return(NA)
     rtn = map(colname, ~select(datasets[[x]], any_of2(.x))) %>% 
       keep(~min(dim(.x))>0)
     ncols = map_dbl(rtn, ncol) %>% unique()
-    if(length(ncols)>1) cli_abort("Several columns named {.val {colname}} in dataset {.val {x}} with discrepancies.")
     if(length(ncols)==0 || ncols==0) return(NA)
-    if(ncols>1) cli_warn("Several columns named {.val {colname}} in dataset {.val {x}}.")
+    if(length(ncols) > 1){
+      cli_abort("Several columns named {.val {colname}} in dataset {.val {x}} with discrepancies.")
+    }
+    if(ncols > 1) {
+      cli_warn("Several columns named {.val {colname}} in dataset {.val {x}}.")
+    }
     length(unique(rtn[[1]][[1]]))
   }
+  
   rtn = lookup %>% 
-    filter(map_lgl(dataset, ~!inherits(datasets[[.x]], "error"))) %>% 
     mutate(
       n_id = map_int(dataset, ~f(.x, id_cols)),
       rows_per_id = round(nrow/n_id, 1),

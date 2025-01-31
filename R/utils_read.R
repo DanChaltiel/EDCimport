@@ -43,7 +43,8 @@ NULL
     set_names(file_names) %>% 
     map(function(.x) {
       tbl = tryCatch(read_function(.x, ...), 
-                     error = function(e) .flatten_error(e))
+                     error = function(e) .flatten_error(e, class="edc_error_data"))
+      if(inherits(tbl, "edc_error_data")) return(tbl)
       tbl %>% 
         as_tibble() %>% 
         clean_names_fun() %>% 
@@ -83,11 +84,11 @@ NULL
 #' Change a `try-error` into a simpler character column of class "edc_error_col"
 #' @noRd
 #' @keywords internal
-.flatten_error = function(e){
+.flatten_error = function(e, class="edc_error_col"){
   if(!inherits(e, c("try-error", "error"))) return(e)
   if(inherits(e, c("try-error"))) e = attr(e, "condition")
   e = e$message
-  class(e) = "edc_error_col"
+  class(e) = class
   e
 }
 
@@ -117,10 +118,10 @@ NULL
 #' clean all labels for non-UTF8 characters
 #' @noRd
 #' @keywords internal
-#' @importFrom purrr map modify
+#' @importFrom purrr map_if modify
 .clean_labels_utf8 = function(datalist, warn=FALSE){
   datalist %>% 
-    map(function(df){
+    map_if(is.data.frame, function(df){
       df %>% modify(~{
         attr(.x, "label") = .repair_invalid_utf8(attr(.x, "label"))
         .x

@@ -117,7 +117,7 @@ read_tm_all_xpt = read_all_xpt
 #' @importFrom cli cli_warn
 #' @importFrom purrr keep
 .warn_bad_tables = function(rtn){
-  errs = keep(rtn, is_error)
+  errs = keep(rtn, ~inherits(.x, "edc_error_data"))
   if(length(errs)>0){
     cli_warn(c("SAS dataset{?s} {.val {names(errs)}} could not be read from 
                the archive using {.fun haven::read_xpt}.",
