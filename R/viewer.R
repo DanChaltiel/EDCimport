@@ -2,6 +2,7 @@
 #TODO: height en % plutôt qu'en px?
 #TODO: layout plutôt que dom (mettre tous les widgets en haut si possible)
 
+#'@noRd
 #'@examples
 #'import_to_list("#' @importFrom bslib card card_body sidebar")
 #'import_to_list("shiny actionButton selectInput actionLink tags textOutput")
