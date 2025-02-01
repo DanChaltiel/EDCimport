@@ -175,6 +175,14 @@ cli_menu <- function(prompt, not_interactive, choices, quit = integer(), .envir 
 }
 
 
+#' @noRd
+#' @keywords internal
+#' @source ChatGPT
+checksum = function(object) {
+  raw_data = serialize(object, NULL)
+  sum(as.integer(raw_data)) %% 2^32 #CRC32-like checksum
+}
+
 # Parse zip name ------------------------------------------------------------------------------
 
 #' Parse a file name to get the date of data extraction
