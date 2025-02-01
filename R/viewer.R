@@ -49,7 +49,7 @@ edc_viewer_ui = function(datasets, lookup){
   )
 }
 
-# Serveur
+
 #' @importFrom dplyr arrange filter if_any lst pick relocate select setdiff
 #' @importFrom glue glue
 #' @importFrom purrr map map_chr map_dbl
@@ -115,7 +115,6 @@ edc_viewer_server = function(datasets, lookup) {
     #output: datatable body
     output$table = renderDT({
       req(dataset_selected())
-      # browser()
       subjid_selected = input$subjid_selected
       all_selected = length(subjid_selected)==0
       if(is.null(datasets[[dataset_selected()]])) return(tibble())
@@ -126,16 +125,6 @@ edc_viewer_server = function(datasets, lookup) {
                       ~all_selected | .x %in% subjid_selected))
       labels = map_chr(data, ~attr(.x, "label") %0% NA)
       
-      # Génération des noms de colonnes avec attribut "title" pour le hover
-      colnames_with_hover = map_chr(colnames(data), ~{
-        label = attr(data[[.x]], "label")
-        if (!is.null(label) && label != "") {
-          glue('<span title="{label}">{.x}</span>')
-        } else {
-          .x
-        }
-      })
-      
       data %>% 
         datatable(
           # rownames = FALSE,
@@ -144,7 +133,7 @@ edc_viewer_server = function(datasets, lookup) {
           # height = "80%",
           # plugins = "ellipsis",
           escape = FALSE, # Autorise HTML
-          colnames = colnames_with_hover, # Applique les noms HTML
+          colnames = colnames_with_hover(data), # Applique les noms HTML
           options = lst(
             pageLength = 15,
             # dom = "tp",
@@ -232,10 +221,10 @@ edc_viewer = function(background=TRUE){
 # Utils ---------------------------------------------------------------------------------------
 
 
-#'@noRd
-#'@examples
-#'import_to_list("#' @importFrom bslib card card_body sidebar")
-#'import_to_list("shiny actionButton selectInput actionLink tags textOutput")
+#' @noRd
+#' @examples
+#' import_to_list("#' @importFrom bslib card card_body sidebar")
+#' import_to_list("shiny actionButton selectInput actionLink tags textOutput")
 import_to_list = function(x){
   x = str_remove(x, "#' @importFrom ") %>% stringr::str_split_1(" ")
   paste0(x[-1], "=", x[1], "::", x[-1]) %>% paste(collapse=";")
@@ -253,6 +242,7 @@ get_ids = function(datasets, subjid_cols){
   ids
 }
 
+
 #' @importFrom glue glue
 #' @importFrom purrr map_lgl
 dt_ellipsis = function(data, n){
@@ -266,4 +256,19 @@ dt_ellipsis = function(data, n){
       "'<span title=\"' + data + '\">' + data.substr(0, {n}) + '...</span>' : data;",
       "}}"))
   ))
+}
+
+
+#' @noRd
+#' Set the "label" dataset attribute on the "title" HTML attribute
+#' Makes the column header show the column label on hover
+colnames_with_hover = function(data){
+  map_chr(colnames(data), ~{
+    label = attr(data[[.x]], "label")
+    if (!is.null(label) && label != "") {
+      glue('<span title="{label}">{.x}</span>')
+    } else {
+      .x
+    }
+  })
 }
