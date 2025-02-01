@@ -93,6 +93,13 @@ edc_viewer_server = function(datasets, lookup) {
     
     #output: datatable choice list
     output$input_table = renderDT({
+      selected_subjid = input$subjid_selected
+      red_rows = map_lgl(lookup$subjids, ~!any(selected_subjid %in% .x)) %>% which()
+      grey_rows = which(lookup$crfname=="** Error in source file **")
+      if(length(selected_subjid)==0) red_rows = 0
+      if(length(red_rows)==0) red_rows = 0
+      if(length(grey_rows)==0) grey_rows = 0
+      
       lookup %>% 
         select(dataset, nrow, ncol) %>% 
         as_tibble() %>% 
@@ -107,8 +114,13 @@ edc_viewer_server = function(datasets, lookup) {
         ) %>% 
         formatStyle(
           columns = 1:3,
+          color = styleRow(red_rows, "red"),
           `white-space` = "nowrap",
           `height` = "20px"
+        ) %>% 
+        formatStyle(
+          columns = 1:3,
+          color = styleRow(grey_rows, "grey")
         )
     })
     
@@ -169,8 +181,8 @@ edc_viewer_server = function(datasets, lookup) {
 #' @importFrom rlang check_installed
 #' @importFrom utils browseURL
 edc_viewer = function(background=TRUE){
-  lookup = edc_lookup()
-  datasets = get_datasets()
+  lookup = edc_lookup(dataset)
+  datasets = get_datasets(lookup)
   
   launch_shiny = function(datasets, lookup){
     # devtools::load_all(helpers=FALSE)
@@ -259,9 +271,9 @@ dt_ellipsis = function(data, n){
 }
 
 
-#' @noRd
 #' Set the "label" dataset attribute on the "title" HTML attribute
 #' Makes the column header show the column label on hover
+#' @noRd
 colnames_with_hover = function(data){
   map_chr(colnames(data), ~{
     label = attr(data[[.x]], "label")
