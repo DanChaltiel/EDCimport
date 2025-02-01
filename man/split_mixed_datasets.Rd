@@ -8,7 +8,7 @@ split_mixed_datasets(
   datasets = get_datasets(),
   id = get_subjid_cols(),
   ...,
-  ignore_cols = get_meta_cols(0.95),
+  ignore_cols = get_meta_cols(min_pct = 0.95),
   output_code = FALSE,
   verbose = TRUE
 )

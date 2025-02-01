@@ -33,11 +33,11 @@
       -- Lookup table - CRF (extraction of 2022-08-25) - EDCimport v0.0.0 ----------------------------------------------------
         dataset  nrow  ncol  n_id rows_per_id crfname                       
         <chr>   <dbl> <dbl> <int>       <dbl> <chr>                         
-      1 site        1    33    NA          NA Trial Site Setup & Information
-      2 trial       1    23    NA          NA Trial                         
-      3 pat         0    35    NA          NA <NA>                          
-      4 visit       0    27    NA          NA <NA>                          
-      5 vs          0    31    NA          NA <NA>                          
+      1 site        1    33     0          NA Trial Site Setup & Information
+      2 trial       1    23     0          NA Trial                         
+      3 pat         0    35     0          NA <NA>                          
+      4 visit       0    27     0          NA <NA>                          
+      5 vs          0    31     0          NA <NA>                          
     Code
       lu = edc_lookup()
       expect_identical(lu, w$.lookup)

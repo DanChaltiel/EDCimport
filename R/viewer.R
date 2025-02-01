@@ -32,7 +32,7 @@ edc_viewer_ui = function(datasets, lookup){
         selectInput("subjid_selected", label=NULL, choices=1, multiple=TRUE),
       ),
       card(
-        card_title("Select a dataset:", container = htmltools::h3),
+        card_title("Select a dataset:", container = shiny::h3),
         DTOutput("input_table", fill = FALSE),
       )
     ),
@@ -57,6 +57,7 @@ edc_viewer_server = function(datasets, lookup) {
   datatable=DT::datatable;formatStyle=DT::formatStyle;renderDT=DT::renderDT
   observe=shiny::observe;observeEvent=shiny::observeEvent;reactiveVal=shiny::reactiveVal;
   renderText=shiny::renderText;req=shiny::req;updateSelectInput=shiny::updateSelectInput
+  dataTableProxy=DT::dataTableProxy;selectRows=DT::selectRows;styleRow=DT::styleRow
   
   .set_lookup(lookup, verbose=FALSE)
   subjid_cols = get_subjid_cols(lookup)
@@ -187,8 +188,8 @@ edc_viewer = function(background=TRUE){
   launch_shiny = function(datasets, lookup){
     # devtools::load_all(helpers=FALSE)
     
-    app = shiny::shinyApp(EDCimport:::edc_viewer_ui(datasets, lookup), 
-                          EDCimport:::edc_viewer_server(datasets, lookup))
+    app = shiny::shinyApp(edc_viewer_ui(datasets, lookup), 
+                          edc_viewer_server(datasets, lookup))
     shiny::runApp(app, launch.browser=FALSE, port=1231)
   }
   

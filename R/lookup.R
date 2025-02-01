@@ -149,7 +149,7 @@ get_lookup = deprecatedly(edc_lookup, what="get_lookup()", when="0.5.0")
 #' @seealso [build_lookup()], [edc_lookup()]
 #' 
 #' @importFrom cli cli_abort cli_warn
-#' @importFrom dplyr arrange desc filter last_col mutate relocate select
+#' @importFrom dplyr arrange desc filter if_else last_col mutate relocate select
 #' @importFrom purrr keep map map_chr map_dbl map_int map_lgl
 #' @importFrom rlang check_dots_empty
 #' @examples
@@ -164,12 +164,12 @@ extend_lookup = function(lookup, ...,
                          crf_cols = get_crfname_cols(lookup), 
                          datasets = get_datasets(lookup, envir=parent.frame())){
   check_dots_empty()  
-
+  
   #case-insensitive column selection (cf. `any_of2`)
   get_subjid = function(data_name){
     data = datasets[[data_name]]
-    if(!is.data.frame(data)) return(NA)
-    if(!any(id_cols %in% names(data))) return(NA)
+    if(!is.data.frame(data)) return(character(0))
+    if(!any(id_cols %in% names(data))) return(character(0))
     x = data %>% select(any_of2(id_cols))
     x %>% pull(1) %>% as.character() %>% unique() %>% sort()
   }
@@ -179,10 +179,12 @@ extend_lookup = function(lookup, ...,
       subjids = map(dataset, ~get_subjid(.x)),
       n_id = lengths(subjids),
       rows_per_id = round(nrow/n_id, 1),
+      rows_per_id = if_else(is.nan(rows_per_id) | is.infinite(rows_per_id), NA, rows_per_id),
       crfname = map_chr(dataset, ~get_data_name(datasets[[.x]]), crfname=crf_cols)
     ) %>% 
     arrange(n_id, desc(nrow)) %>% 
     relocate(c(subjids, names, labels), .after=last_col())
+  
   rtn
 }
 
@@ -212,7 +214,7 @@ print.edc_lookup = function(x, n=Inf, ...){
   print(rule(a, col = "violet"))
   
   x_tbl = remove_class(x, "edc_lookup") %>% 
-    select(-subjids, -names, -labels) %>% 
+    select(-any_of("subjids"), -names, -labels) %>% 
     format(n=n) %>% 
     tail(-1) #remove "A tibble: n × p"
   cat(x_tbl, sep="\n")

@@ -104,7 +104,7 @@ table_format = function(df, id=get_subjid_cols(), ...,
 #' split_mixed_datasets(tm, id="subjid", output_code=filename)
 #' readLines(filename)
 split_mixed_datasets = function(datasets=get_datasets(), id=get_subjid_cols(), ..., 
-                                ignore_cols=get_meta_cols(0.95), 
+                                ignore_cols=get_meta_cols(min_pct=0.95), 
                                 output_code=FALSE,
                                 verbose=TRUE){
   check_dots_empty()
@@ -135,7 +135,6 @@ split_mixed_datasets = function(datasets=get_datasets(), id=get_subjid_cols(), .
   #TODO option pour faire plutôt length(unique(na.omit(.x))) ?
   #si c'est manquant sur une ligne et pas sur une autre on 
   #peut sans doute unifier quand même
-  
   not_found = dataset_mean_nval %>% keep(is.null) %>% names()
   if(length(not_found) == length(datasets)){
     cli_warn("{.val {id}} was not found in any table. Returning {.val NULL}")

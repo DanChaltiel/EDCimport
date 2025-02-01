@@ -28,9 +28,10 @@
 #' lastnews_table()
 #' lastnews_table(except="db3")
 #' lastnews_table(except="db3$date9")
-#' 
 #' lastnews_table(prefer="date10", show_delta=TRUE) 
-#' lastnews %>% dplyr::count(origin = glue::glue("{origin_data}${origin_col}"), sort=TRUE)
+#' lastnews_table() %>% 
+#'   dplyr::count(origin = glue::glue("{origin_data}${origin_col}"), 
+#'   sort=TRUE)
 #' 
 #' csv_file = tempfile(fileext=".csv")
 #' lastnews_table(prefer="date9", warn_if_future=csv_file) 
@@ -92,7 +93,7 @@ lastnews_table = function(except=NULL, with_ties=FALSE, show_delta=FALSE, numeri
     rtn = rtn %>% 
       rowwise() %>%  
       mutate(preferred = .get_preferred(c(origin, origin_data, origin_col),
-                                     needle=prefer, regex=regex)) %>%
+                                        needle=prefer, regex=regex)) %>%
       ungroup() %>% 
       arrange((preferred)) %>% 
       select(-preferred, -origin) %>%

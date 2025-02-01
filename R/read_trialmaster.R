@@ -37,10 +37,10 @@ read_trialmaster = function(archive, ..., use_cache="write",
   extract_datetime = parse_file_datetime(archive, warn=TRUE)
   directory = path_dir(archive)
   cache_file = .get_tm_cache(directory, extract_datetime)
-  use_cache = file_exists(cache_file) && (isTRUE(use_cache) || use_cache=="read")
+  read_from_cache = file_exists(cache_file) && (isTRUE(use_cache) || use_cache=="read")
   cache_outdated = FALSE
   
-  if(use_cache){
+  if(read_from_cache){
     rtn = .read_tm_cache(cache_file, split_mixed, clean_names_fun, verbose) %>% 
       structure(source="cache")
     cache_version = attr(rtn$.lookup, "EDCimport_version")
@@ -51,7 +51,7 @@ read_trialmaster = function(archive, ..., use_cache="write",
     }
   }
   
-  if(!use_cache || cache_outdated){
+  if(!read_from_cache || cache_outdated){
     rtn = .read_tm_zip(archive=archive, pw=pw, extract_datetime=extract_datetime,
                        clean_names_fun=clean_names_fun, split_mixed=split_mixed, 
                        extend_lookup=extend_lookup, key_columns=key_columns, 

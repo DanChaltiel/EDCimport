@@ -676,7 +676,6 @@ get_common_cols = function(lookup=edc_lookup(), min_datasets=3){
       pct_datasets = mean(.data$name_in),
       datasets_in = toString(names(.data$name_in[.data$name_in])),
       datasets_out = toString(names(.data$name_in[!.data$name_in])),
-      # aaa = browser(),
     ) %>% 
     ungroup() %>% 
     arrange(desc(.data$pct_datasets)) %>% 
