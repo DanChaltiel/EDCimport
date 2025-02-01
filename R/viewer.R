@@ -9,7 +9,6 @@ edc_viewer_ui = function(datasets, lookup){
   actionButton=shiny::actionButton;selectInput=shiny::selectInput;actionLink=shiny::actionLink;
   tags=shiny::tags;textOutput=shiny::textOutput
   
-  datasets = datasets[rev(order(map_dbl(datasets, ~nrow(.x) %0% -1)))]
   extraction = attr(lookup, "datetime_extraction")
   EDCimport_version = attr(lookup, "EDCimport_version")
   project_name = attr(lookup, "project_name")
@@ -27,29 +26,14 @@ edc_viewer_ui = function(datasets, lookup){
     title=title,
     height="100vh",
     sidebar = sidebar(
+      width = 350,
       card(
         card_title("Subjects:", actionButton("reset_subjid", "Reset", style="padding:5px")),
-        selectInput("subjid_selected", label=NULL, choices="All", selected="All",
-                    multiple=TRUE),
+        selectInput("subjid_selected", label=NULL, choices=1, multiple=TRUE),
       ),
       card(
         card_title("Select a dataset:", container = htmltools::h3),
-        tags$ul(
-          style = "list-style: none; padding: 0;overflow-y: auto; ",
-          lapply(names(datasets), function(name) {
-            tags$li(
-              style = "margin-bottom: 8px;",
-              actionLink(
-                inputId = paste0("link_", name),
-                label = name,
-                style = "display: block; padding: 8px; border: 1px solid #007BFF;
-                  border-radius: 4px; text-align: center; text-decoration: none;
-                  color: #007BFF; font-weight: bold; background-color: #ffffff;
-                  transition: background-color 0.2s;"
-              )
-            )
-          })
-        )
+        DTOutput("input_table", fill = FALSE),
       )
     ),
     card(
@@ -79,60 +63,71 @@ edc_viewer_server = function(datasets, lookup) {
   datasets = datasets
   
   function(input, output, session) {
-    # datasets = get_datasets()
-    datasets = datasets[rev(order(map_dbl(datasets, ~nrow(.x) %0% -1)))]
     dataset_selected = reactiveVal(NULL)
-    ids = datasets %>%
-      keep(is.data.frame) %>% 
-      map(~select(.x, any_of2(subjid_cols))) %>% 
-      unlist() %>% unique() %>% sort()
-    if(can_be_numeric(ids)){
-      ids = as.numeric(ids) %>% unique() %>% sort()
-    }
     
-    dataset_selected(names(datasets)[1]) #init: show first dataset
+    ids = get_ids(datasets, subjid_cols)
     
-    observe({
-      lapply(names(datasets), function(name) {
-        observeEvent(input[[paste0("link_", name)]], {
-          dataset_selected(name)
-        })
-      })
+    #init
+    selectRows(dataTableProxy("input_table"), selected=1)
+    updateSelectInput(session, "subjid_selected", choices=c(ids))
+    
+    #show datatable on row selected
+    observeEvent(input$input_table_rows_selected, {
+      selected = input$input_table_rows_selected
+      dataset_selected(names(datasets[selected]))
     })
     
-    observe({
+    #reset subjid choice on click on Reset button
+    observeEvent(input$reset_subjid, {
       updateSelectInput(session, "subjid_selected", choices=c(ids))
     })
     
-    observeEvent(input$reset_subjid, {
-      updateSelectInput(session, "subjid_selected", choices=c("All", ids), 
-                        selected="All")
-    })
     
+    #output: datatable header
     output$dataset_name = renderText({
+      if(is.null(dataset_selected())) return("Loading")
       data = datasets[[dataset_selected()]]
       if(is.null(data)) return(glue("{name}: Corrupted dataset", name=dataset_selected()))
       glue("Dataset selected: {name} ({nrow(data)} x {ncol(data)})", name=dataset_selected())
     })
     
+    #output: datatable choice list
+    output$input_table = renderDT({
+      lookup %>% 
+        select(dataset, nrow, ncol) %>% 
+        as_tibble() %>% 
+        datatable(
+          rownames = FALSE,
+          selection = "single",
+          filter = "none",
+          options = lst(
+            pageLength = 500,
+            dom = "t"
+          )
+        ) %>% 
+        formatStyle(
+          columns = 1:3,
+          `white-space` = "nowrap",
+          `height` = "20px"
+        )
+    })
+    
+    #output: datatable body
     output$table = renderDT({
       req(dataset_selected())
-      subjid_selected=input$subjid_selected
-      if(is.null(subjid_selected)) subjid_selected = "All"
-      if(length(subjid_selected)>1){
-        updateSelectInput(session, "subjid_selected", 
-                          selected=setdiff(subjid_selected, "All"))
-      }
+      # browser()
+      subjid_selected = input$subjid_selected
+      all_selected = length(subjid_selected)==0
       if(is.null(datasets[[dataset_selected()]])) return(tibble())
       data = datasets[[dataset_selected()]] %>% 
         relocate(any_of2(subjid_cols), .before=1) %>% 
         arrange(pick(any_of2(subjid_cols))) %>% 
         filter(if_any(any_of2(subjid_cols), 
-                      ~any(subjid_selected=="All")|.x %in% subjid_selected))
+                      ~all_selected | .x %in% subjid_selected))
       labels = map_chr(data, ~attr(.x, "label") %0% NA)
       
       # Génération des noms de colonnes avec attribut "title" pour le hover
-      colnames_with_hover =  map_chr(colnames(data), ~{
+      colnames_with_hover = map_chr(colnames(data), ~{
         label = attr(data[[.x]], "label")
         if (!is.null(label) && label != "") {
           glue('<span title="{label}">{.x}</span>')
@@ -141,28 +136,27 @@ edc_viewer_server = function(datasets, lookup) {
         }
       })
       
-      datatable(
-        data,
-        # rownames = FALSE,
-        selection = "none",
-        filter = "top",
-        # height = "80%",
-        # plugins = "ellipsis",
-        escape = FALSE, # Autorise HTML
-        colnames = colnames_with_hover, # Applique les noms HTML
-        options = lst(
-          pageLength = 15,
-          # dom = "tp",
-          # autoWidth = TRUE,
-          # scrollX = TRUE,
-          columnDefs = dt_ellipsis(data, n=10),
-          # columnDefs = list(list(
-          #   targets = unname(which(map_lgl(data, ~is.character(.x)||is.factor(.x)))),
-          #   render = JS("$.fn.dataTable.render.ellipsis(17, false )")
-          # ))
-        )
-      ) %>% 
-        # Applique le CSS pour limiter la hauteur des cellules
+      data %>% 
+        datatable(
+          # rownames = FALSE,
+          selection = "none",
+          filter = "top",
+          # height = "80%",
+          # plugins = "ellipsis",
+          escape = FALSE, # Autorise HTML
+          colnames = colnames_with_hover, # Applique les noms HTML
+          options = lst(
+            pageLength = 15,
+            # dom = "tp",
+            # autoWidth = TRUE,
+            # scrollX = TRUE,
+            columnDefs = dt_ellipsis(data, n=10),
+            # columnDefs = list(list(
+            #   targets = unname(which(map_lgl(data, ~is.character(.x)||is.factor(.x)))),
+            #   render = JS("$.fn.dataTable.render.ellipsis(17, false )")
+            # ))
+          )
+        ) %>% 
         formatStyle(
           columns = seq_along(colnames(data)),
           `white-space` = "nowrap",
@@ -190,6 +184,8 @@ edc_viewer = function(background=TRUE){
   datasets = get_datasets()
   
   launch_shiny = function(datasets, lookup){
+    # devtools::load_all(helpers=FALSE)
+    
     app = shiny::shinyApp(EDCimport:::edc_viewer_ui(datasets, lookup), 
                           EDCimport:::edc_viewer_server(datasets, lookup))
     shiny::runApp(app, launch.browser=FALSE, port=1231)
@@ -223,8 +219,9 @@ edc_viewer = function(background=TRUE){
   }
   
   browseURL("http://127.0.0.1:1231")
-  launch_shiny(datasets, lookup)
-  invisible()
+  x=launch_shiny(datasets, lookup)
+  # print(x)
+  invisible(x)
 }
 
 # devtools::load_all(".");x=edc_viewer(TRUE);
@@ -244,6 +241,17 @@ import_to_list = function(x){
   paste0(x[-1], "=", x[1], "::", x[-1]) %>% paste(collapse=";")
 }
 
+
+get_ids = function(datasets, subjid_cols){
+  ids = datasets %>%
+    keep(is.data.frame) %>% 
+    map(~select(.x, any_of2(subjid_cols))) %>% 
+    unlist() %>% unique() %>% sort()
+  if(can_be_numeric(ids)){
+    ids = as.numeric(ids) %>% unique() %>% sort()
+  }
+  ids
+}
 
 #' @importFrom glue glue
 #' @importFrom purrr map_lgl
