@@ -19,7 +19,7 @@
 #' @importFrom cli cli_inform
 #' @importFrom fs file_exists path_dir
 #' @importFrom rlang check_dots_empty
-#' @importFrom utils object.size
+#' @importFrom utils object.size packageVersion
 read_trialmaster = function(archive, ..., use_cache="write", 
                             clean_names_fun=NULL,
                             split_mixed=FALSE,
@@ -37,10 +37,21 @@ read_trialmaster = function(archive, ..., use_cache="write",
   extract_datetime = parse_file_datetime(archive, warn=TRUE)
   directory = path_dir(archive)
   cache_file = .get_tm_cache(directory, extract_datetime)
-  if(file_exists(cache_file) && (isTRUE(use_cache) || use_cache=="read")){
+  use_cache = file_exists(cache_file) && (isTRUE(use_cache) || use_cache=="read")
+  cache_outdated = FALSE
+  
+  if(use_cache){
     rtn = .read_tm_cache(cache_file, split_mixed, clean_names_fun, verbose) %>% 
       structure(source="cache")
-  } else {
+    cache_version = attr(rtn$.lookup, "EDCimport_version")
+    cache_outdated = packageVersion("EDCimport") > cache_version
+    if(cache_outdated){
+      cli_inform(c(i="Updating cache with latest EDCimport version ({cache_version} 
+                   to {packageVersion('EDCimport')})"))
+    }
+  }
+  
+  if(!use_cache || cache_outdated){
     rtn = .read_tm_zip(archive=archive, pw=pw, extract_datetime=extract_datetime,
                        clean_names_fun=clean_names_fun, split_mixed=split_mixed, 
                        extend_lookup=extend_lookup, key_columns=key_columns, 

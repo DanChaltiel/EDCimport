@@ -13,6 +13,11 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 -   New function `edc_viewer()`, which run a shiny application for easily browsing your database (#83)
 -   New argument `subdirectories` to all reading functions (`read_trialmaster()`, `read_all_xpt()`,  `read_all_sas()`, and `read_all_csv()`), to control whether to read sub-directories. Note that until now, those subdirectories were read and could overwrite root files.
 
+### Internal improvements
+
+-   `read_trialmaster()` won't read from cache if installed EDCimport version is different from cache's
+
+
 # EDCimport 0.5.2
 
 -   Fixed a bug in `lastnews_table()` when subjid is not numeric
