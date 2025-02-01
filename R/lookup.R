@@ -166,29 +166,23 @@ extend_lookup = function(lookup, ...,
   check_dots_empty()  
 
   #case-insensitive column selection (cf. `any_of2`)
-  f = function(x, colname){
-    if(!is.data.frame(datasets[[x]])) return(NA)
-    rtn = map(colname, ~select(datasets[[x]], any_of2(.x))) %>% 
-      keep(~min(dim(.x))>0)
-    ncols = map_dbl(rtn, ncol) %>% unique()
-    if(length(ncols)==0 || ncols==0) return(NA)
-    if(length(ncols) > 1){
-      cli_abort("Several columns named {.val {colname}} in dataset {.val {x}} with discrepancies.")
-    }
-    if(ncols > 1) {
-      cli_warn("Several columns named {.val {colname}} in dataset {.val {x}}.")
-    }
-    length(unique(rtn[[1]][[1]]))
+  get_subjid = function(data_name){
+    data = datasets[[data_name]]
+    if(!is.data.frame(data)) return(NA)
+    if(!any(id_cols %in% names(data))) return(NA)
+    x = data %>% select(any_of2(id_cols))
+    x %>% pull(1) %>% as.character() %>% unique() %>% sort()
   }
   
   rtn = lookup %>% 
     mutate(
-      n_id = map_int(dataset, ~f(.x, id_cols)),
+      subjids = map(dataset, ~get_subjid(.x)),
+      n_id = lengths(subjids),
       rows_per_id = round(nrow/n_id, 1),
       crfname = map_chr(dataset, ~get_data_name(datasets[[.x]]), crfname=crf_cols)
     ) %>% 
     arrange(n_id, desc(nrow)) %>% 
-    relocate(c(names, labels), .after=last_col())
+    relocate(c(subjids, names, labels), .after=last_col())
   rtn
 }
 
@@ -218,7 +212,7 @@ print.edc_lookup = function(x, n=Inf, ...){
   print(rule(a, col = "violet"))
   
   x_tbl = remove_class(x, "edc_lookup") %>% 
-    select(-names, -labels) %>% 
+    select(-subjids, -names, -labels) %>% 
     format(n=n) %>% 
     tail(-1) #remove "A tibble: n × p"
   cat(x_tbl, sep="\n")
