@@ -44,7 +44,7 @@ Generate a barplot showing the distribution of CRF status (Complete, Incomplete,
 }
 \examples{
 \dontrun{
-#import a TM database and use load_list(), then:
+#import a TM database and use load_database(), then:
 edc_crf_plot() + ggtitle(date_extraction)
 edc_crf_plot(pal=rev(edc_pal_crf()))
 edc_crf_plot(details=TRUE, treat_as_worst="No Data")

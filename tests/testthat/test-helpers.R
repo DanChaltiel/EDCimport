@@ -2,7 +2,7 @@
 edc_options(edc_lookup_overwrite_warn=FALSE)
 
 test_that("assert_no_duplicate works", {
-  tm = edc_example() #to set up the lookup and the subjid column
+  db = edc_example() #to set up the lookup and the subjid column
   
   tibble(subjid=c(1:10)) %>% assert_no_duplicate() %>% expect_silent()
   

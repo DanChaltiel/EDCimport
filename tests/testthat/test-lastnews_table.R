@@ -6,8 +6,8 @@ lastnews_example = function(outdated=FALSE){
 
 
 test_that("lastnews_table() default", {
-  tm = lastnews_example()
-  load_list(tm)
+  db = lastnews_example()
+  load_database(db)
   
   lnt0 = lastnews_table()
   lnt0b = lastnews_table(regex=TRUE)
@@ -17,8 +17,8 @@ test_that("lastnews_table() default", {
 
 
 test_that("lastnews_table() except", {
-  tm = lastnews_example()
-  load_list(tm)
+  db = lastnews_example()
+  load_database(db)
   
   #without regex
   lnt1 = lastnews_table(except=c("db3", "db2$date4"))
@@ -35,8 +35,8 @@ test_that("lastnews_table() except", {
 
 
 test_that("lastnews_table() prefer", {
-  tm = lastnews_example()
-  load_list(tm)
+  db = lastnews_example()
+  load_database(db)
   
   #without regex
   lnt3 = lastnews_table(prefer=c("db2$date5", "db3"))
@@ -51,8 +51,8 @@ test_that("lastnews_table() prefer", {
 
 
 test_that("lastnews_table() with ties", {
-  tm = lastnews_example()
-  load_list(tm)
+  db = lastnews_example()
+  load_database(db)
   lnt6 = lastnews_table(with_ties=TRUE) %>% 
     filter(n()>1, .by=subjid)
   expect_setequal(lnt6$subjid, 1:3)
@@ -62,8 +62,8 @@ test_that("lastnews_table() with ties", {
 test_that("lastnews_table() snapshot", {
   #snapshot for the default, with warning and csv output
   expect_snapshot({
-    tm = lastnews_example(outdated=TRUE)
-    load_list(tm)
+    db = lastnews_example(outdated=TRUE)
+    load_database(db)
     csv_file = tempfile(fileext=".csv")
     lastnews_table(warn_if_future=csv_file) %>% head(10)
     x = read.csv2(csv_file)
@@ -73,8 +73,8 @@ test_that("lastnews_table() snapshot", {
 
 
 test_that("lastnews_table() error", {
-  tm = lastnews_example()
-  load_list(tm)
+  db = lastnews_example()
+  load_database(db)
   lastnews_table(except=c("enrol", "\\d"), regex=TRUE) %>% 
     expect_error(class="edc_no_columns_error")
 })

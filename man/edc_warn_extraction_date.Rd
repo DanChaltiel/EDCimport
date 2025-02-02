@@ -16,7 +16,7 @@ nothing
 Warn if extraction is too old
 }
 \examples{
-tm = edc_example()
-load_list(tm)
+db = edc_example()
+load_database(db)
 edc_warn_extraction_date()
 }

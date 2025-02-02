@@ -23,8 +23,8 @@
 #' @importFrom tidyr replace_na
 #'
 #' @examples
-#' tm = edc_example()
-#' load_list(tm)
+#' db = edc_example()
+#' load_database(db)
 #' lastnews_table()
 #' lastnews_table(except="db3")
 #' lastnews_table(except="db3$date9")

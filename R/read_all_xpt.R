@@ -9,7 +9,6 @@
 #' @param format_file \[`character(1)`]\cr the path to the file that should be used to apply formats. See details. Use `NULL` to not apply formats.
 #' @param datetime_extraction \[`POSIXt(1)`]\cr the datetime of the data extraction. Default to the most common date of last modification in `directory`.
 #' @param ... unused
-#' @param extend_lookup \[`character(1): FALSE`]\cr whether to enrich the lookup table. See [extend_lookup].
 #' @param clean_names_fun \[`function`]\cr a function to clean column names, e.g. [tolower], [janitor::clean_names()],...
 #' @param subdirectories \[`logical(1)`]\cr whether to read subdirectories
 #' @param verbose \[`numeric(1)`]\cr one of `c(0, 1, 2)`. The higher, the more information will be printed.
@@ -32,7 +31,6 @@
 read_all_xpt = function(path, ..., 
                         format_file="procformat.sas", 
                         clean_names_fun=NULL, 
-                        extend_lookup=TRUE,
                         datetime_extraction="guess", 
                         subdirectories=FALSE,
                         verbose=getOption("edc_read_verbose", 1),
@@ -54,7 +52,7 @@ read_all_xpt = function(path, ...,
     .apply_sas_formats(format_file) %>% 
     .add_lookup_and_date(
       datetime_extraction=datetime_extraction,
-      extend_lookup=extend_lookup,
+      extend_lookup=TRUE,
       clean_names_fun=.get_clean_names_fun(clean_names_fun), 
       EDCimport_version=packageVersion("EDCimport")
     )

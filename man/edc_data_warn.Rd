@@ -52,8 +52,8 @@ Use \code{edc_data_warnings()} to generate the table for such a file.
 }
 \examples{
 library(dplyr)
-tm = edc_example()
-load_list(tm)
+db = edc_example()
+load_database(db)
 enrol \%>\% 
   filter(age>70) \%>\% 
   edc_data_warn("Age should not be >70", issue_n=1)

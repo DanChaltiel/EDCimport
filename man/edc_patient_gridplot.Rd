@@ -39,7 +39,7 @@ patient is present in the dataset. Data are drawn from \link{get_datasets}.
 \examples{
 \dontrun{
   tm = read_trialmaster("path/to/archive.zip")
-  load_list(tm)
+  load_database(db)
   edc_patient_gridplot(sort_rows=FALSE, sort_cols=FALSE)
   edc_patient_gridplot(axes_flip=TRUE, show_grid=TRUE,
                        preprocess=~str_remove(.x, "\\\\D*")) #remove all non-digits

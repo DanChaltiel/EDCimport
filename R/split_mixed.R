@@ -10,7 +10,7 @@
 #' @param df a dataframe
 #' @param id the identifying subject ID
 #' @param ... not used
-#' @param ignore_cols columns to ignore. Usually meta columns (see [get_meta_cols]).
+#' @param ignore_cols columns to ignore.
 #' @param na_rm whether to consider missing values
 #' @param warn whether to warn if ID is not found
 #'
@@ -18,8 +18,8 @@
 #' @export
 #' 
 #' @examples
-#' tm = edc_example()
-#' sapply(tm, table_format, warn=FALSE) 
+#' db = edc_example()
+#' sapply(db, table_format, warn=FALSE) 
 table_format = function(df, id=get_subjid_cols(), ..., 
                         ignore_cols=get_meta_cols(0.95), 
                         na_rm=FALSE,
@@ -70,6 +70,7 @@ table_format = function(df, id=get_subjid_cols(), ...,
 #' Split mixed tables, i.e. tables that hold both long data (N values per patient) and short data (one value per patient, duplicated on N lines), into one long table and one short table.
 #'
 #' @param database an [edc_database] object, from [read_trialmaster()] or other EDCimport reading functions.
+#' @param datasets <tidyselect> datasets to split in the database
 #' @param ignore_cols columns to ignore in long tables. Default to `getOption("edc_cols_crfname", "CRFNAME")`. Case-insensitive. Avoid splitting tables for useless columns.
 #' @param verbose whether to print informations about the process.
 #' @param ... not used, ensure arguments are named
@@ -79,19 +80,20 @@ table_format = function(df, id=get_subjid_cols(), ...,
 #' @importFrom cli cli_abort cli_warn
 #' @importFrom dplyr setdiff
 #' @importFrom purrr keep_at map_lgl
+#' @importFrom rlang as_label
 #'
 #' @examples
-#' #tm = read_trialmaster("filename.zip", pw="xx")
-#' tm = edc_example() %>% 
-#'   edc_split_mixed(ae, starts_with("long"))
+#' #db = read_trialmaster("filename.zip", pw="xx")
+#' db = edc_example() %>% 
+#'   edc_split_mixed(c(ae, starts_with("long")))
 #'   
-#' names(tm)
+#' names(db)
 #' edc_lookup()
 #' 
-#' print(tm$ae) #`aesoc`, `aegr`, and `sae` are long, but `n_ae` is short
+#' db$ae #`aesoc`, `aegr`, and `sae` are long, but `n_ae` is short
 #' 
-#' print(tm$ae_short) 
-#' print(tm$ae_long)
+#' db$ae_short
+#' db$ae_long
 edc_split_mixed = function(database, datasets=everything(), 
                            ...,
                            ignore_cols=NULL, 
@@ -264,7 +266,7 @@ split_mixed_datasets = function(datasets=get_datasets(), id=get_subjid_cols(), .
                   " "="{.run utils::browseURL({output_code})}"))
     cat(code, file=output_code, append=TRUE)
   } else if(verbose){
-    cli_bullets(c(">"="Use {.fun EDCimport::load_list} on the result to get separated long and short data."))
+    cli_bullets(c(">"="Use {.fun EDCimport::load_database} on the result to get separated long and short data."))
   }
   
   rtn %>% 

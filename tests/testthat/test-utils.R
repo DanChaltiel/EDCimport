@@ -13,28 +13,28 @@ test_that("no exports", {
 
 
 
-# load_list() ---------------------------------------------------------------------------------
+# load_database() ---------------------------------------------------------------------------------
 
-test_that("load_list() works", {
+test_that("load_database() works", {
   x=list(a=1, b=mtcars)
-  load_list(x, remove=TRUE)
+  load_database(x, remove=TRUE)
   expect_equal(a,1)
   expect_length(b,11)
   expect_false(exists("x", inherits=FALSE))
 })
 
-test_that("load_list() works without remove", {
+test_that("load_database() works without remove", {
   x=list(a=1, b=mtcars)
-  load_list(x, remove=FALSE)
+  load_database(x, remove=FALSE)
   expect_equal(a,1)
   expect_length(b,11)
   expect_true(exists("x", inherits=FALSE))
 })
 
-test_that("load_list() errors", {
+test_that("load_database() errors", {
   x=list(a=1, 5, b=8, 9)
-  expect_error(load_list(x),
-               class="load_list_unnamed_error")
+  expect_error(load_database(x),
+               class="load_database_unnamed_error")
 })
 
 
@@ -240,8 +240,8 @@ test_that("cli_menu() is not in package cli yet", {
 
 
 test_that("edc_db_to_excel() works", {
-  tm = edc_example()
-  load_list(tm)
+  db = edc_example()
+  load_database(db)
   filename=tempfile(fileext=".xlsx")
   edc_db_to_excel(filename=filename, datasets=get_datasets(), open=FALSE) %>% expect_message()
   expect_true(file.exists(filename))

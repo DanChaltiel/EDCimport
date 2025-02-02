@@ -20,7 +20,7 @@ table_format(
 
 \item{...}{not used}
 
-\item{ignore_cols}{columns to ignore. Usually meta columns (see \link{get_meta_cols}).}
+\item{ignore_cols}{columns to ignore.}
 
 \item{na_rm}{whether to consider missing values}
 
@@ -35,6 +35,6 @@ This function identifies the format of a dataframe with respect to a subject ID.
 If a dataframe has some wide and long columns, it is considered "mixed".
 }
 \examples{
-tm = edc_example()
+db = edc_example()
 sapply(tm, table_format, warn=FALSE) 
 }

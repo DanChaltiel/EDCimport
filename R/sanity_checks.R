@@ -20,8 +20,8 @@
 #' @export
 #'
 #' @examples
-#' tm = edc_example()
-#' load_list(tm)
+#' db = edc_example()
+#' load_database(db)
 #' options(edc_subjid_ref=enrol$subjid)
 #' #usually, you set something like:
 #' #options(edc_subjid_ref=enrolres$subjid)
@@ -93,8 +93,8 @@ edc_warn_patient_diffs = function(x, ref=getOption("edc_subjid_ref"),
 #' @export
 #'
 #' @examples
-#' tm = edc_example()
-#' load_list(tm)
+#' db = edc_example()
+#' load_database(db)
 #' edc_warn_extraction_date()
 #' @importFrom cli cli_warn
 edc_warn_extraction_date = function(max_days=30){
@@ -191,8 +191,8 @@ assert_no_duplicate = function(df, by=NULL, id_col=get_subjid_cols()){
 #'
 #' @examples
 #' library(dplyr)
-#' tm = edc_example()
-#' load_list(tm)
+#' db = edc_example()
+#' load_database(db)
 #' enrol %>% 
 #'   filter(age>70) %>% 
 #'   edc_data_warn("Age should not be >70", issue_n=1)

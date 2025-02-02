@@ -35,8 +35,8 @@ name of the \code{y} dataset. See \verb{[dplyr::mutate-joins]} for the descripti
 join logic.
 }
 \examples{
-tm = edc_example()
-attach(tm)
+db = edc_example()
+load_database(db)
 db2$common = db1$common = "Common"
 x = enrol \%>\% 
   edc_left_join(db2) \%>\% 

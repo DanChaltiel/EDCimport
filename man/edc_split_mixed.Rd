@@ -15,6 +15,8 @@ edc_split_mixed(
 \arguments{
 \item{database}{an \link{edc_database} object, from \code{\link[=read_trialmaster]{read_trialmaster()}} or other EDCimport reading functions.}
 
+\item{datasets}{\if{html}{\out{<tidyselect>}} datasets to split in the database}
+
 \item{...}{not used, ensure arguments are named}
 
 \item{ignore_cols}{columns to ignore in long tables. Default to \code{getOption("edc_cols_crfname", "CRFNAME")}. Case-insensitive. Avoid splitting tables for useless columns.}
@@ -28,15 +30,15 @@ an \link{edc_database} object
 Split mixed tables, i.e. tables that hold both long data (N values per patient) and short data (one value per patient, duplicated on N lines), into one long table and one short table.
 }
 \examples{
-#tm = read_trialmaster("filename.zip", pw="xx")
-tm = edc_example() \%>\% 
-  edc_split_mixed(ae, starts_with("long"))
+#db = read_trialmaster("filename.zip", pw="xx")
+db = edc_example() \%>\% 
+  edc_split_mixed(c(ae, starts_with("long")))
   
-names(tm)
+names(db)
 edc_lookup()
 
-print(tm$ae) #`aesoc`, `aegr`, and `sae` are long, but `n_ae` is short
+db$ae #`aesoc`, `aegr`, and `sae` are long, but `n_ae` is short
 
-print(tm$ae_short) 
-print(tm$ae_long)
+db$ae_short
+db$ae_long
 }

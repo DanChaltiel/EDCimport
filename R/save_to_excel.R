@@ -17,8 +17,8 @@
 #' @export
 #' @examples
 #' \dontrun{
-#'   tm = edc_example()
-#'   load_list(tm)  
+#'   db = edc_example()
+#'   load_database(db)  
 #'   edc_db_to_excel() #default arguments are usually OK
 #'   edc_db_to_excel(filename=TRUE)
 #' }

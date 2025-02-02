@@ -19,11 +19,8 @@ the lookup dataframe summarizing the database import
 Retrieve the lookup table from options
 }
 \examples{
-tm = edc_example()
-load_list(tm)
+db = edc_example()
+load_database(db)
 edc_lookup()
 edc_lookup(dataset)
-}
-\seealso{
-\code{\link[=build_lookup]{build_lookup()}}, \code{\link[=extend_lookup]{extend_lookup()}}
 }

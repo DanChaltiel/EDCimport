@@ -57,7 +57,7 @@ NULL
 #' Build and add lookup, add datetime_extraction, and add `...` as attributes
 #' @noRd
 #' @keywords internal
-.add_lookup_and_date = function(datalist, datetime_extraction, extend_lookup=FALSE, ...){
+.add_lookup_and_date = function(datalist, datetime_extraction, extend_lookup=TRUE, ...){
   assert_class(datetime_extraction, c("POSIXt", "Date"))
   .lookup = build_lookup(datalist)
   if(!is.null(extend_lookup)){

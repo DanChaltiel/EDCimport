@@ -48,8 +48,8 @@ outliers to be easily identified.
 }
 \examples{
 #tm = read_trialmaster("filename.zip", pw="xx")
-tm = edc_example()
-load_list(tm)
+db = edc_example()
+load_database(db)
 p = edc_swimmerplot(id_lim=c(5,45))
 p2 = edc_swimmerplot(origin="enrol$date_naissance", time_unit="weeks", 
                      exclude=c("DB1$DATE2", "db3$.*"))

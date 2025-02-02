@@ -56,7 +56,7 @@ test_that("Read TM with cache", {
   expect_length(w, 8)
 
 
-  load_list(w, remove=FALSE)
+  load_database(w, remove=FALSE)
   expect_true(exists("pat"))
   expect_length(pat, 35)
   expect_true(nrow(trial)==1)
@@ -112,7 +112,7 @@ test_that("Use cache only if permitted", {
   clean_lookup()
   w2 = read_trialmaster(filename, use_cache="read", verbose=0) %>% expect_silent()
   w2 = read_trialmaster(filename, use_cache="read", verbose=0, 
-                        clean_names_fun=f, split_mixed=TRUE) %>% 
+                        clean_names_fun=f) %>% 
     expect_error(class="read_tm_cache_bad_param")
   clean_cache()
 })

@@ -65,14 +65,13 @@ build_lookup = function(data_list){
 #' @return the lookup dataframe summarizing the database import 
 #' 
 #' @export
-#' @seealso [build_lookup()], [extend_lookup()]
 #' @importFrom cli cli_abort cli_warn format_inline
 #' @importFrom dplyr arrange enquos
 #' @importFrom purrr discard
 #' 
 #' @examples
-#' tm = edc_example()
-#' load_list(tm)
+#' db = edc_example()
+#' load_database(db)
 #' edc_lookup()
 #' edc_lookup(dataset)
 edc_lookup = function(..., check=TRUE){
@@ -91,7 +90,7 @@ edc_lookup = function(..., check=TRUE){
       }
       cli_warn(c("Datasets from this lookup are not available in the global environment.",
                  msg,
-                 i="Did you forget to use {.run EDCimport::load_list(tm)} to load the tables?"),
+                 i="Did you forget to use {.run EDCimport::load_database(db)} to load the tables?"),
                class="edc_lookup_missing_dataset_warning",
                .frequency="once",
                .frequency_id="edc_lookup"
@@ -154,8 +153,8 @@ get_lookup = deprecatedly(edc_lookup, what="get_lookup()", when="0.5.0")
 #' @importFrom rlang check_dots_empty
 #' @examples
 #' #tm = read_trialmaster("filename.zip", pw="xx")
-#' tm = edc_example()
-#' load_list(tm)
+#' db = edc_example()
+#' load_database(db)
 #' .lookup
 #' .lookup = extend_lookup(.lookup)
 #' .lookup

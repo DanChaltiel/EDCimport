@@ -7,7 +7,7 @@ test_that("edc_swimmerplot", {
   edc_options(edc_lookup_overwrite_warn=FALSE)
 
   e = edc_example()
-  load_list(e)
+  load_database(e)
   
   p = edc_swimmerplot(.lookup, plotly=FALSE)
   p2 = edc_swimmerplot(.lookup, origin="enrol$date_naissance", time_unit="months", plotly=FALSE)

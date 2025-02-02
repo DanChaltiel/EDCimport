@@ -32,8 +32,8 @@ Compare a subject ID vector to the study's reference subject ID (usually somethi
 \code{check_subjid()} is the old, deprecated name.
 }
 \examples{
-tm = edc_example()
-load_list(tm)
+db = edc_example()
+load_database(db)
 options(edc_subjid_ref=enrol$subjid)
 #usually, you set something like:
 #options(edc_subjid_ref=enrolres$subjid)

@@ -22,7 +22,6 @@
 #' @importFrom utils object.size packageVersion
 read_trialmaster = function(archive, ..., use_cache="write", 
                             clean_names_fun=NULL,
-                            extend_lookup=TRUE,
                             subdirectories=FALSE,
                             pw=getOption("trialmaster_pw"), 
                             verbose=getOption("edc_read_verbose", 1),
@@ -52,8 +51,7 @@ read_trialmaster = function(archive, ..., use_cache="write",
   
   if(!read_from_cache || cache_outdated){
     rtn = .read_tm_zip(archive=archive, pw=pw, extract_datetime=extract_datetime,
-                       clean_names_fun=clean_names_fun, 
-                       extend_lookup=extend_lookup, key_columns=key_columns, 
+                       clean_names_fun=clean_names_fun, key_columns=key_columns, 
                        subdirectories=subdirectories, use_cache=use_cache, 
                        cache_file=cache_file, verbose=verbose) %>% 
       structure(source="zip")
@@ -118,7 +116,7 @@ read_trialmaster = function(archive, ..., use_cache="write",
 #' @importFrom fs dir_create file_exists path path_temp
 #' @importFrom stringr str_remove
 .read_tm_zip <- function(archive, pw, extract_datetime, clean_names_fun, 
-                         extend_lookup, key_columns, subdirectories, use_cache, cache_file, 
+                         key_columns, subdirectories, use_cache, cache_file, 
                          verbose) {
   
   if(verbose>0) cli_inform("Unzipping {.file {archive}}", class="read_tm_zip")
@@ -136,7 +134,6 @@ read_trialmaster = function(archive, ..., use_cache="write",
   }
   rtn = read_all_xpt(temp_folder, format_file=format_file, 
                      clean_names_fun=clean_names_fun, 
-                     extend_lookup=extend_lookup,
                      key_columns=key_columns,
                      subdirectories=subdirectories,
                      datetime_extraction=extract_datetime, 

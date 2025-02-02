@@ -356,8 +356,8 @@ harmonize_subjid = function(database, preprocess=NULL, col_subjid=NULL){
 #' @export
 #'
 #' @examples
-#' tm = edc_example()
-#' attach(tm)
+#' db = edc_example()
+#' load_database(db)
 #' db2$common = db1$common = "Common"
 #' x = enrol %>% 
 #'   edc_left_join(db2) %>% 
@@ -499,7 +499,7 @@ get_datasets = function(lookup=edc_lookup(), envir=parent.frame()){
     mget(envir=envir, ifnotfound=list(NULL), mode="list", inherits=TRUE)
   a = rtn %>% keep(is.null) %>% names()
   if(length(a) > 5){
-    cli_warn(c("Could not find {length(a)}/{length(rtn)} datasets from the lookup, did you forget to call {.fn load_list} on your import?",
+    cli_warn(c("Could not find {length(a)}/{length(rtn)} datasets from the lookup, did you forget to call {.fn load_database} on your import?",
                i="{.val {a}}"))
   }
   
@@ -632,8 +632,8 @@ get_crfname_cols = function(lookup=edc_lookup()){
 #' @keywords internal
 #'
 #' @examples
-#' tm = edc_example()
-#' load_list(tm)
+#' db = edc_example()
+#' load_database(db)
 #' meta_cols = get_meta_cols()
 #' long_mixed %>% dplyr::select(-dplyr::any_of(meta_cols))
 #' @importFrom dplyr filter pull setdiff
@@ -663,8 +663,8 @@ get_meta_cols = function(lookup=edc_lookup(), min_pct = getOption("edc_meta_cols
 #' @importFrom tibble tibble
 #'
 #' @examples
-#' tm = edc_example()
-#' load_list(tm)
+#' db = edc_example()
+#' load_database(db)
 #' x = get_common_cols(min_datasets=1)
 #' x
 #' summary(x)
@@ -735,7 +735,7 @@ load_database = function(db, env=parent.frame(), remove=TRUE){
   if(any(!nz)){
     cli_abort(c("Every member of {.arg db} should have a name.", 
                 i="Unnamed member{?s} ind{?ex/ices} of {.arg db}: {as.character(which(!nz))}"), 
-              class="load_list_unnamed_error")
+              class="load_database_unnamed_error")
   }
   list2env(db, env)
   
@@ -790,7 +790,7 @@ print.edc_database = function(x, ...){
   nms = cli_vec(names(x), list("vec-trunc"=3))
   cli_bullets(c(
     "Contains {length(x)} table{?s}: {.arg {nms}}",
-    i="Use {.run EDCimport::load_list(tm)} to load the tables in the global environment.",
+    i="Use {.run EDCimport::load_database(db)} to load the tables in the global environment.",
     i="Use {.run EDCimport::edc_lookup()} to see the summary table."
   ))
 }

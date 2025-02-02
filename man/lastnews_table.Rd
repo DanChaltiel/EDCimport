@@ -38,8 +38,8 @@ for each patient with the variable it comes from. Useful in survival analysis to
 the right censoring time.
 }
 \examples{
-tm = edc_example()
-load_list(tm)
+db = edc_example()
+load_database(db)
 lastnews_table()
 lastnews_table(except="db3")
 lastnews_table(except="db3$date9")

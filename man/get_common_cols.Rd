@@ -28,8 +28,8 @@ common to some datasets.
 Useful to find keys to pivot or summarise data.
 }
 \examples{
-tm = edc_example()
-load_list(tm)
+db = edc_example()
+load_database(db)
 x = get_common_cols(min_datasets=1)
 x
 summary(x)

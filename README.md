@@ -43,13 +43,13 @@ For TrialMaster, you should request an export of type `SAS Xport`, with the chec
 
 The resulting object `db` is an `edc_database` object containing all the datasets and some metadatas.
 
-You can now use `load_list()` to import the list in the global environment and use your tables:
+You can now use `load_database()` to import the list in the global environment and use your tables:
 
 
 ``` r
 library(EDCimport)
 db = read_all_sas("path/to/my/files/")
-load_list(db) #this also removes `db` to save some RAM
+load_database(db) #this also removes `db` to save some RAM
 mean(dataset1$column5)
 ```
 

@@ -2,8 +2,8 @@
 test_that("edc_data_warn snapshot", {
   clean_lookup()
   reset_warn_list()
-  tm = edc_example()
-  attach(tm)
+  db = edc_example()
+  attach(db)
   
   expect_snapshot({
     #default
@@ -47,8 +47,8 @@ test_that("edc_data_warn snapshot", {
 
 test_that("edc_data_warn errors", {
   clean_lookup()
-  tm = edc_example()
-  attach(tm)
+  db = edc_example()
+  attach(db)
   
   #error expected
   enrol %>%
@@ -66,8 +66,8 @@ test_that("edc_data_warn errors", {
 
 test_that("edc_data_warn CSV", {
   clean_lookup()
-  tm = edc_example()
-  attach(tm)
+  db = edc_example()
+  attach(db)
   
   path = tempfile(fileext=".csv")
   

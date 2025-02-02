@@ -40,7 +40,7 @@ edc_options(
 
 \item{edc_fct_yesno}{\strong{used in \link{fct_yesno}} list of values to be considered as Yes/No values. Defaults to \code{get_yesno_lvl()}.}
 
-\item{edc_cols_subjid, edc_cols_meta}{\strong{used in \link{get_key_cols}} the name of the columns holding the subject id (default to \code{c("ptno", "subjid")}) and the CRF form name (default to \code{c("crfname")}). It is case-insensitive.}
+\item{edc_cols_subjid, edc_cols_meta}{the name of the columns holding the subject id (default to \code{c("ptno", "subjid")}) and the CRF form name (default to \code{c("crfname")}). It is case-insensitive.}
 
 \item{edc_cols_id, edc_cols_crfname}{deprecated}
 
@@ -48,7 +48,7 @@ edc_options(
 
 \item{edc_warn_max_subjid}{The max number of subject IDs to show in \link{edc_data_warn}}
 
-\item{edc_read_verbose, edc_correction_verbose, edc_get_key_cols_verbose}{the verbosity of the output of functions \link{read_trialmaster} and \link{read_all_xpt}, \link{manual_correction}, and \link{get_key_cols}. For example, set \code{edc_options(edc_read_verbose=0)} to silence the first 2.}
+\item{edc_read_verbose, edc_correction_verbose, edc_get_key_cols_verbose}{the verbosity of the output of functions \link{read_trialmaster} and \link{read_all_xpt}, and \link{manual_correction}. For example, set \code{edc_options(edc_read_verbose=0)} to silence the first 2.}
 
 \item{edc_lookup_overwrite_warn}{default to TRUE. Whether there should be warning when overwriting \code{.lookup} (like when reading 2 databases successively)}
 
