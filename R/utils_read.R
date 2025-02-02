@@ -28,7 +28,7 @@ NULL
 #' @importFrom dplyr across as_tibble mutate where
 #' @importFrom fs path_ext_remove
 #' @importFrom purrr map
-#' @importFrom rlang set_names
+#' @importFrom rlang hash set_names
 #' @importFrom stringr fixed str_remove str_replace_all
 .read_all = function(files, read_function, clean_names_fun=NULL, path=NULL, ...){
   assert_file_exists(files)
@@ -49,7 +49,7 @@ NULL
         as_tibble() %>% 
         clean_names_fun() %>% 
         mutate(across(where(bad_hms), fix_hms))
-      attr(rtn, "checksum") = checksum(rtn)
+      attr(rtn, "hash") = hash(rtn)
       rtn
     })
 }
