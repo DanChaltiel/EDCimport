@@ -23,6 +23,9 @@ reference:
   - read_all_xpt
   - read_all_sas
   - read_all_csv
+  - load_database
+  - edc_database
+  - edc_lookup
 - title: "Checking databases"
 - contents:
   - edc_data_warn
@@ -43,6 +46,7 @@ reference:
   - lastnews_table
   - edc_db_to_excel
   - get_common_cols
+  - edc_viewer
 - title: "Options"
 - contents:
   - edc_options
@@ -60,21 +64,8 @@ reference:
   - select_distinct
   - harmonize_subjid
   - get_datasets
-  - get_meta_cols
-  - get_subjid_cols
-  - get_key_cols
-  - split_mixed_datasets
+  - edc_split_mixed
   - edc_left_join
-- title: "Lookup Utils"
-- contents:
-  - get_lookup
-  - extend_lookup
-  - build_lookup
-- title: "List Utils"
-- contents:
-  - load_list
-  - load_as_list
-  - save_list
 - title: "Examples"
 - contents:
   - edc_example
