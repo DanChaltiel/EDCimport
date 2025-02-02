@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9013</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9017</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,8 +41,28 @@
 <li>Improved <code><a href="../reference/lastnews_table.html">lastnews_table()</a></code>: allow regex in except &amp; prefer, improved warning message, and allow saving warning as csv (<a href="https://github.com/DanChaltiel/EDCimport/issues/78" class="external-link">#78</a>)</li>
 <li>New argument <code>lastnews_table(show_delta=TRUE)</code>, which computes the difference between the last <code>prefer</code> date and the actual last date (<a href="https://github.com/DanChaltiel/EDCimport/issues/81" class="external-link">#81</a>)</li>
 <li>New functions <code><a href="../reference/edc_left_join.html">edc_left_join()</a></code>, <code><a href="../reference/edc_left_join.html">edc_right_join()</a></code>, and <code><a href="../reference/edc_left_join.html">edc_full_join()</a></code>, which perform joins with defaults to subject ID as primary key (<a href="https://github.com/DanChaltiel/EDCimport/issues/82" class="external-link">#82</a>)</li>
-<li>New function <code>edc_viewer()</code>, which run a shiny application for easily browsing your database (<a href="https://github.com/DanChaltiel/EDCimport/issues/83" class="external-link">#83</a>)</li>
+<li>New function <code><a href="../reference/edc_viewer.html">edc_viewer()</a></code>, which run a shiny application for easily browsing your database (<a href="https://github.com/DanChaltiel/EDCimport/issues/83" class="external-link">#83</a>)</li>
 <li>New argument <code>subdirectories</code> to all reading functions (<code><a href="../reference/read_trialmaster.html">read_trialmaster()</a></code>, <code><a href="../reference/read_all_xpt.html">read_all_xpt()</a></code>, <code><a href="../reference/read_all_sas.html">read_all_sas()</a></code>, and <code><a href="../reference/read_all_csv.html">read_all_csv()</a></code>), to control whether to read sub-directories. Note that until now, those subdirectories were read and could overwrite root files.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="internal-improvements-0-6-0">Internal improvements<a class="anchor" aria-label="anchor" href="#internal-improvements-0-6-0"></a></h4>
+<ul><li>
+<code><a href="../reference/read_trialmaster.html">read_trialmaster()</a></code> won’t read from cache if installed EDCimport version is different from cache’s</li>
+</ul></div>
+<div class="section level4">
+<h4 id="deprecations-0-6-0">Deprecations<a class="anchor" aria-label="anchor" href="#deprecations-0-6-0"></a></h4>
+<ul><li>
+<code>load_list()</code>, renamed to <code><a href="../reference/load_database.html">load_database()</a></code>
+</li>
+</ul></div>
+<div class="section level4">
+<h4 id="breaking-changes-0-6-0">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-6-0"></a></h4>
+<p>I don’t think enough people are using this so that it is necessary to go through the deprecation process.</p>
+<ul><li>
+<code>split_mixed_datasets</code> becomes <code><a href="../reference/edc_split_mixed.html">edc_split_mixed()</a></code>
+</li>
+<li>Unexported internal functions: <code>build_lookup()</code>, <code>extend_lookup()</code>, <code>get_key_cols()</code>, <code>get_subjid_cols()</code>, <code>get_crfname_cols()</code>, <code>get_meta_cols()</code>, <code>load_as_list()</code>, <code>save_list()</code>
+</li>
 </ul></div>
 </div>
     <div class="section level2">
@@ -88,7 +108,7 @@
 <li><p>New function <code><a href="../reference/lastnews_table.html">lastnews_table()</a></code> to find the last date an information has been entered for each patient (<a href="https://github.com/DanChaltiel/EDCimport/issues/37" class="external-link">#37</a>). Useful for survival analyses.</p></li>
 <li><p>New function <code><a href="../reference/harmonize_subjid.html">harmonize_subjid()</a></code>, to have the same structure for subject IDs in all the datasets of the database (<a href="https://github.com/DanChaltiel/EDCimport/issues/30" class="external-link">#30</a>).</p></li>
 <li><p>New function <code><a href="../reference/save_plotly.html">save_plotly()</a></code>, to save a <code>plotly</code> to an HTML file (<a href="https://github.com/DanChaltiel/EDCimport/issues/15" class="external-link">#15</a>).</p></li>
-<li><p>New experimental functions <code><a href="../reference/table_format.html">table_format()</a></code>, <code><a href="../reference/get_common_cols.html">get_common_cols()</a></code> and <code><a href="../reference/get_meta_cols.html">get_meta_cols()</a></code> that might become useful to find keys to pivot or summarise data.</p></li>
+<li><p>New experimental functions <code><a href="../reference/table_format.html">table_format()</a></code>, <code><a href="../reference/get_common_cols.html">get_common_cols()</a></code> and <code>get_meta_cols()</code> that might become useful to find keys to pivot or summarise data.</p></li>
 </ul></div>
 </div>
 <div class="section level4">
@@ -104,14 +124,14 @@
 <li>
 <code><a href="../reference/find_keyword.html">find_keyword()</a></code> is more robust and inform on the proportion of missing if possible.</li>
 <li>
-<code><a href="../reference/edc_lookup.html">edc_lookup()</a></code> will now retrieve the lookup table. Use <code><a href="../reference/build_lookup.html">build_lookup()</a></code> to build one from a table list.</li>
+<code><a href="../reference/edc_lookup.html">edc_lookup()</a></code> will now retrieve the lookup table. Use <code>build_lookup()</code> to build one from a table list.</li>
 <li>
-<code><a href="../reference/extend_lookup.html">extend_lookup()</a></code> will not fail anymore when the database has a faulty table.</li>
+<code>extend_lookup()</code> will not fail anymore when the database has a faulty table.</li>
 </ul></div>
 <div class="section level4">
 <h4 id="deprecations-0-5-0">Deprecations<a class="anchor" aria-label="anchor" href="#deprecations-0-5-0"></a></h4>
 <ul><li>
-<code><a href="../reference/get_key_cols.html">get_key_cols()</a></code> is replaced by <code><a href="../reference/get_subjid_cols.html">get_subjid_cols()</a></code> and <code><a href="../reference/get_subjid_cols.html">get_crfname_cols()</a></code>.</li>
+<code>get_key_cols()</code> is replaced by <code>get_subjid_cols()</code> and <code>get_crfname_cols()</code>.</li>
 <li>
 <code><a href="../reference/edc_warn_patient_diffs.html">check_subjid()</a></code> is replaced by <code><a href="../reference/edc_warn_patient_diffs.html">edc_warn_patient_diffs()</a></code>. It can either take a vector or a dataframe as input, and the message is more informative.</li>
 </ul></div>
@@ -148,7 +168,7 @@
 <h4 id="bug-fixes--improvements-0-4-0">Bug fixes &amp; Improvements<a class="anchor" aria-label="anchor" href="#bug-fixes--improvements-0-4-0"></a></h4>
 <ul><li>Reading with <code><a href="../reference/read_trialmaster.html">read_trialmaster()</a></code> from cache will output an error if parameters (<code>split_mixed</code>, <code>clean_names_fun</code>) are different (<a href="https://github.com/DanChaltiel/EDCimport/issues/4" class="external-link">#4</a>).</li>
 <li>
-<code><a href="../reference/split_mixed_datasets.html">split_mixed_datasets()</a></code> is now fully case-insensitive.</li>
+<code>split_mixed_datasets()</code> is now fully case-insensitive.</li>
 <li>Non-UTF8 characters in labels are now identified and corrected during reading (<a href="https://github.com/DanChaltiel/EDCimport/issues/5" class="external-link">#5</a>).</li>
 </ul></div>
 <div class="section level4">
@@ -176,7 +196,7 @@
 <li>
 <code>key_columns=get_key_cols()</code> is where you can change the default column names for patient ID and CRF name (used in other new features).</li>
 </ul></li>
-<li><p>Standalone functions <code><a href="../reference/extend_lookup.html">extend_lookup()</a></code> and <code><a href="../reference/split_mixed_datasets.html">split_mixed_datasets()</a></code>.</p></li>
+<li><p>Standalone functions <code>extend_lookup()</code> and <code>split_mixed_datasets()</code>.</p></li>
 <li><p>New helper <code><a href="../reference/unify.html">unify()</a></code>, which turns a vector of duplicate values into a vector of length 1.</p></li>
 </ul></div>
 <div class="section level4">

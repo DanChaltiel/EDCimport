@@ -13,7 +13,7 @@ Use edc_db_to_excel() to create the file and edc_browse_excel() to open it."></h
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9013</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9017</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -92,8 +92,8 @@ Use <code>edc_db_to_excel()</code> to create the file and <code>edc_browse_excel
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
-<span class="r-in"><span>  <span class="va">tm</span> <span class="op">=</span> <span class="fu"><a href="edc_example.html">edc_example</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="load_list.html">load_list</a></span><span class="op">(</span><span class="va">tm</span><span class="op">)</span>  </span></span>
+<span class="r-in"><span>  <span class="va">db</span> <span class="op">=</span> <span class="fu"><a href="edc_example.html">edc_example</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="load_database.html">load_database</a></span><span class="op">(</span><span class="va">db</span><span class="op">)</span>  </span></span>
 <span class="r-in"><span>  <span class="fu">edc_db_to_excel</span><span class="op">(</span><span class="op">)</span> <span class="co">#default arguments are usually OK</span></span></span>
 <span class="r-in"><span>  <span class="fu">edc_db_to_excel</span><span class="op">(</span>filename<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>

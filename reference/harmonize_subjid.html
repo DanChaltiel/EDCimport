@@ -11,7 +11,7 @@ be performed on the levels."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9013</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9017</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,19 +46,19 @@ be performed on the levels.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">harmonize_subjid</span><span class="op">(</span><span class="va">datalist</span>, preprocess <span class="op">=</span> <span class="cn">NULL</span>, col_subjid <span class="op">=</span> <span class="fu"><a href="get_subjid_cols.html">get_subjid_cols</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">harmonize_subjid</span><span class="op">(</span><span class="va">database</span>, preprocess <span class="op">=</span> <span class="cn">NULL</span>, col_subjid <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-datalist">datalist<a class="anchor" aria-label="anchor" href="#arg-datalist"></a></dt>
-<dd><p>a list of dataframes</p></dd>
+<dl><dt id="arg-database">database<a class="anchor" aria-label="anchor" href="#arg-database"></a></dt>
+<dd><p>an <a href="edc_database.html">edc_database</a> object, from <code><a href="read_trialmaster.html">read_trialmaster()</a></code> or other EDCimport reading functions.</p></dd>
 
 
 <dt id="arg-preprocess">preprocess<a class="anchor" aria-label="anchor" href="#arg-preprocess"></a></dt>
-<dd><p>an optional function to modify the subject ID column, for example <code><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric()</a></code>. See examples.</p></dd>
+<dd><p>an optional function to modify the subject ID column. Default to <code><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric()</a></code> if applicable and <code><a href="https://rdrr.io/r/base/identity.html" class="external-link">identity()</a></code> otherwise. See examples.</p></dd>
 
 
 <dt id="arg-col-subjid">col_subjid<a class="anchor" aria-label="anchor" href="#arg-col-subjid"></a></dt>
@@ -67,7 +67,7 @@ be performed on the levels.</p>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>datalist, with subject id modified</p>
+    <p>database, with subject id modified</p>
     </div>
 
     <div class="section level2">

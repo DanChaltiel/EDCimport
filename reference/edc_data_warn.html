@@ -21,7 +21,7 @@ Use edc_data_warnings() to generate the table for such a file."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9013</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9017</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,7 +65,7 @@ Use <code>edc_data_warnings()</code> to generate the table for such a file.</p>
 <span>  issue_n <span class="op">=</span> <span class="st">"xx"</span>,</span>
 <span>  max_subjid <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>  csv_path <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  col_subjid <span class="op">=</span> <span class="fu"><a href="get_subjid_cols.html">get_subjid_cols</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  col_subjid <span class="op">=</span> <span class="fu">get_subjid_cols</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">edc_data_stop</span><span class="op">(</span><span class="va">df</span>, <span class="va">message</span>, <span class="va">...</span>, <span class="va">issue_n</span>, <span class="va">max_subjid</span>, <span class="va">csv_path</span>, <span class="va">col_subjid</span><span class="op">)</span></span>
@@ -121,14 +121,13 @@ Use <code>edc_data_warnings()</code> to generate the table for such a file.</p>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:base’:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>     intersect, setdiff, setequal, union</span>
-<span class="r-in"><span><span class="va">tm</span> <span class="op">=</span> <span class="fu"><a href="edc_example.html">edc_example</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Option <span style="color: #0000BB;">"edc_lookup"</span> has been overwritten.</span>
-<span class="r-in"><span><span class="fu"><a href="load_list.html">load_list</a></span><span class="op">(</span><span class="va">tm</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">db</span> <span class="op">=</span> <span class="fu"><a href="edc_example.html">edc_example</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="load_database.html">load_database</a></span><span class="op">(</span><span class="va">db</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">enrol</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">age</span><span class="op">&gt;</span><span class="fl">70</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
 <span class="r-in"><span>  <span class="fu">edc_data_warn</span><span class="op">(</span><span class="st">"Age should not be &gt;70"</span>, issue_n<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Datasets from this lookup are not available in the global environment.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Did you forget to use `EDCimport::load_list(tm)` to load the tables?</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Did you forget to use `EDCimport::load_database(db)` to load the tables?</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #555555;">This warning is displayed once per session.</span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Issue #<span style="color: #00BB00;">01</span>: Age should not be &gt;70 (2 patients: #9 and #12)</span>
 <span class="r-in"><span></span></span>

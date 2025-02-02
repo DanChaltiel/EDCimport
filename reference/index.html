@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9013</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9017</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,6 +67,24 @@
 
         </dt>
         <dd>Read all <code>.csv</code> files in a directory</dd>
+      </dl><dl><dt>
+
+          <code><a href="load_database.html">load_database()</a></code>
+
+        </dt>
+        <dd>Load a list in an environment</dd>
+      </dl><dl><dt>
+
+          <code><a href="edc_database.html">edc_database</a></code>
+
+        </dt>
+        <dd>EDCimport Database</dd>
+      </dl><dl><dt>
+
+          <code><a href="edc_lookup.html">edc_lookup()</a></code>
+
+        </dt>
+        <dd>Retrieve the lookup table from options</dd>
       </dl></div><div class="section level2">
       <h2 id="checking-databases">Checking databases<a class="anchor" aria-label="anchor" href="#checking-databases"></a></h2>
 
@@ -184,6 +202,12 @@
           <span class="badge lifecycle lifecycle-experimental">experimental</span>
         </dt>
         <dd>Get columns that are common to multiple datasets</dd>
+      </dl><dl><dt>
+
+          <code><a href="edc_viewer.html">edc_viewer()</a></code>
+
+        </dt>
+        <dd>Shiny data explorer</dd>
       </dl></div><div class="section level2">
       <h2 id="options">Options<a class="anchor" aria-label="anchor" href="#options"></a></h2>
 
@@ -285,25 +309,7 @@
         <dd>Retrieve the datasets as a list of data.frames</dd>
       </dl><dl><dt>
 
-          <code><a href="get_meta_cols.html">get_meta_cols()</a></code>
-
-        </dt>
-        <dd>Get columns shared by most datasets</dd>
-      </dl><dl><dt>
-
-          <code><a href="get_subjid_cols.html">get_subjid_cols()</a></code> <code><a href="get_subjid_cols.html">get_crfname_cols()</a></code>
-
-        </dt>
-        <dd>Get key column names</dd>
-      </dl><dl><dt>
-
-          <code><a href="get_key_cols.html">get_key_cols()</a></code>
-
-        </dt>
-        <dd>Important column names</dd>
-      </dl><dl><dt>
-
-          <code><a href="split_mixed_datasets.html">split_mixed_datasets()</a></code>
+          <code><a href="edc_split_mixed.html">edc_split_mixed()</a></code>
 
         </dt>
         <dd>Split mixed datasets</dd>
@@ -313,64 +319,6 @@
 
         </dt>
         <dd>Join within the EDCimport framework</dd>
-      </dl></div><div class="section level2">
-      <h2 id="lookup-utils">Lookup Utils<a class="anchor" aria-label="anchor" href="#lookup-utils"></a></h2>
-
-
-
-
-    </div><div class="section level2">
-
-
-
-
-      <dl><dt>
-
-          <code><a href="edc_lookup.html">edc_lookup()</a></code>
-
-        </dt>
-        <dd>Retrieve the lookup table from options</dd>
-      </dl><dl><dt>
-
-          <code><a href="extend_lookup.html">extend_lookup()</a></code>
-
-        </dt>
-        <dd>Extend the lookup table</dd>
-      </dl><dl><dt>
-
-          <code><a href="build_lookup.html">build_lookup()</a></code>
-
-        </dt>
-        <dd>Generate a lookup table</dd>
-      </dl></div><div class="section level2">
-      <h2 id="list-utils">List Utils<a class="anchor" aria-label="anchor" href="#list-utils"></a></h2>
-
-
-
-
-    </div><div class="section level2">
-
-
-
-
-      <dl><dt>
-
-          <code><a href="load_list.html">load_list()</a></code>
-
-        </dt>
-        <dd>Load a list in an environment</dd>
-      </dl><dl><dt>
-
-          <code><a href="load_as_list.html">load_as_list()</a></code>
-
-        </dt>
-        <dd>Load a <code>.RData</code> file as a list</dd>
-      </dl><dl><dt>
-
-          <code><a href="save_list.html">save_list()</a></code>
-
-        </dt>
-        <dd>Save a list as <code>.RData</code> file</dd>
       </dl></div><div class="section level2">
       <h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a></h2>
 

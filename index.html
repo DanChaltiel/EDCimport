@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9013</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9017</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,7 +52,12 @@
 </h1></div>
 <!-- badges: start -->
 
-<p>EDCimport is a package designed to easily import data from EDC software <a href="https://www.anjusoftware.com/trial-master/" class="external-link">TrialMaster</a>.</p>
+<p>EDCimport is a package designed to easily import data from EDC softwares in clinical research.</p>
+<p>It is an opinionated framework, built to compute usual calculations given a database of several datasets sharing a common “Subject ID” key.</p>
+<p>It can directly read from an export of <a href="https://www.anjusoftware.com/trial-master/" class="external-link">TrialMaster</a>.</p>
+<blockquote>
+<p>[!WARNING] This package is experimental and under active developement. <br> Retrocompatibility is not a priority for the moment.<br> For reproducibility, use <a href="https://rstudio.github.io/renv/articles/renv.html" class="external-link">renv</a> to fix the package version.</p>
+</blockquote>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -61,25 +66,20 @@
 <span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"EDCimport"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Install development version on Github</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"DanChaltiel/EDCimport"</span><span class="op">)</span></span></code></pre></div>
-<p>You will also need <a href="https://www.7-zip.org/download.html" class="external-link"><code>7-zip</code></a> installed, and preferably added to the <a href="https://superuser.com/q/284342/532861" class="external-link"><code>PATH</code></a>.</p>
-<blockquote>
-<p>[!WARNING] This package was developed to work on Windows and is unlikely to work on any other OS. You are very welcome to submit a PR if you manage to get it to work on Mac or Linux.</p>
-</blockquote>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"DanChaltiel/EDCimport"</span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="load-the-data">Load the data<a class="anchor" aria-label="anchor" href="#load-the-data"></a>
 </h3>
-<p>Inside TrialMaster, you should request an export of type <code>SAS Xport</code>, with the checkbox “Include Codelists” ticked. This export should generate a <code>.zip</code> archive.</p>
-<p>Then, simply use <code><a href="reference/read_trialmaster.html">read_trialmaster()</a></code> with the archive password (if any) to retrieve the data from the archive:</p>
+<p>Your data usually comes as multiple files inside a specific directory.</p>
+<p>Depending on the type of the files, you should use one of <code><a href="reference/read_all_sas.html">read_all_sas()</a></code>, <code><a href="reference/read_all_xpt.html">read_all_xpt()</a></code>, <code><a href="reference/read_all_csv.html">read_all_csv()</a></code>, or <code><a href="reference/read_trialmaster.html">read_trialmaster()</a></code>.</p>
+<p>For TrialMaster, you should request an export of type <code>SAS Xport</code>, with the checkbox “Include Codelists” ticked. This export should generate a <code>.zip</code> archive that you can use in <code><a href="reference/read_trialmaster.html">read_trialmaster()</a></code>.</p>
+<p>The resulting object <code>db</code> is an <code>edc_database</code> object containing all the datasets and some metadatas.</p>
+<p>You can now use <code><a href="reference/load_database.html">load_database()</a></code> to import the list in the global environment and use your tables:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DanChaltiel/EDCimport" class="external-link">EDCimport</a></span><span class="op">)</span></span>
-<span><span class="va">tm</span> <span class="op">=</span> <span class="fu"><a href="reference/read_trialmaster.html">read_trialmaster</a></span><span class="op">(</span><span class="st">"path/to/my/archive.zip"</span>, pw<span class="op">=</span><span class="st">"foobar"</span><span class="op">)</span></span></code></pre></div>
-<p>The resulting object <code>tm</code> is a list containing all the datasets, plus metadatas.</p>
-<p>You can now use <code><a href="reference/load_list.html">load_list()</a></code> to import the list in the global environment and use your tables:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/load_list.html">load_list</a></span><span class="op">(</span><span class="va">tm</span><span class="op">)</span> <span class="co">#this also removes `tm` to save memory</span></span>
+<span><span class="va">db</span> <span class="op">=</span> <span class="fu"><a href="reference/read_all_sas.html">read_all_sas</a></span><span class="op">(</span><span class="st">"path/to/my/files/"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/load_database.html">load_database</a></span><span class="op">(</span><span class="va">db</span><span class="op">)</span> <span class="co">#this also removes `db` to save some RAM</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">dataset1</span><span class="op">$</span><span class="va">column5</span><span class="op">)</span></span></code></pre></div>
-<p>There are many other options available (e.g. colnames cleaning &amp; table splitting), see <code><a href="reference/read_trialmaster.html">?read_trialmaster</a></code> for more details.</p>
 </div>
 <div class="section level3">
 <h3 id="database-management-tools">Database management tools<a class="anchor" aria-label="anchor" href="#database-management-tools"></a>
@@ -88,47 +88,35 @@
 <div class="section level4">
 <h4 id="database-summary">Database summary<a class="anchor" aria-label="anchor" href="#database-summary"></a>
 </h4>
-<p>Reading a database using <code><a href="reference/read_trialmaster.html">read_trialmaster()</a></code> generates the <code>.lookup</code> dataframe, which contains for each dataset the number of rows, columns, patients, and the CRF name.</p>
-<p><code>.lookup</code> is used by many other tools inside EDCimport, be careful not to modify or delete it.</p>
+<p><code><a href="reference/edc_lookup.html">edc_lookup()</a></code> returns a dataframe containing the number of rows, columns, patients, and the CRF name of each dataset.</p>
 </div>
 <div class="section level4">
 <h4 id="search-the-whole-database">Search the whole database<a class="anchor" aria-label="anchor" href="#search-the-whole-database"></a>
 </h4>
-<p>Using <code><a href="reference/find_keyword.html">find_keyword()</a></code>, you can run a global search of the database.</p>
-<p>For instance, say you do not remember in which dataset and column is located the “date of ECG”. <code><a href="reference/find_keyword.html">find_keyword()</a></code> will search every column name and label and will give you the answer:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/find_keyword.html">find_keyword</a></span><span class="op">(</span><span class="st">"date"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 10 x 3</span></span>
-<span><span class="co">#&gt;    dataset names   labels                      </span></span>
-<span><span class="co">#&gt;    &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;                       </span></span>
-<span><span class="co">#&gt;  1 pat     PTRNDT  Randomization Date          </span></span>
-<span><span class="co">#&gt;  2 pat     RGSTDT  Registration Date           </span></span>
-<span><span class="co">#&gt;  3 site    INVDAT  Deactivation date           </span></span>
-<span><span class="co">#&gt;  4 site    TRGTDT  Target Enroll Date          </span></span>
-<span><span class="co">#&gt;  5 trial   TRSPDT  End Date                    </span></span>
-<span><span class="co">#&gt;  6 trial   TRSTDT  Start Date                  </span></span>
-<span><span class="co">#&gt;  7 visit   VISIT2  Visit Date                  </span></span>
-<span><span class="co">#&gt;  8 visit   EEXPVDT Earliest Expected Visit Date</span></span>
-<span><span class="co">#&gt;  9 vs      ECGDAT  Date of ECG                 </span></span>
-<span><span class="co">#&gt; 10 vs      VISITDT Visit Date</span></span></code></pre></div>
+<p><code><a href="reference/find_keyword.html">find_keyword()</a></code> runs a global search of the database for a given keyword (or regex).</p>
+<p>For instance, say you are looking for the “date of ECG” but don’t know where it is, you can run <code>find_keyword("date")</code> or <code>find_keyword("ecg")</code>.</p>
+<p>It won’t look into the actual data, though, as this would take too much computing power.</p>
 </div>
 </div>
 <div class="section level3">
 <h3 id="swimmer-plot">Swimmer Plot<a class="anchor" aria-label="anchor" href="#swimmer-plot"></a>
 </h3>
-<p>The <code><a href="reference/edc_swimmerplot.html">edc_swimmerplot()</a></code> function will create a swimmer plot of all date variables in the whole database.</p>
-<p>There are 2 arguments of interest:</p>
-<ul>
-<li><p><code>group</code>, a grouping variable (e.g. the treatment arm)</p></li>
-<li><p><code>origin</code>, a date variable acting as the time zero (e.g. the date of enrollment)</p></li>
-</ul>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/edc_swimmerplot.html">edc_swimmerplot</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/edc_swimmerplot.html">edc_swimmerplot</a></span><span class="op">(</span>group<span class="op">=</span><span class="st">"enrolres$arm"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/edc_swimmerplot.html">edc_swimmerplot</a></span><span class="op">(</span>origin<span class="op">=</span><span class="st">"enrolres$enroldt"</span><span class="op">)</span></span></code></pre></div>
-<p>This outputs a <code>plotly</code> interactive graph where you can select the dates of interest and zoom in with your mouse.</p>
-<p><img src="reference/figures/swimmerplot.png"></p>
-<p>Note that any modification made after running <code><a href="reference/read_trialmaster.html">read_trialmaster()</a></code> is taken into account. For instance, mutating a column with <code><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date()</a></code> in one of the tables will add a new group in the plot.</p>
+<p><code><a href="reference/edc_swimmerplot.html">edc_swimmerplot()</a></code> creates a swimmer plot of <strong>all date variables</strong> of the whole database. This is very useful to find inconsistencies and outliers, especially with the <code>plotly</code> interactive output.</p>
+</div>
+<div class="section level3">
+<h3 id="data-checking-system">Data checking system<a class="anchor" aria-label="anchor" href="#data-checking-system"></a>
+</h3>
+<p><code><a href="reference/edc_data_warn.html">edc_data_warn()</a></code> throws a warning if an inconsistency is found in a dataset. The interface allows to perform multiple checks and get a report as a CSV file.</p>
+</div>
+<div class="section level3">
+<h3 id="join-helpers">Join helpers<a class="anchor" aria-label="anchor" href="#join-helpers"></a>
+</h3>
+<p>As the primary key is almost always the Subject ID, join helpers were added to reduce code clutter. Currently, only <code><a href="reference/edc_left_join.html">edc_left_join()</a></code>, <code><a href="reference/edc_left_join.html">edc_right_join()</a></code>, and <code><a href="reference/edc_left_join.html">edc_full_join()</a></code> are supported.</p>
+</div>
+<div class="section level3">
+<h3 id="shiny-browser">Shiny browser<a class="anchor" aria-label="anchor" href="#shiny-browser"></a>
+</h3>
+<p><code><a href="reference/edc_viewer.html">edc_viewer()</a></code> runs a shiny application that browses the whole database. The HTML interface is quicker and less cluttered than it would be in RStudio. It also allows to filter by Subject ID.</p>
 </div>
 </div>
 </div>

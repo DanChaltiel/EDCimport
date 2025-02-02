@@ -11,7 +11,7 @@ If a procformat.sas file exists in the directory, formats will be applied."></he
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9013</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9017</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,8 +51,6 @@ If a <code>procformat.sas</code> file exists in the directory, formats will be a
 <span>  <span class="va">...</span>,</span>
 <span>  format_file <span class="op">=</span> <span class="st">"procformat.sas"</span>,</span>
 <span>  clean_names_fun <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  split_mixed <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  extend_lookup <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  datetime_extraction <span class="op">=</span> <span class="st">"guess"</span>,</span>
 <span>  subdirectories <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"edc_read_verbose"</span>, <span class="fl">1</span><span class="op">)</span>,</span>
@@ -79,14 +77,6 @@ If a <code>procformat.sas</code> file exists in the directory, formats will be a
 
 <dt id="arg-clean-names-fun">clean_names_fun<a class="anchor" aria-label="anchor" href="#arg-clean-names-fun"></a></dt>
 <dd><p>[<code>function</code>]<br> a function to clean column names, e.g. <a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower</a>, <code><a href="https://sfirke.github.io/janitor/reference/clean_names.html" class="external-link">janitor::clean_names()</a></code>,...</p></dd>
-
-
-<dt id="arg-split-mixed">split_mixed<a class="anchor" aria-label="anchor" href="#arg-split-mixed"></a></dt>
-<dd><p>[<code>logical(1): FALSE</code>]<br> whether to split mixed datasets. See <a href="split_mixed_datasets.html">split_mixed_datasets</a>.</p></dd>
-
-
-<dt id="arg-extend-lookup">extend_lookup<a class="anchor" aria-label="anchor" href="#arg-extend-lookup"></a></dt>
-<dd><p>[<code>character(1): FALSE</code>]<br> whether to enrich the lookup table. See <a href="extend_lookup.html">extend_lookup</a>.</p></dd>
 
 
 <dt id="arg-datetime-extraction">datetime_extraction<a class="anchor" aria-label="anchor" href="#arg-datetime-extraction"></a></dt>
@@ -121,6 +111,14 @@ If a <code>procformat.sas</code> file exists in the directory, formats will be a
 <li><p>or a data file (.csv or .sas7bdat) containing 3 columns: the SAS format name (repeated),
 each level, and its associated label. Use <code>options(edc_var_format_name="xxx", edc_var_level="xxx", edc_var_label="xxx")</code> to specify the names of the columns.</p></li>
 </ul></div>
+    <div class="section level2">
+    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
+    <div class="dont-index"><p>Other EDCimport read functions: <code><a href="read_trialmaster.html">read_trialmaster()</a></code>, <code><a href="read_all_sas.html">read_all_sas()</a></code>, <code>read_all_xpt()</code>, and <code><a href="read_all_csv.html">read_all_csv()</a></code>.</p>
+<p>Other EDCimport reading functions:
+<code><a href="read_all_csv.html">read_all_csv</a>()</code>,
+<code><a href="read_all_sas.html">read_all_sas</a>()</code>,
+<code><a href="read_trialmaster.html">read_trialmaster</a>()</code></p></div>
+    </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
