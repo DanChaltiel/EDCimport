@@ -17,6 +17,17 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 -   `read_trialmaster()` won't read from cache if installed EDCimport version is different from cache's
 
+### Deprecations
+
+-   `load_list()`, renamed to `load_database()`
+
+### Breaking changes
+
+I don't think enough people are using this so that it is necessary to go through the deprecation process.
+
+-   `split_mixed_datasets` becomes `edc_split_mixed()`
+-   Unexported internal functions: `build_lookup()`, `extend_lookup()`, `get_key_cols()`, `get_subjid_cols()`, `get_crfname_cols()`, `get_meta_cols()`, `load_as_list()`, `save_list()`
+
 
 # EDCimport 0.5.2
 

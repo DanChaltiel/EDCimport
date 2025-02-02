@@ -521,12 +521,13 @@ get_datasets = function(lookup=edc_lookup(), envir=parent.frame()){
 #'
 #' @return a list(2) of characters with names `patient_id` and `crfname`
 #' 
-#' @export
 #' @importFrom cli cli_warn
 #' @importFrom dplyr lst mutate select
 #' @importFrom lifecycle deprecate_warn
 #' @importFrom purrr map map_chr
 #' @importFrom stats na.omit
+#' @noRd
+#' @keywords internal
 get_key_cols = function(lookup=edc_lookup()){
   patient_id = get_subjid_cols()
   
@@ -576,7 +577,8 @@ get_key_cols = function(lookup=edc_lookup()){
 #' @param lookup the lookup table
 #'
 #' @return a character vector
-#' @export
+#' @noRd
+#' @keywords internal
 #'
 #' @examples
 #' get_subjid_cols()
@@ -586,8 +588,8 @@ get_subjid_cols = function(lookup=edc_lookup()){
   .get_key_cols(subjid_cols, id_name="patient", lookup)
 }
 
-#' @rdname get_subjid_cols
-#' @export
+#' @noRd
+#' @keywords internal
 get_crfname_cols = function(lookup=edc_lookup()){
   crfname_cols=getOption("edc_cols_crfname", "CRFNAME")
   .get_key_cols(crfname_cols, id_name="CRF", lookup)
@@ -626,7 +628,8 @@ get_crfname_cols = function(lookup=edc_lookup()){
 #' @param min_pct Default=`0.95`. The minimal proportion of datasets a column has to reach. Subject ID is always excluded.
 #'
 #' @return a character vector
-#' @export
+#' @noRd
+#' @keywords internal
 #'
 #' @examples
 #' tm = edc_example()
@@ -708,43 +711,44 @@ summary.common_cols = function(object, ...){
 
 #' Load a list in an environment
 #'
-#' @param x a list
+#' @param db an [edc_database] object (to be fair, any list would do)
 #' @param env the environment onto which the list should be loaded
-#' @param remove if `TRUE`, `x` will be removed from the environment afterward
+#' @param remove if `TRUE`, `db` will be removed from the environment afterward
 #'
 #' @return nothing, called for its side-effect
 #' @export
+#' @importFrom cli cli_abort cli_warn
+#' @importFrom rlang caller_arg
 #'
 #' @examples
 #' 
-#' x=list(a=1, b=mtcars)
-#' load_list(x, remove=FALSE)
-#' print(a)
-#' print(nrow(b))
-#' 
-#' @importFrom cli cli_abort cli_warn
-#' @importFrom rlang caller_arg
-load_list = function(x, env=parent.frame(), remove=TRUE){
-  if(length(x)==0){
+#' db = edc_example()
+#' load_database(db, remove=FALSE)
+#' print(db)
+#' print(lengths(db))
+load_database = function(db, env=parent.frame(), remove=TRUE){
+  if(length(db)==0){
     cli_warn("List was empty.")
     return(invisible())
   }
-  nz = nzchar(names(x))
+  nz = nzchar(names(db))
   if(any(!nz)){
-    cli_abort(c("Every member of {.arg x} should have a name.", 
-                i="Unnamed member{?s} ind{?ex/ices} of {.arg x}: {as.character(which(!nz))}"), 
+    cli_abort(c("Every member of {.arg db} should have a name.", 
+                i="Unnamed member{?s} ind{?ex/ices} of {.arg db}: {as.character(which(!nz))}"), 
               class="load_list_unnamed_error")
   }
-  list2env(x, env)
+  list2env(db, env)
   
   if(remove) {
-    x_name = caller_arg(x)
+    x_name = caller_arg(db)
     if(exists(x_name, where=env, inherits=FALSE)) 
       remove(list=x_name, envir=env)
     else                          
       remove(list=x_name, envir=parent.frame())
   }
 }
+load_list = deprecatedly(load_database, what="load_list()", when="0.6.0")
+
 
 
 #' Save a list as `.RData` file
@@ -753,7 +757,8 @@ load_list = function(x, env=parent.frame(), remove=TRUE){
 #' @param filename the filename, with the `.RData` extension.
 #'
 #' @return nothing, called for its side-effect
-#' @export
+#' @noRd
+#' @keywords internal
 #'
 #' @examples
 #' x=list(a=1, b=mtcars)

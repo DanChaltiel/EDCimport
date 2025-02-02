@@ -12,9 +12,10 @@
 #' lk
 #' lk %>% tidyr::unnest(c(names, labels))  
 #' 
-#' @export
 #' @seealso [extend_lookup()], [edc_lookup()]
 #' 
+#' @noRd
+#' @keywords internal
 #' @importFrom cli cli_abort
 #' @importFrom dplyr arrange lst mutate
 #' @importFrom purrr discard_at map map_dbl
@@ -145,8 +146,8 @@ get_lookup = deprecatedly(edc_lookup, what="get_lookup()", when="0.5.0")
 #' @inheritParams read_all_xpt
 #'
 #' @return the lookup, extended
-#' @export
-#' @seealso [build_lookup()], [edc_lookup()]
+#' @noRd
+#' @keywords internal
 #' 
 #' @importFrom cli cli_abort cli_warn
 #' @importFrom dplyr arrange desc filter if_else last_col mutate relocate select

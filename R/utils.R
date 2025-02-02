@@ -175,13 +175,15 @@ cli_menu <- function(prompt, not_interactive, choices, quit = integer(), .envir 
 }
 
 
+#' Allow using tidyselect to select members of a list
+#' Still a bit limited
 #' @noRd
 #' @keywords internal
-#' @source ChatGPT
-checksum = function(object) {
-  raw_data = serialize(object, NULL)
-  sum(as.integer(raw_data)) %% 2^32 #CRC32-like checksum
+list_select = function(x, ...){
+  nm = x %>% map(~1) %>% bind_cols() %>% select(...) %>% names()
+  x[nm]
 }
+
 
 # Parse zip name ------------------------------------------------------------------------------
 
