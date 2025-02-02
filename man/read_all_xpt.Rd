@@ -10,7 +10,6 @@ read_all_xpt(
   ...,
   format_file = "procformat.sas",
   clean_names_fun = NULL,
-  split_mixed = FALSE,
   extend_lookup = TRUE,
   datetime_extraction = "guess",
   subdirectories = FALSE,
@@ -27,8 +26,6 @@ read_all_xpt(
 \item{format_file}{[\code{character(1)}]\cr the path to the file that should be used to apply formats. See details. Use \code{NULL} to not apply formats.}
 
 \item{clean_names_fun}{[\code{function}]\cr a function to clean column names, e.g. \link{tolower}, \code{\link[janitor:clean_names]{janitor::clean_names()}},...}
-
-\item{split_mixed}{[\code{logical(1): FALSE}]\cr whether to split mixed datasets. See \link{split_mixed_datasets}.}
 
 \item{extend_lookup}{[\code{character(1): FALSE}]\cr whether to enrich the lookup table. See \link{extend_lookup}.}
 

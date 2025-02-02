@@ -22,7 +22,6 @@
 #' @importFrom utils object.size packageVersion
 read_trialmaster = function(archive, ..., use_cache="write", 
                             clean_names_fun=NULL,
-                            split_mixed=FALSE,
                             extend_lookup=TRUE,
                             subdirectories=FALSE,
                             pw=getOption("trialmaster_pw"), 
@@ -41,19 +40,19 @@ read_trialmaster = function(archive, ..., use_cache="write",
   cache_outdated = FALSE
   
   if(read_from_cache){
-    rtn = .read_tm_cache(cache_file, split_mixed, clean_names_fun, verbose) %>% 
+    rtn = .read_tm_cache(cache_file, clean_names_fun, verbose) %>% 
       structure(source="cache")
     cache_version = attr(rtn$.lookup, "EDCimport_version")
     cache_outdated = packageVersion("EDCimport") > cache_version
     if(cache_outdated){
-      cli_inform(c(i="Updating cache with latest EDCimport version ({cache_version} 
-                   to {packageVersion('EDCimport')})"))
+      cli_inform(c(i="Updating cache with latest {.pkg EDCimport} version
+                      (v{cache_version} to v{packageVersion('EDCimport')})"))
     }
   }
   
   if(!read_from_cache || cache_outdated){
     rtn = .read_tm_zip(archive=archive, pw=pw, extract_datetime=extract_datetime,
-                       clean_names_fun=clean_names_fun, split_mixed=split_mixed, 
+                       clean_names_fun=clean_names_fun, 
                        extend_lookup=extend_lookup, key_columns=key_columns, 
                        subdirectories=subdirectories, use_cache=use_cache, 
                        cache_file=cache_file, verbose=verbose) %>% 
@@ -90,14 +89,15 @@ read_trialmaster = function(archive, ..., use_cache="write",
 #' @noRd
 #' @keywords internal
 #' @importFrom cli cli_abort cli_inform
-.read_tm_cache <- function(cache_file, split_mixed, clean_names_fun, verbose) {
+.read_tm_cache <- function(cache_file, clean_names_fun, verbose) {
   if(verbose>0) cli_inform("Reading cache: {.file {cache_file}}", class="read_tm_cache")
   rtn = readRDS(cache_file)
   lookup_verbose = TRUE
   
   #TODO utiliser .lookup pour faire la comparaison
   a = rtn$.lookup %>% attr("split_mixed") %>% 
-    identical(split_mixed)
+    identical(FALSE)
+  a=TRUE
   b = rtn$.lookup %>% attr("clean_names_fun") %>% 
     identical(.get_clean_names_fun(clean_names_fun), ignore.bytecode=TRUE)
   if(!a || !b){
@@ -117,7 +117,7 @@ read_trialmaster = function(archive, ..., use_cache="write",
 #' @importFrom cli cli_inform cli_warn
 #' @importFrom fs dir_create file_exists path path_temp
 #' @importFrom stringr str_remove
-.read_tm_zip <- function(archive, pw, extract_datetime, clean_names_fun, split_mixed,
+.read_tm_zip <- function(archive, pw, extract_datetime, clean_names_fun, 
                          extend_lookup, key_columns, subdirectories, use_cache, cache_file, 
                          verbose) {
   
@@ -136,7 +136,6 @@ read_trialmaster = function(archive, ..., use_cache="write",
   }
   rtn = read_all_xpt(temp_folder, format_file=format_file, 
                      clean_names_fun=clean_names_fun, 
-                     split_mixed=split_mixed,
                      extend_lookup=extend_lookup,
                      key_columns=key_columns,
                      subdirectories=subdirectories,

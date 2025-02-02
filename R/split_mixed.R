@@ -65,44 +65,76 @@ table_format = function(df, id=get_subjid_cols(), ...,
   mean_nval
 }
 
-
 #' Split mixed datasets
 #' 
 #' Split mixed tables, i.e. tables that hold both long data (N values per patient) and short data (one value per patient, duplicated on N lines), into one long table and one short table.
 #'
-#' @param datasets a dataframe or a list of dataframes to split. Default to all the datasets from `.lookup`.
-#' @param id the patient identifier, probably "subjid". Should be shared by all datasets. Case-insensitive.
-#' @param ignore_cols columns to ignore when considering a table as long. Default to `getOption("edc_cols_crfname", "CRFNAME")`. Case-insensitive.
-#' @param output_code whether to print the code to explicitly write. Can also be a file path.
+#' @param database an [edc_database] object, from [read_trialmaster()] or other EDCimport reading functions.
+#' @param ignore_cols columns to ignore in long tables. Default to `getOption("edc_cols_crfname", "CRFNAME")`. Case-insensitive. Avoid splitting tables for useless columns.
 #' @param verbose whether to print informations about the process.
-#' @param ... not used
+#' @param ... not used, ensure arguments are named
 #'
-#' @return a list of the new long and short tables. Use [load_list()] to load them into the global environment.
+#' @return an [edc_database] object
 #' @export
+#' @importFrom cli cli_abort cli_warn
+#' @importFrom dplyr setdiff
+#' @importFrom purrr keep_at map_lgl
+#'
+#' @examples
+#' #tm = read_trialmaster("filename.zip", pw="xx")
+#' tm = edc_example() %>% 
+#'   edc_split_mixed(ae, starts_with("long"))
+#'   
+#' names(tm)
+#' edc_lookup()
+#' 
+#' print(tm$ae) #`aesoc`, `aegr`, and `sae` are long, but `n_ae` is short
+#' 
+#' print(tm$ae_short) 
+#' print(tm$ae_long)
+edc_split_mixed = function(database, datasets=everything(), 
+                           ...,
+                           ignore_cols=NULL, 
+                           verbose=FALSE){
+  check_dots_empty()
+  .lookup = database$.lookup
+  patient_id = get_subjid_cols(lookup=.lookup)
+ 
+  if(is.null(ignore_cols)){
+    ignore_cols = c(get_crfname_cols(lookup=.lookup), 
+                    get_meta_cols(lookup=.lookup, min_pct=0.95))
+  }
+  
+  db_mixed = database %>% 
+    keep(is.data.frame) %>% 
+    discard_at(".lookup") %>% 
+    list_select({{datasets}}) %>% 
+    split_mixed_datasets(id=patient_id, verbose=verbose, 
+                         ignore_cols=ignore_cols, output_code=FALSE)
+  
+  if(length(db_mixed)==0){
+    split_mixed_names = as_label(enquo(datasets))
+    cli_abort("Dataset{?s} {.val {split_mixed_names}} are not mixed 
+                 (either short or long) and cannot be splitted.", 
+             class="edc_read_cannot_split_mixed_warn")
+  }
+  database = c(database, db_mixed)
+
+  database$.lookup = database %>% build_lookup() %>% extend_lookup(datasets=database)
+  .set_lookup(database$.lookup)
+  
+  
+  database
+}
+
+#' @noRd
+#' @keywords internal
 #' @importFrom cli cli_bullets cli_warn
 #' @importFrom dplyr across all_of everything group_by lst select summarise summarise_all ungroup
 #' @importFrom glue glue
 #' @importFrom purrr discard discard_at imap keep list_flatten map_chr
 #' @importFrom rlang check_dots_empty
 #' @importFrom utils head
-#'
-#' @examples
-#' #tm = read_trialmaster("filename.zip", pw="xx")
-#' tm = edc_example()
-#' names(tm)
-#' #load_list(tm)
-#' print(tm$long_mixed) #`val1` and `val2` are long but `val3` is short
-#' 
-#' mixed_data = split_mixed_datasets(tm, id="subjid", verbose=TRUE)
-#' load_list(mixed_data)
-#' print(long_mixed_short) 
-#' print(long_mixed_long) 
-#' 
-#' #alternatively, get the code and only use the datasets you need
-#' split_mixed_datasets(tm, id="subjid", output_code=TRUE)
-#' filename = tempfile("mixed_code", fileext=".R")
-#' split_mixed_datasets(tm, id="subjid", output_code=filename)
-#' readLines(filename)
 split_mixed_datasets = function(datasets=get_datasets(), id=get_subjid_cols(), ..., 
                                 ignore_cols=get_meta_cols(min_pct=0.95), 
                                 output_code=FALSE,
@@ -112,6 +144,13 @@ split_mixed_datasets = function(datasets=get_datasets(), id=get_subjid_cols(), .
   override_ignore_cols = options("edc_override_ignore_cols")[[1]]
   if(!is.null(override_ignore_cols)) ignore_cols = override_ignore_cols
   datasets = datasets %>% keep(is.data.frame) %>% discard_at(".lookup")
+
+  id_found = map_lgl(datasets, ~any(tolower(id) %in% tolower(names(.x))))
+  if(!any(id_found)){
+    cli_abort("Patient ID column {.val {id}} was not found in any of 
+              {.arg datasets} ( {.val {names(mixed)}}).",
+              class="edc_subjid_not_found")
+  }
   
   dataset_mean_nval = datasets %>%
     imap( ~ {

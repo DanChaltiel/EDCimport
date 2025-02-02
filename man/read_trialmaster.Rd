@@ -9,7 +9,6 @@ read_trialmaster(
   ...,
   use_cache = "write",
   clean_names_fun = NULL,
-  split_mixed = FALSE,
   extend_lookup = TRUE,
   subdirectories = FALSE,
   pw = getOption("trialmaster_pw"),
@@ -25,8 +24,6 @@ read_trialmaster(
 \item{use_cache}{[\code{mixed(1)}: "write"]\cr controls the \code{.rds} cache. If \code{TRUE}, read the cache if any or extract the archive and create a cache. If \code{FALSE} extract the archive without creating a cache file. Can also be \code{"read"} or \code{"write"}.}
 
 \item{clean_names_fun}{[\code{function}]\cr a function to clean column names, e.g. \link{tolower}, \code{\link[janitor:clean_names]{janitor::clean_names()}},...}
-
-\item{split_mixed}{[\code{logical(1): FALSE}]\cr whether to split mixed datasets. See \link{split_mixed_datasets}.}
 
 \item{extend_lookup}{[\code{character(1): FALSE}]\cr whether to enrich the lookup table. See \link{extend_lookup}.}
 
