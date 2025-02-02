@@ -634,9 +634,9 @@ get_crfname_cols = function(lookup=edc_lookup()){
 #' meta_cols = get_meta_cols()
 #' long_mixed %>% dplyr::select(-dplyr::any_of(meta_cols))
 #' @importFrom dplyr filter pull setdiff
-get_meta_cols = function(min_pct = getOption("edc_meta_cols_pct", 0.95)){
-  a = get_common_cols(min_datasets=0)
-  subjid_cols = get_subjid_cols()
+get_meta_cols = function(lookup=edc_lookup(), min_pct = getOption("edc_meta_cols_pct", 0.95)){
+  a = get_common_cols(lookup=edc_lookup(), min_datasets=0)
+  subjid_cols = get_subjid_cols(lookup=edc_lookup())
   a %>% filter(pct_datasets>min_pct) %>% pull(column) %>% setdiff(subjid_cols)
 }
 
