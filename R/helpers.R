@@ -273,7 +273,7 @@ save_sessioninfo = function(path="check/session_info.txt", with_date=TRUE){
 #' db = harmonize_subjid(db, preprocess=function(x) paste0("#", x))
 #' db$enrol$subjid %>% head()
 harmonize_subjid = function(database, preprocess=NULL, col_subjid=NULL){
-  if(is.null(col_subjid)) col_subjid=get_subjid_cols()
+  if(is.null(col_subjid)) col_subjid=get_subjid_cols(database$.lookup)
   
   all_subjid = database %>% 
     keep(is.data.frame) %>% 
