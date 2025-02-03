@@ -55,7 +55,7 @@ mean(dataset1$column5)
 
 ### Database management tools
 
-`EDCimport` include a set of useful tools that help with using the imported database. See [References](https://danchaltiel.github.io/EDCimport/reference/index.html) for a complete list.
+`EDCimport` includes a set of useful tools that help with using the imported database. See [References](https://danchaltiel.github.io/EDCimport/reference/index.html) for a complete list.
 
 #### Database summary
 
@@ -70,22 +70,22 @@ For instance, say you are looking for the "date of ECG" but don't know where it 
 
 It won't look into the actual data, though, as this would take too much computing power.
 
-### Swimmer Plot
+#### Swimmer Plot
 
 `edc_swimmerplot()` creates a swimmer plot of **all date variables** of the whole database. 
 This is very useful to find inconsistencies and outliers, especially with the `plotly` interactive output.
 
-### Data checking system
+#### Data checking system
 
 `edc_data_warn()` throws a warning if an inconsistency is found in a dataset. The interface allows
 to perform multiple checks and get a report as a CSV file.
 
-### Join helpers
+#### Join helpers
 
 As the primary key is almost always the Subject ID, join helpers were added to reduce code clutter. 
 Currently, only `edc_left_join()`, `edc_right_join()`, and `edc_full_join()` are supported.
 
-### Shiny browser
+#### Shiny browser
 
 `edc_viewer()` runs a shiny application that browses the whole database. The HTML interface is quicker 
-and less cluttered than it would be in RStudio. It also allows to filter by Subject ID.
+and less cluttered than it would be in RStudio. It also allows filtering by Subject ID.
