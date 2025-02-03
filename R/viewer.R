@@ -182,6 +182,7 @@ edc_viewer_server = function(datasets, lookup) {
 #' @importFrom rlang check_installed
 #' @importFrom utils browseURL
 edc_viewer = function(background=TRUE){
+  check_installed(c("DT", "bslib", "shiny"), "for `edc_viewer()` to work.")
   lookup = edc_lookup(dataset)
   datasets = get_datasets(lookup)
   
