@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9018</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9019</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,7 +84,7 @@
 <div class="section level3">
 <h3 id="database-management-tools">Database management tools<a class="anchor" aria-label="anchor" href="#database-management-tools"></a>
 </h3>
-<p><code>EDCimport</code> include a set of useful tools that help with using the imported database. See <a href="https://danchaltiel.github.io/EDCimport/reference/index.html">References</a> for a complete list.</p>
+<p><code>EDCimport</code> includes a set of useful tools that help with using the imported database. See <a href="https://danchaltiel.github.io/EDCimport/reference/index.html">References</a> for a complete list.</p>
 <div class="section level4">
 <h4 id="database-summary">Database summary<a class="anchor" aria-label="anchor" href="#database-summary"></a>
 </h4>
@@ -97,26 +97,26 @@
 <p>For instance, say you are looking for the “date of ECG” but don’t know where it is, you can run <code>find_keyword("date")</code> or <code>find_keyword("ecg")</code>.</p>
 <p>It won’t look into the actual data, though, as this would take too much computing power.</p>
 </div>
-</div>
-<div class="section level3">
-<h3 id="swimmer-plot">Swimmer Plot<a class="anchor" aria-label="anchor" href="#swimmer-plot"></a>
-</h3>
+<div class="section level4">
+<h4 id="swimmer-plot">Swimmer Plot<a class="anchor" aria-label="anchor" href="#swimmer-plot"></a>
+</h4>
 <p><code><a href="reference/edc_swimmerplot.html">edc_swimmerplot()</a></code> creates a swimmer plot of <strong>all date variables</strong> of the whole database. This is very useful to find inconsistencies and outliers, especially with the <code>plotly</code> interactive output.</p>
 </div>
-<div class="section level3">
-<h3 id="data-checking-system">Data checking system<a class="anchor" aria-label="anchor" href="#data-checking-system"></a>
-</h3>
+<div class="section level4">
+<h4 id="data-checking-system">Data checking system<a class="anchor" aria-label="anchor" href="#data-checking-system"></a>
+</h4>
 <p><code><a href="reference/edc_data_warn.html">edc_data_warn()</a></code> throws a warning if an inconsistency is found in a dataset. The interface allows to perform multiple checks and get a report as a CSV file.</p>
 </div>
-<div class="section level3">
-<h3 id="join-helpers">Join helpers<a class="anchor" aria-label="anchor" href="#join-helpers"></a>
-</h3>
+<div class="section level4">
+<h4 id="join-helpers">Join helpers<a class="anchor" aria-label="anchor" href="#join-helpers"></a>
+</h4>
 <p>As the primary key is almost always the Subject ID, join helpers were added to reduce code clutter. Currently, only <code><a href="reference/edc_left_join.html">edc_left_join()</a></code>, <code><a href="reference/edc_left_join.html">edc_right_join()</a></code>, and <code><a href="reference/edc_left_join.html">edc_full_join()</a></code> are supported.</p>
 </div>
-<div class="section level3">
-<h3 id="shiny-browser">Shiny browser<a class="anchor" aria-label="anchor" href="#shiny-browser"></a>
-</h3>
-<p><code><a href="reference/edc_viewer.html">edc_viewer()</a></code> runs a shiny application that browses the whole database. The HTML interface is quicker and less cluttered than it would be in RStudio. It also allows to filter by Subject ID.</p>
+<div class="section level4">
+<h4 id="shiny-browser">Shiny browser<a class="anchor" aria-label="anchor" href="#shiny-browser"></a>
+</h4>
+<p><code><a href="reference/edc_viewer.html">edc_viewer()</a></code> runs a shiny application that browses the whole database. The HTML interface is quicker and less cluttered than it would be in RStudio. It also allows filtering by Subject ID.</p>
+</div>
 </div>
 </div>
 </div>
