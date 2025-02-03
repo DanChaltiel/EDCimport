@@ -4,16 +4,16 @@ edc_options(edc_lookup_overwrite_warn=FALSE)
 
 
 test_that("Split mixed", {
-  tm = edc_example(N=100) 
+  db = edc_example(N=100) 
   
   #all datasets
-  mixed_data_all = edc_split_mixed(tm, verbose=FALSE)
+  mixed_data_all = edc_split_mixed(db, verbose=FALSE)
   expect_equal(edc_lookup(dataset)$dataset,
                c("ae", "ae_long", "ae_short", "db1", "db2", "db3", "enrol", "long_mixed",
                  "long_mixed_long", "long_mixed_short", "long_pure", "short"))
   
   #tidyselection
-  mixed_data = edc_split_mixed(tm, c(short, "enrol", starts_with("long")), verbose=FALSE)
+  mixed_data = edc_split_mixed(db, c(short, "enrol", starts_with("long")), verbose=FALSE)
   
   expect_equal(edc_lookup(dataset)$dataset,
                c("ae", "db1", "db2", "db3", "enrol", "long_mixed", "long_mixed_long", 

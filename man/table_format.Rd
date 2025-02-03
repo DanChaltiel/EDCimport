@@ -36,5 +36,5 @@ If a dataframe has some wide and long columns, it is considered "mixed".
 }
 \examples{
 db = edc_example()
-sapply(tm, table_format, warn=FALSE) 
+sapply(db, table_format, warn=FALSE) 
 }
