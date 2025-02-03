@@ -2,6 +2,7 @@
 % Please edit documentation in R/helpers.R
 \name{load_database}
 \alias{load_database}
+\alias{load_list}
 \title{Load a list in an environment}
 \usage{
 load_database(db, env = parent.frame(), remove = TRUE)

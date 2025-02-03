@@ -747,6 +747,11 @@ load_database = function(db, env=parent.frame(), remove=TRUE){
       remove(list=x_name, envir=parent.frame())
   }
 }
+
+
+#' @rdname load_database
+#' @usage NULL
+#' @export
 load_list = deprecatedly(load_database, what="load_list()", when="0.6.0")
 
 
