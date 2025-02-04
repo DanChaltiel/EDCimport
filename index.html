@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9020</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9021</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,7 +48,8 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="edcimport">EDCimport<a class="anchor" aria-label="anchor" href="#edcimport"></a>
+<div class="page-header"><h1 id="edcimport-">EDCimport <a href="https://DanChaltiel.github.io/EDCimport/" class="external-link"><img src="inst/figures/logo.png" align="right" height="175"></a>
+<a class="anchor" aria-label="anchor" href="#edcimport-"></a>
 </h1></div>
 <!-- badges: start -->
 
@@ -77,14 +78,14 @@
 <p>You can now use <code><a href="reference/load_database.html">load_database()</a></code> to import the list in the global environment and use your tables:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DanChaltiel/EDCimport" class="external-link">EDCimport</a></span><span class="op">)</span></span>
-<span><span class="va">db</span> <span class="op">=</span> <span class="fu"><a href="reference/read_all_sas.html">read_all_sas</a></span><span class="op">(</span><span class="st">"path/to/my/files/"</span><span class="op">)</span></span>
+<span><span class="va">db</span> <span class="op">=</span> <span class="fu"><a href="reference/read_all_sas.html">read_all_sas</a></span><span class="op">(</span><span class="st">"path/to/my/files/folder"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/load_database.html">load_database</a></span><span class="op">(</span><span class="va">db</span><span class="op">)</span> <span class="co">#this also removes `db` to save some RAM</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">dataset1</span><span class="op">$</span><span class="va">column5</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="database-management-tools">Database management tools<a class="anchor" aria-label="anchor" href="#database-management-tools"></a>
 </h3>
-<p><code>EDCimport</code> includes a set of useful tools that help with using the imported database. See <a href="https://danchaltiel.github.io/EDCimport/reference/index.html">References</a> for a complete list.</p>
+<p><code>EDCimport</code> includes a set of useful tools that help with using the imported database. See <a href="https://danchaltiel.github.io/EDCimport/reference/index.html">References</a> for the complete list.</p>
 <div class="section level4">
 <h4 id="database-summary">Database summary<a class="anchor" aria-label="anchor" href="#database-summary"></a>
 </h4>
@@ -98,9 +99,10 @@
 <p>It won’t look into the actual data, though, as this would take too much computing power.</p>
 </div>
 <div class="section level4">
-<h4 id="swimmer-plot">Swimmer Plot<a class="anchor" aria-label="anchor" href="#swimmer-plot"></a>
+<h4 id="get-the-last-news-date-of-each-subject">Get the last news date of each subject<a class="anchor" aria-label="anchor" href="#get-the-last-news-date-of-each-subject"></a>
 </h4>
-<p><code><a href="reference/edc_swimmerplot.html">edc_swimmerplot()</a></code> creates a swimmer plot of <strong>all date variables</strong> of the whole database. This is very useful to find inconsistencies and outliers, especially with the <code>plotly</code> interactive output.</p>
+<p><code><a href="reference/lastnews_table.html">lastnews_table()</a></code> finds the last date of each subject throughout the whole database and inform on the date original dataset and column. It has arguments to avoid selecting irrelevant dates.</p>
+<p>This is very useful to get the actual followup time when fitting survival analyses.</p>
 </div>
 <div class="section level4">
 <h4 id="data-checking-system">Data checking system<a class="anchor" aria-label="anchor" href="#data-checking-system"></a>
@@ -116,6 +118,11 @@
 <h4 id="shiny-browser">Shiny browser<a class="anchor" aria-label="anchor" href="#shiny-browser"></a>
 </h4>
 <p><code><a href="reference/edc_viewer.html">edc_viewer()</a></code> runs a shiny application that browses the whole database. The HTML interface is quicker and less cluttered than it would be in RStudio. It also allows filtering by Subject ID.</p>
+</div>
+<div class="section level4">
+<h4 id="swimmer-plot">Swimmer Plot<a class="anchor" aria-label="anchor" href="#swimmer-plot"></a>
+</h4>
+<p><code><a href="reference/edc_swimmerplot.html">edc_swimmerplot()</a></code> creates a swimmer plot of <strong>all date variables</strong> of the whole database. This is very useful to find inconsistencies and outliers, especially with the <code>plotly</code> interactive output.</p>
 </div>
 </div>
 </div>
