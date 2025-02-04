@@ -21,7 +21,7 @@ Save a plotly to an HTML file
 }
 \examples{
 \dontrun{
-db = edc_example_plot()
+db = edc_example()
 p = edc_swimmerplot(db$.lookup, id_lim=c(5,45))
 save_plotly(p, "graph/swimplots/edc_swimmerplot.html", title="My Swimmerplot")
 }
