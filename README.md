@@ -1,5 +1,4 @@
-# EDCimport
-
+# EDCimport <a href='https://DanChaltiel.github.io/EDCimport/'><img src='inst/figures/logo.png' align="right" height="175" /></a>
 <!-- badges: start -->
 
 [![Package-License](http://img.shields.io/badge/license-GPL--3-brightgreen.svg?style=flat)](http://www.gnu.org/licenses/gpl-3.0.html) 
@@ -48,14 +47,14 @@ You can now use `load_database()` to import the list in the global environment a
 
 ``` r
 library(EDCimport)
-db = read_all_sas("path/to/my/files/")
+db = read_all_sas("path/to/my/files/folder")
 load_database(db) #this also removes `db` to save some RAM
 mean(dataset1$column5)
 ```
 
 ### Database management tools
 
-`EDCimport` includes a set of useful tools that help with using the imported database. See [References](https://danchaltiel.github.io/EDCimport/reference/index.html) for a complete list.
+`EDCimport` includes a set of useful tools that help with using the imported database. See [References](https://danchaltiel.github.io/EDCimport/reference/index.html) for the complete list.
 
 #### Database summary
 
@@ -70,10 +69,12 @@ For instance, say you are looking for the "date of ECG" but don't know where it 
 
 It won't look into the actual data, though, as this would take too much computing power.
 
-#### Swimmer Plot
+#### Get the last news date of each subject
 
-`edc_swimmerplot()` creates a swimmer plot of **all date variables** of the whole database. 
-This is very useful to find inconsistencies and outliers, especially with the `plotly` interactive output.
+`lastnews_table()` finds the last date of each subject throughout the whole database and inform on
+the date original dataset and column. It has arguments to avoid selecting irrelevant dates.
+
+This is very useful to get the actual followup time when fitting survival analyses.
 
 #### Data checking system
 
@@ -89,3 +90,8 @@ Currently, only `edc_left_join()`, `edc_right_join()`, and `edc_full_join()` are
 
 `edc_viewer()` runs a shiny application that browses the whole database. The HTML interface is quicker 
 and less cluttered than it would be in RStudio. It also allows filtering by Subject ID.
+
+#### Swimmer Plot
+
+`edc_swimmerplot()` creates a swimmer plot of **all date variables** of the whole database. 
+This is very useful to find inconsistencies and outliers, especially with the `plotly` interactive output.
