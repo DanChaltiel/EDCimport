@@ -266,7 +266,8 @@ parse_var = function(input, id, env){
 #' @examples
 #' \dontrun{
 #' db = edc_example()
-#' p = edc_swimmerplot(db$.lookup, id_lim=c(5,45))
+#' load_database(db)
+#' p = edc_swimmerplot(id_lim=c(5,45))
 #' save_plotly(p, "graph/swimplots/edc_swimmerplot.html", title="My Swimmerplot")
 #' }
 #' @importFrom fs dir_create path_dir
@@ -275,6 +276,7 @@ save_plotly = function(p, file, ...){
   check_installed("plotly", reason="for `save_plotly()` to work.")
   check_installed("htmlwidgets", reason="for `save_plotly()` to work.")
   if(inherits(p, "ggplot")) p = plotly::ggplotly(p)
+  if(!str_ends(file, "\\.html")) abort('File name should end in ".html"')
   dir_create(path_dir(file), recurse=TRUE)
   wd = setwd(path_dir(file))
   on.exit(setwd(wd))
