@@ -123,7 +123,7 @@ edc_split_mixed = function(database, datasets=everything(),
   database = c(database, db_mixed)
 
   database$.lookup = database %>% build_lookup() %>% extend_lookup(datasets=database)
-  .set_lookup(database$.lookup)
+  .set_lookup(database$.lookup, verbose=FALSE)
   
   
   database
