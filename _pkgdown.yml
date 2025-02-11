@@ -26,15 +26,17 @@ reference:
   - load_database
   - edc_database
   - edc_lookup
+- title: "Modifying databases"
+- contents:
+  - harmonize_subjid
+  - edc_split_mixed
+  - edc_clean_names
 - title: "Checking databases"
 - contents:
   - edc_data_warn
   - assert_no_duplicate
   - edc_warn_patient_diffs
   - edc_warn_extraction_date
-  - edc_crf_plot
-  - edc_patient_gridplot
-  - edc_population_plot
 - title: "Project management"
 - contents:
   - edc_inform_code
@@ -55,6 +57,9 @@ reference:
 - title: "Graphics"
 - contents:
   - edc_swimmerplot
+  - edc_crf_plot
+  - edc_patient_gridplot
+  - edc_population_plot
 - title: "Helpers"
 - contents:
   - unify
@@ -62,9 +67,7 @@ reference:
   - table_format
   - save_plotly
   - select_distinct
-  - harmonize_subjid
   - get_datasets
-  - edc_split_mixed
   - edc_left_join
 - title: "Examples"
 - contents:

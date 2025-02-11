@@ -9,6 +9,8 @@
 #' 
 #' @param database an [edc_database] object, from [read_trialmaster()] or other EDCimport reading functions.
 #' @return an [edc_database] object
+#' 
+#' @importFrom dplyr rename_with
 #' @export
 #' 
 #' @examples
