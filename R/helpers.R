@@ -752,7 +752,10 @@ load_database = function(db, env=parent.frame(), remove=TRUE){
 #' @rdname load_database
 #' @usage NULL
 #' @export
-load_list = deprecatedly(load_database, what="load_list()", when="0.6.0")
+load_list = function(db, env=parent.frame(), remove=TRUE){
+  deprecate_warn(when="0.6.0", what="load_list()", with="load_database()")
+  load_database(db, env, remove)
+}
 
 
 
