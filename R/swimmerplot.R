@@ -95,6 +95,7 @@ edc_swimmerplot = function(...,
   p = dat %>% 
     ggplot(aes(x=!!sym(aes_x), y=id, group=id, date=date)) + 
     aes(color=!!sym(aes_color), label=!!sym(aes_label)) +
+    .get_scale_color(n_levels=n_distinct(dat$variable)) +
     geom_line(na.rm=TRUE) +
     geom_point(na.rm=TRUE) +
     labs(x=x_label, y="Patient", color="Variable")
@@ -210,6 +211,14 @@ edc_swimmerplot = function(...,
     }
   }
   data
+}
+
+#' @importFrom dplyr n_distinct
+.get_scale_color = function(n_levels){
+  rtn = getOption("ggplot2.discrete.colour", default=ggplot2::scale_colour_hue)()
+  chk = suppressWarnings(rtn$palette(n_levels))
+  if(any(is.na(chk))) rtn = ggplot2::scale_colour_hue()
+  rtn
 }
 
 #' @importFrom cli cli_abort
