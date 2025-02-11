@@ -14,7 +14,7 @@ edc_crf_plot(
   ...,
   details = FALSE,
   pal = edc_pal_crf(),
-  crfstat_lvls = names(pal),
+  reverse = FALSE,
   x_label = "{dataset}",
   treat_as_worst = NULL
 )
@@ -28,13 +28,13 @@ edc_pal_crf()
 
 \item{details}{whether to show all the CRF status levels. When \code{FALSE} (default), recode the status into "Complete", "Incomplete", or "No Data".}
 
-\item{pal}{the palette, defaulting to the helper \code{EDCimport:::edc_pal_crf()}}
+\item{pal}{the palette, defaulting to the helper \code{EDCimport:::edc_pal_crf()}. The names give the CRF status levels, from "best" to "worst". The plot is ordered by the "worst" level.}
 
-\item{crfstat_lvls}{the CRF status levels, from "best" to "worst". The plot is ordered by the "worst" level.}
+\item{reverse}{whether to reverse the CRF status level order.}
 
-\item{x_label}{a glue pattern determining the tick label in the x axis. Available variables are \code{c("nrow", "ncol", "n_id", "rows_per_id", "crfname")}, taken from \code{\link[=edc_lookup]{edc_lookup()}}.}
+\item{x_label}{a glue pattern determining the tick label in the x axis. Available variables are the ones of \code{\link[=edc_lookup]{edc_lookup()}}: \code{c("dataset", "nrow", "ncol", "n_id", "rows_per_id", "crfname")}.}
 
-\item{treat_as_worst}{a regex for levels that should be treated as worst in the ordering}
+\item{treat_as_worst}{a regex for levels that should be treated as worst in the ordering.}
 }
 \value{
 a ggplot
@@ -46,7 +46,7 @@ Generate a barplot showing the distribution of CRF status (Complete, Incomplete,
 \dontrun{
 #import a TM database and use load_database(), then:
 edc_crf_plot() + ggtitle(date_extraction)
-edc_crf_plot(pal=rev(edc_pal_crf()))
+edc_crf_plot(reverse=TRUE)
 edc_crf_plot(details=TRUE, treat_as_worst="No Data")
 edc_crf_plot(x_label="{crfname} (N={n_id}, n={nrow})")
 

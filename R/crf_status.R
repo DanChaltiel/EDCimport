@@ -6,11 +6,11 @@
 #' Generate a barplot showing the distribution of CRF status (Complete, Incomplete, ...) for each dataset of the database.
 #'
 #' @param crfstat_col the column name of the CRF status 
-#' @param pal the palette, defaulting to the helper `EDCimport:::edc_pal_crf()`
 #' @param details whether to show all the CRF status levels. When `FALSE` (default), recode the status into "Complete", "Incomplete", or "No Data".
-#' @param crfstat_lvls the CRF status levels, from "best" to "worst". The plot is ordered by the "worst" level. 
-#' @param x_label a glue pattern determining the tick label in the x axis. Available variables are `c("nrow", "ncol", "n_id", "rows_per_id", "crfname")`, taken from [edc_lookup()].
-#' @param treat_as_worst a regex for levels that should be treated as worst in the ordering
+#' @param pal the palette, defaulting to the helper `EDCimport:::edc_pal_crf()`. The names give the CRF status levels, from "best" to "worst". The plot is ordered by the "worst" level. 
+#' @param reverse whether to reverse the CRF status level order. 
+#' @param x_label a glue pattern determining the tick label in the x axis. Available variables are the ones of [edc_lookup()]: `c("dataset", "nrow", "ncol", "n_id", "rows_per_id", "crfname")`.
+#' @param treat_as_worst a regex for levels that should be treated as worst in the ordering.
 #' @param ... unused
 #'
 #' @return a ggplot
@@ -20,7 +20,7 @@
 #' \dontrun{
 #' #import a TM database and use load_database(), then:
 #' edc_crf_plot() + ggtitle(date_extraction)
-#' edc_crf_plot(pal=rev(edc_pal_crf()))
+#' edc_crf_plot(reverse=TRUE)
 #' edc_crf_plot(details=TRUE, treat_as_worst="No Data")
 #' edc_crf_plot(x_label="{crfname} (N={n_id}, n={nrow})")
 #' 
@@ -39,17 +39,23 @@
 #' @importFrom stringr str_subset
 #' @importFrom tibble tibble
 edc_crf_plot = function(crfstat_col="CRFSTAT", 
-                           ..., 
-                           details=FALSE,
-                           pal = edc_pal_crf(), 
-                           crfstat_lvls = names(pal), 
-                           x_label = "{dataset}",
-                           treat_as_worst=NULL){
+                        ..., 
+                        details=FALSE,
+                        pal = edc_pal_crf(), 
+                        reverse = FALSE,
+                        x_label = "{dataset}",
+                        treat_as_worst=NULL){
   check_dots_empty()
   
-  completion_reorder = function(x,y) {
-    incomplete = last(crfstat_lvls)
-    if(!is.null(treat_as_worst)) incomplete = c(incomplete, str_subset(crfstat_lvls, treat_as_worst))
+  if(isTRUE(reverse)) pal = rev(pal)
+  crfstat_lvls = names(pal)
+  # print(crfstat_lvls)
+  
+  completion_reorder = function(x, y, which_lvl) {
+    incomplete = which_lvl(crfstat_lvls)
+    if(!is.null(treat_as_worst)) {
+      incomplete = c(incomplete, str_subset(crfstat_lvls, treat_as_worst))
+    }
     if(!any(x %in% incomplete)) return(0)
     sum(y[x %in% incomplete])/sum(y)
   }
@@ -65,9 +71,12 @@ edc_crf_plot = function(crfstat_col="CRFSTAT",
     left_join(edc_lookup(), by="dataset") %>% 
     mutate(
       crfstat = factor(crfstat, levels=crfstat_lvls) %>% fct_drop() %>% fct_rev(),
-      dataset = fct_reorder2(dataset, crfstat, n, #arrange by complete then by incomplete
-                             .fun=function(x,y) y[x=="Complete"]/sum(y)) %>% fct_rev(),
-      dataset = fct_reorder2(dataset, crfstat, n, .fun=completion_reorder)
+      #arrange by complete then by incomplete
+      # dataset = fct_reorder2(dataset, crfstat, n, 
+      #                        .fun=function(x,y) y[x=="Complete"]/sum(y)) %>% fct_rev(),
+      dataset = fct_reorder2(dataset, crfstat, n, .fun=completion_reorder, which_lvl=first) %>% 
+        fct_rev(),
+      dataset = fct_reorder2(dataset, crfstat, n, .fun=completion_reorder, which_lvl=last)
     ) %>% 
     arrange(dataset)
   
@@ -77,7 +86,8 @@ edc_crf_plot = function(crfstat_col="CRFSTAT",
     geom_col(position=position_fill(reverse=TRUE)) +
     scale_fill_manual(values=pal) +
     scale_x_continuous(labels=label_percent()) +
-    labs(x=NULL, y="Dataset", fill="CRF Status")
+    labs(x=NULL, y="Dataset", fill="CRF Status") +
+    theme_minimal()
 }
 
 #' @rdname edc_crf_plot
