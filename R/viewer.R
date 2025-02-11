@@ -29,10 +29,13 @@ edc_viewer_ui = function(datasets, lookup){
       width = 350,
       card(
         card_title("Subjects:", actionButton("reset_subjid", "Reset", style="padding:5px")),
-        selectInput("subjid_selected", label=NULL, choices=1, multiple=TRUE),
+        selectizeInput("subjid_selected", label=NULL, choices=1, multiple=TRUE,
+                       options = list("plugins"=list("remove_button"), 
+                                      "create"=TRUE, "persist"=FALSE)),
       ),
       card(
         card_title("Select a dataset:", container = shiny::h3),
+        checkboxInput("hide_filtered", "Hide empty tables"),
         DTOutput("input_table", fill = FALSE),
       )
     ),
@@ -84,7 +87,7 @@ edc_viewer_server = function(datasets, lookup) {
     })
     
     
-    #output: datatable header
+    #output: datatable header text
     output$dataset_name = renderText({
       if(is.null(dataset_selected())) return("Loading")
       a = lookup %>% filter(dataset==dataset_selected())
@@ -93,16 +96,25 @@ edc_viewer_server = function(datasets, lookup) {
       glue("Dataset selected: `{a$dataset}` ({a$nrow} x {a$ncol}) - {a$n_id} patients - {layout}")
     })
     
-    #output: datatable choice list
+    #output: sidebar data choice list
     output$input_table = renderDT({
       selected_subjid = input$subjid_selected
       red_rows = map_lgl(lookup$subjids, ~!any(selected_subjid %in% .x)) %>% which()
       grey_rows = which(lookup$crfname=="** Error in source file **")
+      
       if(length(selected_subjid)==0) red_rows = 0
       if(length(red_rows)==0) red_rows = 0
       if(length(grey_rows)==0) grey_rows = 0
       
-      lookup %>% 
+      n_filtered = length(red_rows) + length(grey_rows) 
+      updateCheckboxInput(session, "hide_filtered", 
+                          label=glue("Hide empty tables (N={n_filtered})"))
+      
+      if(isTRUE(input$hide_filtered) && length(selected_subjid)>0){
+        lookup = slice(lookup, -red_rows, -grey_rows)
+      }
+      
+      rtn = lookup %>% 
         select(dataset, nrow, ncol) %>% 
         as_tibble() %>% 
         datatable(
@@ -113,17 +125,23 @@ edc_viewer_server = function(datasets, lookup) {
             pageLength = 500,
             dom = "t"
           )
-        ) %>% 
-        formatStyle(
-          columns = 1:3,
-          color = styleRow(red_rows, "red"),
-          `white-space` = "nowrap",
-          `height` = "20px"
-        ) %>% 
-        formatStyle(
-          columns = 1:3,
-          color = styleRow(grey_rows, "grey")
-        )
+        ) 
+      
+      if(!isTRUE(input$hide_filtered)){
+        rtn = rtn %>% 
+          formatStyle(
+            columns = 1:3,
+            color = styleRow(red_rows, "red"),
+            `white-space` = "nowrap",
+            `height` = "20px"
+          ) %>% 
+          formatStyle(
+            columns = 1:3,
+            color = styleRow(grey_rows, "grey")
+          )
+      }
+      
+      rtn
     })
     
     #output: datatable body
