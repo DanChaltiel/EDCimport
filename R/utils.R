@@ -1,32 +1,4 @@
 
-
-
-#' Rudimentary function to clean the names
-#'
-#' Avoids a dependency to janitor.
-#'
-#' @param string a string to clean
-#' @param from the current encoding. passed on to [iconv()]. `""` is the current locale.
-#'
-#' @keywords internal
-#' @noRd
-#' @importFrom stringr str_remove_all
-#' @source janitor:::old_make_clean_names(), tweaked with iconv for accents
-#' @examples
-#' edc_make_clean_name("àccénts")
-edc_make_clean_name = function (string, from = "") {
-  old_names <- string
-  new_names <- old_names %>% gsub("'", "", .) %>% gsub("\"", "", .) %>% gsub("%", "percent", .) %>% 
-    gsub("^[ ]+", "", .) %>% make.names(.) %>% gsub("[.]+", "_", .) %>% gsub("[_]+", "_", .) %>% 
-    tolower(.) %>% gsub("_$", "", .) %>% iconv(from = from, to = "ASCII//TRANSLIT") %>% 
-    str_remove_all("[\r\n]")
-  dupe_count <- vapply(seq_along(new_names), function(i) {sum(new_names[i] == new_names[1:i])}, 
-                       integer(1))
-  new_names[dupe_count > 1] <- paste(new_names[dupe_count > 1], dupe_count[dupe_count > 1], sep = "_")
-  new_names
-}
-
-
 #' @noRd
 #' @keywords internal
 #' @source vctrs::`%0%`
