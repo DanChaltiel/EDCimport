@@ -21,15 +21,15 @@ test_that("lastnews_table() except", {
   load_database(db)
   
   #without regex
-  lnt1 = lastnews_table(except=c("db3", "db2$date4"))
-  lnt1b = lastnews_table(except=c("db3", "date4"), regex=TRUE)
+  lnt1 = lastnews_table(except=c("data3", "data2$date4"))
+  lnt1b = lastnews_table(except=c("data3", "date4"), regex=TRUE)
   expect_identical(lnt1, lnt1b)
-  expect_true(!any(lnt1$origin_data=="db3"))
+  expect_true(!any(lnt1$origin_data=="data3"))
   expect_true(!any(lnt1$origin_col=="date4"))
   
   #with regex
   lnt2 = lastnews_table(except=c("2", "d..e\\d$"), regex=TRUE)
-  expect_true(!any(lnt2$origin_data=="db2"))
+  expect_true(!any(lnt2$origin_data=="data2"))
   expect_true(all(lnt2$origin_col=="date10"))
 })
 
@@ -39,8 +39,8 @@ test_that("lastnews_table() prefer", {
   load_database(db)
   
   #without regex
-  lnt3 = lastnews_table(prefer=c("db2$date5", "db3"))
-  lnt3b = lastnews_table(prefer=c("date5", "db3"), regex=TRUE)
+  lnt3 = lastnews_table(prefer=c("data2$date5", "data3"))
+  lnt3b = lastnews_table(prefer=c("date5", "data3"), regex=TRUE)
   expect_identical(lnt3, lnt3b, ignore_attr=TRUE)
   expect_equal(lnt3$origin_col[1:3], c("date10", "date5", "date5"))
   

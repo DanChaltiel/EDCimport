@@ -9,14 +9,14 @@ test_that("Split mixed", {
   #all datasets
   mixed_data_all = edc_split_mixed(db, verbose=FALSE)
   expect_equal(edc_lookup(dataset)$dataset,
-               c("ae", "ae_long", "ae_short", "db1", "db2", "db3", "enrol", "long_mixed",
+               c("ae", "ae_long", "ae_short", "data1", "data2", "data3", "enrol", "long_mixed",
                  "long_mixed_long", "long_mixed_short", "long_pure", "short"))
   
   #tidyselection
   mixed_data = edc_split_mixed(db, c(short, "enrol", starts_with("long")), verbose=FALSE)
   
   expect_equal(edc_lookup(dataset)$dataset,
-               c("ae", "db1", "db2", "db3", "enrol", "long_mixed", "long_mixed_long", 
+               c("ae", "data1", "data2", "data3", "enrol", "long_mixed", "long_mixed_long", 
                  "long_mixed_short", "long_pure", "short"))
   expect_equal(nrow(mixed_data$long_mixed_short), 100)
   expect_equal(nrow(mixed_data$long_mixed_long), 200)

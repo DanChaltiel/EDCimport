@@ -48,29 +48,29 @@ edc_example_plot = edc_example
   set.seed(seed)
   start = ISOdate(2010, 04, 13, tz="CET")
   day = 3600*24
-  db = tibble(subjid=1:N, age=rnorm(N, 50, 10), date_naissance=start-age*day)
-  attr(db$subjid, "label") = "Subject ID"
-  attr(db$age, "label")    = "Age (years)"
-  attr(db$date_naissance, "label") = "Date of birth"
+  data0 = tibble(subjid=1:N, age=rnorm(N, 50, 10), date_naissance=start-age*day)
+  attr(data0$subjid, "label") = "Subject ID"
+  attr(data0$age, "label")    = "Age (years)"
+  attr(data0$date_naissance, "label") = "Date of birth"
   
   for(i in 1:10){
-    db[[paste0("date",i)]] = (start+rnorm(N, i*10, 10)*day) %>% 
+    data0[[paste0("date",i)]] = (start+rnorm(N, i*10, 10)*day) %>% 
       set_label(paste0("Date at visit ",i))
   }
   
-  enrol = db %>% select(subjid, age, date_naissance) %>%
+  enrol = data0 %>% select(subjid, age, date_naissance) %>%
     mutate(arm = ifelse(runif(n()) > 0.5, "Trt", "Ctl") %>% set_label("Treatment arm"))
-  db1 = db %>% select(subjid, 4:6) %>%
+  data1 = data0 %>% select(subjid, 4:6) %>%
     mutate(x = ifelse(runif(n()) > 0.5, "X", "Y") %>% set_label("Covariate"))
-  db1 = rbind(db1, db1) #long table
-  db2 = db %>% select(subjid, 7:9)
-  db3 = db %>% select(subjid, 10:13)
+  data1 = rbind(data1, data1) #long table
+  data2 = data0 %>% select(subjid, 7:9)
+  data3 = data0 %>% select(subjid, 10:13)
   
   #add ties for patients 1:3 (for `lastnews_table()`)
-  db2$date4[1:2] = db3$date10[1:2]
-  db2$date5[2:3] = db3$date10[2:3]
+  data2$date4[1:2] = data3$date10[1:2]
+  data2$date5[2:3] = data3$date10[2:3]
   
-  lst(enrol, db1, db2, db3)%>% 
+  lst(enrol, data1, data2, data3)%>% 
     imap(~.x %>% mutate(crfname=.y %>% set_label("Form name")))
 }
 
