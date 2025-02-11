@@ -87,9 +87,10 @@ edc_viewer_server = function(datasets, lookup) {
     #output: datatable header
     output$dataset_name = renderText({
       if(is.null(dataset_selected())) return("Loading")
-      data = datasets[[dataset_selected()]]
-      if(is.null(data)) return(glue("{name}: Corrupted dataset", name=dataset_selected()))
-      glue("Dataset selected: {name} ({nrow(data)} x {ncol(data)})", name=dataset_selected())
+      a = lookup %>% filter(dataset==dataset_selected())
+      layout = ifelse(a$rows_per_id>1, glue("long ({a$rows_per_id} rows per patient)"), "wide")
+      if(nrow(a)==0) return(glue("{name}: Corrupted dataset", name=dataset_selected()))
+      glue("Dataset selected: `{a$dataset}` ({a$nrow} x {a$ncol}) - {a$n_id} patients - {layout}")
     })
     
     #output: datatable choice list
@@ -181,17 +182,18 @@ edc_viewer_server = function(datasets, lookup) {
 #' @export
 #' @importFrom rlang check_installed
 #' @importFrom utils browseURL
-edc_viewer = function(background=TRUE){
+edc_viewer = function(background=TRUE, port=1209){
   check_installed(c("DT", "bslib", "shiny"), "for `edc_viewer()` to work.")
   lookup = edc_lookup(dataset)
   datasets = get_datasets(lookup)
+  shiny_url = paste0("http://127.0.0.1:", port)
   
   launch_shiny = function(datasets, lookup){
     # devtools::load_all(helpers=FALSE)
     
     app = shiny::shinyApp(edc_viewer_ui(datasets, lookup), 
                           edc_viewer_server(datasets, lookup))
-    shiny::runApp(app, launch.browser=FALSE, port=1231)
+    shiny::runApp(app, launch.browser=FALSE, port=port)
   }
   
   if(isTRUE(background)){
@@ -213,15 +215,15 @@ edc_viewer = function(background=TRUE){
     )
     if(edcimport_env$process$is_alive()) {
       cli_inform(c("Shiny app launched in the background (PID: {edcimport_env$process$get_pid()})",
-                   i="Browse at {.url http://127.0.0.1:1231}"))
-      browseURL("http://127.0.0.1:1231")
+                   i="Browse at {.url {shiny_url}}"))
+      browseURL(shiny_url)
     } else {
       cli_inform(c(x="Error: Shiny app couldn't be launched"))
     }
     return(edcimport_env$process)
   }
   
-  browseURL("http://127.0.0.1:1231")
+  browseURL(shiny_url)
   x=launch_shiny(datasets, lookup)
   # print(x)
   invisible(x)
