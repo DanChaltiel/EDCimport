@@ -11,7 +11,7 @@ outliers to be easily identified."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9024</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9025</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -111,7 +111,7 @@ outliers to be easily identified.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">#tm = read_trialmaster("filename.zip", pw="xx")</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">#db = read_trialmaster("filename.zip", pw="xx")</span></span></span>
 <span class="r-in"><span><span class="va">db</span> <span class="op">=</span> <span class="fu"><a href="edc_example.html">edc_example</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Option <span style="color: #0000BB;">"edc_lookup"</span> has been overwritten.</span>
 <span class="r-in"><span><span class="fu"><a href="load_database.html">load_database</a></span><span class="op">(</span><span class="va">db</span><span class="op">)</span></span></span>
@@ -123,7 +123,7 @@ outliers to be easily identified.</p>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> None of the datasets contains an identifier column</span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> `id`=<span style="color: #0000BB;">"subjid"</span></span>
 <span class="r-in"><span><span class="va">p2</span> <span class="op">=</span> <span class="fu">edc_swimmerplot</span><span class="op">(</span>origin<span class="op">=</span><span class="st">"enrol$date_naissance"</span>, time_unit<span class="op">=</span><span class="st">"weeks"</span>, </span></span>
-<span class="r-in"><span>                     exclude<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"DB1$DATE2"</span>, <span class="st">"db3$.*"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>                     exclude<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"DATA1$DATE2"</span>, <span class="st">"data3$.*"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Could not find 8/8 datasets from the lookup, did you forget to call</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> `load_database()` on your import?</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #0000BB;">"enrol"</span>, <span style="color: #0000BB;">"data2"</span>, <span style="color: #0000BB;">"data3"</span>, <span style="color: #0000BB;">"short"</span>, <span style="color: #0000BB;">"data1"</span>, <span style="color: #0000BB;">"long_mixed"</span>, <span style="color: #0000BB;">"long_pure"</span>, and</span>

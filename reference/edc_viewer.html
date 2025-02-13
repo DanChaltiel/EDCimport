@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9024</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9025</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,7 +40,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">edc_viewer</span><span class="op">(</span>background <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">edc_viewer</span><span class="op">(</span>background <span class="op">=</span> <span class="cn">TRUE</span>, port <span class="op">=</span> <span class="fl">1209</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -48,7 +48,11 @@
 
 
 <dl><dt id="arg-background">background<a class="anchor" aria-label="anchor" href="#arg-background"></a></dt>
-<dd><p>should the app run in a background process</p></dd>
+<dd><p>Whether the app should run in a background process.</p></dd>
+
+
+<dt id="arg-port">port<a class="anchor" aria-label="anchor" href="#arg-port"></a></dt>
+<dd><p>The TCP port that the application should listen on.</p></dd>
 
 </dl></div>
 

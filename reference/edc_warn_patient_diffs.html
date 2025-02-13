@@ -9,7 +9,7 @@ check_subjid() is the old, deprecated name."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9024</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9025</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -88,12 +88,13 @@ check_subjid() is the old, deprecated name."></head><body>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>edc_subjid_ref<span class="op">=</span><span class="va">enrol</span><span class="op">$</span><span class="va">subjid</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co">#usually, you set something like:</span></span></span>
 <span class="r-in"><span><span class="co">#options(edc_subjid_ref=enrolres$subjid)</span></span></span>
-<span class="r-in"><span><span class="fu">edc_warn_patient_diffs</span><span class="op">(</span><span class="va">db1</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'db1' not found</span>
-<span class="r-in"><span><span class="va">db1</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">subjid</span><span class="op">&gt;</span><span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">edc_warn_patient_diffs</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'db1' not found</span>
-<span class="r-in"><span><span class="fu">edc_warn_patient_diffs</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">db1</span><span class="op">$</span><span class="va">subjid</span>, <span class="fl">99</span>, <span class="fl">999</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'db1' not found</span>
+<span class="r-in"><span><span class="fu">edc_warn_patient_diffs</span><span class="op">(</span><span class="va">data1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">data1</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">subjid</span><span class="op">&gt;</span><span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">edc_warn_patient_diffs</span><span class="op">(</span>issue_n<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>`.` has patient discrepancies:</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Missing: 1 patient: #1</span>
+<span class="r-in"><span><span class="fu">edc_warn_patient_diffs</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">data1</span><span class="op">$</span><span class="va">subjid</span>, <span class="fl">99</span>, <span class="fl">999</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Issue #<span style="color: #00BB00;">xx</span>: `c(data1$subjid, 99, 999)` has patient discrepancies:</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Extra: 2 patients: #99 and #999</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
