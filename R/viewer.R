@@ -139,23 +139,26 @@ edc_viewer_server = function(datasets, lookup) {
     #output: sidebar data choice list
     output$input_table = renderDT({
       selected_subjid = input$subjid_selected
-      red_rows = map_lgl(lookup$subjids, ~!any(selected_subjid %in% .x)) %>% which()
-      grey_rows = which(lookup$crfname=="** Error in source file **")
+      all_subjid = unlist(lookup$subjids) %>% unique() %>% sort()
+      if(is.null(selected_subjid)) selected_subjid = all_subjid
       
-      if(length(selected_subjid)==0) red_rows = 0
-      if(length(red_rows)==0) red_rows = 0
-      if(length(grey_rows)==0) grey_rows = 0
+      lookup = lookup %>% 
+        mutate(
+          has_subjid = map_lgl(subjids, ~any(selected_subjid %in% .x)),
+          is_error = !is.na(crfname) & crfname=="** Error in source file **",
+          exclude = !has_subjid | is_error,
+          row_color = case_when(!has_subjid~"red", is_error~"grey", .default=NA)
+        )
+      n_filtered = lookup %>% filter(exclude) %>% nrow()
       
-      n_filtered = length(red_rows) + length(grey_rows) 
       updateCheckboxInput(session, "hide_filtered", 
                           label=glue("Hide empty tables (N={n_filtered})"))
       
       if(isTRUE(input$hide_filtered) && length(selected_subjid)>0){
-        lookup = slice(lookup, -red_rows, -grey_rows)
+        lookup = lookup %>% filter(!exclude)
       }
       
       rtn = lookup %>% 
-        select(dataset, nrow, ncol) %>% 
         as_tibble() %>% 
         datatable(
           rownames = FALSE,
@@ -163,23 +166,17 @@ edc_viewer_server = function(datasets, lookup) {
           filter = "none",
           options = lst(
             pageLength = 500,
-            dom = "t"
+            dom = "t",
+            columnDefs = list(list(visible=FALSE, targets=seq(3, ncol(lookup)-1))),
           )
-        ) 
-      
-      if(!isTRUE(input$hide_filtered)){
-        rtn = rtn %>% 
+        ) %>% 
           formatStyle(
-            columns = 1:3,
-            color = styleRow(red_rows, "red"),
+            columns = TRUE,
+            valueColumns="row_color",
+            color = styleEqual(levels = c("red", "grey"), values = c("red", "grey")),
             `white-space` = "nowrap",
             `height` = "20px"
-          ) %>% 
-          formatStyle(
-            columns = 1:3,
-            color = styleRow(grey_rows, "grey")
           )
-      }
       
       rtn
     })
