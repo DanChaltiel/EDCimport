@@ -44,7 +44,7 @@ reference:
   - save_sessioninfo
 - title: "Searching databases"
 - contents:
-  - find_keyword
+  - edc_find_value
   - lastnews_table
   - edc_db_to_excel
   - get_common_cols
