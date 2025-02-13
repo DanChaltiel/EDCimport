@@ -80,6 +80,8 @@ edc_viewer_server = function(datasets, lookup) {
     dataset_selected = reactiveVal(NULL)
     
     ids = get_ids(datasets, subjid_cols)
+    p1 = edc_crf_plot() + theme(legend.position="bottom")
+    p2 = edc_patient_gridplot()
     
     #init
     selectRows(dataTableProxy("input_table"), selected=1)
@@ -98,12 +100,8 @@ edc_viewer_server = function(datasets, lookup) {
     
     #on Summary button: show modal
     observeEvent(input$btn_db_summary, {
-      output$crf_plot <- renderPlot({
-        edc_crf_plot() + theme(legend.position="bottom")
-      })
-      output$patient_gridplot <- renderPlot({
-        edc_patient_gridplot()
-      })
+      output$crf_plot = renderPlot(p1)
+      output$patient_gridplot = renderPlot(p2)
       vb1 = value_box(
         title = "Datasets",
         fill = FALSE,
