@@ -20,11 +20,16 @@ edc_viewer_ui = function(datasets, lookup){
   if(!is.null(EDCimport_version)) 
     par_version = format_inline("- EDCimport v{EDCimport_version}")
   title = format_inline("{{EDCimport}} Data browsing {par_projname}{par_extraction}{par_version}")
+  title_div = div(
+      style = "width: 100%; display: flex; justify-content: space-between; align-items: center;",
+      title, 
+      actionButton("btn_db_summary", icon=icon("circle-question"), label=NULL) |> 
+                tooltip("Database summary"))
   
   page_sidebar(
-    window_title=paste(project_name, " - EDCimport"),
-    title=title,
-    height="100vh",
+    window_title = paste(project_name, " - EDCimport"),
+    title = title_div,
+    height = "100vh",
     sidebar = sidebar(
       width = 350,
       card(
@@ -47,8 +52,11 @@ edc_viewer_ui = function(datasets, lookup){
         DTOutput("table")
       )
     ),
-    tags$head(tags$style('.card{overflow: visible !important;}'),
-              tags$style('.card-body{overflow: visible !important;}'))
+    tags$head(tags$style(
+      '.card{overflow: visible !important;}',
+      '.card-body{overflow: visible !important;}',
+      '.modal-dialog{margin: 50px auto;}',
+    ))
   )
 }
 
@@ -64,7 +72,9 @@ edc_viewer_server = function(datasets, lookup) {
   
   .set_lookup(lookup, verbose=FALSE)
   subjid_cols = get_subjid_cols(lookup)
-  datasets = datasets
+  # datasets = datasets
+  project_name = attr(lookup, "project_name")
+  if(is.null(project_name)) project_name="" 
   
   function(input, output, session) {
     dataset_selected = reactiveVal(NULL)
@@ -75,15 +85,47 @@ edc_viewer_server = function(datasets, lookup) {
     selectRows(dataTableProxy("input_table"), selected=1)
     updateSelectInput(session, "subjid_selected", choices=c(ids))
     
-    #show datatable on row selected
+    #On row selected: show datatable
     observeEvent(input$input_table_rows_selected, {
       selected = input$input_table_rows_selected
       dataset_selected(names(datasets[selected]))
     })
     
-    #reset subjid choice on click on Reset button
+    #on Reset button: reset subjid choice
     observeEvent(input$reset_subjid, {
       updateSelectInput(session, "subjid_selected", choices=c(ids))
+    })
+    
+    #on Summary button: show modal
+    observeEvent(input$btn_db_summary, {
+      output$crf_plot <- renderPlot({
+        edc_crf_plot() + theme(legend.position="bottom")
+      })
+      output$patient_gridplot <- renderPlot({
+        edc_patient_gridplot()
+      })
+      vb1 = value_box(
+        title = "Datasets",
+        fill = FALSE,
+        value = paste0(length(datasets), " datasets"),
+        showcase = icon("database"),
+      )
+      vb2 = value_box(
+        title = "Patients",
+        value = paste0(max(lookup$n_id, na.rm=TRUE), " patients"),
+        showcase = icon("person"),
+      )
+      showModal(
+        modalDialog(
+          title = paste0(project_name, " Database summary"),
+          easyClose = TRUE,
+          footer = NULL,
+          size = "xl",
+          layout_column_wrap(vb1, vb2, width = "250px"),
+          plotOutput(session$ns("crf_plot")),
+          plotOutput(session$ns("patient_gridplot")),
+        )
+      )
     })
     
     
