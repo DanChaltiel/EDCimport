@@ -9,6 +9,7 @@ desc = dplyr
 dir_create = fs
 dir_exists = fs
 discard = purrr
+div = shiny
 enquo = dplyr
 enquos = dplyr
 everything = dplyr

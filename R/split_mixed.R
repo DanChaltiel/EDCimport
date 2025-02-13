@@ -77,10 +77,10 @@ table_format = function(df, id=get_subjid_cols(), ...,
 #'
 #' @return an [edc_database] object
 #' @export
-#' @importFrom cli cli_abort cli_warn
-#' @importFrom dplyr setdiff
-#' @importFrom purrr keep_at map_lgl
-#' @importFrom rlang as_label
+#' @importFrom cli cli_abort
+#' @importFrom dplyr enquo everything
+#' @importFrom purrr discard_at keep
+#' @importFrom rlang as_label check_dots_empty
 #'
 #' @examples
 #' #db = read_trialmaster("filename.zip", pw="xx")
@@ -131,10 +131,10 @@ edc_split_mixed = function(database, datasets=everything(),
 
 #' @noRd
 #' @keywords internal
-#' @importFrom cli cli_bullets cli_warn
+#' @importFrom cli cli_abort cli_bullets cli_warn
 #' @importFrom dplyr across all_of everything group_by lst select summarise summarise_all ungroup
 #' @importFrom glue glue
-#' @importFrom purrr discard discard_at imap keep list_flatten map_chr
+#' @importFrom purrr discard discard_at imap keep list_flatten map_chr map_lgl
 #' @importFrom rlang check_dots_empty
 #' @importFrom utils head
 split_mixed_datasets = function(datasets=get_datasets(), id=get_subjid_cols(), ..., 

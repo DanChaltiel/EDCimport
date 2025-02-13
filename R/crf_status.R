@@ -29,9 +29,9 @@
 #' #> [1] "Incomplete"        "No Data Locked"    "No Data"           "Signed"           
 #' #> [5] "Partial Monitored" "Monitored"         "Complete Locked"   "Complete" 
 #' }
-#' @importFrom dplyr arrange count last left_join mutate select
+#' @importFrom dplyr arrange count left_join mutate select
 #' @importFrom forcats fct_drop fct_inorder fct_reorder2 fct_rev
-#' @importFrom ggplot2 aes geom_col ggplot labs position_fill scale_fill_manual scale_x_continuous
+#' @importFrom ggplot2 aes geom_col ggplot labs position_fill scale_fill_manual scale_x_continuous theme_minimal
 #' @importFrom glue glue
 #' @importFrom purrr list_rbind map
 #' @importFrom rlang check_dots_empty

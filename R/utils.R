@@ -138,6 +138,8 @@ cli_menu <- function(prompt, not_interactive, choices, quit = integer(), .envir 
 #' Still a bit limited
 #' @noRd
 #' @keywords internal
+#' @importFrom dplyr bind_cols select
+#' @importFrom purrr map
 list_select = function(x, ...){
   nm = x %>% map(~1) %>% bind_cols() %>% select(...) %>% names()
   x[nm]

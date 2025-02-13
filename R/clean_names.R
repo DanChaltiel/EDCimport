@@ -11,6 +11,7 @@
 #' @return an [edc_database] object
 #' 
 #' @importFrom dplyr rename_with
+#' @importFrom purrr map_if
 #' @export
 #' 
 #' @examples

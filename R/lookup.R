@@ -147,9 +147,8 @@ get_lookup = deprecatedly(edc_lookup, what="get_lookup()", when="0.5.0")
 #' @noRd
 #' @keywords internal
 #' 
-#' @importFrom cli cli_abort cli_warn
-#' @importFrom dplyr arrange desc filter if_else last_col mutate relocate select
-#' @importFrom purrr keep map map_chr map_dbl map_int map_lgl
+#' @importFrom dplyr arrange desc if_else last_col mutate pull relocate select
+#' @importFrom purrr map map_chr
 #' @importFrom rlang check_dots_empty
 #' @examples
 #' #tm = read_trialmaster("filename.zip", pw="xx")
@@ -192,7 +191,7 @@ extend_lookup = function(lookup, ...,
 
 #' @export
 #' @importFrom cli format_inline rule
-#' @importFrom dplyr select
+#' @importFrom dplyr any_of select
 #' @importFrom utils tail
 print.edc_lookup = function(x, n=Inf, ...){
   extraction = attr(x, "datetime_extraction")

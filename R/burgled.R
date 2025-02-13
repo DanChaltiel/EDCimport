@@ -4,6 +4,7 @@
 #' @source gtools::mixedsort
 #' @noRd
 #' @keywords internal 
+#' @importFrom stringr str_remove_all
 mixedsort = function (x, decreasing = FALSE, na.last = TRUE, blank.last = FALSE, 
                       ignore_hyphens = TRUE,
                       roman.case = c("upper", "lower", "both"), scientific = TRUE) {

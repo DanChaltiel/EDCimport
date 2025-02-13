@@ -36,7 +36,7 @@
 #' save_plotly(p, "edc_swimmerplot.html")
 #' }
 #' @importFrom cli cli_abort
-#' @importFrom dplyr arrange left_join mutate sym
+#' @importFrom dplyr arrange left_join mutate n_distinct sym
 #' @importFrom ggplot2 aes facet_wrap geom_line geom_point ggplot labs
 #' @importFrom glue glue
 #' @importFrom purrr list_rbind
@@ -282,6 +282,7 @@ parse_var = function(input, id, env){
 #' @importFrom cli cli_abort
 #' @importFrom fs dir_create path_dir
 #' @importFrom rlang check_installed
+#' @importFrom stringr str_ends
 save_plotly = function(p, file, ...){
   check_installed("plotly", reason="for `save_plotly()` to work.")
   check_installed("htmlwidgets", reason="for `save_plotly()` to work.")

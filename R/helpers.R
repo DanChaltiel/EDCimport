@@ -14,8 +14,10 @@
 #'
 #' @return a tibble
 #' @export
-#' @importFrom stringr fixed
-#' @importFrom tidyr pivot_longer
+#' @importFrom dplyr across any_of arrange as_tibble filter mutate mutate_all pull select slice
+#' @importFrom purrr list_rbind map
+#' @importFrom stringr fixed str_detect
+#' @importFrom tidyr pivot_longer unnest
 #' 
 #' @examples
 #' db = edc_example()
@@ -786,6 +788,7 @@ load_database = function(db, env=parent.frame(), remove=TRUE){
 #' @rdname load_database
 #' @usage NULL
 #' @export
+#' @importFrom lifecycle deprecate_warn
 load_list = function(db, env=parent.frame(), remove=TRUE){
   deprecate_warn(when="0.6.0", what="load_list()", with="load_database()")
   load_database(db, env, remove)
