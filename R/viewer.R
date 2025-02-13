@@ -56,6 +56,7 @@ edc_viewer_ui = function(datasets, lookup){
       '.card{overflow: visible !important;}',
       '.card-body{overflow: visible !important;}',
       '.modal-dialog{margin: 50px auto;}',
+      '.modal-header{padding-bottom: 0;}',
     ))
   )
 }
@@ -81,7 +82,7 @@ edc_viewer_server = function(datasets, lookup) {
     
     ids = get_ids(datasets, subjid_cols)
     p1 = edc_crf_plot() + theme(legend.position="bottom")
-    p2 = edc_patient_gridplot()
+    p2 = edc_patient_gridplot() + labs(title=NULL, subtitle=NULL)
     
     #init
     selectRows(dataTableProxy("input_table"), selected=1)
@@ -102,9 +103,12 @@ edc_viewer_server = function(datasets, lookup) {
     observeEvent(input$btn_db_summary, {
       output$crf_plot = renderPlot(p1)
       output$patient_gridplot = renderPlot(p2)
+      datetime_extraction = attr(lookup, "datetime_extraction")
+      date_extraction = format(datetime_extraction, "%Y/%m/%d")
+      delay_extraction = difftime(Sys.Date(), as.Date(datetime_extraction), units="days") %>% 
+        as.numeric()
       vb1 = value_box(
         title = "Datasets",
-        fill = FALSE,
         value = paste0(length(datasets), " datasets"),
         showcase = icon("database"),
       )
@@ -113,13 +117,19 @@ edc_viewer_server = function(datasets, lookup) {
         value = paste0(max(lookup$n_id, na.rm=TRUE), " patients"),
         showcase = icon("person"),
       )
+      vb3 = value_box(
+        title = "Extraction",
+        value = date_extraction,
+        glue("{delay_extraction} days ago"),
+        showcase = icon("calendar-days"),
+      )
       showModal(
         modalDialog(
           title = paste0(project_name, " Database summary"),
           easyClose = TRUE,
           footer = NULL,
           size = "xl",
-          layout_column_wrap(vb1, vb2, width = "250px"),
+          layout_column_wrap(vb1, vb2, vb3, width=0),
           plotOutput(session$ns("crf_plot")),
           plotOutput(session$ns("patient_gridplot")),
         )
