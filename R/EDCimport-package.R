@@ -43,7 +43,7 @@ globals = c(
   "severe_", "showNA", "soc_", "sort_by_count", "star", "star_txt", 
   "subjid", "subjid", "subjid_", "subjid_sum", "subjids", "term_", 
   "title", "Tot", "unit", "value", "variable", "vars", "weight", 
-  "x", "exclude", "div",  "first", "has_subjid"
+  "x", "exclude", "div",  "first", "has_subjid", "column_label"
 )
 # dput(sort(globals))
 utils::globalVariables(globals)
