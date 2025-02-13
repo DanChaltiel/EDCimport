@@ -8,6 +8,8 @@ edc_viewer_ui = function(datasets, lookup){
   DTOutput=DT::DTOutput
   actionButton=shiny::actionButton;selectInput=shiny::selectInput;actionLink=shiny::actionLink;
   tags=shiny::tags;textOutput=shiny::textOutput
+  checkboxInput=shiny::checkboxInput;
+  tooltip=bslib::tooltip; icon=shiny::icon; selectizeInput=shiny::selectizeInput;
   
   extraction = attr(lookup, "datetime_extraction")
   EDCimport_version = attr(lookup, "EDCimport_version")
@@ -70,6 +72,11 @@ edc_viewer_server = function(datasets, lookup) {
   observe=shiny::observe;observeEvent=shiny::observeEvent;reactiveVal=shiny::reactiveVal;
   renderText=shiny::renderText;req=shiny::req;updateSelectInput=shiny::updateSelectInput
   dataTableProxy=DT::dataTableProxy;selectRows=DT::selectRows;styleRow=DT::styleRow
+  icon=shiny::icon;showModal=shiny::showModal;modalDialog=shiny::modalDialog;
+  plotOutput=shiny::plotOutput;renderPlot=shiny::renderPlot;
+  updateCheckboxInput=shiny::updateCheckboxInput
+  layout_column_wrap=bslib::layout_column_wrap;styleEqual=DT::styleEqual;
+  value_box=bslib::value_box
   
   .set_lookup(lookup, verbose=FALSE)
   subjid_cols = get_subjid_cols(lookup)
@@ -242,7 +249,8 @@ edc_viewer_server = function(datasets, lookup) {
 #' 
 #' Run a Shiny application that allows to browse the datasets.
 #' 
-#' @param background should the app run in a background process
+#' @param background Whether the app should run in a background process.
+#' @param port The TCP port that the application should listen on. 
 #'
 #' @export
 #' @importFrom rlang check_installed

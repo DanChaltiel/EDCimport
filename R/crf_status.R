@@ -70,9 +70,7 @@ edc_crf_plot = function(crfstat_col="CRFSTAT",
     left_join(edc_lookup(), by="dataset") %>% 
     mutate(
       crfstat = factor(crfstat, levels=crfstat_lvls) %>% fct_drop() %>% fct_rev(),
-      #arrange by complete then by incomplete
-      # dataset = fct_reorder2(dataset, crfstat, n, 
-      #                        .fun=function(x,y) y[x=="Complete"]/sum(y)) %>% fct_rev(),
+      #arrange by first (eg. complete) then by last (eg. incomplete)
       dataset = fct_reorder2(dataset, crfstat, n, .fun=completion_reorder, which_lvl=first) %>% 
         fct_rev(),
       dataset = fct_reorder2(dataset, crfstat, n, .fun=completion_reorder, which_lvl=last)

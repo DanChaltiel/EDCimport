@@ -358,7 +358,7 @@ harmonize_subjid = function(database, preprocess=NULL, col_subjid=NULL){
 #' @examples
 #' db = edc_example()
 #' load_database(db)
-#' data2$common = data$common = "Common"
+#' data1$common = data2$common = "Common"
 #' x = enrol %>% 
 #'   edc_left_join(data2) %>% 
 #'   edc_right_join(data1)

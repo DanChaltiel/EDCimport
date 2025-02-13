@@ -7,7 +7,9 @@
 edc_viewer(background = TRUE, port = 1209)
 }
 \arguments{
-\item{background}{should the app run in a background process}
+\item{background}{Whether the app should run in a background process.}
+
+\item{port}{The TCP port that the application should listen on.}
 }
 \description{
 Run a Shiny application that allows to browse the datasets.
