@@ -49,7 +49,6 @@ edc_crf_plot = function(crfstat_col="CRFSTAT",
   
   if(isTRUE(reverse)) pal = rev(pal)
   crfstat_lvls = names(pal)
-  # print(crfstat_lvls)
   
   completion_reorder = function(x, y, which_lvl) {
     incomplete = which_lvl(crfstat_lvls)

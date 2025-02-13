@@ -47,12 +47,12 @@ plotly if \code{plotly=TRUE}) showing all dates for each patients. This allows
 outliers to be easily identified.
 }
 \examples{
-#tm = read_trialmaster("filename.zip", pw="xx")
+#db = read_trialmaster("filename.zip", pw="xx")
 db = edc_example()
 load_database(db)
 p = edc_swimmerplot(id_lim=c(5,45))
 p2 = edc_swimmerplot(origin="enrol$date_naissance", time_unit="weeks", 
-                     exclude=c("DB1$DATE2", "db3$.*"))
+                     exclude=c("DATA1$DATE2", "data3$.*"))
 p3 = edc_swimmerplot(group="enrol$arm", aes_color="label")
 \dontrun{
 #save the plotly plot as HTML to share it

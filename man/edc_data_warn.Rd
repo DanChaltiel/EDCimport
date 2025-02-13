@@ -62,9 +62,9 @@ enrol \%>\%
   filter(age<25) \%>\% 
   edc_data_warn("Age should not be <25", issue_n=2)
 
-db1 \%>\% 
+data1 \%>\% 
   filter(n()>1, .by=subjid) \%>\% 
-  edc_data_warn("There are duplicated patients in `db1` ({nrow(.data)} rows)", issue_n=3)
+  edc_data_warn("There are duplicated patients in `data1` ({nrow(.data)} rows)", issue_n=3)
 
 enrol \%>\% 
   filter(age<25) \%>\% 

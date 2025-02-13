@@ -37,7 +37,7 @@ load_database(db)
 options(edc_subjid_ref=enrol$subjid)
 #usually, you set something like:
 #options(edc_subjid_ref=enrolres$subjid)
-edc_warn_patient_diffs(db1)
-db1 \%>\% dplyr::filter(subjid>1) \%>\% edc_warn_patient_diffs()
-edc_warn_patient_diffs(c(db1$subjid, 99, 999))
+edc_warn_patient_diffs(data)
+data \%>\% dplyr::filter(subjid>1) \%>\% edc_warn_patient_diffs()
+edc_warn_patient_diffs(c(data$subjid, 99, 999))
 }

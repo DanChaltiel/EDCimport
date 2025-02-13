@@ -4,7 +4,7 @@
 \alias{edc_viewer}
 \title{Shiny data explorer}
 \usage{
-edc_viewer(background = TRUE)
+edc_viewer(background = TRUE, port = 1209)
 }
 \arguments{
 \item{background}{should the app run in a background process}

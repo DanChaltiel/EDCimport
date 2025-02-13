@@ -358,10 +358,10 @@ harmonize_subjid = function(database, preprocess=NULL, col_subjid=NULL){
 #' @examples
 #' db = edc_example()
 #' load_database(db)
-#' db2$common = db1$common = "Common"
+#' data2$common = data$common = "Common"
 #' x = enrol %>% 
-#'   edc_left_join(db2) %>% 
-#'   edc_right_join(db1)
+#'   edc_left_join(data2) %>% 
+#'   edc_right_join(data1)
 #'   
 #' #crfname get a suffix, common 
 #' names(x)
