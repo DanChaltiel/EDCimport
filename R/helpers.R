@@ -4,36 +4,68 @@
 # User helpers --------------------------------------------------------------------------------
 
 
-#' Find a keyword in the whole database
+#' Search the whole database
 #' 
-#' Find a keyword in all names and labels of a list of datasets. 
+#' Find a keyword in columns or values, in all the datasets of the database.
 #'
-#' @param keyword the keyword to search for. Can handle regular expressions (see examples).
-#' @param data the lookup dataframe where to search the keyword. Can be set using `edc_options(edc_lookup=my_data)`, which is done automatically when calling [read_trialmaster()].
-#' @param ignore_case should case differences be ignored in the match? Default to `TRUE`.
+#' @param keyword The keyword to search for. Regular expressions are only supported in `edc_find_column`.
+#' @param ignore_case Logical. If `TRUE` (default), the search will ignore case differences.
+#' @param data Either a lookup table (`edc_find_column`) or a list of datasets (`edc_find_value()`).
 #'
 #' @return a tibble
 #' @export
-#' @examples 
-#' \dontrun{
-#' path = system.file("extdata/Example_Export_SAS_XPORT_2022_08_25_15_16.zip", 
-#'                    package="EDCimport", mustWork=TRUE)
-#' w = read_trialmaster(path, verbose=FALSE)
+#' @importFrom stringr fixed
+#' @importFrom tidyr pivot_longer
 #' 
-#' find_keyword("patient")
+#' @examples
+#' db = edc_example()
+#' load_database(db)
 #' 
+#' edc_find_value("respi")
+#' edc_find_value(2010)
+#' 
+#' edc_find_column("ad")
+#' edc_find_column("date") 
 #' #with regex
-#' find_keyword("patient$")
-#' find_keyword("\\d")
-#' find_keyword("(Trial|Form) Name")
-#' find_keyword("\\(") #you need to escape special characters
-#' }
+#' edc_find_column("\\d")
+#' edc_find_column("\\(") #you need to escape special characters
+edc_find_value = function(keyword, ignore_case=TRUE, data=get_datasets()){
+  subjid = get_subjid_cols()
+  data_labels = edc_lookup() %>% 
+    as_tibble() %>% 
+    unnest(labels) %>% 
+    pull(labels)
+  
+  a = data %>% 
+    map(function(dataset){
+      if(!any(tolower(subjid) %in% tolower(names(dataset)))) return(NULL)
+      dataset %>%
+        mutate_all(as.character) %>% 
+        pivot_longer(-any_of(subjid), names_to="column") %>% 
+        filter(str_detect(value, fixed(as.character(keyword), ignore_case=ignore_case)))
+    }) %>% 
+    list_rbind(names_to="dataset") %>% 
+    mutate(column_label = unlist(data_labels[column])) %>% 
+    select(any_of(subjid), dataset, column, column_label, value) %>% 
+    arrange(dataset, column) %>% 
+    slice(across(any_of(subjid), mixedorder)[[1]])
+  
+  # a %>% 
+  #   summarise(value = cli::ansi_collapse(value, trunc=3, style='head'), 
+  #             .by=c(dataset, column))
+  
+  a
+}
+
+
+#' @rdname edc_find_value
+#' @export
 #' @importFrom cli cli_warn
 #' @importFrom dplyr any_of filter mutate pull select where
 #' @importFrom purrr map2_chr map2_dbl
 #' @importFrom stringr str_detect str_trim
 #' @importFrom tidyr unite unnest
-find_keyword = function(keyword, data=edc_lookup(), ignore_case=TRUE){
+edc_find_column = function(keyword, ignore_case=TRUE, data=edc_lookup()){
   invalid=names2=labels2=x=NULL
   f = if(isTRUE(ignore_case)) tolower else identity
   f2 = function(x,y) map2_chr(x, y, ~if(.y) {.x} else {f(.x)})
@@ -69,6 +101,8 @@ find_keyword = function(keyword, data=edc_lookup(), ignore_case=TRUE){
     select(-invalid)
 }
 
+
+find_keyword = deprecatedly(edc_find_column, when="0.6.0", what="find_keyword()")
 
 
 #' Format factor levels as Yes/No

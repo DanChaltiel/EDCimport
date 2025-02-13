@@ -11,6 +11,7 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 -   New argument `lastnews_table(show_delta=TRUE)`, which computes the difference between the last `prefer` date and the actual last date (#81)
 -   New functions `edc_left_join()`, `edc_right_join()`, and `edc_full_join()`, which perform joins with defaults to subject ID as primary key (#82)
 -   New function `edc_viewer()`, which run a shiny application for easily browsing your database (#83)
+-   New function `edc_find_value()`, which searches the whole database for a value, as `edc_find_column()` searches for column names or labels.
 -   New argument `subdirectories` to all reading functions (`read_trialmaster()`, `read_all_xpt()`,  `read_all_sas()`, and `read_all_csv()`), to control whether to read sub-directories. Note that until now, those subdirectories were read and could overwrite root files.
 
 ### Internal improvements
@@ -20,6 +21,7 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 ### Deprecations
 
 -   `load_list()`, renamed to `load_database()`
+-   `find_keyword()`, renamed to `edc_find_column()`
 
 ### Breaking changes
 
