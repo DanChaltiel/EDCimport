@@ -6,7 +6,7 @@ p =
          y_arrow = c(0.2,0.35,0.35, 0.2,0.35,0.35, 0.2)) %>%
   ggplot() +
   aes(x=angle, y=1) +
-  geom_image(image="inst/figures/table.png", size=0.2) +
+  ggimage::geom_image(image="inst/figures/table.png", size=0.2) +
   geom_segment(aes(x=angle, xend=angle, y=y_arrow, yend=0.7), 
                arrow=arrow(type="open", length=unit(0.2, "cm")), 
                linewidth=0.5, color="black") +
@@ -30,6 +30,6 @@ hexSticker::sticker(
   s_width=1.75,
   s_height=5000,
   #output
-  filename="inst/figures/logo.png"
+  filename="man/figures/logo.png"
 )
 
