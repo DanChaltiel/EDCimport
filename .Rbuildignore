@@ -39,3 +39,4 @@ DEV\.R
 
 ^vignettes/*_files$
 ^vignettes/articles$
+^vignettes/\.quarto$

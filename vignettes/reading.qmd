@@ -1,0 +1,78 @@
+---
+title: "1 - Read your database"
+vignette: >
+  %\VignetteIndexEntry{1 - Read your database}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: '#>'
+---
+
+```{r}
+#| label: setup
+library(EDCimport)
+```
+
+## Read your database
+
+If you are reading this vignette, chances are that you have requested an export from an EDC software that provided you with a directory filled with files of datasets.
+
+Wouldn't it be so tedious if you had to load all those files one by one? Lucky you, EDCimport knows a better way!
+
+Depending on the type of files in your export directory, you should use:
+
+-   `read_all_sas()`, to read `.sas7bdat` files
+
+-   `read_all_xpt()`, to read `.xpt` files
+
+-   `read_all_csv()`, to read `.csv` files
+
+-   `read_trialmaster()` to read a [TrialMaster](https://www.anjusoftware.com/trial-master/) zip archive.
+
+Formats are imported through a metadata file, `format_file`, that can be either:
+
+-   a `procformat.sas` file, containing the whole PROC FORMAT
+
+-   a catalog file (`.sas7bcat`)
+
+-   or a data file (`.csv` or `.sas7bdat`) containing 3 columns: the SAS format name (repeated), each level, and its associated label. Use `options(edc_var_format_name="xxx", edc_var_level="xxx", edc_var_label="xxx")` to specify the names of the columns.
+
+You can then load your datasets into the global environment with `load_database()`.
+
+``` r
+library(EDCimport)
+db = read_all_sas("path/to/my/files/folder", format_file="procformat.sas")
+print(db)
+load_database(db) #this also removes `db` to save some RAM
+mean(dataset1$column5)
+```
+
+## Explore your database
+
+Knowing a CRF by hand is not always an easy task, so EDCimport provide a few useful tools:
+
+-   `edc_lookup()`, to remember what are the available datasets.
+
+-   `edc_find_column()` and `edc_find_value()`, to search the database for a column/label or for an actual value.
+
+```{r}
+db = edc_example()
+load_database(db)
+edc_lookup()
+edc_find_column("date")
+edc_find_value("immune")
+```
+
+## Shiny browser
+
+But the easiest way to explore your database is by running `edc_viewer()`, which will run a local shiny application:
+
+``` r
+db = edc_example()
+load_database(db) #this also removes `db` to save some RAM
+edc_viewer()
+```
+
+![](edc_viewer.gif)
