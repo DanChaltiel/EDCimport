@@ -11,17 +11,31 @@
 #' @return A list of tables of class `edc_database`.
 #' @export
 edc_example = function(N=50, seed=42, outdated=FALSE){
+  set.seed(seed)
+  ext1 = as.POSIXct("2024-01-01 01:00:00 CET")
+  ext2 = as.POSIXct("2010-08-10 18:58:36 CET")
+  datetime_extraction = if(isTRUE(outdated)) ext2 else ext1
+  
   x1 = .example_dates(N, seed)
   x2 = .example_mixed(N, seed)
   x3 = .example_ae(N, seed)
-  rtn = c(x1, x2, x3)
+  rtn = c(x1, x2, x3) %>% 
+    map(~{
+      .x %>% 
+        mutate(
+          crfstat=sample(c("Complete","No Data","Incomplete"), 
+                              prob=c(.7,.1,.2),
+                              size=n(), replace=TRUE) %>% 
+            set_label("CRF status")
+        )
+    }) %>% 
+    .add_lookup_and_date(
+      datetime_extraction=datetime_extraction,
+      extend_lookup=TRUE,
+      EDCimport_version=packageVersion("EDCimport"),
+      project_name="EDCimport example"
+    )
   
-  ext1 = as.POSIXct("2024-01-01 01:00:00 CET")
-  ext2 = as.POSIXct("2010-08-10 18:58:36 CET")
-  rtn$datetime_extraction = if(isTRUE(outdated)) ext2 else ext1
-  rtn$date_extraction = format(rtn$datetime_extraction, "%Y/%m/%d")
-  
-  rtn$.lookup = build_lookup(rtn)
   .set_lookup(rtn$.lookup)
   class(rtn) = "edc_database"
   rtn
