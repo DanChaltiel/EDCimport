@@ -11,7 +11,9 @@ edc_patient_gridplot(
   axes_flip = FALSE,
   show_grid = TRUE,
   preprocess = NULL,
-  palette = c(Yes = "#00468BFF", No = "#ED0000FF")
+  palette = c(Yes = "#00468BFF", No = "#ED0000FF"),
+  datasets = get_datasets(),
+  lookup = get_lookup()
 )
 }
 \arguments{
@@ -28,6 +30,8 @@ edc_patient_gridplot(
 \item{preprocess}{a function to preprocess the patient ID, e.g. \code{as.numeric}, or a custom function with string replacement}
 
 \item{palette}{the colors to use}
+
+\item{datasets, lookup}{internal}
 }
 \value{
 a \code{ggplot} object

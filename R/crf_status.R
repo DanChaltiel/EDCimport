@@ -11,6 +11,7 @@
 #' @param reverse whether to reverse the CRF status level order. 
 #' @param x_label a glue pattern determining the tick label in the x axis. Available variables are the ones of [edc_lookup()]: `c("dataset", "nrow", "ncol", "n_id", "rows_per_id", "crfname")`.
 #' @param treat_as_worst a regex for levels that should be treated as worst in the ordering.
+#' @param datasets,lookup internal
 #' @param ... unused
 #'
 #' @return a ggplot
@@ -44,8 +45,13 @@ edc_crf_plot = function(crfstat_col="CRFSTAT",
                         pal = edc_pal_crf(), 
                         reverse = FALSE,
                         x_label = "{dataset}",
-                        treat_as_worst=NULL){
+                        treat_as_worst=NULL,
+                        datasets=get_datasets(),
+                        lookup=edc_lookup()){
   check_dots_empty()
+  assert_class(crfstat_col, "character")
+  assert_class(datasets, "list")
+  assert(length(datasets)>0)
   
   if(isTRUE(reverse)) pal = rev(pal)
   crfstat_lvls = names(pal)
@@ -59,7 +65,7 @@ edc_crf_plot = function(crfstat_col="CRFSTAT",
     sum(y[x %in% incomplete])/sum(y)
   }
   
-  df = get_datasets(envir=parent.frame()) %>% 
+  df = datasets %>% 
     map(~{
       if(!any(crfstat_col %in% names(.x))) return(tibble())
       .x %>% select(crfstat = any_of2(crfstat_col))
@@ -67,13 +73,14 @@ edc_crf_plot = function(crfstat_col="CRFSTAT",
     list_rbind(names_to="dataset") %>% 
     mutate(crfstat = edf_crfstat_recode(crfstat, do=!details)) %>% 
     count(dataset, crfstat) %>% 
-    left_join(edc_lookup(), by="dataset") %>% 
+    left_join(lookup, by="dataset") %>% 
     mutate(
       crfstat = factor(crfstat, levels=crfstat_lvls) %>% fct_drop() %>% fct_rev(),
       #arrange by first (eg. complete) then by last (eg. incomplete)
-      dataset = fct_reorder2(dataset, crfstat, n, .fun=completion_reorder, which_lvl=first) %>% 
-        fct_rev(),
-      dataset = fct_reorder2(dataset, crfstat, n, .fun=completion_reorder, which_lvl=last)
+      dataset = fct_reorder2(dataset, crfstat, n, .fun=completion_reorder, 
+                             which_lvl=dplyr::first) %>% fct_rev(),
+      dataset = fct_reorder2(dataset, crfstat, n, .fun=completion_reorder, 
+                             which_lvl=dplyr::last)
     ) %>% 
     arrange(dataset)
   

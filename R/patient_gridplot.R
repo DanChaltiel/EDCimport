@@ -13,6 +13,7 @@
 #' @param show_grid whether to show the grid
 #' @param preprocess a function to preprocess the patient ID, e.g. `as.numeric`, or a custom function with string replacement
 #' @param palette the colors to use
+#' @param datasets,lookup internal
 #'
 #' @return a `ggplot` object
 #' @export
@@ -34,14 +35,13 @@
 #' @importFrom tibble tibble
 edc_patient_gridplot = function(sort_rows=TRUE, sort_cols=TRUE, gradient=FALSE,
                                 axes_flip=FALSE, show_grid=TRUE, preprocess=NULL,
-                                palette=c("Yes"="#00468BFF", "No"="#ED0000FF")){
-  
-  data_list = get_datasets()
-  subjid_cols = get_subjid_cols()
+                                palette=c("Yes"="#00468BFF", "No"="#ED0000FF"),
+                                datasets=get_datasets(), lookup=get_lookup()){
+  subjid_cols = get_subjid_cols(lookup=lookup)
   if(is.null(preprocess)) preprocess=identity
   if(is_formula(preprocess)) preprocess=as_function(preprocess)
   
-  subjid_list = data_list %>% 
+  subjid_list = datasets %>% 
     map(~{
       tmp = .get_subjid_vector(.x, subjid_cols)$subjid %>% preprocess()
       if(!gradient) tmp = unique(tmp)
@@ -50,7 +50,7 @@ edc_patient_gridplot = function(sort_rows=TRUE, sort_cols=TRUE, gradient=FALSE,
   
   all_subjid = subjid_list %>% unlist() %>% unique() %>% sort()
   
-  nrow_rslt = length(all_subjid) * length(data_list)
+  nrow_rslt = length(all_subjid) * length(datasets)
   df = subjid_list %>% 
     imap(~{
       tibble(subjid=all_subjid,
@@ -63,9 +63,8 @@ edc_patient_gridplot = function(sort_rows=TRUE, sort_cols=TRUE, gradient=FALSE,
     mutate(dataset_sum = sum(included), .by=dataset)
   stopifnot(nrow(df) == nrow_rslt)
   
-  l = edc_lookup()
-  extraction = attr(l, "datetime_extraction")
-  project_name = attr(l, "project_name")
+  extraction = attr(lookup, "datetime_extraction")
+  project_name = attr(lookup, "project_name")
   par_projname = plot_subtitle = NULL
   if(!is.null(project_name)) 
     par_projname = format_inline(" - {project_name}")

@@ -16,7 +16,9 @@ edc_crf_plot(
   pal = edc_pal_crf(),
   reverse = FALSE,
   x_label = "{dataset}",
-  treat_as_worst = NULL
+  treat_as_worst = NULL,
+  datasets = get_datasets(),
+  lookup = edc_lookup()
 )
 
 edc_pal_crf()
@@ -35,6 +37,8 @@ edc_pal_crf()
 \item{x_label}{a glue pattern determining the tick label in the x axis. Available variables are the ones of \code{\link[=edc_lookup]{edc_lookup()}}: \code{c("dataset", "nrow", "ncol", "n_id", "rows_per_id", "crfname")}.}
 
 \item{treat_as_worst}{a regex for levels that should be treated as worst in the ordering.}
+
+\item{datasets, lookup}{internal}
 }
 \value{
 a ggplot
