@@ -10,7 +10,7 @@ edc_find_value(keyword, ignore_case = TRUE, data = get_datasets())
 edc_find_column(keyword, ignore_case = TRUE, data = edc_lookup())
 }
 \arguments{
-\item{keyword}{The keyword to search for. Regular expressions are not supported.}
+\item{keyword}{The keyword to search for. Regular expressions are only supported in \code{edc_find_column}.}
 
 \item{ignore_case}{Logical. If \code{TRUE} (default), the search will ignore case differences.}
 
@@ -20,8 +20,7 @@ edc_find_column(keyword, ignore_case = TRUE, data = edc_lookup())
 a tibble
 }
 \description{
-Find a keyword in columns (\code{edc_find_column}) or values (\code{edc_find_value()}), in all
-the datasets of the database.
+Find a keyword in columns or values, in all the datasets of the database.
 }
 \examples{
 db = edc_example()

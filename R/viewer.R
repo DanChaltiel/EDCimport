@@ -99,7 +99,9 @@ edc_viewer_server = function(datasets, lookup) {
   dataTableProxy=DT::dataTableProxy;selectRows=DT::selectRows;styleRow=DT::styleRow
   icon=shiny::icon;showModal=shiny::showModal;modalDialog=shiny::modalDialog;
   plotOutput=shiny::plotOutput;renderPlot=shiny::renderPlot;
-  updateCheckboxInput=shiny::updateCheckboxInput
+  updateCheckboxInput=shiny::updateCheckboxInput;textInput=shiny::textInput;
+  actionButton=shiny::actionButton;renderUI=shiny::renderUI;
+  showNotification=shiny::showNotification; uiOutput=shiny::uiOutput;
   layout_column_wrap=bslib::layout_column_wrap;styleEqual=DT::styleEqual;
   value_box=bslib::value_box;update_switch=bslib::update_switch;DTOutput=DT::DTOutput;
   
