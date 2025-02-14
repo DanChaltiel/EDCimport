@@ -100,7 +100,7 @@ edc_find_column = function(keyword, ignore_case=TRUE, data=edc_lookup()){
   }
   
   tmp %>% 
-    select(-invalid)
+    select(-invalid, -any_of("subjids"))
 }
 
 
