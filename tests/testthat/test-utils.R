@@ -59,7 +59,7 @@ test_that("get_folder_datetime() works", {
 })
 
 
-# build_lookup() & find_keyword() ---------------------------------------------------------------
+# build_lookup() & edc_find_column() ---------------------------------------------------------------
 
 test_that("build_lookup() works", {
   excluded = c(".lookup", "date_extraction", "datetime_extraction")
@@ -78,23 +78,23 @@ test_that("build_lookup() works", {
     expect_error(class="edc_lookup_empty")
 })
 
-test_that("find_keyword() works", {
+test_that("edc_find_column() works", {
   x = edc_example()
   # x$.lookup %>% unnest() %>% v
-  x1=find_keyword("visit", data=x$.lookup)
+  x1=edc_find_column("visit", data=x$.lookup)
   expect_setequal(x1$names, paste0("date", 1:10))
-  x2=find_keyword("SUBJ|\\(", data=x$.lookup)
+  x2=edc_find_column("SUBJ|\\(", data=x$.lookup)
   expect_equal(unique(x2$names), c("subjid", "age"))
-  x3=find_keyword("SUBJ|\\(", data=x$.lookup, ignore_case=FALSE)
+  x3=edc_find_column("SUBJ|\\(", data=x$.lookup, ignore_case=FALSE)
   expect_equal(unique(x3$names), "age")
 })
 
 
-test_that("find_keyword() works with read_trialmaster()", {
+test_that("edc_find_column() works with read_trialmaster()", {
   clean_cache()
   w = read_trialmaster(filename, use_cache=FALSE, verbose=0)
   local_options(edc_lookup=w$.lookup)
-  x1=find_keyword("sex")
+  x1=edc_find_column("sex")
   expect_equal(x1$names, "SEX")
 })
 
