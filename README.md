@@ -1,4 +1,4 @@
-# EDCimport <a href='https://DanChaltiel.github.io/EDCimport/'><img src='man/figures/logo.png.png' align="right" height="175" /></a>
+# EDCimport <a href='https://DanChaltiel.github.io/EDCimport/'><img src='man/figures/logo.png' align="right" height="175" /></a>
 <!-- badges: start -->
 
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html) 
@@ -19,7 +19,7 @@ The **EDCimport** package is designed to simplify the import and management of E
 ## Installation 🛠️
 
 ``` r
-# Install last version available on CRAN (once published)
+# Install last version available on CRAN
 install.packages("EDCimport")
 
 # Install development version on Github
