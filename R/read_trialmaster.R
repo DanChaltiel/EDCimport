@@ -3,7 +3,10 @@
 #' 
 #' Import the `.zip` archive of a TrialMaster trial export as a list of dataframes. The archive filename should be leaved untouched as it contains the project name and the date of extraction. \cr
 #' Generate a `.rds` cache file for future reads. \cr
-#' If `7zip` is not installed or available, use [read_all_xpt()] instead.
+#' If `7zip` is not installed or available, use [read_all_xpt()] instead.\cr\cr
+#' The TM export should be of type `SAS Xport`, with the checkbox 
+#' "Include Codelists" ticked.
+#' 
 #'
 #' @param archive \[`character(1)`]\cr the path to the archive
 #' @param use_cache \[`mixed(1)`: "write"]\cr controls the `.rds` cache. If `TRUE`, read the cache if any or extract the archive and create a cache. If `FALSE` extract the archive without creating a cache file. Can also be `"read"` or `"write"`.
