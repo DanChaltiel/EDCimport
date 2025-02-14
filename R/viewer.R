@@ -234,7 +234,7 @@ edc_viewer_server = function(datasets, lookup) {
           footer = NULL,
           size = "xl",
           layout_column_wrap(vb1, vb2, vb3, width=0),
-          plotOutput(session$ns("crf_plot")),
+          if(!is.null(p1)) plotOutput(session$ns("crf_plot")),
           plotOutput(session$ns("patient_gridplot")),
         )
       )
@@ -315,14 +315,18 @@ edc_viewer_server = function(datasets, lookup) {
           filter = "top",
           # height = "80%",
           # plugins = "ellipsis",
+          extensions = c("FixedHeader", "FixedColumns"),
           escape = FALSE, # Autorise HTML
           colnames = colnames_with_hover(data), # Applique les noms HTML
           options = lst(
             pageLength = 15,
+            fixedHeader = TRUE,
+            # scrollY = "50%",
             # dom = "tp",
             # autoWidth = TRUE,
             # scrollX = TRUE,
-            columnDefs = dt_ellipsis(data, n=10),
+            columnDefs = dt_ellipsis(data, n=10), 
+            fixedColumns = list(leftColumns = 2),
             # columnDefs = list(list(
             #   targets = unname(which(map_lgl(data, ~is.character(.x)||is.factor(.x)))),
             #   render = JS("$.fn.dataTable.render.ellipsis(17, false )")
