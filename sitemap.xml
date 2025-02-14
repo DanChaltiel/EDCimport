@@ -11,6 +11,7 @@
 <url><loc>https://danchaltiel.github.io/EDCimport/reference/edc_database.html</loc></url>
 <url><loc>https://danchaltiel.github.io/EDCimport/reference/edc_db_to_excel.html</loc></url>
 <url><loc>https://danchaltiel.github.io/EDCimport/reference/edc_example.html</loc></url>
+<url><loc>https://danchaltiel.github.io/EDCimport/reference/edc_find_value.html</loc></url>
 <url><loc>https://danchaltiel.github.io/EDCimport/reference/edc_inform_code.html</loc></url>
 <url><loc>https://danchaltiel.github.io/EDCimport/reference/edc_left_join.html</loc></url>
 <url><loc>https://danchaltiel.github.io/EDCimport/reference/edc_lookup.html</loc></url>
@@ -25,7 +26,6 @@
 <url><loc>https://danchaltiel.github.io/EDCimport/reference/edc_warn_extraction_date.html</loc></url>
 <url><loc>https://danchaltiel.github.io/EDCimport/reference/edc_warn_patient_diffs.html</loc></url>
 <url><loc>https://danchaltiel.github.io/EDCimport/reference/fct_yesno.html</loc></url>
-<url><loc>https://danchaltiel.github.io/EDCimport/reference/find_keyword.html</loc></url>
 <url><loc>https://danchaltiel.github.io/EDCimport/reference/get_common_cols.html</loc></url>
 <url><loc>https://danchaltiel.github.io/EDCimport/reference/get_datasets.html</loc></url>
 <url><loc>https://danchaltiel.github.io/EDCimport/reference/harmonize_subjid.html</loc></url>
