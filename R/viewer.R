@@ -4,10 +4,10 @@
 #' @importFrom purrr map_dbl
 edc_viewer_ui = function(datasets, lookup){
   card=bslib::card;card_body=bslib::card_body;card_header=bslib::card_header;
-  card_title=bslib::card_title;page_sidebar=bslib::page_sidebar;sidebar=bslib::sidebar
-  DTOutput=DT::DTOutput
+  card_title=bslib::card_title;page_sidebar=bslib::page_sidebar;sidebar=bslib::sidebar;
+  DTOutput=DT::DTOutput;
   actionButton=shiny::actionButton;selectInput=shiny::selectInput;actionLink=shiny::actionLink;
-  tags=shiny::tags;textOutput=shiny::textOutput
+  div=shiny::div;HTML=shiny::HTML;tags=shiny::tags;textOutput=shiny::textOutput
   checkboxInput=shiny::checkboxInput;
   tooltip=bslib::tooltip; icon=shiny::icon; selectizeInput=shiny::selectizeInput;
   
@@ -21,12 +21,18 @@ edc_viewer_ui = function(datasets, lookup){
     par_extraction = format_inline("(extraction of {format_ymd(extraction)}) ")
   if(!is.null(EDCimport_version)) 
     par_version = format_inline("- EDCimport v{EDCimport_version}")
+  
   title = format_inline("{{EDCimport}} Data browsing {par_projname}{par_extraction}{par_version}")
   title_div = div(
-      style = "width: 100%; display: flex; justify-content: space-between; align-items: center;",
-      title, 
+    style = "width: 100%; display: flex; justify-content: space-between; align-items: center;",
+    title, 
+    div(
+      actionButton("btn_search", icon=icon("search"), label=NULL) |> 
+        tooltip("Search"),
       actionButton("btn_db_summary", icon=icon("circle-question"), label=NULL) |> 
-                tooltip("Database summary"))
+        tooltip("Database summary")
+    )
+  )
   
   page_sidebar(
     window_title = paste(project_name, " - EDCimport"),
@@ -54,11 +60,23 @@ edc_viewer_ui = function(datasets, lookup){
         DTOutput("table")
       )
     ),
+    
     tags$head(tags$style(
       '.card{overflow: visible !important;}',
       '.card-body{overflow: visible !important;}',
       '.modal-dialog{margin: 50px auto;}',
       '.modal-header{padding-bottom: 0;}',
+      '.modal-title{width: 100%;}',
+      '.bslib-input-switch{font-size: large;}',
+    )), 
+    
+    #Typing Enter in #search_input validate the input
+    tags$script(HTML(
+      "$(document).on('keyup', '#search_input', function(e) {
+        if (e.which == 13) {
+          Shiny.setInputValue('search_validate', true, {priority: 'event'});
+        }
+      });"
     ))
   )
 }
@@ -76,11 +94,11 @@ edc_viewer_server = function(datasets, lookup) {
   plotOutput=shiny::plotOutput;renderPlot=shiny::renderPlot;
   updateCheckboxInput=shiny::updateCheckboxInput
   layout_column_wrap=bslib::layout_column_wrap;styleEqual=DT::styleEqual;
-  value_box=bslib::value_box
+  value_box=bslib::value_box;update_switch=bslib::update_switch;DTOutput=DT::DTOutput;
   
-  .set_lookup(lookup, verbose=FALSE)
+  .set_lookup(lookup, verbose=FALSE) #needed for bg launch
   subjid_cols = get_subjid_cols(lookup)
-  # datasets = datasets
+
   project_name = attr(lookup, "project_name")
   if(is.null(project_name)) project_name="" 
   
@@ -88,8 +106,8 @@ edc_viewer_server = function(datasets, lookup) {
     dataset_selected = reactiveVal(NULL)
     
     ids = get_ids(datasets, subjid_cols)
-    p1 = edc_crf_plot() + theme(legend.position="bottom")
-    p2 = edc_patient_gridplot() + labs(title=NULL, subtitle=NULL)
+    p1 = edc_crf_plot(datasets=datasets, lookup=lookup) + theme(legend.position="bottom")
+    p2 = edc_patient_gridplot(datasets=datasets, lookup=lookup) + labs(title=NULL, subtitle=NULL)
     
     #init
     selectRows(dataTableProxy("input_table"), selected=1)
@@ -104,6 +122,76 @@ edc_viewer_server = function(datasets, lookup) {
     #on Reset button: reset subjid choice
     observeEvent(input$reset_subjid, {
       updateSelectInput(session, "subjid_selected", choices=c(ids))
+    })
+    
+    #on Search type change: update label
+    observeEvent(input$search_type_value, {
+      update_switch("search_type_value", label=ifelse(input$search_type_value, "for value", "for column"))
+    })
+    
+    #on Search button: show the whole search dialog
+    observeEvent(input$btn_search, {
+      showModal(
+        modalDialog(
+          title = div(
+            style = c("width: 100%; display: flex; justify-content: space-between;",
+                     "gap: 50px; align-items: center;"),
+            div(
+              style = "display: flex; flex-grow: 1; align-items: center;",
+              textInput("search_input", label=NULL, placeholder="Enter a keyword", width="100%")
+            ),
+            div(
+              style = "display: flex; align-items: center; gap: 10px;",
+              div(
+                style = "display: flex; align-items: center; height: 38px;", # Ajuste la hauteur
+                bslib::input_switch("search_type_value", "for column", width = "175px")
+              ),
+              actionButton("search_validate", "Search", icon = icon("search"))
+            )
+          ),
+          uiOutput("search_error"),
+          DTOutput("search_result"),
+          easyClose = TRUE,
+          size = "xl",
+          footer = NULL
+        )
+      )
+    })
+    
+    #on Search validation: show results
+    observeEvent(input$search_validate, {
+      req(input$search_input)
+      keyword = input$search_input
+      if(is.null(keyword) || nchar(keyword)==0) {
+        showNotification("Search input is empty")
+        return(NULL)
+      } 
+      if(input$search_type_value){
+        result = edc_find_value(keyword)
+        term = "value"
+      } else {
+        result = edc_find_column(keyword)
+        term = "column/label"
+      }
+      
+      if(is.null(result) || nrow(result)==0) {
+        output$search_error = renderUI(
+          div(class="alert alert-danger", 
+              glue('Could not find any {term} matching "{keyword}" in the database.'))
+        )
+        output$search_result = renderDT(NULL)
+      } else {
+        output$search_error = renderUI(NULL)
+        output$search_result = renderDT({ 
+          result %>% 
+            select(-any_of("subjids")) %>% 
+            mutate_all(~str_replace_all(format(.x), glue("(?i){keyword}"), 
+                                        glue("<span style='color:red;'>\\0</span>"))) %>% 
+            datatable(escape=FALSE)
+        })
+      }
+        
+      
     })
     
     #on Summary button: show modal
@@ -261,7 +349,7 @@ edc_viewer = function(background=TRUE, port=1209){
   datasets = get_datasets(lookup)
   shiny_url = paste0("http://127.0.0.1:", port)
   
-  launch_shiny = function(datasets, lookup){
+  launch_shiny = function(datasets, lookup, port){
     # devtools::load_all(helpers=FALSE)
     
     app = shiny::shinyApp(edc_viewer_ui(datasets, lookup), 
@@ -280,10 +368,8 @@ edc_viewer = function(background=TRUE, port=1209){
     
     edcimport_env$process = callr::r_bg(
       launch_shiny, 
-      args=list(datasets=datasets, lookup=lookup), 
+      args=list(datasets=datasets, lookup=lookup, port=port), 
       stdout="out", stderr="errors",
-      # env = c(R_BROWSER=brw),
-      # error="error",
       package="EDCimport"
     )
     if(edcimport_env$process$is_alive()) {
@@ -297,13 +383,9 @@ edc_viewer = function(background=TRUE, port=1209){
   }
   
   browseURL(shiny_url)
-  x=launch_shiny(datasets, lookup)
-  # print(x)
+  x=launch_shiny(datasets, lookup, port)
   invisible(x)
 }
-
-# devtools::load_all(".");x=edc_viewer(TRUE);
-# cat(x$read_error())
 
 
 
