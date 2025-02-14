@@ -47,16 +47,16 @@ edc_find_value = function(keyword, ignore_case=TRUE, data=get_datasets()){
         filter(str_detect(value, fixed(as.character(keyword), ignore_case=ignore_case)))
     }) %>% 
     list_rbind(names_to="dataset") %>% 
-    mutate(column_label = unlist(data_labels[column])) %>% 
-    select(any_of(subjid), dataset, column, column_label, value) %>% 
+    mutate(column_label = unlist(data_labels[column]) %0% NA) %>% 
+    select(any_of(subjid), dataset, column, column_label, value)
+  
+  if(nrow(a)==0){
+    return(a)
+  }
+  
+  a %>% 
     arrange(dataset, column) %>% 
     slice(across(any_of(subjid), mixedorder)[[1]])
-  
-  # a %>% 
-  #   summarise(value = cli::ansi_collapse(value, trunc=3, style='head'), 
-  #             .by=c(dataset, column))
-  
-  a
 }
 
 
@@ -89,7 +89,7 @@ edc_find_column = function(keyword, ignore_case=TRUE, data=edc_lookup()){
       mean(is.na(x))
     })) %>% 
     select(-where(~all(is.na(.x))))
-  if(nrow(tmp)==0) return(NULL)
+  if(nrow(tmp)==0) return(tmp)
   
   if(isTRUE(ignore_case) && any(tmp[["invalid"]])){
     cols = tmp %>% filter(invalid) %>% unite("x", c("dataset", "names"), sep="$") %>% pull(x)
