@@ -70,12 +70,19 @@ edc_viewer_ui = function(datasets, lookup){
       '.bslib-input-switch{font-size: large;}',
     )), 
     
-    #Typing Enter in #search_input validate the input
     tags$script(HTML(
+      #Typing Enter in #search_input validate the input
       "$(document).on('keyup', '#search_input', function(e) {
         if (e.which == 13) {
           Shiny.setInputValue('search_validate', true, {priority: 'event'});
         }
+      });",
+      #Activate JQuery tooltips for Data headers
+      "$(document).on('shiny:value', function(e) {
+        if(e.name != 'table') return(null)
+        setTimeout(function() {
+          $('.edc_label').tooltip();
+        }, 300);
       });"
     ))
   )
@@ -422,7 +429,6 @@ dt_ellipsis = function(data, n){
     render = DT::JS(glue(
       "function(data, type, row, meta) {{",
       "if(data==null || data==undefined) return ' ';",
-      "console.log(data);",
       "return type === 'display' && data.length > {n} ?",
       "'<span title=\"' + data + '\">' + data.substr(0, {n}) + '...</span>' : data;",
       "}}"))
@@ -437,7 +443,7 @@ colnames_with_hover = function(data){
   map_chr(colnames(data), ~{
     label = attr(data[[.x]], "label")
     if (!is.null(label) && label != "") {
-      glue('<span title="{label}">{.x}</span>')
+      glue('<span class="edc_label" title="{label}">{.x}</span>')
     } else {
       .x
     }
