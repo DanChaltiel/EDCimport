@@ -67,10 +67,13 @@ edc_crf_plot = function(crfstat_col="CRFSTAT",
   
   df = datasets %>% 
     map(~{
-      if(!any(crfstat_col %in% names(.x))) return(tibble())
+      if(!any(tolower(crfstat_col) %in% tolower(names(.x)))) return(tibble())
       .x %>% select(crfstat = any_of2(crfstat_col))
     }) %>% 
-    list_rbind(names_to="dataset") %>% 
+    list_rbind(names_to="dataset")
+  if(nrow(df)==0) return(NULL)
+  
+  df = df %>% 
     mutate(crfstat = edf_crfstat_recode(crfstat, do=!details)) %>% 
     count(dataset, crfstat) %>% 
     left_join(lookup, by="dataset") %>% 
