@@ -13,6 +13,7 @@
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Import Data from EDC Software">
 <meta name="description" content="A convenient toolbox to import data exported from Electronic Data Capture (EDC) software TrialMaster.">
 <meta property="og:description" content="A convenient toolbox to import data exported from Electronic Data Capture (EDC) software TrialMaster.">
+<meta property="og:image" content="https://danchaltiel.github.io/EDCimport/logo.png">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -22,7 +23,7 @@
 
     <a class="navbar-brand me-2" href="index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9027</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9028</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,19 +49,23 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="edcimport-">EDCimport <a href="https://DanChaltiel.github.io/EDCimport/" class="external-link"><img src="inst/figures/logo.png" align="right" height="175"></a>
+<div class="page-header">
+<img src="logo.png" class="logo" alt=""><h1 id="edcimport-">EDCimport 
 <a class="anchor" aria-label="anchor" href="#edcimport-"></a>
-</h1></div>
+</h1>
+</div>
 <!-- badges: start -->
 
-<p>EDCimport is a package designed to easily import data from EDC softwares in clinical research.</p>
-<p>It is an opinionated framework, built to compute usual calculations given a database of several datasets sharing a common “Subject ID” key.</p>
-<p>It can directly read from an export of <a href="https://www.anjusoftware.com/trial-master/" class="external-link">TrialMaster</a>.</p>
-<blockquote>
-<p>[!WARNING] This package is experimental and under active developement. <br> Retrocompatibility is not a priority for the moment.<br> For reproducibility, use <a href="https://rstudio.github.io/renv/articles/renv.html" class="external-link">renv</a> to fix the package version.</p>
-</blockquote>
 <div class="section level2">
-<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+<h2 id="introduction-">Introduction 📦<a class="anchor" aria-label="anchor" href="#introduction-"></a>
+</h2>
+<p>The <strong>EDCimport</strong> package is designed to simplify the import and management of Electronic Data Capture (EDC) exports, particularly in clinical research settings. It is an opinionated framework, providing multiple streamlined tools for importing, cleaning, and checking your datasets.</p>
+<blockquote>
+<p>[!WARNING] This package is experimental and under active developement. Retrocompatibility is not a priority for the moment. For reproducibility, use <a href="https://rstudio.github.io/renv/articles/renv.html" class="external-link">renv</a> to set the package version.</p>
+</blockquote>
+</div>
+<div class="section level2">
+<h2 id="installation-️">Installation 🛠️<a class="anchor" aria-label="anchor" href="#installation-%EF%B8%8F"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Install last version available on CRAN (once published)</span></span>
@@ -68,17 +73,18 @@
 <span></span>
 <span><span class="co"># Install development version on Github</span></span>
 <span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"DanChaltiel/EDCimport"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="features-">Features 🚀<a class="anchor" aria-label="anchor" href="#features-"></a>
+</h2>
 <div class="section level3">
 <h3 id="load-the-data">Load the data<a class="anchor" aria-label="anchor" href="#load-the-data"></a>
 </h3>
-<p>Your data usually comes as multiple files inside a specific directory.</p>
-<p>Depending on the type of the files, you should use one of <code><a href="reference/read_all_sas.html">read_all_sas()</a></code>, <code><a href="reference/read_all_xpt.html">read_all_xpt()</a></code>, <code><a href="reference/read_all_csv.html">read_all_csv()</a></code>, or <code><a href="reference/read_trialmaster.html">read_trialmaster()</a></code>.</p>
-<p>For TrialMaster, you should request an export of type <code>SAS Xport</code>, with the checkbox “Include Codelists” ticked. This export should generate a <code>.zip</code> archive that you can use in <code><a href="reference/read_trialmaster.html">read_trialmaster()</a></code>.</p>
-<p>The resulting object <code>db</code> is an <code>edc_database</code> object containing all the datasets and some metadatas.</p>
-<p>You can now use <code><a href="reference/load_database.html">load_database()</a></code> to import the list in the global environment and use your tables:</p>
+<p>Use one of <code><a href="reference/read_all_sas.html">read_all_sas()</a></code>, <code><a href="reference/read_all_xpt.html">read_all_xpt()</a></code>, <code><a href="reference/read_all_csv.html">read_all_csv()</a></code>, or <code><a href="reference/read_trialmaster.html">read_trialmaster()</a></code>, depending on the type of files in your export directory. You can then load your datasets into the global environment with <code><a href="reference/load_database.html">load_database()</a></code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DanChaltiel/EDCimport" class="external-link">EDCimport</a></span><span class="op">)</span></span>
 <span><span class="va">db</span> <span class="op">=</span> <span class="fu"><a href="reference/read_all_sas.html">read_all_sas</a></span><span class="op">(</span><span class="st">"path/to/my/files/folder"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">db</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/load_database.html">load_database</a></span><span class="op">(</span><span class="va">db</span><span class="op">)</span> <span class="co">#this also removes `db` to save some RAM</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">dataset1</span><span class="op">$</span><span class="va">column5</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -161,11 +167,9 @@
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="http://www.gnu.org/licenses/gpl-3.0.html" class="external-link"><img src="http://img.shields.io/badge/license-GPL--3-brightgreen.svg?style=flat" alt="Package-License"></a></li>
-<li><a href="https://lifecycle.r-lib.org/articles/stages.html" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-blue.svg" alt="Lifecycle: stable"></a></li>
+<li><a href="https://lifecycle.r-lib.org/articles/stages.html" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
 <li><a href="https://CRAN.R-project.org/package=EDCimport" class="external-link"><img src="https://www.r-pkg.org/badges/version/EDCimport" alt="CRAN status"></a></li>
 <li><a href="https://github.com/DanChaltiel/EDCimport" class="external-link"><img src="https://img.shields.io/github/last-commit/DanChaltiel/EDCimport" alt="Last Commit"></a></li>
-<li><a href="https://cran.r-project.org/" class="external-link"><img src="https://img.shields.io/badge/R-%E2%89%A53.1-blue.svg" alt="minimal R version"></a></li>
 <li><a href="https://github.com/DanChaltiel/EDCimport/actions/workflows/check-standard.yaml" class="external-link"><img src="https://github.com/DanChaltiel/EDCimport/actions/workflows/check-standard.yaml/badge.svg" alt="R-CMD-check"></a></li>
 </ul>
 </div>
