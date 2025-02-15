@@ -28,7 +28,7 @@ reference:
   - edc_lookup
 - title: "Modifying databases"
 - contents:
-  - harmonize_subjid
+  - edc_unify_subjid
   - edc_split_mixed
   - edc_clean_names
 - title: "Checking databases"

@@ -299,16 +299,17 @@ save_sessioninfo = function(path="check/session_info.txt", with_date=TRUE){
 #' @export
 #' @importFrom dplyr across any_of mutate select
 #' @importFrom purrr discard_at keep map map_lgl modify_if
+#' @importFrom rlang as_function
 #'
 #' @examples
 #' db = edc_example()
 #' db$enrol = head(db$enrol, 10)
 #' db$enrol$subjid %>% head()
-#' db = harmonize_subjid(db)
+#' db = edc_unify_subjid(db)
 #' db$enrol$subjid %>% head()
-#' db = harmonize_subjid(db, preprocess=function(x) paste0("#", x))
+#' db = edc_unify_subjid(db, preprocess=function(x) paste0("#", x))
 #' db$enrol$subjid %>% head()
-harmonize_subjid = function(database, preprocess=NULL, col_subjid=NULL){
+edc_unify_subjid = function(database, preprocess=NULL, col_subjid=NULL){
   if(is.null(col_subjid)) col_subjid=get_subjid_cols(database$.lookup)
   
   all_subjid = database %>% 
@@ -320,6 +321,8 @@ harmonize_subjid = function(database, preprocess=NULL, col_subjid=NULL){
   all_numeric = all_subjid %>% map_lgl(can_be_numeric) %>% all()
   if(is.null(preprocess)){
     if(all_numeric) preprocess = as.numeric else preprocess = as.character
+  } else {
+    preprocess = as_function(preprocess)
   }
   assert_class(preprocess, "function")
   
@@ -341,6 +344,10 @@ harmonize_subjid = function(database, preprocess=NULL, col_subjid=NULL){
   a
 }
 
+#' @rdname edc_unify_subjid
+#' @export
+#' @usage NULL
+harmonize_subjid = deprecatedly(edc_unify_subjid, when="0.6.0", what="harmonize_subjid()")
 
 # Joins ---------------------------------------------------------------------------------------
 

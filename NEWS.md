@@ -84,7 +84,7 @@ I don't think enough people are using this so that it is necessary to go through
 
 -   New function `lastnews_table()` to find the last date an information has been entered for each patient (#37). Useful for survival analyses.
 
--   New function `harmonize_subjid()`, to have the same structure for subject IDs in all the datasets of the database (#30).
+-   New function `edc_unify_subjid()`, to have the same structure for subject IDs in all the datasets of the database (#30).
 
 -   New function `save_plotly()`, to save a `plotly` to an HTML file (#15).
 
