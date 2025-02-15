@@ -1,0 +1,116 @@
+---
+title: "2 - Post processing"
+format: 
+  html:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{2 - Post processing}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: '#>'
+---
+
+## Introduction
+
+::: callout-caution
+Before reading this, you should read `vignette("reading")` to learn how to import your database.
+:::
+
+After importing your database with EDCimport, you end up with an `edc_database` object, which can be loaded to the global environment using `load_database()`.
+
+However, EDCimport provides a few functions to improve the database before loading it.
+
+## Harmonize Subject ID across the database
+
+The Subject ID column, usually `SUBJID` for CDISC data, is the primary key, shared by almost all your datasets.
+
+Using `edc_unify_subjid()`, you can harmonize this column across the whole database, so that it becomes a `factor`, consistant for all datasets. With `preprocess`, you can even customize it.
+
+This is especially convenient for joining your data and checking for missing patients.
+
+```{r}
+#| warning: false
+library(EDCimport)
+db1 = edc_example()
+load_database(db1)
+enrol$subjid %>% class()
+enrol$subjid %>% head()
+
+db2 = edc_example() %>% 
+  edc_unify_subjid(preprocess=~paste0("#", .x))
+load_database(db2)
+enrol$subjid %>% class()
+enrol$subjid %>% head()
+#missing patients in table `ae`
+ae$subjid %>% 
+  forcats::fct_count() %>% 
+  dplyr::filter(n==0) 
+```
+
+::: callout-note
+If your SUBJID column is numeric and `preprocess` is empty, SUBJID will be casted to numeric.
+:::
+
+## Clean dataset names
+
+Is your database from a messy EDC software, filled with special characters or camelCase column names?
+
+Fear not! With `edc_clean_names()` you can clean all dataset names at once.
+
+By default, it converts names to lowercase letters, numbers, and underscores only. For this example, since `edc_example()` already provides clean column names, let's convert all columns to **uppercase**:
+
+```{r}
+#| warning: false
+library(EDCimport)
+db = edc_example() %>% 
+  edc_clean_names(toupper)
+load_database(db)
+names(enrol)
+```
+
+## Split some dataset to short+long
+
+::: {.callout-note appearance="minimal"}
+This one is a bit more complex, but bear with me, I'll try to make is understandable.
+:::
+
+When a CRF form contains both repeated and non-repeated measures, the export usually duplicates the non-repeated measure.
+
+This results in a "mixed" data format, combining both "long" and "short" structures. (You usually call the latter "wide", but in this case it is not really.)
+
+For example, in the dataset `long_mixed` from `edc_example()`, you have two long-format variables (one value per observation) and one wide-format variable (one value per subject).
+
+```{r}
+head(long_mixed)
+```
+
+With complex CRFs and lengthy forms, this mixed structure can complicate analysis, as repeated and non-repeated data may be unrelated.
+
+With `edc_split_mixed()`, you can split this dataset into two, one `short` and one `long`:
+
+```{r}
+#| warning: false
+db = edc_example() %>% 
+  edc_split_mixed(long_mixed)
+load_database(db)
+head(long_mixed_short) #one row per subject
+head(long_mixed_long)  #one row per observation
+```
+
+## You can combine!
+
+Obviously, these functions can be piped to one another:
+
+``` r
+db = edc_example() %>% 
+  edc_split_mixed(long_mixed)  %>% 
+  edc_unify_subjid(preprocess=~paste0("#", .x))%>% 
+  edc_clean_names(toupper)
+
+load_database(db)
+```
+
+Don't hesitate to [submit a feature request](https://github.com/DanChaltiel/EDCimport/issues/new?template=feature_request.md) if you think another function can be useful to others!
