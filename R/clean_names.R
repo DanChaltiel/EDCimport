@@ -22,6 +22,7 @@
 #' names(db$enrol)
 edc_clean_names = function(database, clean_fun=NULL){
   if(is.null(clean_fun)) clean_fun = edc_make_clean_name
+  database_class = class(database) 
   .lookup = database$.lookup
   database = database %>% 
     map_if(~is.data.frame(.x) && !inherits(.x, "edc_lookup"),
@@ -32,6 +33,7 @@ edc_clean_names = function(database, clean_fun=NULL){
     extend_lookup(datasets=database)
   
   .set_lookup(database$.lookup, verbose=FALSE)
+  class(database) = database_class
   
   database
 }
