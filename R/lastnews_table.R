@@ -26,8 +26,8 @@
 #' db = edc_example()
 #' load_database(db)
 #' lastnews_table()
-#' lastnews_table(except="db3")
-#' lastnews_table(except="db3$date9")
+#' lastnews_table(except="data3")
+#' lastnews_table(except="data3$date9")
 #' lastnews_table(prefer="date10", show_delta=TRUE) 
 #' lastnews_table() %>% 
 #'   dplyr::count(origin = glue::glue("{origin_data}${origin_col}"), 
