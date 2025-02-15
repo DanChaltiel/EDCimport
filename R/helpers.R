@@ -420,6 +420,7 @@ edc_full_join = .edc_join(type="full")
 #' Manual correction
 #' 
 #' @description
+#' `r lifecycle::badge("experimental")`
 #'  
 #' When finding wrong or unexpected values in an exported dataset, it can be useful to temporarily correct them by hard-coding a value. 
 #' However, this manual correction should be undone as soon as the central database is updated with the correction. 

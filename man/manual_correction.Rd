@@ -29,6 +29,8 @@ reset_manual_correction()
 Nothing, used for side effects
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
 When finding wrong or unexpected values in an exported dataset, it can be useful to temporarily correct them by hard-coding a value.
 However, this manual correction should be undone as soon as the central database is updated with the correction.
 \itemize{
