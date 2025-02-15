@@ -107,8 +107,8 @@ edc_example_plot = edc_example
   
   long_mixed = tibble(subjid=rep(1:N, each=2), 
                       crfname="both short and long data", 
-                      val1b=rnorm(2*N), val2b=rnorm(2*N)+10, 
-                      val3b=LETTERS[subjid%%26+1])
+                      long1=rnorm(2*N), long2=rnorm(2*N)+10, 
+                      short=LETTERS[subjid%%26+1])
   
   attr(short$subjid, "label") = "Subject ID"
   attr(long_pure$subjid, "label") = "Subject ID"
