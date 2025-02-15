@@ -1,5 +1,8 @@
 ---
 title: "1 - Read your database"
+format: 
+  html:
+    toc: true
 vignette: >
   %\VignetteIndexEntry{1 - Read your database}
   %\VignetteEngine{quarto::html}
@@ -11,7 +14,7 @@ knitr:
 ---
 
 ```{r}
-#| label: setup
+#| include: false
 library(EDCimport)
 ```
 
@@ -75,4 +78,4 @@ load_database(db) #this also removes `db` to save some RAM
 edc_viewer()
 ```
 
-![](edc_viewer.gif)
+![](edc_viewer.webp)
