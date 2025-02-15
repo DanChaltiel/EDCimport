@@ -19,7 +19,7 @@ You imported your database, but now you need to check it for errors and inconsis
 
 There are a lot of ways to do so, so EDCimport provides functions for a few concepts.
 
-As in previous vignettes, we will be using `edc_example()`, but you should use EDC reading functions (see `vignette("reading")`)
+As in previous vignettes, we will be using `edc_example()`, but in the real world you should use EDC reading functions. See `vignette("reading")` to see how.
 
 ```{r}
 #| warning: false
@@ -33,6 +33,8 @@ load_database(db)
 ```
 
 ## Data warning
+
+### Data errors
 
 The primary and most valuable data-checking tool in EDCimport is `edc_data_warn()`.
 
@@ -64,14 +66,34 @@ data1 %>%
   edc_data_warn("Treated patients should have been seen later", issue_n=3)
 ```
 
-You can write these checks as per your Data Validation Plan, and they should run after each export.
+You can implement these checks according to your Data Validation Plan, ensuring they run after every export. Any failed check will produce a warning in your R console. Once the database is corrected, the warnings will no longer appear (e.g. `issue_n=2`).
 
-If one check is so mandatory that you cannot work in a database where it fails, use `edc_data_stop()` instead.
-
-At some point, you can use `edc_data_warnings()` to get a summary.
+After running all your checks, you can use `edc_data_warnings()` to get a summary of all detected issues.
 
 ```{r}
 edc_data_warnings()
+```
+
+### Fatal error
+
+If one check is so mandatory that you cannot work in a database where it fails, use `edc_data_stop()` instead.
+
+For example, you can use it to check that some variable construction didn't go wrong:
+
+``` r
+df = mtcars %>% 
+  mutate(
+    type = case_when(
+      cyl==4 ~ "4 cylinders", 
+      cyl==6 ~ "6 cylinders", 
+      cyl==8 ~ "8 cylinders", 
+      .default="ERROR"
+    ),
+  )
+
+df %>% 
+  filter(type=="ERROR") %>% 
+  edc_data_stop("Error on type construction")
 ```
 
 ## Duplicate-free dataset assertion
