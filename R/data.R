@@ -20,7 +20,8 @@ edc_example = function(N=50, seed=42, outdated=FALSE){
   x2 = .example_mixed(N, seed)
   x3 = .example_ae(N, seed)
   rtn = c(x1, x2, x3) %>% 
-    map(~{
+    imap(~{
+      if(.y=="long_pure") return(.x)
       .x %>% 
         mutate(
           crfstat=sample(c("Complete","No Data","Incomplete"), 

@@ -7,13 +7,14 @@ test_that("Split mixed", {
   db = edc_example(N=100) 
   
   #all datasets
-  mixed_data_all = edc_split_mixed(db, verbose=FALSE)
+  mixed_data_all = edc_split_mixed(db, verbose=FALSE, ignore_cols="crfstat")
   expect_equal(edc_lookup(dataset)$dataset,
                c("ae", "ae_long", "ae_short", "data1", "data2", "data3", "enrol", "long_mixed",
                  "long_mixed_long", "long_mixed_short", "long_pure", "short"))
   
   #tidyselection
-  mixed_data = edc_split_mixed(db, c(short, "enrol", starts_with("long")), verbose=FALSE)
+  mixed_data = edc_split_mixed(db, datasets=c(short, "enrol", starts_with("long")), 
+                               ignore_cols="crfstat", verbose=FALSE)
   
   expect_equal(edc_lookup(dataset)$dataset,
                c("ae", "data1", "data2", "data3", "enrol", "long_mixed", "long_mixed_long", 
@@ -21,7 +22,7 @@ test_that("Split mixed", {
   expect_equal(nrow(mixed_data$long_mixed_short), 100)
   expect_equal(nrow(mixed_data$long_mixed_long), 200)
   expect_equal(ncol(mixed_data$long_mixed_short), 3)
-  expect_equal(ncol(mixed_data$long_mixed_long), 3)
+  expect_equal(ncol(mixed_data$long_mixed_long), 4)
   
   #content
   expect_true(all(c("long_mixed_short", "long_mixed_long") %in% names(mixed_data)))
@@ -30,6 +31,6 @@ test_that("Split mixed", {
   expect_equal(nrow(mixed_data$long_mixed_short), 100)
   expect_equal(nrow(mixed_data$long_mixed_long), 200)
   expect_equal(ncol(mixed_data$long_mixed_short), 3)
-  expect_equal(ncol(mixed_data$long_mixed_long), 3)
+  expect_equal(ncol(mixed_data$long_mixed_long), 4)
   
 })

@@ -32,7 +32,8 @@ Split mixed tables, i.e. tables that hold both long data (N values per patient) 
 \examples{
 #db = read_trialmaster("filename.zip", pw="xx")
 db = edc_example() \%>\% 
-  edc_split_mixed(c(ae, starts_with("long")))
+  edc_split_mixed(c(ae, starts_with("long")), 
+                  ignore_cols="crfstat")
   
 names(db)
 edc_lookup()

@@ -13,7 +13,7 @@ edc_patient_gridplot(
   preprocess = NULL,
   palette = c(Yes = "#00468BFF", No = "#ED0000FF"),
   datasets = get_datasets(),
-  lookup = get_lookup()
+  lookup = edc_lookup()
 )
 }
 \arguments{

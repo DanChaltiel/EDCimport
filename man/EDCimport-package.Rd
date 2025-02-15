@@ -6,6 +6,8 @@
 \alias{EDCimport-package}
 \title{EDCimport: Import Data from EDC Software}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 A convenient toolbox to import data exported from Electronic Data Capture (EDC) software 'TrialMaster'.
 }
 \seealso{

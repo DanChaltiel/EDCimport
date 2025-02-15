@@ -36,7 +36,7 @@
 edc_patient_gridplot = function(sort_rows=TRUE, sort_cols=TRUE, gradient=FALSE,
                                 axes_flip=FALSE, show_grid=TRUE, preprocess=NULL,
                                 palette=c("Yes"="#00468BFF", "No"="#ED0000FF"),
-                                datasets=get_datasets(), lookup=get_lookup()){
+                                datasets=get_datasets(), lookup=edc_lookup()){
   subjid_cols = get_subjid_cols(lookup=lookup)
   if(is.null(preprocess)) preprocess=identity
   if(is_formula(preprocess)) preprocess=as_function(preprocess)

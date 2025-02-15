@@ -85,7 +85,8 @@ table_format = function(df, id=get_subjid_cols(), ...,
 #' @examples
 #' #db = read_trialmaster("filename.zip", pw="xx")
 #' db = edc_example() %>% 
-#'   edc_split_mixed(c(ae, starts_with("long")))
+#'   edc_split_mixed(c(ae, starts_with("long")), 
+#'                   ignore_cols="crfstat")
 #'   
 #' names(db)
 #' edc_lookup()
@@ -101,10 +102,11 @@ edc_split_mixed = function(database, datasets=everything(),
   check_dots_empty()
   .lookup = database$.lookup
   patient_id = get_subjid_cols(lookup=.lookup)
- 
-  if(is.null(ignore_cols)){
-    ignore_cols = c(get_crfname_cols(lookup=.lookup), 
-                    get_meta_cols(lookup=.lookup, min_pct=0.95))
+  
+  ignore_cols_default = c(get_crfname_cols(lookup=.lookup), 
+                          get_meta_cols(lookup=.lookup, min_pct=0.95))
+  if(!is.null(ignore_cols)){
+    ignore_cols = c(ignore_cols_default, ignore_cols)
   }
   
   db_mixed = database %>% 
