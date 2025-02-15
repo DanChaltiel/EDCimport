@@ -12,8 +12,8 @@
 #' @export
 edc_example = function(N=50, seed=42, outdated=FALSE){
   set.seed(seed)
-  ext1 = as.POSIXct("2024-01-01 01:00:00 CET")
-  ext2 = as.POSIXct("2010-08-10 18:58:36 CET")
+  ext1 = as.POSIXct("2024-01-01 00:00:00 CET")
+  ext2 = as.POSIXct("2010-08-10 00:00:00 CET")
   datetime_extraction = if(isTRUE(outdated)) ext2 else ext1
   
   x1 = .example_dates(N, seed)
@@ -61,15 +61,14 @@ edc_example_plot = edc_example
 #' @importFrom tibble tibble
 .example_dates = function(N, seed){
   set.seed(seed)
-  start = ISOdate(2010, 04, 13, tz="CET")
-  day = 3600*24
-  data0 = tibble(subjid=1:N, age=rnorm(N, 50, 10), birth_date=start-age*day)
+  start = ISOdate(2010, 04, 13, tz="CET") %>% as.Date()
+  data0 = tibble(subjid=1:N, age=rnorm(N, 50, 10), birth_date=start-age)
   attr(data0$subjid, "label") = "Subject ID"
   attr(data0$age, "label")    = "Age (years)"
   attr(data0$birth_date, "label") = "Date of birth"
   
   for(i in 1:10){
-    data0[[paste0("date",i)]] = (start+rnorm(N, i*10, 10)*day) %>% 
+    data0[[paste0("date",i)]] = (start+rnorm(N, i*10, 10)) %>% 
       set_label(paste0("Date at visit ",i))
   }
   
