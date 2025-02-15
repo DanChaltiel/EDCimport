@@ -5,7 +5,7 @@
     Output
       $db0
       # A tibble: 6 x 5
-        SUBJID   age birth_date             group crfname
+        SUBJID   age date_naissance             group crfname
          <int> <dbl> <chr>                      <chr> <chr>  
       1      1  63.7 2010-02-08 18:58:11.901665 B     db0    
       2      2  44.4 2010-02-28 03:31:39.220086 A     db0    
@@ -60,7 +60,7 @@
       $db0$age
       [1] "Age (years)"
       
-      $db0$birth_date
+      $db0$date_naissance
       [1] "Date of birth"
       
       $db0$group
@@ -139,7 +139,7 @@
         <chr>          <chr>
       1 SUBJID         <NA> 
       2 age            <NA> 
-      3 birth_date <NA> 
+      3 date_naissance <NA> 
       4 group          <NA> 
       5 crfname        <NA> 
       6 date1          <NA> 
@@ -153,7 +153,7 @@
       $db0$age
       [1] "Age (years)"
       
-      $db0$birth_date
+      $db0$date_naissance
       [1] "Date of birth"
       
       $db0$group
