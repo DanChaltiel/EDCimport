@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9032</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9033</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,7 +42,8 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/reading.html">1 - Read your database</a></li>
+<li><a class="dropdown-item" href="../articles/postprocessing.html">2 - Post processing</a></li>
+    <li><a class="dropdown-item" href="../articles/reading.html">1 - Read your database</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -75,11 +76,7 @@
 
 
 
-    <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DanChaltiel/EDCimport" class="external-link">EDCimport</a></span><span class="op">)</span></span></code></pre></div>
-</div>
-<section class="level2"><h2 id="read-your-database">Read your database<a class="anchor" aria-label="anchor" href="#read-your-database"></a>
+    <section class="level2"><h2 id="read-your-database">Read your database<a class="anchor" aria-label="anchor" href="#read-your-database"></a>
 </h2>
 <p>If you are reading this vignette, chances are that you have requested an export from an EDC software that provided you with a directory filled with files of datasets.</p>
 <p>Wouldn’t it be so tedious if you had to load all those files one by one? Lucky you, EDCimport knows a better way!</p>
@@ -97,7 +94,7 @@
 <li><p>or a data file (<code>.csv</code> or <code>.sas7bdat</code>) containing 3 columns: the SAS format name (repeated), each level, and its associated label. Use <code>options(edc_var_format_name="xxx", edc_var_level="xxx", edc_var_label="xxx")</code> to specify the names of the columns.</p></li>
 </ul>
 <p>You can then load your datasets into the global environment with <code><a href="../reference/load_database.html">load_database()</a></code>.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DanChaltiel/EDCimport" class="external-link">EDCimport</a></span><span class="op">)</span></span>
 <span><span class="va">db</span> <span class="op">=</span> <span class="fu"><a href="../reference/read_all_sas.html">read_all_sas</a></span><span class="op">(</span><span class="st">"path/to/my/files/folder"</span>, format_file<span class="op">=</span><span class="st">"procformat.sas"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">db</span><span class="op">)</span></span>
@@ -111,7 +108,7 @@
 <li><p><code><a href="../reference/edc_find_value.html">edc_find_column()</a></code> and <code><a href="../reference/edc_find_value.html">edc_find_value()</a></code>, to search the database for a column/label or for an actual value.</p></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">db</span> <span class="op">=</span> <span class="fu"><a href="../reference/edc_example.html">edc_example</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/load_database.html">load_database</a></span><span class="op">(</span><span class="va">db</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/edc_lookup.html">edc_lookup</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -128,19 +125,19 @@
 <span><span class="co">#&gt; 8 short         50     5    50         1   short data</span></span>
 <span><span class="fu"><a href="../reference/edc_find_value.html">edc_find_column</a></span><span class="op">(</span><span class="st">"date"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 11 × 5</span></span>
-<span><span class="co">#&gt;    dataset crfname names          labels           prop_na</span></span>
-<span><span class="co">#&gt;    &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;          &lt;chr&gt;              &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt;  1 data1   data1   date1          Date at visit 1        0</span></span>
-<span><span class="co">#&gt;  2 data1   data1   date2          Date at visit 2        0</span></span>
-<span><span class="co">#&gt;  3 data1   data1   date3          Date at visit 3        0</span></span>
-<span><span class="co">#&gt;  4 enrol   enrol   date_naissance Date of birth          0</span></span>
-<span><span class="co">#&gt;  5 data2   data2   date4          Date at visit 4        0</span></span>
-<span><span class="co">#&gt;  6 data2   data2   date5          Date at visit 5        0</span></span>
-<span><span class="co">#&gt;  7 data2   data2   date6          Date at visit 6        0</span></span>
-<span><span class="co">#&gt;  8 data3   data3   date7          Date at visit 7        0</span></span>
-<span><span class="co">#&gt;  9 data3   data3   date8          Date at visit 8        0</span></span>
-<span><span class="co">#&gt; 10 data3   data3   date9          Date at visit 9        0</span></span>
-<span><span class="co">#&gt; 11 data3   data3   date10         Date at visit 10       0</span></span>
+<span><span class="co">#&gt;    dataset crfname names      labels           prop_na</span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;      &lt;chr&gt;              &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt;  1 data1   data1   date1      Date at visit 1        0</span></span>
+<span><span class="co">#&gt;  2 data1   data1   date2      Date at visit 2        0</span></span>
+<span><span class="co">#&gt;  3 data1   data1   date3      Date at visit 3        0</span></span>
+<span><span class="co">#&gt;  4 enrol   enrol   birth_date Date of birth          0</span></span>
+<span><span class="co">#&gt;  5 data2   data2   date4      Date at visit 4        0</span></span>
+<span><span class="co">#&gt;  6 data2   data2   date5      Date at visit 5        0</span></span>
+<span><span class="co">#&gt;  7 data2   data2   date6      Date at visit 6        0</span></span>
+<span><span class="co">#&gt;  8 data3   data3   date7      Date at visit 7        0</span></span>
+<span><span class="co">#&gt;  9 data3   data3   date8      Date at visit 8        0</span></span>
+<span><span class="co">#&gt; 10 data3   data3   date9      Date at visit 9        0</span></span>
+<span><span class="co">#&gt; 11 data3   data3   date10     Date at visit 10       0</span></span>
 <span><span class="fu"><a href="../reference/edc_find_value.html">edc_find_value</a></span><span class="op">(</span><span class="st">"immune"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 7 × 5</span></span>
 <span><span class="co">#&gt;   subjid dataset column column_label value                  </span></span>
@@ -156,11 +153,11 @@
 </section><section class="level2"><h2 id="shiny-browser">Shiny browser<a class="anchor" aria-label="anchor" href="#shiny-browser"></a>
 </h2>
 <p>But the easiest way to explore your database is by running <code><a href="../reference/edc_viewer.html">edc_viewer()</a></code>, which will run a local shiny application:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">db</span> <span class="op">=</span> <span class="fu"><a href="../reference/edc_example.html">edc_example</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/load_database.html">load_database</a></span><span class="op">(</span><span class="va">db</span><span class="op">)</span> <span class="co">#this also removes `db` to save some RAM</span></span>
 <span><span class="fu"><a href="../reference/edc_viewer.html">edc_viewer</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="edc_viewer.gif"></p>
+<p><img src="edc_viewer.webp"></p>
 </section><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

@@ -1,6 +1,7 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://danchaltiel.github.io/EDCimport/404.html</loc></url>
 <url><loc>https://danchaltiel.github.io/EDCimport/articles/index.html</loc></url>
+<url><loc>https://danchaltiel.github.io/EDCimport/articles/postprocessing.html</loc></url>
 <url><loc>https://danchaltiel.github.io/EDCimport/articles/reading.html</loc></url>
 <url><loc>https://danchaltiel.github.io/EDCimport/authors.html</loc></url>
 <url><loc>https://danchaltiel.github.io/EDCimport/index.html</loc></url>
@@ -24,13 +25,13 @@
 <url><loc>https://danchaltiel.github.io/EDCimport/reference/edc_reset_options.html</loc></url>
 <url><loc>https://danchaltiel.github.io/EDCimport/reference/edc_split_mixed.html</loc></url>
 <url><loc>https://danchaltiel.github.io/EDCimport/reference/edc_swimmerplot.html</loc></url>
+<url><loc>https://danchaltiel.github.io/EDCimport/reference/edc_unify_subjid.html</loc></url>
 <url><loc>https://danchaltiel.github.io/EDCimport/reference/edc_viewer.html</loc></url>
 <url><loc>https://danchaltiel.github.io/EDCimport/reference/edc_warn_extraction_date.html</loc></url>
 <url><loc>https://danchaltiel.github.io/EDCimport/reference/edc_warn_patient_diffs.html</loc></url>
 <url><loc>https://danchaltiel.github.io/EDCimport/reference/fct_yesno.html</loc></url>
 <url><loc>https://danchaltiel.github.io/EDCimport/reference/get_common_cols.html</loc></url>
 <url><loc>https://danchaltiel.github.io/EDCimport/reference/get_datasets.html</loc></url>
-<url><loc>https://danchaltiel.github.io/EDCimport/reference/harmonize_subjid.html</loc></url>
 <url><loc>https://danchaltiel.github.io/EDCimport/reference/index.html</loc></url>
 <url><loc>https://danchaltiel.github.io/EDCimport/reference/lastnews_table.html</loc></url>
 <url><loc>https://danchaltiel.github.io/EDCimport/reference/load_database.html</loc></url>
