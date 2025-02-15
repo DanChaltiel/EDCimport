@@ -4,10 +4,11 @@
 
 #' Clean up the names of all datasets
 #' 
-#' Clean the names of all the datasets in the database, so that columns are only lowercase letters, 
-#' numbers, and `_`.
+#' Clean the names of all the datasets in the database. By default, it converts names to lowercase 
+#' letters, numbers, and underscores only.
 #' 
 #' @param database an [edc_database] object, from [read_trialmaster()] or other EDCimport reading functions.
+#' @param clean_fun a cleaning function to be applied to column names.
 #' @return an [edc_database] object
 #' 
 #' @importFrom dplyr rename_with
@@ -19,11 +20,12 @@
 #' db = edc_example() %>% 
 #'   edc_clean_names()
 #' names(db$enrol)
-edc_clean_names = function(database){
+edc_clean_names = function(database, clean_fun=NULL){
+  if(is.null(clean_fun)) clean_fun = edc_make_clean_name
   .lookup = database$.lookup
   database = database %>% 
     map_if(~is.data.frame(.x) && !inherits(.x, "edc_lookup"),
-           ~.x %>% rename_with(edc_make_clean_name))
+           ~.x %>% rename_with(clean_fun))
 
   database$.lookup = database %>% 
     build_lookup() %>% 

@@ -4,17 +4,19 @@
 \alias{edc_clean_names}
 \title{Clean up the names of all datasets}
 \usage{
-edc_clean_names(database)
+edc_clean_names(database, clean_fun = NULL)
 }
 \arguments{
 \item{database}{an \link{edc_database} object, from \code{\link[=read_trialmaster]{read_trialmaster()}} or other EDCimport reading functions.}
+
+\item{clean_fun}{a cleaning function to be applied to column names.}
 }
 \value{
 an \link{edc_database} object
 }
 \description{
-Clean the names of all the datasets in the database, so that columns are only lowercase letters,
-numbers, and \verb{_}.
+Clean the names of all the datasets in the database. By default, it converts names to lowercase
+letters, numbers, and underscores only.
 }
 \examples{
 #db = read_trialmaster("filename.zip", pw="xx")
