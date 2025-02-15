@@ -13,7 +13,7 @@ Useful to find keys to pivot or summarise data."><meta property="og:image" conte
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9031</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9032</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -94,8 +94,8 @@ Useful to find keys to pivot or summarise data.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    column  name_in   datasets  n_datasets pct_datasets datasets_in  datasets_out</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> crfname <span style="color: #949494;">&lt;lgl [8]&gt;</span> <span style="color: #949494;">&lt;chr [8]&gt;</span>          8        1     ae, long_pu… <span style="color: #949494;">""</span>          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> crfstat <span style="color: #949494;">&lt;lgl [8]&gt;</span> <span style="color: #949494;">&lt;chr [8]&gt;</span>          8        1     ae, long_pu… <span style="color: #949494;">""</span>          </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> subjid  <span style="color: #949494;">&lt;lgl [8]&gt;</span> <span style="color: #949494;">&lt;chr [8]&gt;</span>          8        1     ae, long_pu… <span style="color: #949494;">""</span>          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> subjid  <span style="color: #949494;">&lt;lgl [8]&gt;</span> <span style="color: #949494;">&lt;chr [8]&gt;</span>          8        1     ae, long_pu… <span style="color: #949494;">""</span>          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> crfstat <span style="color: #949494;">&lt;lgl [8]&gt;</span> <span style="color: #949494;">&lt;chr [7]&gt;</span>          7        0.875 ae, data1, … <span style="color: #949494;">"</span>long_pure<span style="color: #949494;">"</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> aegr    <span style="color: #949494;">&lt;lgl [8]&gt;</span> <span style="color: #949494;">&lt;chr [1]&gt;</span>          1        0.125 ae           <span style="color: #949494;">"</span>long_pure,…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> aesoc   <span style="color: #949494;">&lt;lgl [8]&gt;</span> <span style="color: #949494;">&lt;chr [1]&gt;</span>          1        0.125 ae           <span style="color: #949494;">"</span>long_pure,…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> age     <span style="color: #949494;">&lt;lgl [8]&gt;</span> <span style="color: #949494;">&lt;chr [1]&gt;</span>          1        0.125 enrol        <span style="color: #949494;">"</span>ae, long_p…</span>
@@ -105,11 +105,12 @@ Useful to find keys to pivot or summarise data.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> date2   <span style="color: #949494;">&lt;lgl [8]&gt;</span> <span style="color: #949494;">&lt;chr [1]&gt;</span>          1        0.125 data1        <span style="color: #949494;">"</span>ae, long_p…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 18 more rows</span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 7</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 7</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   pct_datasets n_datasets n_distinct_datasets n_columns columns    datasets   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 100%                  8                   1         3 <span style="color: #949494;">&lt;chr [3]&gt;</span>  <span style="color: #949494;">&lt;list [3]&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> 12%                   1                   8        25 <span style="color: #949494;">&lt;chr [25]&gt;</span> <span style="color: #949494;">&lt;list [25]&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 100%                  8                   1         2 <span style="color: #949494;">&lt;chr [2]&gt;</span>  <span style="color: #949494;">&lt;list [2]&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> 88%                   7                   1         1 <span style="color: #949494;">&lt;chr [1]&gt;</span>  <span style="color: #949494;">&lt;list [1]&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> 12%                   1                   8        25 <span style="color: #949494;">&lt;chr [25]&gt;</span> <span style="color: #949494;">&lt;list [25]&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 1 more variable: columns_str &lt;chr&gt;</span></span>
 </code></pre></div>
     </div>
