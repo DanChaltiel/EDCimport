@@ -44,8 +44,6 @@ Read all \code{.csv} files in a directory, with labels if specified.
 }
 
 \seealso{
-Other EDCimport read functions: \code{\link[=read_trialmaster]{read_trialmaster()}}, \code{\link[=read_all_sas]{read_all_sas()}}, \code{\link[=read_all_xpt]{read_all_xpt()}}, and \code{\link[=read_all_csv]{read_all_csv()}}.
-
 Other EDCimport reading functions: 
 \code{\link{read_all_sas}()},
 \code{\link{read_all_xpt}()},

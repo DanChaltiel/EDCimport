@@ -16,7 +16,6 @@
 #' @inherit read_all_xpt return
 #' @inheritParams read_all_xpt
 #' @family EDCimport reading functions
-#' @seealso Other EDCimport read functions: [read_trialmaster()], [read_all_sas()], [read_all_xpt()], and [read_all_csv()].
 #' 
 #' @export
 #' @importFrom cli cli_inform

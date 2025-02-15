@@ -17,7 +17,7 @@
 #' @return a list containing one dataframe for each `.xpt` file in the folder, the extraction date (`datetime_extraction`), and a summary of all imported tables (`.lookup`).
 #' @export
 #' @family EDCimport reading functions
-#' @seealso Other EDCimport read functions: [read_trialmaster()], [read_all_sas()], [read_all_xpt()], and [read_all_csv()].
+#' 
 #' @importFrom fs dir_exists dir_ls path_ext
 #' @importFrom rlang check_dots_empty
 #' @importFrom utils packageVersion

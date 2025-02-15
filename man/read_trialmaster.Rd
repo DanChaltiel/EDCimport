@@ -43,8 +43,6 @@ The TM export should be of type \verb{SAS Xport}, with the checkbox
 "Include Codelists" ticked.
 }
 \seealso{
-Other EDCimport read functions: \code{\link[=read_trialmaster]{read_trialmaster()}}, \code{\link[=read_all_sas]{read_all_sas()}}, \code{\link[=read_all_xpt]{read_all_xpt()}}, and \code{\link[=read_all_csv]{read_all_csv()}}.
-
 Other EDCimport reading functions: 
 \code{\link{read_all_csv}()},
 \code{\link{read_all_sas}()},
