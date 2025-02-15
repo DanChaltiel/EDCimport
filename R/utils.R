@@ -306,6 +306,10 @@ guess_read_function = function(file){
     n_colons = unique(stringr::str_count(first_lines, ";"))
     n_commas = unique(stringr::str_count(first_lines, ","))
     
+    if(length(n_colons)==length(n_commas)){
+      if(mean(n_colons>n_commas)>0.5) return(utils::read.csv2) 
+      else return(utils::read.csv)
+    }
     if(length(n_colons)==1 & length(n_commas)!=1) return(utils::read.csv2)
     if(length(n_commas)==1 & length(n_colons)!=1) return(utils::read.csv)
       
