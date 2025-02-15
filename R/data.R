@@ -63,17 +63,17 @@ edc_example_plot = edc_example
   set.seed(seed)
   start = ISOdate(2010, 04, 13, tz="CET")
   day = 3600*24
-  data0 = tibble(subjid=1:N, age=rnorm(N, 50, 10), date_naissance=start-age*day)
+  data0 = tibble(subjid=1:N, age=rnorm(N, 50, 10), birth_date=start-age*day)
   attr(data0$subjid, "label") = "Subject ID"
   attr(data0$age, "label")    = "Age (years)"
-  attr(data0$date_naissance, "label") = "Date of birth"
+  attr(data0$birth_date, "label") = "Date of birth"
   
   for(i in 1:10){
     data0[[paste0("date",i)]] = (start+rnorm(N, i*10, 10)*day) %>% 
       set_label(paste0("Date at visit ",i))
   }
   
-  enrol = data0 %>% select(subjid, age, date_naissance) %>%
+  enrol = data0 %>% select(subjid, age, birth_date) %>%
     mutate(arm = ifelse(runif(n()) > 0.5, "Trt", "Ctl") %>% set_label("Treatment arm"))
   data1 = data0 %>% select(subjid, 4:6) %>%
     mutate(x = ifelse(runif(n()) > 0.5, "X", "Y") %>% set_label("Covariate"))
