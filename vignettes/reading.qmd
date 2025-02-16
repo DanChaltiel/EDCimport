@@ -70,11 +70,11 @@ edc_find_value("immune")
 
 ## Shiny browser
 
-But the easiest way to explore your database is by running `edc_viewer()`, which will run a local shiny application:
+The simplest way to explore your database is by running `edc_viewer()`, which launches a local Shiny application:
 
 ``` r
 db = edc_example()
-load_database(db) #this also removes `db` to save some RAM
+load_database(db)
 edc_viewer()
 ```
 
