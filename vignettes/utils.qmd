@@ -1,0 +1,67 @@
+---
+title: "5 - Utility Functions"
+format: 
+  html:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{5 - Utility Functions}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: '#>'
+---
+
+## Introduction
+
+You imported your database, but now you might want to visualize some part of it.
+
+There are a lot of ways to do so, so EDCimport provides functions for a few concepts.
+
+As in previous vignettes, we will be using `edc_example()`, but in the real world you should use EDC reading functions. See `vignette("reading")` to see how.
+
+```{r}
+#| warning: false 
+library(EDCimport) 
+library(dplyr) 
+db = edc_example(N=200) %>%
+  edc_unify_subjid() %>%
+  edc_clean_names() 
+db 
+load_database(db)
+```
+
+## Joins
+
+As the primary key is almost always SUBJID, {dplyr} joins can be simplified with default `by` and `suffix` arguments.
+
+```{r}
+data_xx = enrol %>% 
+  edc_left_join(data2) %>% 
+  edc_right_join(data1) %>% 
+  edc_full_join(ae)
+dim(data_xx)
+names(data_xx) %>% stringr::str_subset("crfname") #suffixes are automated
+```
+
+## "Yes/No" harmonizer
+
+Using `fct_yesno()`, you can harmonize "Yes/No" values into a vector with the "Yes" level first:
+
+```{r}
+set.seed(42)
+x = tibble(a=c("Yes", "No"), b=c("Oui", "Non"), c=0:1, d=c(TRUE, FALSE))
+x
+x %>% dplyr::mutate_all(fct_yesno)
+```
+
+## Miscellaneous
+
+These three helpers don’t quite fit anywhere else, but they still deserve their moment!
+
+-   `save_session_info()` saves the output of `session_info()` to a file.
+
+-   `edc_warn_extraction_date()` triggers a warning if the extraction date of your `edc_database` is older than a specified threshold.
+
+-   `edc_inform_code()` outputs a message indicating the amount of code written for this analysis, assuming you have one file sourcing others.
