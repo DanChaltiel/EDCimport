@@ -1,0 +1,103 @@
+---
+title: "4 - Database Visualizing"
+format: 
+  html:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{4 - Database Visualizing}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: '#>'
+---
+
+## Introduction
+
+You imported your database, but now you might want to visualize some part of it.
+
+There are a lot of ways to do so, so EDCimport provides functions for a few concepts.
+
+As in previous vignettes, we will be using `edc_example()`, but in the real world you should use EDC reading functions. See `vignette("reading")` to see how.
+
+```{r}
+#| warning: false 
+library(EDCimport) 
+library(dplyr) 
+db = edc_example(N=200) %>%
+  edc_unify_subjid() %>%
+  edc_clean_names() 
+db 
+load_database(db)
+```
+
+## Swimmerplot
+
+Each patient experiences a series of events during their visits, recorded in Date/Datetime columns across your datasets.
+
+A simple and effective method to identify errors and inconsistencies is to create a `swimmerplot` of these columns. This visualization helps to quickly spot incorrect sequences, data entry errors, or unexpected time gaps.
+
+For example, you can check that no experimental treatment was administered before enrollment and that the latest recorded date appears in the follow-up dataset.
+
+```{r}
+edc_swimmerplot(origin="enrol$enrol_date")
+```
+
+A convenient way to perform these checks is by using the interactive plot with `plotly=TRUE`. Although it cannot be displayed within a vignette, the output can be saved as a standalone HTML file for easy sharing.
+
+``` r
+sp = edc_swimmerplot(plotly=TRUE)
+sp
+save_plotly(sp, "swimmerplot.html")
+```
+
+## CRF completion plot
+
+Using `edc_crf_plot()`, you can generate a barplot showing the distribution of CRF status (Complete, Incomplete, ...) for each dataset of the database.
+
+```{r}
+edc_crf_plot()
+```
+
+## Patient gridplot
+
+Using `edc_patient_gridplot()`, you can visualize which patients are included in each dataset and identify any problematic missing records.
+
+```{r}
+edc_patient_gridplot()
+```
+
+Population plot
+
+With `edc_population_plot()`, you can visualize the different analysis populations:
+
+```{r}
+# Total population: all screened patients
+pop_total <- c(1:100) %>% setdiff(12) #Software error, SUBJID attributed twice
+
+# ITT (Intent-to-Treat): All randomized patients (excluding screening failures only)
+pop_ITT <- pop_total %>% setdiff(55)
+
+# mITT (Modified ITT): All treated patients
+pop_mITT <- pop_ITT %>% setdiff(68) #Patient 68 randomized but never received treatment
+
+# PP (Per-Protocol): Patients who completed treatment without major protocol deviations
+pop_PP <- pop_mITT %>% setdiff(c(33, 79)) #Major deviations
+
+# Safety: All patients who received at least one dose of treatment
+pop_safety <- pop_ITT %>% setdiff(68)  #Same as mITT
+
+# Evaluable: Patients who completed required assessments for primary endpoint
+pop_evaluable <- pop_mITT %>% setdiff(c(44, 91))  #No primary endpoint assessment
+
+l = list(
+  "Total population"=pop_total,
+  "ITT population"=pop_itt,
+  "Safety population"=pop_safety,
+  "mITT population"=pop_m_itt,
+  "Evaluable population"=pop_evaluable
+)
+edc_population_plot(l[-1], ref=pop_total)
+```
+
