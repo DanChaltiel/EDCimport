@@ -104,6 +104,9 @@ edc_find_column = function(keyword, ignore_case=TRUE, data=edc_lookup()){
 }
 
 
+#' @rdname edc_find_value
+#' @usage NULL
+#' @export
 find_keyword = deprecatedly(edc_find_column, when="0.6.0", what="find_keyword()")
 
 

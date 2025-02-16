@@ -3,6 +3,7 @@
 \name{edc_find_value}
 \alias{edc_find_value}
 \alias{edc_find_column}
+\alias{find_keyword}
 \title{Search the whole database}
 \usage{
 edc_find_value(keyword, ignore_case = TRUE, data = get_datasets())
