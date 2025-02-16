@@ -5,7 +5,9 @@ articles:
   checking: checking.html
   postprocessing: postprocessing.html
   reading: reading.html
-last_built: 2025-02-16T13:54Z
+  utils: utils.html
+  visualizing: visualizing.html
+last_built: 2025-02-16T14:54Z
 urls:
   reference: https://danchaltiel.github.io/EDCimport/reference
   article: https://danchaltiel.github.io/EDCimport/articles

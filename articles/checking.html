@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9034</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9037</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,9 +42,11 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/checking.html">3 - Data checking</a></li>
+<li><a class="dropdown-item" href="../articles/reading.html">1 - Read your database</a></li>
     <li><a class="dropdown-item" href="../articles/postprocessing.html">2 - Post processing</a></li>
-    <li><a class="dropdown-item" href="../articles/reading.html">1 - Read your database</a></li>
+    <li><a class="dropdown-item" href="../articles/checking.html">3 - Data checking</a></li>
+    <li><a class="dropdown-item" href="../articles/visualizing.html">4 - Database Visualizing</a></li>
+    <li><a class="dropdown-item" href="../articles/utils.html">5 - Utility Functions</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -81,7 +83,7 @@
 </h2>
 <p>You imported your database, but now you need to check it for errors and inconsistencies.</p>
 <p>There are a lot of ways to do so, so EDCimport provides functions for a few concepts.</p>
-<p>As in previous vignettes, we will be using <code><a href="../reference/edc_example.html">edc_example()</a></code>, but you should use EDC reading functions (see <code><a href="../articles/reading.html">vignette("reading")</a></code>)</p>
+<p>As in previous vignettes, we will be using <code><a href="../reference/edc_example.html">edc_example()</a></code>, but in the real world you should use EDC reading functions. See <code><a href="../articles/reading.html">vignette("reading")</a></code> to see how.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DanChaltiel/EDCimport" class="external-link">EDCimport</a></span><span class="op">)</span></span>
@@ -95,6 +97,8 @@
 </div>
 </section><section class="level2"><h2 id="data-warning">Data warning<a class="anchor" aria-label="anchor" href="#data-warning"></a>
 </h2>
+<section class="level3"><h3 id="data-errors">Data errors<a class="anchor" aria-label="anchor" href="#data-errors"></a>
+</h3>
 <p>The primary and most valuable data-checking tool in EDCimport is <code><a href="../reference/edc_data_warn.html">edc_data_warn()</a></code>.</p>
 <p>Simply use <code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">dplyr::filter()</a></code> to identify problematic or inconsistent rows and pipe them into the function.</p>
 <p>For example, let’s say that in our study:</p>
@@ -123,9 +127,8 @@
 <span><span class="co">#&gt; Warning: Issue #03: Treated patients should have been seen later (9 patients: #1, #45,</span></span>
 <span><span class="co">#&gt; #64, #69, #82, …)</span></span></code></pre></div>
 </div>
-<p>You can write these checks as per your Data Validation Plan, and they should run after each export.</p>
-<p>If one check is so mandatory that you cannot work in a database where it fails, use <code><a href="../reference/edc_data_warn.html">edc_data_stop()</a></code> instead.</p>
-<p>At some point, you can use <code><a href="../reference/edc_data_warn.html">edc_data_warnings()</a></code> to get a summary.</p>
+<p>You can implement these checks according to your Data Validation Plan, ensuring they run after every export. Any failed check will produce a warning in your R console. Once the database is corrected, the warnings will no longer appear (e.g. <code>issue_n=2</code>).</p>
+<p>After running all your checks, you can use <code><a href="../reference/edc_data_warn.html">edc_data_warnings()</a></code> to get a summary of all detected issues.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/edc_data_warn.html">edc_data_warnings</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -135,12 +138,30 @@
 <span><span class="co">#&gt; 1 01      Patients should be &gt;25yo                     &lt;chr [2]&gt; cli_warn</span></span>
 <span><span class="co">#&gt; 2 03      Treated patients should have been seen later &lt;chr [9]&gt; cli_warn</span></span></code></pre></div>
 </div>
-</section><section class="level2"><h2 id="duplicate-free-dataset-assertion">Duplicate-free dataset assertion<a class="anchor" aria-label="anchor" href="#duplicate-free-dataset-assertion"></a>
+</section><section class="level3"><h3 id="fatal-error">Fatal error<a class="anchor" aria-label="anchor" href="#fatal-error"></a>
+</h3>
+<p>If one check is so mandatory that you cannot work in a database where it fails, use <code><a href="../reference/edc_data_warn.html">edc_data_stop()</a></code> instead.</p>
+<p>For example, you can use it to check that some variable construction didn’t go wrong:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">df</span> <span class="op">=</span> <span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>    type <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
+<span>      <span class="va">cyl</span><span class="op">==</span><span class="fl">4</span> <span class="op">~</span> <span class="st">"4 cylinders"</span>, </span>
+<span>      <span class="va">cyl</span><span class="op">==</span><span class="fl">6</span> <span class="op">~</span> <span class="st">"6 cylinders"</span>, </span>
+<span>      <span class="va">cyl</span><span class="op">==</span><span class="fl">8</span> <span class="op">~</span> <span class="st">"8 cylinders"</span>, </span>
+<span>      .default<span class="op">=</span><span class="st">"ERROR"</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">type</span><span class="op">==</span><span class="st">"ERROR"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/edc_data_warn.html">edc_data_stop</a></span><span class="op">(</span><span class="st">"Error on type construction"</span><span class="op">)</span></span></code></pre></div>
+</section></section><section class="level2"><h2 id="duplicate-free-dataset-assertion">Duplicate-free dataset assertion<a class="anchor" aria-label="anchor" href="#duplicate-free-dataset-assertion"></a>
 </h2>
 <p>If you work with multiple datasets, your code probably include a lot of joins. As you may have painfully discovered, joining data carries a high risk of altering the data layout and resulting in multiple rows per patient.</p>
 <p>This is why you should always include <code><a href="../reference/assert_no_duplicate.html">assert_no_duplicate()</a></code> in your pipeline if you expect only one row per patient.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">enrol</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/assert_no_duplicate.html">assert_no_duplicate</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count</a></span><span class="op">(</span><span class="va">arm</span><span class="op">)</span></span>
@@ -177,7 +198,7 @@
 </ul>
 <p>Here is how to parameterize <code><a href="../reference/lastnews_table.html">lastnews_table()</a></code> to fit this scenario:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/lastnews_table.html">lastnews_table</a></span><span class="op">(</span>prefer<span class="op">=</span><span class="st">"date10"</span>, except<span class="op">=</span><span class="st">"data1"</span>, show_delta<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>delta<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">delta</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">delta</span><span class="op">)</span><span class="op">)</span></span>

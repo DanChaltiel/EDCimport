@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9034</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9037</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,9 +42,11 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/checking.html">3 - Data checking</a></li>
+<li><a class="dropdown-item" href="../articles/reading.html">1 - Read your database</a></li>
     <li><a class="dropdown-item" href="../articles/postprocessing.html">2 - Post processing</a></li>
-    <li><a class="dropdown-item" href="../articles/reading.html">1 - Read your database</a></li>
+    <li><a class="dropdown-item" href="../articles/checking.html">3 - Data checking</a></li>
+    <li><a class="dropdown-item" href="../articles/visualizing.html">4 - Database Visualizing</a></li>
+    <li><a class="dropdown-item" href="../articles/utils.html">5 - Utility Functions</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -126,19 +128,19 @@
 <span><span class="co">#&gt; 8 short         50     5    50         1   short data</span></span>
 <span><span class="fu"><a href="../reference/edc_find_value.html">edc_find_column</a></span><span class="op">(</span><span class="st">"date"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 11 × 5</span></span>
-<span><span class="co">#&gt;    dataset crfname names      labels           prop_na</span></span>
-<span><span class="co">#&gt;    &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;      &lt;chr&gt;              &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt;  1 data1   data1   date1      Date at visit 1        0</span></span>
-<span><span class="co">#&gt;  2 data1   data1   date2      Date at visit 2        0</span></span>
-<span><span class="co">#&gt;  3 data1   data1   date3      Date at visit 3        0</span></span>
-<span><span class="co">#&gt;  4 enrol   enrol   birth_date Date of birth          0</span></span>
-<span><span class="co">#&gt;  5 data2   data2   date4      Date at visit 4        0</span></span>
-<span><span class="co">#&gt;  6 data2   data2   date5      Date at visit 5        0</span></span>
-<span><span class="co">#&gt;  7 data2   data2   date6      Date at visit 6        0</span></span>
-<span><span class="co">#&gt;  8 data3   data3   date7      Date at visit 7        0</span></span>
-<span><span class="co">#&gt;  9 data3   data3   date8      Date at visit 8        0</span></span>
-<span><span class="co">#&gt; 10 data3   data3   date9      Date at visit 9        0</span></span>
-<span><span class="co">#&gt; 11 data3   data3   date10     Date at visit 10       0</span></span>
+<span><span class="co">#&gt;    dataset crfname names      labels            prop_na</span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;      &lt;chr&gt;               &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt;  1 data1   data1   date1      Date at visit 1         0</span></span>
+<span><span class="co">#&gt;  2 data1   data1   date2      Date at visit 2         0</span></span>
+<span><span class="co">#&gt;  3 data1   data1   date3      Date at visit 3         0</span></span>
+<span><span class="co">#&gt;  4 enrol   enrol   enrol_date Date of enrolment       0</span></span>
+<span><span class="co">#&gt;  5 data2   data2   date4      Date at visit 4         0</span></span>
+<span><span class="co">#&gt;  6 data2   data2   date5      Date at visit 5         0</span></span>
+<span><span class="co">#&gt;  7 data2   data2   date6      Date at visit 6         0</span></span>
+<span><span class="co">#&gt;  8 data3   data3   date7      Date at visit 7         0</span></span>
+<span><span class="co">#&gt;  9 data3   data3   date8      Date at visit 8         0</span></span>
+<span><span class="co">#&gt; 10 data3   data3   date9      Date at visit 9         0</span></span>
+<span><span class="co">#&gt; 11 data3   data3   date10     Date at visit 10        0</span></span>
 <span><span class="fu"><a href="../reference/edc_find_value.html">edc_find_value</a></span><span class="op">(</span><span class="st">"immune"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 7 × 5</span></span>
 <span><span class="co">#&gt;   subjid dataset column column_label value                  </span></span>
