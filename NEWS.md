@@ -4,6 +4,10 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 # EDCimport 0.6.0 (dev)
 
+### Documentation
+
+- New vignettes: `vignette("reading")`, `vignette("postprocessing")`, `vignette("checking")`, `vignette("visualizing")`, and `vignette("utils")`
+
 ### New features
 
 -   New functions `edc_patient_gridplot()`, which creates a ggplot matrix giving the presence of all patients in all datasets (#77)
