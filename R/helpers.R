@@ -357,6 +357,7 @@ harmonize_subjid = deprecatedly(edc_unify_subjid, when="0.6.0", what="harmonize_
 #' @importFrom cli cli_abort
 #' @importFrom dplyr all_of everything select setdiff
 #' @importFrom purrr keep
+#' @importFrom rlang as_label caller_call
 .edc_join = function(type){
   dplyr_join = switch(type, 
                 left=dplyr::left_join, right=dplyr::right_join, 
@@ -377,7 +378,9 @@ harmonize_subjid = deprecatedly(edc_unify_subjid, when="0.6.0", what="harmonize_
       y = y %>% select(-all_of(common_col))
     }
     if(is.null(by)) by = subjid_col
-    if(is.null(suffix)) suffix = c("", paste0("_", rlang::caller_arg(y)))
+    if(is.null(suffix)){
+      suffix = c("", paste0("_", as_label(caller_call(0)[[3]])))
+    }
     
     dplyr_join(x, y, by=by, suffix=suffix)
   }
