@@ -32,7 +32,7 @@ globals = c(
   "!!", ".", ".data", ".env", ".id", ".name", ":=", "aegr", "aesoc", 
   "age", "any_ae", "any_grade_sup_na", "any_severe", "arm_", "best_resp", 
   "calc", "case_when", "col_keys", "column", "crfname", "crfstat", 
-  "dataset", "dataset_sum", "birth_date", "datetime_extraction", 
+  "dataset", "dataset_sum", "enrol_date", "datetime_extraction", 
   "diff_first", "element_blank", "facet_grid", "first_date", "first_sum", 
   "grade_", "grade_max", "grade2", "h1", "h2", "included", "included_sum", 
   "label", "label_percent_positive", "last_date", "last_sum", "min_sum", 
