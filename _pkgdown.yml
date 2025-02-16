@@ -13,7 +13,18 @@ navbar:
     twitter:
       icon: fa-twitter
       href: http://twitter.com/DanChaltiel
-      aria-label: Twitter   
+      aria-label: Twitter  
+      
+      
+articles:
+- title: Articles
+  navbar: ~
+  contents:
+  - reading
+  - postprocessing
+  - checking
+  - visualizing
+  - utils
 
 
 reference:
