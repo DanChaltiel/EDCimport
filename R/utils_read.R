@@ -34,7 +34,9 @@ NULL
   assert_file_exists(files)
   clean_names_fun = .get_clean_names_fun(clean_names_fun)
   if(!is.null(path)){
-    file_names = files %>% str_remove(fixed(as.character(path))) %>% str_remove("^/") %>% 
+    path = normalizePath(path, winslash="/")
+    file_names = files %>% normalizePath(winslash="/") %>% 
+      str_remove(fixed(as.character(path))) %>% str_remove("^/") %>% 
       str_replace_all("/", "_") %>% tolower() %>% path_ext_remove()
   } else {
     file_names = basename(files) %>% tolower() %>% path_ext_remove()
