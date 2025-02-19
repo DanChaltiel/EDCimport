@@ -245,6 +245,29 @@ edc_unify_subjid = function(database, preprocess=NULL, col_subjid=NULL){
 #' @usage NULL
 harmonize_subjid = deprecatedly(edc_unify_subjid, when="0.6.0", what="harmonize_subjid()")
 
+
+#' Set the project name
+#' 
+#' Set or override the project name
+#'
+#' @param db the [edc_database]
+#' @param name the project name
+#'
+#' @returns nothing
+#' @export
+#'
+#' @examples
+#' db = edc_example() %>% 
+#'  set_project_name("My great project")
+#' edc_lookup()
+set_project_name = function(db, name){
+  lookup = db$.lookup %>% 
+    structure(project_name = name)
+  .update_lookup(new=lookup)
+  db
+}
+
+
 # Joins ---------------------------------------------------------------------------------------
 
 
