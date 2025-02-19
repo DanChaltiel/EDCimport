@@ -93,6 +93,17 @@ read_all_csv = function(path, ...,
   name_from  = getOption("edc_col_name", default=name_from)
   label_from = getOption("edc_col_label", default=label_from)
   assert_class(data_labels, "data.frame")
+  assert(name_from!=label_from, "Names and labels cannot have the same name in the lookup.")
+  
+  missing_col = setdiff(c(name_from, label_from), names(data_labels))
+  if(length(missing_col)>0){
+    cli_abort(c("The label lookup should contain columns {.val {missing_col}}.",
+                i="It has columns {.val {names(data_labels)}}",
+                i='Use {.code options(edc_col_name="aaa", edc_col_label="bbb")} to 
+                override the default names.'),
+              class="edc_label_missing_col")
+  }
+  
   label_vector = as.data.frame(data_labels) %>%
     select(name=all_of(name_from), label=all_of(label_from)) %>%
     pull(label, name=name)
