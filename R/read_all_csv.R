@@ -28,6 +28,7 @@ read_all_csv = function(path, ...,
                         labels_from=NULL,
                         clean_names_fun=NULL, 
                         read_fun="guess", 
+                        format_file=NULL, 
                         subdirectories=FALSE,
                         datetime_extraction="guess", 
                         verbose=getOption("edc_read_verbose", 1)){
@@ -50,6 +51,7 @@ read_all_csv = function(path, ...,
   rtn = dir_ls(path, regexp="\\.csv", recurse=subdirectories) %>% 
     .read_all(read_fun, clean_names_fun=clean_names_fun, path=path) %>% 
     .add_labels(labels_file=labels_from, path, read_fun) %>% 
+    .apply_sas_formats(format_file) %>%
     .add_lookup_and_date(
       datetime_extraction=datetime_extraction,
       clean_names_fun=clean_names_fun, 
