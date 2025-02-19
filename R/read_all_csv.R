@@ -69,20 +69,19 @@ read_all_csv = function(path, ...,
 #' @importFrom fs path path_ext_remove
 #' @importFrom purrr map
 .add_labels = function(datalist, labels_file, path, read_fun){
-  if(!is.null(labels_file)){
-    label_df_name = path_ext_remove(basename(labels_file))
-    if(label_df_name %in% names(datalist)) {
-      data_labels = datalist[[label_df_name]]
-      datalist[[label_df_name]] = NULL
-    } else {
-      if(!file.exists(labels_file)) labels_file = path(path, labels_file)
-      assert_file_exists(labels_file)
-      data_labels = read_fun(labels_file)
-    }
-    
-    datalist = map(datalist, ~.apply_label_lookup(.x, data_labels))
+  if(is.null(labels_file)) return(datalist)
+  
+  label_df_name = path_ext_remove(basename(labels_file))
+  if(label_df_name %in% names(datalist)) {
+    data_labels = datalist[[label_df_name]]
+    datalist[[label_df_name]] = NULL
+  } else {
+    if(!file.exists(labels_file)) labels_file = path(path, labels_file)
+    assert_file_exists(labels_file)
+    data_labels = read_fun(labels_file)
   }
-  datalist
+  
+  map(datalist, ~.apply_label_lookup(.x, data_labels))
 }
 
 
