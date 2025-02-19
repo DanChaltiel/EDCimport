@@ -42,6 +42,7 @@ reference:
   - edc_unify_subjid
   - edc_split_mixed
   - edc_clean_names
+  - set_project_name
 - title: "Checking databases"
 - contents:
   - edc_data_warn
