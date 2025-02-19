@@ -38,30 +38,41 @@ edc_patient_gridplot = function(sort_rows=TRUE, sort_cols=TRUE, gradient=FALSE,
                                 palette=c("Yes"="#00468BFF", "No"="#ED0000FF"),
                                 datasets=get_datasets(), lookup=edc_lookup()){
   subjid_cols = get_subjid_cols(lookup=lookup)
-  if(is.null(preprocess)) preprocess=identity
   if(is_formula(preprocess)) preprocess=as_function(preprocess)
+  datasets = keep(datasets, is.data.frame)
   
   subjid_list = datasets %>% 
-    map(~{
-      tmp = .get_subjid_vector(.x, subjid_cols)$subjid %>% preprocess()
+    imap(~{
+      tmp = .get_subjid_vector(.x, subjid_cols)$subjid
+      tmp = tmp[!is.na(tmp)]
+      if(length(tmp)==0) return(NULL)
+      if(!is.null(preprocess)) tmp = preprocess(tmp)
+      else if(can_be_numeric(tmp)) tmp = as.numeric(tmp)
       if(!gradient) tmp = unique(tmp)
       tmp
     })
   
-  all_subjid = subjid_list %>% unlist() %>% unique() %>% sort()
+  all_subjid = subjid_list %>% unlist() %>% unique() %>% unname() %>% sort()
   
   nrow_rslt = length(all_subjid) * length(datasets)
   df = subjid_list %>% 
     imap(~{
-      tibble(subjid=all_subjid,
-             included_sum=map_dbl(all_subjid, function(s) sum(s==.x)))
+      isum = map_dbl(all_subjid, function(s) sum(s==.x))
+      if(is.null(.x)) isum = 0
+      tibble(subjid=all_subjid, included_sum=isum)
     }) %>% 
     bind_rows(.id="dataset") %>% 
     arrange(dataset) %>% 
     mutate(included = ifelse(included_sum>0, 1, 0)) %>% 
     mutate(subjid_sum = sum(included), .by=subjid) %>% 
-    mutate(dataset_sum = sum(included), .by=dataset)
+    mutate(dataset_sum = sum(included), .by=dataset) %>% 
+    mutate(
+      included = factor(included, levels=c(0,1), labels=c("No", "Yes")),
+      subjid = factor(subjid, levels=mixedsort(unique(subjid), decreasing=TRUE)),
+      dataset = factor(dataset, levels=mixedsort(unique(dataset))),
+    )
   stopifnot(nrow(df) == nrow_rslt)
+  stopifnot(!any(is.na(df$subjid_sum)))
   
   extraction = attr(lookup, "datetime_extraction")
   project_name = attr(lookup, "project_name")
@@ -96,14 +107,15 @@ edc_patient_gridplot = function(sort_rows=TRUE, sort_cols=TRUE, gradient=FALSE,
     scale_fill = scale_fill_manual(values=palette)
   }
 
+  if(sort_rows){
+    df = df %>% 
+      mutate(subjid = fct_reorder(subjid, subjid_sum, .desc=custom_desc, .na_rm = F))
+  }
+  if(sort_cols){
+    df = df %>% 
+      mutate(dataset = fct_reorder(dataset, dataset_sum, .desc=!custom_desc, .na_rm = F))
+  }
   df %>% 
-    mutate(
-      included = factor(included, levels=c(0,1), labels=c("No", "Yes")),
-      subjid = factor(subjid, levels=mixedsort(unique(subjid), decreasing=TRUE)),
-      dataset = factor(dataset, levels=mixedsort(unique(dataset))),
-      subjid = if(sort_rows) fct_reorder(subjid, subjid_sum, .desc=custom_desc) else subjid,
-      dataset = if(sort_cols) fct_reorder(dataset, dataset_sum, .desc=!custom_desc) else dataset,
-    ) %>% 
     ggplot() +
     aes(x=.data[[aes_x]], y=.data[[aes_y]], fill=.data[[aes_fill]]) +
     geom_tile(color=show_grid) +
