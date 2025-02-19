@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9037</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9039</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -118,14 +118,14 @@
 <span><span class="co">#&gt; ── Lookup table - EDCimport example (extraction of 2024-01-01) - EDCimport v0.5.</span></span>
 <span><span class="co">#&gt;   dataset     nrow  ncol  n_id rows_per_id crfname                 </span></span>
 <span><span class="co">#&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;       &lt;dbl&gt; &lt;chr&gt;                   </span></span>
-<span><span class="co">#&gt; 1 ae           175     7    48         3.6 Adverse events          </span></span>
-<span><span class="co">#&gt; 2 long_pure    150     4    50         3   long data               </span></span>
-<span><span class="co">#&gt; 3 data1        100     7    50         2   data1                   </span></span>
-<span><span class="co">#&gt; 4 long_mixed   100     6    50         2   both short and long data</span></span>
-<span><span class="co">#&gt; 5 enrol         50     6    50         1   enrol                   </span></span>
-<span><span class="co">#&gt; 6 data2         50     6    50         1   data2                   </span></span>
-<span><span class="co">#&gt; 7 data3         50     7    50         1   data3                   </span></span>
-<span><span class="co">#&gt; 8 short         50     5    50         1   short data</span></span>
+<span><span class="co">#&gt; 1 long_pure    150     4    50         3   long data               </span></span>
+<span><span class="co">#&gt; 2 data1        100     7    50         2   data1                   </span></span>
+<span><span class="co">#&gt; 3 long_mixed   100     6    50         2   both short and long data</span></span>
+<span><span class="co">#&gt; 4 data2         50     6    50         1   data2                   </span></span>
+<span><span class="co">#&gt; 5 data3         50     7    50         1   data3                   </span></span>
+<span><span class="co">#&gt; 6 enrol         50     6    50         1   enrol                   </span></span>
+<span><span class="co">#&gt; 7 short         50     5    50         1   short data              </span></span>
+<span><span class="co">#&gt; 8 ae           175     7    48         3.6 Adverse events</span></span>
 <span><span class="fu"><a href="../reference/edc_find_value.html">edc_find_column</a></span><span class="op">(</span><span class="st">"date"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 11 × 5</span></span>
 <span><span class="co">#&gt;    dataset crfname names      labels            prop_na</span></span>
@@ -133,14 +133,14 @@
 <span><span class="co">#&gt;  1 data1   data1   date1      Date at visit 1         0</span></span>
 <span><span class="co">#&gt;  2 data1   data1   date2      Date at visit 2         0</span></span>
 <span><span class="co">#&gt;  3 data1   data1   date3      Date at visit 3         0</span></span>
-<span><span class="co">#&gt;  4 enrol   enrol   enrol_date Date of enrolment       0</span></span>
-<span><span class="co">#&gt;  5 data2   data2   date4      Date at visit 4         0</span></span>
-<span><span class="co">#&gt;  6 data2   data2   date5      Date at visit 5         0</span></span>
-<span><span class="co">#&gt;  7 data2   data2   date6      Date at visit 6         0</span></span>
-<span><span class="co">#&gt;  8 data3   data3   date7      Date at visit 7         0</span></span>
-<span><span class="co">#&gt;  9 data3   data3   date8      Date at visit 8         0</span></span>
-<span><span class="co">#&gt; 10 data3   data3   date9      Date at visit 9         0</span></span>
-<span><span class="co">#&gt; 11 data3   data3   date10     Date at visit 10        0</span></span>
+<span><span class="co">#&gt;  4 data2   data2   date4      Date at visit 4         0</span></span>
+<span><span class="co">#&gt;  5 data2   data2   date5      Date at visit 5         0</span></span>
+<span><span class="co">#&gt;  6 data2   data2   date6      Date at visit 6         0</span></span>
+<span><span class="co">#&gt;  7 data3   data3   date7      Date at visit 7         0</span></span>
+<span><span class="co">#&gt;  8 data3   data3   date8      Date at visit 8         0</span></span>
+<span><span class="co">#&gt;  9 data3   data3   date9      Date at visit 9         0</span></span>
+<span><span class="co">#&gt; 10 data3   data3   date10     Date at visit 10        0</span></span>
+<span><span class="co">#&gt; 11 enrol   enrol   enrol_date Date of enrolment       0</span></span>
 <span><span class="fu"><a href="../reference/edc_find_value.html">edc_find_value</a></span><span class="op">(</span><span class="st">"immune"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 7 × 5</span></span>
 <span><span class="co">#&gt;   subjid dataset column column_label value                  </span></span>
@@ -155,10 +155,10 @@
 </div>
 </section><section class="level2"><h2 id="shiny-browser">Shiny browser<a class="anchor" aria-label="anchor" href="#shiny-browser"></a>
 </h2>
-<p>But the easiest way to explore your database is by running <code><a href="../reference/edc_viewer.html">edc_viewer()</a></code>, which will run a local shiny application:</p>
+<p>The simplest way to explore your database is by running <code><a href="../reference/edc_viewer.html">edc_viewer()</a></code>, which launches a local Shiny application:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">db</span> <span class="op">=</span> <span class="fu"><a href="../reference/edc_example.html">edc_example</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/load_database.html">load_database</a></span><span class="op">(</span><span class="va">db</span><span class="op">)</span> <span class="co">#this also removes `db` to save some RAM</span></span>
+<span><span class="fu"><a href="../reference/load_database.html">load_database</a></span><span class="op">(</span><span class="va">db</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/edc_viewer.html">edc_viewer</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="edc_viewer.webp"></p>
 </section><script id="quarto-html-after-body" type="application/javascript">

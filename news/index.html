@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9037</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9039</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,12 +43,18 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.6.0" id="edcimport-060-dev">EDCimport 0.6.0 (dev)<a class="anchor" aria-label="anchor" href="#edcimport-060-dev"></a></h2>
 <div class="section level4">
+<h4 id="documentation-0-6-0">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-6-0"></a></h4>
+<ul><li>New vignettes: <code><a href="../articles/reading.html">vignette("reading")</a></code>, <code><a href="../articles/postprocessing.html">vignette("postprocessing")</a></code>, <code><a href="../articles/checking.html">vignette("checking")</a></code>, <code><a href="../articles/visualizing.html">vignette("visualizing")</a></code>, and <code><a href="../articles/utils.html">vignette("utils")</a></code>
+</li>
+</ul></div>
+<div class="section level4">
 <h4 id="new-features-0-6-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-6-0"></a></h4>
 <ul><li>New functions <code><a href="../reference/edc_patient_gridplot.html">edc_patient_gridplot()</a></code>, which creates a ggplot matrix giving the presence of all patients in all datasets (<a href="https://github.com/DanChaltiel/EDCimport/issues/77" class="external-link">#77</a>)</li>
 <li>Improved <code><a href="../reference/lastnews_table.html">lastnews_table()</a></code>: allow regex in except &amp; prefer, improved warning message, and allow saving warning as csv (<a href="https://github.com/DanChaltiel/EDCimport/issues/78" class="external-link">#78</a>)</li>
 <li>New argument <code>lastnews_table(show_delta=TRUE)</code>, which computes the difference between the last <code>prefer</code> date and the actual last date (<a href="https://github.com/DanChaltiel/EDCimport/issues/81" class="external-link">#81</a>)</li>
 <li>New functions <code><a href="../reference/edc_left_join.html">edc_left_join()</a></code>, <code><a href="../reference/edc_left_join.html">edc_right_join()</a></code>, and <code><a href="../reference/edc_left_join.html">edc_full_join()</a></code>, which perform joins with defaults to subject ID as primary key (<a href="https://github.com/DanChaltiel/EDCimport/issues/82" class="external-link">#82</a>)</li>
 <li>New function <code><a href="../reference/edc_viewer.html">edc_viewer()</a></code>, which run a shiny application for easily browsing your database (<a href="https://github.com/DanChaltiel/EDCimport/issues/83" class="external-link">#83</a>)</li>
+<li>New function <code><a href="../reference/set_project_name.html">set_project_name()</a></code>, to set the project name when reading from a directory (<a href="https://github.com/DanChaltiel/EDCimport/issues/96" class="external-link">#96</a>)</li>
 <li>New function <code><a href="../reference/edc_find_value.html">edc_find_value()</a></code>, which searches the whole database for a value, as <code><a href="../reference/edc_find_value.html">edc_find_column()</a></code> searches for column names or labels.</li>
 <li>New argument <code>subdirectories</code> to all reading functions (<code><a href="../reference/read_trialmaster.html">read_trialmaster()</a></code>, <code><a href="../reference/read_all_xpt.html">read_all_xpt()</a></code>, <code><a href="../reference/read_all_sas.html">read_all_sas()</a></code>, and <code><a href="../reference/read_all_csv.html">read_all_csv()</a></code>), to control whether to read sub-directories. Note that until now, those subdirectories were read and could overwrite root files.</li>
 </ul></div>
@@ -63,7 +69,7 @@
 <code><a href="../reference/load_database.html">load_list()</a></code>, renamed to <code><a href="../reference/load_database.html">load_database()</a></code>
 </li>
 <li>
-<code>find_keyword()</code>, renamed to <code><a href="../reference/edc_find_value.html">edc_find_column()</a></code>
+<code><a href="../reference/edc_find_value.html">find_keyword()</a></code>, renamed to <code><a href="../reference/edc_find_value.html">edc_find_column()</a></code>
 </li>
 </ul></div>
 <div class="section level4">
@@ -133,7 +139,7 @@
 <li>
 <code><a href="../reference/assert_no_duplicate.html">assert_no_duplicate()</a></code> has now a <code>by</code> argument to check for duplicate in groups, for example by visit (<a href="https://github.com/DanChaltiel/EDCimport/issues/17" class="external-link">#17</a>).</li>
 <li>
-<code>find_keyword()</code> is more robust and inform on the proportion of missing if possible.</li>
+<code><a href="../reference/edc_find_value.html">find_keyword()</a></code> is more robust and inform on the proportion of missing if possible.</li>
 <li>
 <code><a href="../reference/edc_lookup.html">edc_lookup()</a></code> will now retrieve the lookup table. Use <code>build_lookup()</code> to build one from a table list.</li>
 <li>
@@ -213,7 +219,7 @@
 <div class="section level4">
 <h4 id="bug-fixes-0-3-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-3-0"></a></h4>
 <ul><li><p>Reading errors are now handled by <code><a href="../reference/read_trialmaster.html">read_trialmaster()</a></code> instead of failing. If one XPT file is corrupted, the resulting object will contain the error message instead of the dataset.</p></li>
-<li><p><code>find_keyword()</code> is now robust to non-UTF8 characters in labels.</p></li>
+<li><p><code><a href="../reference/edc_find_value.html">find_keyword()</a></code> is now robust to non-UTF8 characters in labels.</p></li>
 <li><p>Option <code>edc_lookup</code> is now set even when reading from cache.</p></li>
 <li><p>SAS formats containing a <code>=</code> now work as intended.</p></li>
 </ul></div>
