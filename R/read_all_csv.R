@@ -6,16 +6,15 @@
 #'
 #' @param path \[`character(1)`]\cr path to the directory containing `.csv` files.
 #' @param ... unused
-#' @param read_fun \[`function`]\cr a function to read the files in path, e.g. `read.csv()`, `read.csv2()`,...
-#' @param labels_from \[`misc`]\cr list of path to file containing the labels.
-#' @param clean_names_fun \[`function`]\cr a function to clean column names, e.g. [tolower], [janitor::clean_names()],...
-#' @param subdirectories \[`logical(1)`]\cr whether to read subdirectories.
-#' @param datetime_extraction \[`dateish(1)`]\cr the datetime of database extraction (database lock). If "guess", the datetime will be inferred from the files modification time.
-#' @param verbose \[`logical(1)`]\cr the level of verbosity
+#' @param labels_from \[`character(1)`]\cr path to the file containing the labels. See section "Labels file" below.
+#' @param read_fun \[`function`]\cr if "guess" doesn't work properly, a function to read the files in path, e.g. `read.csv`, `read.csv2`,...
+#' @param clean_names_fun `r lifecycle::badge("deprecated")` use [edc_clean_names()] instead.
+#' @inheritParams read_all_xpt
 #'
 #' @section Labels file: 
 #' `labels_from` should contain the information about column labels. It should be a data file (`.csv`) containing 2 columns: one for the column name and the other for its associated label. Use `options(edc_col_name="xxx", edc_col_label="xxx")` to specify the names of the columns.
-#'  
+#' 
+#' @inheritSection read_all_xpt Format file
 #'  
 #' @return a list containing one dataframe for each `.csv` file in the folder, the extraction date (`datetime_extraction`), and a summary of all imported tables (`.lookup`).
 #' @family EDCimport reading functions
@@ -26,12 +25,12 @@
 #' @importFrom utils packageVersion
 read_all_csv = function(path, ..., 
                         labels_from=NULL,
-                        clean_names_fun=NULL, 
-                        read_fun="guess", 
                         format_file=NULL, 
                         subdirectories=FALSE,
+                        read_fun="guess", 
                         datetime_extraction="guess", 
-                        verbose=getOption("edc_read_verbose", 1)){
+                        verbose=getOption("edc_read_verbose", 1),
+                        clean_names_fun=NULL){
   check_dots_empty()
   reset_manual_correction()
   assert(is_dir(path))

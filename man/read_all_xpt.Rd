@@ -9,10 +9,10 @@ read_all_xpt(
   path,
   ...,
   format_file = "procformat.sas",
-  clean_names_fun = NULL,
   datetime_extraction = "guess",
   subdirectories = FALSE,
   verbose = getOption("edc_read_verbose", 1),
+  clean_names_fun = NULL,
   directory = "deprecated",
   key_columns = "deprecated"
 )
@@ -22,15 +22,15 @@ read_all_xpt(
 
 \item{...}{unused}
 
-\item{format_file}{[\code{character(1)}]\cr the path to the file that should be used to apply formats. See details. Use \code{NULL} to not apply formats.}
+\item{format_file}{[\code{character(1)}]\cr the path to the file that should be used to apply formats. See section "Format file" below. Use \code{NULL} to not apply formats.}
 
-\item{clean_names_fun}{[\code{function}]\cr a function to clean column names, e.g. \link{tolower}, \code{\link[janitor:clean_names]{janitor::clean_names()}},...}
-
-\item{datetime_extraction}{[\code{POSIXt(1)}]\cr the datetime of the data extraction. Default to the most common date of last modification in \code{directory}.}
+\item{datetime_extraction}{[\code{POSIXt(1)}]\cr the datetime of the data extraction. Default to the most common date of last modification in \code{path}.}
 
 \item{subdirectories}{[\code{logical(1)}]\cr whether to read subdirectories}
 
 \item{verbose}{[\code{numeric(1)}]\cr one of \code{c(0, 1, 2)}. The higher, the more information will be printed.}
+
+\item{clean_names_fun}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} use \code{\link[=edc_clean_names]{edc_clean_names()}} instead.}
 
 \item{directory}{deprecated in favour for \code{path}}
 
@@ -46,11 +46,18 @@ If a \code{procformat.sas} file exists in the directory, formats will be applied
 }
 \section{Format file}{
 
-\code{format_file} should contain the information about SAS formats. It can be either
+\code{format_file} should contain the information about SAS formats. It can be either:
 \itemize{
 \item a \code{procformat.sas} file, containing the whole PROC FORMAT
-\item or a data file (.csv or .sas7bdat) containing 3 columns: the SAS format name (repeated),
-each level, and its associated label. Use \code{options(edc_var_format_name="xxx", edc_var_level="xxx", edc_var_label="xxx")} to specify the names of the columns.
+\item or a data file (.csv or .sas7bdat) containing 3 columns:
+\itemize{
+\item \code{FMTNAME} the SAS format name (repeated)
+\item \code{START} the variable level
+\item \code{LABEL} the label associated to the level
+}
+
+You can get this datafile \href{https://blogs.sas.com/content/sgf/2017/12/04/controlling-your-formats/}{from SAS} using \verb{PROC FORMAT} with option \code{CNTLOUT}.
+Otherwise, you can use \code{options(edc_var_format_name="xxx", edc_var_level="xxx", edc_var_label="xxx")} to specify different column names.
 }
 }
 

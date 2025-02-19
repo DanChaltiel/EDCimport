@@ -6,20 +6,26 @@
 #' If a `procformat.sas` file exists in the directory, formats will be applied.
 #'
 #' @param path \[`character(1)`]\cr the path to the directory containing all `.xpt` files.
-#' @param format_file \[`character(1)`]\cr the path to the file that should be used to apply formats. See details. Use `NULL` to not apply formats.
-#' @param datetime_extraction \[`POSIXt(1)`]\cr the datetime of the data extraction. Default to the most common date of last modification in `directory`.
+#' @param format_file \[`character(1)`]\cr the path to the file that should be used to apply formats. See section "Format file" below. Use `NULL` to not apply formats.
+#' @param datetime_extraction \[`POSIXt(1)`]\cr the datetime of the data extraction. Default to the most common date of last modification in `path`.
 #' @param ... unused
-#' @param clean_names_fun \[`function`]\cr a function to clean column names, e.g. [tolower], [janitor::clean_names()],...
+#' @param clean_names_fun `r lifecycle::badge("deprecated")` use [edc_clean_names()] instead.
 #' @param subdirectories \[`logical(1)`]\cr whether to read subdirectories
 #' @param verbose \[`numeric(1)`]\cr one of `c(0, 1, 2)`. The higher, the more information will be printed.
 #' @param directory deprecated in favour for `path`
 #' @param key_columns deprecated
 #' 
 #' @section Format file: 
-#' `format_file` should contain the information about SAS formats. It can be either 
+#' `format_file` should contain the information about SAS formats. It can be either:
 #'  - a `procformat.sas` file, containing the whole PROC FORMAT
-#'  - or a data file (.csv or .sas7bdat) containing 3 columns: the SAS format name (repeated), 
-#'  each level, and its associated label. Use `options(edc_var_format_name="xxx", edc_var_level="xxx", edc_var_label="xxx")` to specify the names of the columns.
+#'  - or a data file (.csv or .sas7bdat) containing 3 columns: 
+#'    -  `FMTNAME` the SAS format name (repeated)
+#'    -  `START` the variable level
+#'    -  `LABEL` the label associated to the level 
+#'    
+#'    You can get this datafile [from SAS](https://blogs.sas.com/content/sgf/2017/12/04/controlling-your-formats/) using `PROC FORMAT` with option `CNTLOUT`. 
+#'    Otherwise, you can use `options(edc_var_format_name="xxx", edc_var_level="xxx", edc_var_label="xxx")` to specify different column names.
+#' 
 #'
 #' @return a list containing one dataframe for each `.xpt` file in the folder, the extraction date (`datetime_extraction`), and a summary of all imported tables (`.lookup`).
 #' @export
@@ -30,10 +36,10 @@
 #' @importFrom utils packageVersion
 read_all_xpt = function(path, ..., 
                         format_file="procformat.sas", 
-                        clean_names_fun=NULL, 
                         datetime_extraction="guess", 
                         subdirectories=FALSE,
-                        verbose=getOption("edc_read_verbose", 1),
+                        verbose=getOption("edc_read_verbose", 1), 
+                        clean_names_fun=NULL,
                         directory="deprecated",
                         key_columns="deprecated"){
   check_dots_empty()

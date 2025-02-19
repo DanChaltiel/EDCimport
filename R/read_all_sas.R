@@ -5,14 +5,7 @@
 #'
 #' @param path \[`character(1)`]\cr the path to the directory containing all `.sas7bdat` files.
 #' @inheritParams read_all_xpt
-#' 
-#' @section Format file: 
-#' `format_file` should contain the information about SAS formats. It can be either 
-#'  - a `procformat.sas` file, containing the whole PROC FORMAT
-#'  - a catalog file (`.sas7bcat`)
-#'  - or a data file (`.csv` or `.sas7bdat`) containing 3 columns: the SAS format name (repeated), 
-#'  each level, and its associated label. Use `options(edc_var_format_name="xxx", edc_var_level="xxx", edc_var_label="xxx")` to specify the names of the columns.
-#'
+#' @inheritSection read_all_xpt Format file
 #'
 #' @return a list containing one dataframe for each `.xpt` file in the folder, the extraction date (`datetime_extraction`), and a summary of all imported tables (`.lookup`).
 #' @export
