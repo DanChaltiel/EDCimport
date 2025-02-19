@@ -130,6 +130,11 @@ get_lookup = deprecatedly(edc_lookup, what="get_lookup()", when="0.5.0")
   invisible(new)
 }
 
+#' @noRd
+#' @keywords internal
+is_lookup = function(x){
+  inherits(x, "edc_lookup")
+}
 
 #' Extend the lookup table
 #' 
