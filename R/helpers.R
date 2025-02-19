@@ -771,7 +771,6 @@ summary.common_cols = function(object, ...){
 #' @importFrom rlang caller_arg
 #'
 #' @examples
-#' 
 #' db = edc_example()
 #' load_database(db, remove=FALSE)
 #' print(db)

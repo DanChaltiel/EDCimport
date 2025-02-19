@@ -21,7 +21,6 @@ nothing, called for its side-effect
 Load a list in an environment
 }
 \examples{
-
 db = edc_example()
 load_database(db, remove=FALSE)
 print(db)

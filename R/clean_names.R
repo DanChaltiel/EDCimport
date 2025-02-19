@@ -25,7 +25,7 @@ edc_clean_names = function(database, clean_fun=NULL){
   database_class = class(database) 
   .lookup = database$.lookup
   database = database %>% 
-    map_if(~is.data.frame(.x) && !inherits(.x, "edc_lookup"),
+    map_if(~is.data.frame(.x) && !is_lookup(.x),
            ~.x %>% rename_with(clean_fun))
 
   database$.lookup = database %>% 

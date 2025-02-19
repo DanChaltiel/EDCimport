@@ -58,7 +58,6 @@ read_all_xpt = function(path, ...,
     .apply_sas_formats(format_file) %>% 
     .add_lookup_and_date(
       datetime_extraction=datetime_extraction,
-      extend_lookup=TRUE,
       clean_names_fun=.get_clean_names_fun(clean_names_fun), 
       EDCimport_version=packageVersion("EDCimport")
     )
