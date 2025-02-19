@@ -72,6 +72,11 @@ edc_crf_plot = function(crfstat_col="CRFSTAT",
     }) %>% 
     list_rbind(names_to="dataset")
   if(nrow(df)==0) return(NULL)
+  if(any(is.na(df$crfstat))){ 
+    crfstat_lvls = c(crfstat_lvls[-length(crfstat_lvls)], "Missing CRF status",
+                     crfstat_lvls[length(crfstat_lvls)])
+    pal = c(pal, "Missing CRF status"="black")
+  }
   
   df = df %>% 
     mutate(crfstat = edf_crfstat_recode(crfstat, do=!details)) %>% 
@@ -122,6 +127,7 @@ edc_pal_crf = function(){
 #' @keywords internal
 #' @importFrom forcats fct_drop fct_expand fct_recode
 edf_crfstat_recode = function(x, do=TRUE){
+  x[is.na(x)] = "Missing CRF status"
   if(!do) return(x)
   lvl_recoding = c(  
     "Complete" = "Monitored",
@@ -132,6 +138,7 @@ edf_crfstat_recode = function(x, do=TRUE){
     "Complete" = "Complete",
     "No Data" = "No Data Locked",
     "No Data" = "No Data",
+    "No Data" = "Missing CRF status",
     "Incomplete" = "Incomplete"
   )
   
