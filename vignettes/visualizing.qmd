@@ -70,7 +70,8 @@ edc_patient_gridplot()
 
 Population plot
 
-With `edc_population_plot()`, you can visualize the different analysis populations:
+With `edc_population_plot()`, you can visualize the different analysis populations.
+Here, we use `setdiff()` to exclude patients from the various populations, but in real-world data you should probably use `dplyr::filter()`.
 
 ```{r}
 # Total population: all screened patients
