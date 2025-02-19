@@ -14,6 +14,20 @@
 #' @importFrom fs dir_exists dir_ls path_ext
 #' @importFrom rlang check_dots_empty
 #' @importFrom utils packageVersion
+#' 
+#' @examples
+#' # Create a directory with multiple csv files.
+#' path = paste0(tempdir(), "/read_all_sas")
+#' dir.create(paste0(path, "/subdir"), recursive=TRUE)
+#' haven::write_sas(attenu, paste0(path, "/attenu.sas7bdat"))
+#' haven::write_sas(mtcars, paste0(path, "/mtcars.sas7bdat"))
+#' haven::write_sas(mtcars, paste0(path, "/subdir/mtcars.sas7bdat"))
+#' haven::write_sas(esoph, paste0(path, "/esoph.sas7bdat"))
+#' 
+#' db = read_all_sas(path, format_file=NULL, subdirectories=TRUE) %>% 
+#'   set_project_name("My great project")
+#' db
+#' edc_lookup()
 read_all_sas = function(path, ..., 
                         format_file="procformat.sas", 
                         clean_names_fun=NULL, 
@@ -28,9 +42,8 @@ read_all_sas = function(path, ...,
     datetime_extraction = get_folder_datetime(path, verbose=verbose)
   }
   assert_class(datetime_extraction, c("POSIXt", "Date"))
-  
   format_file = .locate_file(format_file, path)
-  catalog_file = if(path_ext(format_file)=="sas7bcat") format_file else NULL
+  catalog_file = if(.is_catalog(format_file)) format_file else NULL
   
   rtn = dir_ls(path, regexp="\\.sas7bdat$", recurse=subdirectories) %>% 
     .read_all(haven::read_sas, clean_names_fun=clean_names_fun, 
@@ -42,7 +55,7 @@ read_all_sas = function(path, ...,
       EDCimport_version=packageVersion("EDCimport")
     )
   
-  if(path_ext(format_file) %in% c("sas", "sas7bdat", "csv")){
+  if(.is_not_catalog(format_file)){
     rtn = rtn %>% 
       .apply_sas_formats(format_file)
   }
@@ -54,3 +67,6 @@ read_all_sas = function(path, ...,
   class(rtn) = "edc_database"
   rtn
 }
+
+.is_catalog = function(x) !is.null(x) && path_ext(x)=="sas7bcat"
+.is_not_catalog = function(x) !is.null(x) && path_ext(format_file) %in% c("sas", "sas7bdat", "csv")
