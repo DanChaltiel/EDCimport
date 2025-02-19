@@ -63,6 +63,23 @@ Otherwise, you can use \code{options(edc_var_format_name="xxx", edc_var_level="x
 }
 }
 
+\examples{
+# Create a directory with multiple csv files and a label lookup.
+path = paste0(tempdir(), "/read_all_csv")
+dir.create(paste0(path, "/subdir"), recursive=TRUE)
+write.csv(iris, paste0(path, "/iris.csv"))
+write.csv(mtcars, paste0(path, "/mtcars.csv"))
+write.csv(mtcars, paste0(path, "/subdir/mtcars.csv"))
+write.csv(airquality, paste0(path, "/airquality.csv"))
+labs = c(iris, mtcars, airquality) \%>\% names()
+write.csv(data.frame(name=labs, label=toupper(labs)), paste0(path, "/labels.csv"))
+
+
+db = read_all_csv(path, labels_from="labels.csv", subdirectories=TRUE) \%>\% 
+  set_project_name("My great project")
+db
+edc_lookup()
+}
 \seealso{
 Other EDCimport reading functions: 
 \code{\link{read_all_sas}()},

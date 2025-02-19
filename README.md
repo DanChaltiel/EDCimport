@@ -26,6 +26,9 @@ install.packages("EDCimport")
 pak::pak("DanChaltiel/EDCimport")
 ```
 
+> [!WARNING]
+> The documentation pertains to the dev version, not the one on CRAN.
+
 ## Features 🚀 
 
 ### Load the data

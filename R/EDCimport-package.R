@@ -36,7 +36,7 @@ globals = c(
   "diff_first", "element_blank", "facet_grid", "first_date", "first_sum", 
   "grade_", "grade_max", "grade2", "h1", "h2", "included", "included_sum", 
   "label", "label_percent_positive", "last_date", "last_sum", "min_sum", 
-  "n_ae", "n_arm", "n_id", "n_severe", "n_soc", "n_term", "name", 
+  "n_ae", "n_arm", "n_id", "n_severe", "n_soc", "n_term", "name", "format_file",
   "origin", "origin_col", "origin_data", "origin_label", "pct_ae", 
   "pct_datasets", "pct_severe", "prefered", "preferred", "preferred_last_date", 
   "replace_na", "resp", "resp_num", "resp2", "rows_per_id", "sae", "scale_fill_steps", 
