@@ -69,4 +69,4 @@ read_all_sas = function(path, ...,
 }
 
 .is_catalog = function(x) !is.null(x) && path_ext(x)=="sas7bcat"
-.is_not_catalog = function(x) !is.null(x) && path_ext(format_file) %in% c("sas", "sas7bdat", "csv")
+.is_not_catalog = function(x) !is.null(x) && path_ext(x) %in% c("sas", "sas7bdat", "csv")
