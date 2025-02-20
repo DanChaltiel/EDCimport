@@ -139,16 +139,19 @@ select_distinct = function(df, .by) {
 #' @return Nothing
 #' @export
 #' @importFrom cli cli_inform
+#' @importFrom fs file_exists path
 #' @importFrom purrr map_dbl
 #' @importFrom rlang set_names
 #' @importFrom stringr str_extract str_subset
 edc_inform_code = function(main="main.R", Rdir="R/"){
+  if(!file_exists(main)) main = path(Rdir, main)
   assert_file_exists(main)
   sources = readLines(main) %>% 
-    str_subset(Rdir) %>% str_subset("^ *#", negate=TRUE) %>% str_extract('"(.*)"', group=TRUE) %>% 
+    str_subset(Rdir) %>% str_subset("^ *#", negate=TRUE) %>% 
+    str_extract('"(.*)"', group=TRUE) %>% 
     set_names()
   
-  rslt = sources %>% map_dbl(~readLines(.x) %>% length())
+  rslt = sources %>% map_dbl(~readLines(.x, warn=FALSE) %>% length())
   
   cli_inform("Sourcing {length(rslt)} files in {.path {main}} for a total 
              of {sum(rslt)} lines of code.")
