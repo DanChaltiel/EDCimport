@@ -13,7 +13,7 @@
 #' @param group a grouping variable, given as "dataset$column"
 #' @param origin a variable to consider as time 0, given as "dataset$column"
 #' @param id_lim a numeric vector of length 2 providing the minimum and maximum `id` to subset on. 
-#' @param exclude a character vector of variables to exclude, in the form `dataset$column`. Can be a regex, but `$` symbols don't count. Case-insensitive.
+#' @param include,exclude a character vector of variables to exclude/include, in the form `dataset$column`. Can be a regex, but `$` symbols don't count. Case-insensitive.
 #' @param time_unit if `origin!=NULL`, the unit to measure time. One of `c("days", "weeks", "months", "years")`.
 #' @param aes_color either `variable` ("\{dataset\} - \{column\}") or `label` (the column label)
 #' @param plotly whether to use `{plotly}` to get an interactive plot
@@ -28,9 +28,13 @@
 #' db = edc_example()
 #' load_database(db)
 #' p = edc_swimmerplot(id_lim=c(5,45))
+#' p
 #' p2 = edc_swimmerplot(origin="enrol$enrol_date", time_unit="weeks", 
-#'                      exclude=c("DATA1$DATE2", "data3$.*"))
+#'                      include=c("data1", "data3"),
+#'                      exclude=c("DATA1$DATE2", "data3$date\\d\\d"))
+#' p2
 #' p3 = edc_swimmerplot(group="enrol$arm", aes_color="label")
+#' p3
 #' \dontrun{
 #' #save the plotly plot as HTML to share it
 #' save_plotly(p, "edc_swimmerplot.html")
@@ -45,6 +49,7 @@
 edc_swimmerplot = function(..., 
                            group=NULL, origin=NULL, 
                            id_lim=NULL,
+                           include=NULL,
                            exclude=NULL,
                            id=get_subjid_cols(), 
                            time_unit=c("days", "weeks", "months", "years"),
@@ -62,8 +67,10 @@ edc_swimmerplot = function(...,
     .discard_if_no_id(id=id) %>% 
     .select_dates(id=id) %>% 
     .pivot_dates(id=id) %>% 
+    edc_unify_subjid(col_subjid="id") %>% 
     list_rbind() %>% 
-    .exclude_columns(exclude) %>% 
+    .select_columns(include, dir="include") %>% 
+    .select_columns(exclude, dir="exclude") %>% 
     .parse_id_to_numeric(id=id, id_lim=id_lim)%>% 
     arrange(variable)
   
@@ -173,12 +180,17 @@ edc_swimmerplot = function(...,
 
 #' @importFrom dplyr filter
 #' @importFrom stringr str_detect str_replace_all
-.exclude_columns = function(data, exclude) {
-  if(!is.null(exclude)){
-    excl = exclude %>% paste(collapse="|") %>% tolower() %>% 
+.select_columns = function(data, cols, dir="exclude") {
+  if(!is.null(cols)){
+    excl = cols %>% paste(collapse="|") %>% tolower() %>% 
       str_replace_all("\\$", "\\\\$")
-    data = data %>% 
-      filter(!str_detect(tolower(variable), excl))
+    if(dir=="exclude"){
+      data = data %>% 
+        filter(!str_detect(tolower(variable), excl))
+    } else {
+      data = data %>% 
+        filter(str_detect(tolower(variable), excl))
+    }
   }
   data
 }

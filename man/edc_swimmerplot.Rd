@@ -9,6 +9,7 @@ edc_swimmerplot(
   group = NULL,
   origin = NULL,
   id_lim = NULL,
+  include = NULL,
   exclude = NULL,
   id = get_subjid_cols(),
   time_unit = c("days", "weeks", "months", "years"),
@@ -26,7 +27,7 @@ edc_swimmerplot(
 
 \item{id_lim}{a numeric vector of length 2 providing the minimum and maximum \code{id} to subset on.}
 
-\item{exclude}{a character vector of variables to exclude, in the form \code{dataset$column}. Can be a regex, but \code{$} symbols don't count. Case-insensitive.}
+\item{include, exclude}{a character vector of variables to exclude/include, in the form \code{dataset$column}. Can be a regex, but \code{$} symbols don't count. Case-insensitive.}
 
 \item{id}{the patient identifier. Will be coerced as numeric if possible.}
 
@@ -51,9 +52,13 @@ outliers to be easily identified.
 db = edc_example()
 load_database(db)
 p = edc_swimmerplot(id_lim=c(5,45))
+p
 p2 = edc_swimmerplot(origin="enrol$enrol_date", time_unit="weeks", 
-                     exclude=c("DATA1$DATE2", "data3$.*"))
+                     include=c("data1", "data3"),
+                     exclude=c("DATA1$DATE2", "data3$date\\\\d\\\\d"))
+p2
 p3 = edc_swimmerplot(group="enrol$arm", aes_color="label")
+p3
 \dontrun{
 #save the plotly plot as HTML to share it
 save_plotly(p, "edc_swimmerplot.html")

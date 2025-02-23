@@ -17,6 +17,7 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 -   New function `edc_viewer()`, which run a shiny application for easily browsing your database (#83)
 -   New function `set_project_name()`, to set the project name when reading from a directory (#96)
 -   New function `edc_find_value()`, which searches the whole database for a value, as `edc_find_column()` searches for column names or labels.
+-   New argument `edc_swimmerplot(include)`.
 -   New argument `subdirectories` to all reading functions (`read_trialmaster()`, `read_all_xpt()`,  `read_all_sas()`, and `read_all_csv()`), to control whether to read sub-directories. Note that until now, those subdirectories were read and could overwrite root files.
 
 ### Internal improvements
