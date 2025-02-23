@@ -23,6 +23,7 @@ As in previous vignettes, we will be using `edc_example()`, but in the real worl
 
 ```{r}
 #| warning: false
+#| message: true
 library(EDCimport)
 library(dplyr)
 db = edc_example(N=200) %>% 
