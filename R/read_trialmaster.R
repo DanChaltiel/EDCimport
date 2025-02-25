@@ -61,7 +61,8 @@ read_trialmaster = function(archive, ..., use_cache="write",
 
   if(verbose>0){
     size = object.size(rtn) %>% format("auto")
-    cli_inform(c(v="Database loaded: {length(rtn)} tables, {size}"))
+    l = rtn %>% keep(is.data.frame) %>% discard(is_lookup) %>% length()
+    cli_inform(c(v="Database loaded: {l} tables, {size}"))
   }
   
   rtn
