@@ -22,7 +22,7 @@
       Size: 61533
       Compressed: 13576
       Writing cache file './trialmaster_export_2022-08-25 15h16.rds'
-      v Database loaded: 8 tables, 000 Kb
+      v Database loaded: 5 tables, 000 Kb
     Code
       w$datetime_extraction
     Output
