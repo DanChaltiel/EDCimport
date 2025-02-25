@@ -12,7 +12,7 @@
 #' @param id the patient identifier. Will be coerced as numeric if possible.
 #' @param group a grouping variable, given as "dataset$column"
 #' @param origin a variable to consider as time 0, given as "dataset$column"
-#' @param id_lim a numeric vector of length 2 providing the minimum and maximum `id` to subset on. 
+#' @param id_lim if `id` is numeric, a numeric vector of length 2 providing the minimum and maximum `id` to subset on. 
 #' @param include,exclude a character vector of variables to exclude/include, in the form `dataset$column`. Can be a regex, but `$` symbols don't count. Case-insensitive.
 #' @param time_unit if `origin!=NULL`, the unit to measure time. One of `c("days", "weeks", "months", "years")`.
 #' @param aes_color either `variable` ("\{dataset\} - \{column\}") or `label` (the column label)
@@ -41,7 +41,7 @@
 #' }
 #' @importFrom cli cli_abort
 #' @importFrom dplyr arrange left_join mutate n_distinct sym
-#' @importFrom ggplot2 aes facet_wrap geom_line geom_point ggplot labs
+#' @importFrom ggplot2 aes facet_wrap geom_line geom_point geom_vline ggplot labs
 #' @importFrom glue glue
 #' @importFrom purrr list_rbind
 #' @importFrom rlang check_dots_empty check_installed
@@ -63,19 +63,18 @@ edc_swimmerplot = function(...,
   if(!str_ends(time_unit, "s")) time_unit = paste0(time_unit, "s")
   parent = parent.frame()
   
-  dat = get_datasets() %>% 
+  dat = get_datasets(envir=parent) %>% 
     .discard_if_no_id(id=id) %>% 
     .select_dates(id=id) %>% 
     .pivot_dates(id=id) %>% 
-    edc_unify_subjid(col_subjid="id") %>% 
     list_rbind() %>% 
     .select_columns(include, dir="include") %>% 
     .select_columns(exclude, dir="exclude") %>% 
-    .parse_id_to_numeric(id=id, id_lim=id_lim)%>% 
     arrange(variable)
   
   if(!is.null(group)){
-    dat_group = parse_var(group, id, parent)
+    dat_group = parse_var(group, id, parent) %>% 
+      mutate(id=as.character(id))
     if(anyDuplicated(dat_group$id)!=0){
       cli_abort("{.arg group} ({group}) should identify subjects ({id}) uniquely.", 
                 class="edc_swimplot_group_dup")
@@ -86,9 +85,16 @@ edc_swimmerplot = function(...,
   tooltip = c("x", "y", "color", "label")
   x_label = "Calendar date"
   aes_x = "date"
+  vline = NULL
   if(!is.null(origin)){
-    dat_origin = parse_var(origin, id, parent)
+    dat_origin = parse_var(origin, id, parent) %>% 
+      mutate(id=as.character(id))
     values = c(days=1, weeks=7, months=365.24/12, years=365.24)
+    if(!inherits(dat_origin$origin, c("Date", "POSIXt"))){
+      cli_abort("Column {.arg origin} ({.val {origin}}) should be of class
+                {.cls Date} or {.cls POSIXt}, not {.cls {class(dat_origin$origin)}}.", 
+                class="edc_swimplot_origin_notdate")
+    }
     dat = dat %>%
       left_join(dat_origin, by="id") %>% 
       mutate(
@@ -97,12 +103,15 @@ edc_swimmerplot = function(...,
     x_label = glue("Date difference from `{origin}` (in {time_unit})")
     tooltip = c(tooltip, "date")
     aes_x = "time"
+    vline = geom_vline(xintercept=0)
   }
   
   p = dat %>% 
+    .parse_id_to_numeric(id=id, id_lim=id_lim) %>% 
     ggplot(aes(x=!!sym(aes_x), y=id, group=id, date=date)) + 
     aes(color=!!sym(aes_color), label=!!sym(aes_label)) +
     .get_scale_color(n_levels=n_distinct(dat$variable)) +
+    vline +
     geom_line(na.rm=TRUE) +
     geom_point(na.rm=TRUE) +
     labs(x=x_label, y="Patient", color="Variable")
@@ -152,7 +161,8 @@ edc_swimmerplot = function(...,
     map(~{
       .x %>% 
         select(id=any_of2(id), where(is.Date)) %>% 
-        rename(id=1)
+        rename(id=1) %>%
+        mutate(id=as.character(id)) 
     }) %>% 
     discard(~ncol(.x)<2)
   if(length(data_dates)==0){
@@ -180,16 +190,17 @@ edc_swimmerplot = function(...,
 
 #' @importFrom dplyr filter
 #' @importFrom stringr str_detect str_replace_all
-.select_columns = function(data, cols, dir="exclude") {
-  if(!is.null(cols)){
-    excl = cols %>% paste(collapse="|") %>% tolower() %>% 
+.select_columns = function(data, cols, dir) {
+  cols = cols[nchar(cols)>0]
+  if(length(cols)>0){
+    needle = cols %>% paste(collapse="|") %>% tolower() %>% 
       str_replace_all("\\$", "\\\\$")
     if(dir=="exclude"){
       data = data %>% 
-        filter(!str_detect(tolower(variable), excl))
+        filter(!str_detect(tolower(variable), needle))
     } else {
       data = data %>% 
-        filter(str_detect(tolower(variable), excl))
+        filter(str_detect(tolower(variable), needle))
     }
   }
   data

@@ -25,7 +25,7 @@ edc_swimmerplot(
 
 \item{origin}{a variable to consider as time 0, given as "dataset$column"}
 
-\item{id_lim}{a numeric vector of length 2 providing the minimum and maximum \code{id} to subset on.}
+\item{id_lim}{if \code{id} is numeric, a numeric vector of length 2 providing the minimum and maximum \code{id} to subset on.}
 
 \item{include, exclude}{a character vector of variables to exclude/include, in the form \code{dataset$column}. Can be a regex, but \code{$} symbols don't count. Case-insensitive.}
 
