@@ -40,6 +40,9 @@ edc_patient_gridplot = function(sort_rows=TRUE, sort_cols=TRUE, gradient=FALSE,
   subjid_cols = get_subjid_cols(lookup=lookup)
   if(is_formula(preprocess)) preprocess=as_function(preprocess)
   datasets = keep(datasets, is.data.frame)
+  if(length(datasets)==0){
+    cli_abort("No datasets are availables", .internal=TRUE)
+  }
   
   subjid_list = datasets %>% 
     imap(~{
