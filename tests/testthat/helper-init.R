@@ -191,6 +191,7 @@ tryCatch2 = function(expr){
 }
 
 # clean_cache()
-cli::cli_inform(c(v="Initializer {.file helper-init.R} loaded at {.path {getwd()}}",
-                  i="is_testing={.val {is_testing()}}, is_checking={.val {is_checking()}}, 
+cli::cli_inform(c(i="is_testing={.val {is_testing()}}, 
+                  is_checking={.val {is_checking()}}, 
                   is_parallel={.val {is_parallel()}}"))
+cli::cli_inform(c(v="Initializer {.file helper-init.R} loaded at {.path {getwd()}}"))
