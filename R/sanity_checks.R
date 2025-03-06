@@ -270,6 +270,7 @@ edc_data_warnings = function(){
 #' @keywords internal
 #' @importFrom cli cli_abort cli_vec cli_warn format_inline
 #' @importFrom dplyr pull
+#' @importFrom fs dir_create
 #' @importFrom rlang caller_arg
 #' @importFrom stringr str_ends str_pad
 #' @importFrom tibble tibble
@@ -280,6 +281,7 @@ edc_data_condition = function(.data, message, issue_n, max_subjid,
   if(nrow(.data)>0){
     if(is.character(csv_path)){
       assert(str_ends(csv_path, "\\.csv"), call=parent.frame())
+      dir_create(dirname(csv_path))
       write.csv2(.data, csv_path, row.names=FALSE)
     }
     message = format_inline(message)
