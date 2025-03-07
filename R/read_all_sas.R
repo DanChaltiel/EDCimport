@@ -53,12 +53,8 @@ read_all_sas = function(path, ...,
       datetime_extraction=datetime_extraction,
       clean_names_fun=.get_clean_names_fun(clean_names_fun), 
       EDCimport_version=packageVersion("EDCimport")
-    )
-  
-  if(.is_not_catalog(format_file)){
-    rtn = rtn %>% 
-      .apply_sas_formats(format_file)
-  }
+    ) %>% 
+    .apply_sas_formats(format_file)
   
   .warn_bad_tables(rtn)
   .warn_bad_columns(rtn)

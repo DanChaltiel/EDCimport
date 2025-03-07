@@ -74,7 +74,7 @@
 #' @keywords internal
 .format_sas_column =  function(x, formats){
   fname = attr(x, "format.sas") #set by haven::read_xpt
-  if (is.null(fname) || !fname %in% names(formats)){
+  if (is.null(fname) || is.null(formats) || !fname %in% names(formats)){
     return(x)
   }
   x %>% 
@@ -113,6 +113,7 @@
 #' @importFrom fs path_ext
 .read_sas_formats = function(format_file){
   ext = path_ext(format_file)
+  if(ext=="sas7bcat") return(NULL)
   if(ext=="sas") {
     sas_formats = .read_proc_format(format_file)
   } else {
