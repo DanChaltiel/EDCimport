@@ -18,41 +18,31 @@ test_that("Read TM with cache", {
   clean_lookup()
   edc_options(edc_lookup_overwrite_warn=TRUE, .local=TRUE)
   
+  #first read, read from zip (default: use_cache=write)
   w = read_trialmaster(filename) %>% 
     expect_classed_conditions(message_class="read_tm_zip")
   
+  #2nd, use_cache=TRUE -> read from cache
   w = read_trialmaster(filename, use_cache=TRUE) %>%
     expect_classed_conditions(message_class="read_tm_cache",
                               warning_class="edc_lookup_overwrite_warn")
-  # if(FALSE){
-    
-
-
+  
+  #3rd, use_cache=write -> read from zip again
   w = read_trialmaster(filename, use_cache="write") %>%
     expect_classed_conditions(message_class="read_tm_zip",
                               warning_class="edc_lookup_overwrite_warn")
+  
+  #4th, use_cache=read -> read from cache again
   w = read_trialmaster(filename, use_cache="read") %>%
     expect_classed_conditions(message_class="read_tm_cache",
                               warning_class="edc_lookup_overwrite_warn")
-  # expect_message(w <- read_trialmaster(filename),
-  #                class="read_tm_zip")
-  # expect_message(w <- read_trialmaster(filename),
-  #                class="read_tm_cache")
-  # expect_message(w <- read_trialmaster(filename, use_cache=FALSE),
-  #                class="read_tm_zip")
-  # expect_warning(w <- read_trialmaster(filename, use_cache=FALSE),
-  #                class="edc_lookup_overwrite_warn")
-
+  
+  #5th, use_cache=F -> read from zip again again
   w = read_trialmaster(filename, use_cache=FALSE) %>%
     expect_classed_conditions(message_class="read_tm_zip",
                               warning_class="edc_lookup_overwrite_warn")
-  # w = read_trialmaster(filename, use_cache=FALSE) %>% 
-  #   expect_classed_conditions(message_class=c("read_tm_zip", "xxxx"),
-  #                             warning_class="edc_lookup_overwrite_warn")
-  # }
   
-  # class(es[[1]])
-  # [1] "expectation_failure" "expectation"         "error"               "condition"      
+  
   expect_length(w, 8)
 
 
