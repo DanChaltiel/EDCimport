@@ -56,9 +56,8 @@ lastnews_table = function(except=NULL, with_ties=FALSE, show_delta=FALSE, numeri
   }
   
   if(isTRUE(show_delta)){
-    f = if(!isTRUE(regex)) fixed else identity
-    rtn_delta =
-      rtn %>% 
+    f = if(!isTRUE(regex)) fixed else identity 
+    rtn_delta = rtn %>% 
       arrange(order(mixedorder(subjid))) %>%
       select(subjid, last_date=value, origin_data=dataset, origin_col=name, origin_label) %>%
       mutate(origin = paste0(origin_data, "$", origin_col)) %>%
@@ -69,15 +68,23 @@ lastnews_table = function(except=NULL, with_ties=FALSE, show_delta=FALSE, numeri
     rtn_delta = rtn_delta %>%
       slice_max(last_date, by=c(subjid, origin), with_ties=TRUE) %>%
       mutate(
-        preferred = map_dbl(origin, ~which(str_detect(.x, f(prefer)))[1]) %>% 
+        preferred = map_dbl(origin, ~which(str_detect(.x, f(as.character(prefer))))[1]) %>% 
           replace_na(Inf)
-      ) 
-    rtn_delta = rtn_delta %>% 
-      filter(!is.infinite(preferred)) %>%
-      arrange(preferred) %>% 
-      slice_max(last_date, by=subjid, with_ties=FALSE) %>% 
-      select(subjid, preferred_last_date=last_date, preferred_origin=origin) %>% 
-      arrange(order(mixedorder(subjid)))
+      )  %>% 
+      filter(!is.infinite(preferred))
+    
+    if(nrow(rtn_delta)>0){
+      rtn_delta = rtn_delta %>%
+        arrange(preferred) %>% 
+        slice_max(last_date, by=subjid, with_ties=FALSE) %>% 
+        select(subjid, preferred_last_date=last_date, preferred_origin=origin) %>% 
+        arrange(order(mixedorder(subjid)))
+    } else {
+      cli_warn("No {.cls date} column corresponding to {.arg prefer}={.val {prefer}} could be 
+               found, so {.arg show_delta} has been set back to FALSE.",
+               class="edc_no_preferred_column_warning")
+      show_delta = FALSE
+    }
   }
   
   rtn = rtn %>% 

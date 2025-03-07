@@ -47,6 +47,11 @@ test_that("lastnews_table() prefer", {
   #with regex
   lnt4 = lastnews_table(prefer=c("xxxx", "date\\d\\d"), regex=TRUE)
   expect_setequal(lnt4$origin_col[1:3], c("date10"))
+  
+  #show_delta
+  lnt5 = lastnews_table(prefer=c("data2$date5"), show_delta=TRUE)
+  expect_contains(names(lnt5), c("preferred_last_date", "preferred_origin", "delta"))
+  expect_false(any(is.infinite(lnt5$delta) | is.na(lnt5$delta)))
 })
 
 
@@ -77,4 +82,13 @@ test_that("lastnews_table() error", {
   load_database(db)
   lastnews_table(except=c("enrol", "\\d"), regex=TRUE) %>% 
     expect_error(class="edc_no_columns_error")
+})
+
+
+test_that("lastnews_table() error", {
+  db = lastnews_example()
+  load_database(db)
+  lnt6 = lastnews_table(show_delta=TRUE)  %>% 
+    expect_classed_conditions(warning_class="edc_no_preferred_column_warning")
+  expect_true(!any(c("preferred_last_date", "preferred_origin", "delta") %in% names(lnt6)))
 })
