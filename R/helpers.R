@@ -17,7 +17,7 @@
 #' @return a factor, or `x` untouched.
 #' @export
 #' @importFrom cli cli_abort
-#' @importFrom dplyr case_when
+#' @importFrom dplyr case_match case_when 
 #' @importFrom stringr str_detect
 #'
 #' @examples 
@@ -46,13 +46,13 @@
 #' fct_yesno(x$e, strict=TRUE, fail=FALSE) 
 #' fct_yesno(x$e, output=c("Ja", "Nein"))
 fct_yesno = function(x, 
-                     input=list(yes=c("Yes", "Oui"), no=c("No", "Non"), na="NA"),
+                     input=list(yes=c("Yes", "Oui"), no=c("No", "Non"), na=c("NA", "")),
                      output=c("Yes", "No"),
                      strict=FALSE,
                      mutate_character=TRUE, 
                      fail=TRUE){
   assert_class(input, "list")
-  default_input = list(yes=c("Yes", "Oui"), no=c("No", "Non"), na="NA")
+  default_input = list(yes=c("Yes", "Oui"), no=c("No", "Non"), na=c("NA", ""))
   missing_names = setdiff(names(default_input), names(input))
   input[missing_names] = default_input[missing_names]
   assert(setequal(names(input), c("yes", "no", "na")))
@@ -76,6 +76,7 @@ fct_yesno = function(x,
     is_no  = fun(x) %in% fun(input$no)
     is_na  = fun(x) %in% fun(input$na)
   } else {
+    input = map(input, ~case_match(.x, ""~"^$", .default=.x))
     is_yes = str_detect(tolower(x), paste(tolower(input$yes), collapse="|"))
     is_no  = str_detect(tolower(x), paste(tolower(input$no ), collapse="|"))
     is_na  = str_detect(tolower(x), paste(tolower(input$na ), collapse="|"))

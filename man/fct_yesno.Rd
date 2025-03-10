@@ -6,7 +6,7 @@
 \usage{
 fct_yesno(
   x,
-  input = list(yes = c("Yes", "Oui"), no = c("No", "Non"), na = "NA"),
+  input = list(yes = c("Yes", "Oui"), no = c("No", "Non"), na = c("NA", "")),
   output = c("Yes", "No"),
   strict = FALSE,
   mutate_character = TRUE,
