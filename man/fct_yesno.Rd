@@ -6,7 +6,7 @@
 \usage{
 fct_yesno(
   x,
-  input = list(yes = c("Yes", "Oui"), no = c("No", "Non")),
+  input = list(yes = c("Yes", "Oui"), no = c("No", "Non"), na = "NA"),
   output = c("Yes", "No"),
   strict = FALSE,
   mutate_character = TRUE,
@@ -16,11 +16,11 @@ fct_yesno(
 \arguments{
 \item{x}{a vector of any type/class.}
 
-\item{input}{list of values to be considered as "yes" and "no".}
+\item{input}{list of values to be considered as "yes", "no", and \code{NA}.}
 
 \item{output}{the output factor levels.}
 
-\item{strict}{whether to match the input strictly or use \link[stringr:str_detect]{stringr::str_detect} to find them.}
+\item{strict}{whether to match the input strictly or use \link[stringr:str_detect]{stringr::str_detect} to find them. Can also be "ignore_case" to just ignore the case.}
 
 \item{mutate_character}{whether to turn characters into factor.}
 
@@ -43,7 +43,7 @@ x = tibble(
   b=sample(c("Oui", "Non"), size=N, replace=TRUE),
   c=sample(0:1, size=N, replace=TRUE),
   d=sample(c(TRUE, FALSE), size=N, replace=TRUE),
-  e=sample(c("1-Yes", "0-No"), size=N, replace=TRUE),
+  e=sample(c("1-Yes", "0-No", "2-NA"), size=N, replace=TRUE),
   
   y=sample(c("aaa", "bbb", "ccc"), size=N, replace=TRUE),
   z=1:N,
@@ -51,7 +51,7 @@ x = tibble(
  
 x          
 #y and z are left untouched (or throw an error if fail=TRUE)   
-sapply(x, fct_yesno, fail=FALSE)
+sapply(x, fct_yesno, fail=FALSE, simplify=FALSE)
 
 # as "1-Yes" is not in `input`, x$e is untouched/fails if strict=TRUE
 fct_yesno(x$e)

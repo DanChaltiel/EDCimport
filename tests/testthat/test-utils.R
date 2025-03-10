@@ -206,7 +206,7 @@ test_that("fct_yesno() works", {
     fra=sample(c("Oui", "Non"), size=N, replace=TRUE),
     bin=sample(0:1, size=N, replace=TRUE),
     log=sample(c(TRUE, FALSE), size=N, replace=TRUE),
-    eng2=sample(c("1-Yes", "0-No"), size=N, replace=TRUE),
+    eng2=sample(c("1-Yes", "0-No", "2-NA"), size=N, replace=TRUE),
 
     chr=sample(c("aaa", "bbb", "ccc"), size=N, replace=TRUE),
     num=1:N,
@@ -221,6 +221,8 @@ test_that("fct_yesno() works", {
     
     mutate_all(x, fct_yesno, fail=FALSE)
     mutate_all(x, fct_yesno, fail=FALSE, strict=TRUE)
+    
+    #should not change `fra` and `eng2`
     mutate_all(x, fct_yesno, fail=FALSE, input=list(yes="Ja", no="Nein"))
   })
   
