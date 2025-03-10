@@ -197,42 +197,6 @@ test_that("expect_classed_conditions()", {
 # Misc ----------------------------------------------------------------------------------------
 
 
-test_that("fct_yesno() works", {
-  
-  set.seed(42)
-  N=20
-  x = tibble(
-    eng=sample(c("Yes", "No"), size=N, replace=TRUE),
-    fra=sample(c("Oui", "Non"), size=N, replace=TRUE),
-    bin=sample(0:1, size=N, replace=TRUE),
-    log=sample(c(TRUE, FALSE), size=N, replace=TRUE),
-    eng2=sample(c("1-Yes", "0-No", "2-NA"), size=N, replace=TRUE),
-
-    chr=sample(c("aaa", "bbb", "ccc"), size=N, replace=TRUE),
-    num=1:N,
-  )
-  x[10:11,] = NA
-  
-  
-  expect_snapshot({
-    
-    fct_yesno("Yes")
-    fct_yesno(c("No", "Yes"))
-    
-    mutate_all(x, fct_yesno, fail=FALSE)
-    mutate_all(x, fct_yesno, fail=FALSE, strict=TRUE)
-    
-    #should not change `fra` and `eng2`
-    mutate_all(x, fct_yesno, fail=FALSE, input=list(yes="Ja", no="Nein"))
-  })
-  
-  mutate_all(x, fct_yesno, fail=TRUE) %>% expect_error(class="fct_yesno_unparsed_error")
-  fct_yesno(x$chr) %>% expect_error(class="fct_yesno_unparsed_error")
-  # fct_yesno(x$num) %>% expect_error(class="fct_yesno_unparsed_error") #TODO?
-  fct_yesno("YesNo") %>% expect_error(class="fct_yesno_both_error")
-  fct_yesno("foobar") %>% expect_error(class="fct_yesno_unparsed_error")
-  
-})
 
 
 test_that("cli_menu() is not in package cli yet", {

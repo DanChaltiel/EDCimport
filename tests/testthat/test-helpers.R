@@ -1,7 +1,7 @@
 
 edc_options(edc_lookup_overwrite_warn=FALSE)
 
-test_that("assert_no_duplicate works", {
+test_that("assert_no_duplicate() works", {
   db = edc_example() #to set up the lookup and the subjid column
   
   tibble(subjid=c(1:10)) %>% assert_no_duplicate() %>% expect_silent()
@@ -30,7 +30,7 @@ test_that("assert_no_duplicate works", {
 
 
 
-test_that("edc_warn_patient_diffs works", {
+test_that("edc_warn_patient_diffs() works", {
   local_options(edc_subjid_ref = 1:50)
   
   edc_warn_patient_diffs(1:50) %>% expect_silent()
@@ -43,7 +43,7 @@ test_that("edc_warn_patient_diffs works", {
 
 
 
-test_that("edc_unify_subjid works", {
+test_that("edc_unify_subjid() works", {
   #numeric subjid
   db = list(x=data.frame(subjid=c("1", "2", "3", "005"), a=1))
   h = edc_unify_subjid(db, col_subjid="subjid")
@@ -65,33 +65,58 @@ test_that("edc_unify_subjid works", {
 
 
 
-test_that("fct_yesno works", {
+
+test_that("fct_yesno() works", {
   edc_reset_options(quiet=TRUE)
   set.seed(42)
-  N=10
-  dat = tibble(
-    a=sample(c("Yes", "No"), size=N, replace=TRUE),
-    b=sample(c("Oui", "Non"), size=N, replace=TRUE),
-    c=sample(0:1, size=N, replace=TRUE),
-    d=sample(c(TRUE, FALSE), size=N, replace=TRUE),
-    e=sample(c("1-Yes", "0-No"), size=N, replace=TRUE),
-    y=sample(c("aaa", "bbb", "ccc"), size=N, replace=TRUE),
-    z=1:N,
+  N=20
+  x = tibble(
+    eng=sample(c("Yes", "No", ""), size=N, replace=TRUE),
+    fra=sample(c("Oui", "Non"), size=N, replace=TRUE),
+    bin=sample(0:1, size=N, replace=TRUE),
+    log=sample(c(TRUE, FALSE), size=N, replace=TRUE),
+    eng2=sample(c("1-Yes", "0-No", "2-NA"), size=N, replace=TRUE),
+    
+    chr=sample(c("aaa", "bbb", "ccc"), size=N, replace=TRUE),
+    num=1:N,
   )
+  x[10:11,] = NA
   
-  rslt = dat %>% mutate(across(everything(), ~fct_yesno(.x, fail=FALSE)))
+  
+  rslt = x %>% mutate(across(everything(), ~fct_yesno(.x, fail=FALSE)))
   
   x1 = rslt %>% 
-    select(a:e) %>% 
+    select(eng:eng2) %>% 
     pivot_longer(everything()) %>% 
     pull(value)
   
+  #TESTS
   expect_true(is.factor(x1))
   expect_identical(levels(x1), c("Yes", "No"))
   
-  expect_identical(dat$y, rslt$y)
-  expect_identical(dat$z, rslt$z)
+  expect_identical(x$chr, rslt$chr)
+  expect_identical(x$num, rslt$num)
   
-  fct_yesno(dat$y, fail=TRUE) %>% expect_error(class="fct_yesno_unparsed_error")
-  fct_yesno(dat$z, fail=TRUE) %>% expect_silent()
+  fct_yesno(x$num, fail=TRUE) %>% expect_silent() #no fct_yesno_unparsed_error
+  
+  #SNAPSHOT
+  expect_snapshot({
+    
+    fct_yesno("Yes")
+    fct_yesno(c("No", "Yes"))
+    
+    mutate_all(x, fct_yesno, fail=FALSE)
+    mutate_all(x, fct_yesno, fail=FALSE, strict=TRUE)
+    
+    #should not change `fra` and `eng2`
+    mutate_all(x, fct_yesno, fail=FALSE, input=list(yes="Ja", no="Nein"))
+  })
+  
+  
+  #ERRORS
+  mutate_all(x, fct_yesno, fail=TRUE) %>% expect_error(class="fct_yesno_unparsed_error")
+  fct_yesno(x$chr) %>% expect_error(class="fct_yesno_unparsed_error")
+  fct_yesno("YesNo") %>% expect_error(class="fct_yesno_both_error")
+  fct_yesno("foobar") %>% expect_error(class="fct_yesno_unparsed_error")
+  
 })
