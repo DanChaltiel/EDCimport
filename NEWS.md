@@ -11,13 +11,13 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 ### New features
 
 -   New functions `edc_patient_gridplot()`, which creates a ggplot matrix giving the presence of all patients in all datasets (#77)
--   Improved `lastnews_table()`: allow regex in except & prefer, improved warning message, and allow saving warning as csv (#78)
+-   Improved `lastnews_table()`: allow regex in `except` & `prefer` (with `regex=TRUE`), show the differences (with `show_delta=TRUE`), improved warning message, and allow saving warnings in a csv file (#78)
 -   New argument `lastnews_table(show_delta=TRUE)`, which computes the difference between the last `prefer` date and the actual last date (#81)
 -   New functions `edc_left_join()`, `edc_right_join()`, and `edc_full_join()`, which perform joins with defaults to subject ID as primary key (#82)
 -   New function `edc_viewer()`, which run a shiny application for easily browsing your database (#83)
 -   New function `set_project_name()`, to set the project name when reading from a directory (#96)
 -   New function `edc_find_value()`, which searches the whole database for a value, as `edc_find_column()` searches for column names or labels.
--   New argument `edc_swimmerplot(include)`.
+-   New argument `edc_swimmerplot(include)`, to subset the swimmerplot on significant variables only.
 -   New argument `subdirectories` to all reading functions (`read_trialmaster()`, `read_all_xpt()`,  `read_all_sas()`, and `read_all_csv()`), to control whether to read sub-directories. Note that until now, those subdirectories were read and could overwrite root files.
 
 ### Internal improvements
@@ -38,7 +38,7 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 I don't think enough people are using this so that it is necessary to go through the deprecation process.
 
 -   `split_mixed_datasets` becomes `edc_split_mixed()`
--   Unexported internal functions: `build_lookup()`, `extend_lookup()`, `get_key_cols()`, `get_subjid_cols()`, `get_crfname_cols()`, `get_meta_cols()`, `load_as_list()`, `save_list()`
+-   Unexport internal functions: `build_lookup()`, `extend_lookup()`, `get_key_cols()`, `get_subjid_cols()`, `get_crfname_cols()`, `get_meta_cols()`, `load_as_list()`, `save_list()`
 
 
 # EDCimport 0.5.2
