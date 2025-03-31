@@ -182,6 +182,7 @@ assert_no_duplicate = function(df, by=NULL, id_col=get_subjid_cols()){
 #' @param issue_n identifying row number
 #' @param csv_path a path to save `df` in a csv file that can be shared with the DM for more details.
 #' @param max_subjid max number of subject ID to show in the message
+#' @param envir the environment to evaluate `message` in.
 #' @param col_subjid column name for subject ID. Set to `NULL` to ignore.
 #' @param ... unused 
 #'
@@ -223,12 +224,13 @@ assert_no_duplicate = function(df, by=NULL, id_col=get_subjid_cols()){
 edc_data_warn = function(df, message, ..., 
                          issue_n="xx", max_subjid=5, 
                          csv_path=FALSE, 
+                         envir=parent.frame(), 
                          col_subjid=get_subjid_cols()){
   
   if (missing(max_subjid)) max_subjid = getOption("edc_warn_max_subjid", max_subjid)
   check_dots_empty()
   edc_data_condition(.data=df, message=message, issue_n=issue_n, csv_path=csv_path,
-                     max_subjid=max_subjid, col_subjid=col_subjid, 
+                     max_subjid=max_subjid, .envir=envir, col_subjid=col_subjid, 
                      fun=cli_warn)
 }
 
@@ -239,12 +241,13 @@ edc_data_warn = function(df, message, ...,
 edc_data_stop = function(df, message, ..., 
                          issue_n="xx", max_subjid=5, 
                          csv_path=FALSE, 
+                         envir=parent.frame(), 
                          col_subjid=get_subjid_cols()){
   
   if (missing(max_subjid)) max_subjid = getOption("edc_warn_max_subjid", max_subjid)
   check_dots_empty()
   edc_data_condition(.data=df, message=message, issue_n=issue_n, csv_path=csv_path,
-                     max_subjid=max_subjid, col_subjid=col_subjid, 
+                     max_subjid=max_subjid, .envir=envir, col_subjid=col_subjid, 
                      fun=cli_abort)
 }
 
@@ -271,12 +274,12 @@ edc_data_warnings = function(){
 #' @importFrom cli cli_abort cli_vec cli_warn format_inline
 #' @importFrom dplyr pull
 #' @importFrom fs dir_create
-#' @importFrom rlang caller_arg
+#' @importFrom rlang caller_arg env_bind
 #' @importFrom stringr str_ends str_pad
 #' @importFrom tibble tibble
 #' @importFrom utils write.csv2
 edc_data_condition = function(.data, message, issue_n, max_subjid, 
-                              csv_path, 
+                              csv_path, .envir, 
                               col_subjid, fun){
   if(nrow(.data)>0){
     if(is.character(csv_path)){
@@ -284,7 +287,9 @@ edc_data_condition = function(.data, message, issue_n, max_subjid,
       dir_create(dirname(csv_path))
       write.csv2(.data, csv_path, row.names=FALSE)
     }
-    message = format_inline(message)
+    
+    env_bind(.envir, .data=.data)
+    message = format_inline(message, .envir=.envir)
     
     par_issue = par_subj = ""; subj=NULL
     if(is.null(issue_n)) issue_n = NA

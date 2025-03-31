@@ -14,6 +14,7 @@ edc_data_warn(
   issue_n = "xx",
   max_subjid = 5,
   csv_path = FALSE,
+  envir = parent.frame(),
   col_subjid = get_subjid_cols()
 )
 
@@ -33,6 +34,8 @@ edc_data_warnings()
 \item{max_subjid}{max number of subject ID to show in the message}
 
 \item{csv_path}{a path to save \code{df} in a csv file that can be shared with the DM for more details.}
+
+\item{envir}{the environment to evaluate \code{message} in.}
 
 \item{col_subjid}{column name for subject ID. Set to \code{NULL} to ignore.}
 }
