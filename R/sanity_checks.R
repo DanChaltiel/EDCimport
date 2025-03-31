@@ -235,7 +235,7 @@ edc_data_warn = function(df, message, ...,
 }
 
 #' @rdname edc_data_warn
-#' @usage edc_data_stop(df, message, ..., issue_n, max_subjid, csv_path, col_subjid)
+#' @usage edc_data_stop(df, message, ..., issue_n, max_subjid, csv_path, envir, col_subjid)
 #' @export
 #' @importFrom rlang check_dots_empty
 edc_data_stop = function(df, message, ..., 
