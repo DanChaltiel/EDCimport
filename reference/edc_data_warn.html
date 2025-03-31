@@ -21,7 +21,7 @@ Use edc_data_warnings() to generate the table for such a file."><meta property="
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9047</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9048</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -72,6 +72,7 @@ Use <code>edc_data_warnings()</code> to generate the table for such a file.</p>
 <span>  issue_n <span class="op">=</span> <span class="st">"xx"</span>,</span>
 <span>  max_subjid <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>  csv_path <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  envir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sys.parent.html" class="external-link">parent.frame</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  col_subjid <span class="op">=</span> <span class="fu">get_subjid_cols</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -106,6 +107,10 @@ Use <code>edc_data_warnings()</code> to generate the table for such a file.</p>
 
 <dt id="arg-csv-path">csv_path<a class="anchor" aria-label="anchor" href="#arg-csv-path"></a></dt>
 <dd><p>a path to save <code>df</code> in a csv file that can be shared with the DM for more details.</p></dd>
+
+
+<dt id="arg-envir">envir<a class="anchor" aria-label="anchor" href="#arg-envir"></a></dt>
+<dd><p>the environment to evaluate <code>message</code> in.</p></dd>
 
 
 <dt id="arg-col-subjid">col_subjid<a class="anchor" aria-label="anchor" href="#arg-col-subjid"></a></dt>

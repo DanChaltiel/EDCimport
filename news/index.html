@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9047</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9048</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,23 +50,25 @@
 <div class="section level4">
 <h4 id="new-features-0-6-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-6-0"></a></h4>
 <ul><li>New functions <code><a href="../reference/edc_patient_gridplot.html">edc_patient_gridplot()</a></code>, which creates a ggplot matrix giving the presence of all patients in all datasets (<a href="https://github.com/DanChaltiel/EDCimport/issues/77" class="external-link">#77</a>)</li>
-<li>Improved <code><a href="../reference/lastnews_table.html">lastnews_table()</a></code>: allow regex in <code>except</code> &amp; <code>prefer</code> (with <code>regex=TRUE</code>), show the differences (with <code>show_delta=TRUE</code>), improved warning message, and allow saving warnings in a csv file (<a href="https://github.com/DanChaltiel/EDCimport/issues/78" class="external-link">#78</a>)</li>
-<li>New argument <code>lastnews_table(show_delta=TRUE)</code>, which computes the difference between the last <code>prefer</code> date and the actual last date (<a href="https://github.com/DanChaltiel/EDCimport/issues/81" class="external-link">#81</a>)</li>
 <li>New functions <code><a href="../reference/edc_left_join.html">edc_left_join()</a></code>, <code><a href="../reference/edc_left_join.html">edc_right_join()</a></code>, and <code><a href="../reference/edc_left_join.html">edc_full_join()</a></code>, which perform joins with defaults to subject ID as primary key (<a href="https://github.com/DanChaltiel/EDCimport/issues/82" class="external-link">#82</a>)</li>
 <li>New function <code><a href="../reference/edc_viewer.html">edc_viewer()</a></code>, which run a shiny application for easily browsing your database (<a href="https://github.com/DanChaltiel/EDCimport/issues/83" class="external-link">#83</a>)</li>
 <li>New function <code><a href="../reference/set_project_name.html">set_project_name()</a></code>, to set the project name when reading from a directory (<a href="https://github.com/DanChaltiel/EDCimport/issues/96" class="external-link">#96</a>)</li>
 <li>New function <code><a href="../reference/edc_find_value.html">edc_find_value()</a></code>, which searches the whole database for a value, as <code><a href="../reference/edc_find_value.html">edc_find_column()</a></code> searches for column names or labels.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="bug-fixes--improvements-0-6-0">Bug fixes &amp; Improvements<a class="anchor" aria-label="anchor" href="#bug-fixes--improvements-0-6-0"></a></h4>
+<ul><li>New argument <code>lastnews_table(show_delta=TRUE)</code>, which computes the difference between the last <code>prefer</code> date and the actual last date (<a href="https://github.com/DanChaltiel/EDCimport/issues/81" class="external-link">#81</a>)
+<ul><li>Other improvements: allow regex in <code>except</code> &amp; <code>prefer</code> (with <code>regex=TRUE</code>), improved warning message, and allow saving warnings in a csv file (<a href="https://github.com/DanChaltiel/EDCimport/issues/78" class="external-link">#78</a>)</li>
+</ul></li>
+<li>New argument <code>edc_data_warn(envir)</code>, the environment to evaluate <code>message</code> in.</li>
 <li>New argument <code>edc_swimmerplot(include)</code>, to subset the swimmerplot on significant variables only.</li>
 <li>New argument <code>subdirectories</code> to all reading functions (<code><a href="../reference/read_trialmaster.html">read_trialmaster()</a></code>, <code><a href="../reference/read_all_xpt.html">read_all_xpt()</a></code>, <code><a href="../reference/read_all_sas.html">read_all_sas()</a></code>, and <code><a href="../reference/read_all_csv.html">read_all_csv()</a></code>), to control whether to read sub-directories. Note that until now, those subdirectories were read and could overwrite root files.</li>
+<li>Fixed labels being sometimes duplicated.</li>
 </ul></div>
 <div class="section level4">
 <h4 id="internal-improvements-0-6-0">Internal improvements<a class="anchor" aria-label="anchor" href="#internal-improvements-0-6-0"></a></h4>
 <ul><li>
 <code><a href="../reference/read_trialmaster.html">read_trialmaster()</a></code> won’t read from cache if installed EDCimport version is different from cache’s</li>
-</ul></div>
-<div class="section level4">
-<h4 id="bug-fixes-0-6-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-6-0"></a></h4>
-<ul><li>Fixed labels being sometimes duplicated.</li>
 </ul></div>
 <div class="section level4">
 <h4 id="deprecations-0-6-0">Deprecations<a class="anchor" aria-label="anchor" href="#deprecations-0-6-0"></a></h4>
