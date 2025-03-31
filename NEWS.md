@@ -24,6 +24,10 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 -   `read_trialmaster()` won't read from cache if installed EDCimport version is different from cache's
 
+### Bug fixes
+
+-   Fixed labels being sometimes duplicated.
+
 ### Deprecations
 
 -   `load_list()`, renamed to `load_database()`
