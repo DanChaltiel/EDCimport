@@ -115,8 +115,10 @@ edc_viewer_server = function(datasets, lookup) {
     dataset_selected = reactiveVal(NULL)
     
     ids = get_ids(datasets, subjid_cols)
-    p1 = edc_crf_plot(datasets=datasets, lookup=lookup) + theme(legend.position="bottom")
-    p2 = edc_patient_gridplot(datasets=datasets, lookup=lookup) + labs(title=NULL, subtitle=NULL)
+    p1 = try(edc_crf_plot(datasets=datasets, lookup=lookup) + theme(legend.position="bottom"))
+    p2 = try(edc_patient_gridplot(datasets=datasets, lookup=lookup) + labs(title=NULL, subtitle=NULL))
+    if(inherits(p1, "try-error")) p1=ggplot()
+    if(inherits(p2, "try-error")) p2=ggplot()
     
     #init
     selectRows(dataTableProxy("input_table"), selected=1)
