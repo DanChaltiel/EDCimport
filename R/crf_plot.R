@@ -72,6 +72,16 @@ edc_crf_plot = function(crfstat_col="CRFSTAT",
     }) %>% 
     list_rbind(names_to="dataset")
   if(nrow(df)==0) return(NULL)
+  missing_lvl = setdiff(df$crfstat, crfstat_lvls)
+  if(length(missing_lvl)>0){ 
+    col = scales::hue_pal()(500)[sample(1:500, length(missing_lvl))]
+    cli_warn(c("Palette {.arg pal} is missing the level{?s} {.val {missing_lvl}}.",
+               i="Random color{?s} {col} ha{?s/ve} been attributed."))
+    crfstat_lvls = c(crfstat_lvls[-length(crfstat_lvls)], missing_lvl,
+                     crfstat_lvls[length(crfstat_lvls)])
+    new_pal = set_names(col, missing_lvl)
+    pal = c(pal, new_pal)
+  }
   if(any(is.na(df$crfstat))){ 
     crfstat_lvls = c(crfstat_lvls[-length(crfstat_lvls)], "Missing CRF status",
                      crfstat_lvls[length(crfstat_lvls)])
@@ -112,14 +122,16 @@ crf_status_plot = edc_crf_plot
 #' @source `ggsci:::ggsci_db$lancet[["lanonc"]] %>% dput()`
 edc_pal_crf = function(){
   c("Complete"="#000e8b", 
-    "Complete Locked"="#0053a5", 
+    "Complete Locked"="#0053a5",
     "Complete Signed"="#006dd8", 
-    "Signed"="#925E9F", 
-    "Monitored"="#42B540FF", 
-    "Partial Monitored"="#0099B4", 
-    "No Data"="#C8CECE", 
-    "No Data Locked"="#ADB6B6", 
-    "Incomplete"="#ED0000"
+    "Signed"="#925e9f", 
+    "Monitored"="#42b540", 
+    "Monitored Locked"="#2d8e37",
+    "Monitored Signed"="#1b6a2a",
+    "Partial Monitored"="#0099b4", 
+    "No Data"="#c8cece", 
+    "No Data Locked"="#adb6b6", 
+    "Incomplete"="#ed0000"
   )
 }
 
@@ -131,6 +143,8 @@ edf_crfstat_recode = function(x, do=TRUE){
   if(!do) return(x)
   lvl_recoding = c(  
     "Complete" = "Monitored",
+    "Complete" = "Monitored Locked",
+    "Complete" = "Monitored Signed",
     "Complete" = "Partial Monitored",
     "Complete" = "Signed",
     "Complete" = "Complete Signed",
@@ -141,6 +155,14 @@ edf_crfstat_recode = function(x, do=TRUE){
     "No Data" = "Missing CRF status",
     "Incomplete" = "Incomplete"
   )
+  
+  missing_lvl = setdiff(x, lvl_recoding)
+  if(length(missing_lvl)>0){
+    cli_warn(c("Internal error, please add an issue on {.pkg EDCimport}'s GitHub:", 
+               i="missing level in {.fn edf_crfstat_recode}: {.val {missing_lvl}}"), 
+             parent=NA)
+    lvl_recoding[missing_lvl] = missing_lvl
+  }
   
   x %>% fct_expand(lvl_recoding) %>% fct_recode(!!!lvl_recoding) %>% fct_drop()
 }
