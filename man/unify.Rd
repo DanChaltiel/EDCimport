@@ -4,24 +4,34 @@
 \alias{unify}
 \title{Unify a vector}
 \usage{
-unify(x)
+unify(x, collapse_chr = FALSE, warn = TRUE)
 }
 \arguments{
 \item{x}{a vector}
+
+\item{collapse_chr}{whether to collapse non-unique character values}
+
+\item{warn}{whether to warn if non-unique values were found}
 }
 \value{
 a vector of length 1
 }
 \description{
-Turn a vector of length N to a vector of length 1 after checking that there is only one unique value. Useful to safely flatten a duplicated table. This preserves the \code{label} attribute if set.
+Turn a vector of length N to a vector of length 1 after checking that there
+is only one unique value.
+Useful to safely flatten a duplicated table.
+Preserves the \code{label} attribute if set.
 }
 \examples{
 unify(c(1,1,1,1))
 #unify(c(1,1,2,1)) #warning
 
 library(dplyr)
-x=tibble(id=rep(letters[1:5],10), value=rep(1:5,10))
-x \%>\% group_by(id) \%>\% summarise(value=unify(value)) #safer than `value=value[1]`
+set.seed(42)
+x=tibble(id=rep(letters[1:5],10), value=rep(1:5,10), 
+         value2=sample(letters[6:10], 50, replace=TRUE))
+x \%>\% summarise(value=unify(value), .by=id) #safer than `value=value[1]`
+x \%>\% summarise(value2=unify(value2, collapse_chr=TRUE, warn=FALSE), .by=id)
 x$value[2]=1
-#x \%>\% group_by(id) \%>\% summarise(value=unify(value)) #warning about that non-unique value
+x \%>\% summarise(value2=unify(value2), .by=id) #warning about that non-unique value
 }

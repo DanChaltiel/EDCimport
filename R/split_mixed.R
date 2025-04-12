@@ -283,9 +283,14 @@ split_mixed_datasets = function(datasets=get_datasets(), id=get_subjid_cols(), .
 
 #' Unify a vector
 #' 
-#' Turn a vector of length N to a vector of length 1 after checking that there is only one unique value. Useful to safely flatten a duplicated table. This preserves the `label` attribute if set.
+#' Turn a vector of length N to a vector of length 1 after checking that there 
+#' is only one unique value. 
+#' Useful to safely flatten a duplicated table. 
+#' Preserves the `label` attribute if set.
 #'
 #' @param x a vector
+#' @param collapse_chr whether to collapse non-unique character values 
+#' @param warn whether to warn if non-unique values were found
 #'
 #' @return a vector of length 1
 #' @export
@@ -297,18 +302,32 @@ split_mixed_datasets = function(datasets=get_datasets(), id=get_subjid_cols(), .
 #' #unify(c(1,1,2,1)) #warning
 #' 
 #' library(dplyr)
-#' x=tibble(id=rep(letters[1:5],10), value=rep(1:5,10))
-#' x %>% group_by(id) %>% summarise(value=unify(value)) #safer than `value=value[1]`
+#' set.seed(42)
+#' x=tibble(id=rep(letters[1:5],10), value=rep(1:5,10), 
+#'          value2=sample(letters[6:10], 50, replace=TRUE))
+#' x %>% summarise(value=unify(value), .by=id) #safer than `value=value[1]`
+#' x %>% summarise(value2=unify(value2, collapse_chr=TRUE, warn=FALSE), .by=id)
 #' x$value[2]=1
-#' #x %>% group_by(id) %>% summarise(value=unify(value)) #warning about that non-unique value
-unify = function(x){
+#' x %>% summarise(value2=unify(value2), .by=id) #warning about that non-unique value
+unify = function (x, collapse_chr=FALSE, warn=TRUE) {
   rtn = x[1]
   lu = length(unique(na.omit(x)))
-  if(lu>1){
-    cli_warn(c("Unifying multiple values in {.val {caller_arg(x)}}, returning the first one ({.val {rtn})}", 
-               i="Unique values: {.val {unique(na.omit(x))}}"))
+  if (lu > 1) {
+    if(isTRUE(collapse_chr)){
+      if(is.character(x) || is.factor(x)){
+        if(isTRUE(warn)){
+          cli_warn(c("Collapsed multiple values in {.val {caller_arg(x)}}",
+                     i = "Unique values: {.val {unique(na.omit(x))}}"))
+        }
+        rtn = toString(x)
+      }
+    } else if(isTRUE(warn)){
+      cli_warn(c("Unifying multiple values in {.val {caller_arg(x)}}, returning the first one ({.val {rtn})}",
+                 i = "Unique values: {.val {unique(na.omit(x))}}"))
+    }
   }
   rtn_label = get_label(x)
-  if(!is.null(rtn_label)) attr(rtn, "label") = rtn_label
+  if (!is.null(rtn_label))
+    attr(rtn, "label") = rtn_label
   rtn
 }

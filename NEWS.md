@@ -18,6 +18,7 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 ### Bug fixes & Improvements
 
+-   New argument `unify(collapse_chr=TRUE)`, to collapse non-unique character values (#99)
 -   New argument `lastnews_table(show_delta=TRUE)`, which computes the difference between the last `prefer` date and the actual last date (#81)
     -   Other improvements: allow regex in `except` & `prefer` (with `regex=TRUE`), improved warning message, and allow saving warnings in a csv file (#78)
 -   New argument `edc_data_warn(envir)`, the environment to evaluate `message` in.
