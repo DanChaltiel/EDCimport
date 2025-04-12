@@ -311,6 +311,7 @@ edc_viewer_server = function(datasets, lookup) {
       labels = map_chr(data, ~attr(.x, "label") %0% NA)
       
       data %>% 
+        mutate_all(~str_remove_all(.x, "<.*?>")) %>% #remove HTML tage
         datatable(
           # rownames = FALSE,
           selection = "none",
@@ -319,7 +320,7 @@ edc_viewer_server = function(datasets, lookup) {
           # plugins = "ellipsis",
           extensions = c("FixedHeader", "FixedColumns"),
           escape = FALSE, # Autorise HTML
-          colnames = colnames_with_hover(data), # Applique les noms HTML
+          colnames = colnames_with_hover(data), # apply HTML names on hover
           options = lst(
             pageLength = 15,
             fixedHeader = TRUE,
@@ -448,12 +449,13 @@ dt_ellipsis = function(data, n){
 #' Makes the column header show the column label on hover
 #' @noRd
 colnames_with_hover = function(data){
-  map_chr(colnames(data), ~{
-    label = attr(data[[.x]], "label")
-    if (!is.null(label) && label != "") {
-      glue('<span class="edc_label" title="{label}">{.x}</span>')
-    } else {
-      .x
-    }
-  })
+  data %>% 
+    imap_chr(~{
+      p_na = mean(is.na(.x)) %>% percent()
+      label = attr(.x, "label")
+      if (!is.null(label) && label != "") label = paste0(label, "<br>")
+      glue('<span class="edc_label" title="{label}NA: {p_na}" data-bs-html="true">
+           {.y}</span>')
+    }) %>% 
+    unname()
 }
