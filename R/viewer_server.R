@@ -184,6 +184,7 @@ edc_viewer_server = function(datasets, lookup) {
         lookup = lookup %>% filter(!exclude)
       }
       
+      crf_name_i = which(names(lookup)=="crfname") - 1
       rtn = lookup %>% 
         as_tibble() %>% 
         datatable(
@@ -194,6 +195,11 @@ edc_viewer_server = function(datasets, lookup) {
             pageLength = 500,
             dom = "t",
             columnDefs = list(list(visible=FALSE, targets=seq(3, ncol(lookup)-1))),
+            rowCallback = JS(
+              "function(row, data) {",
+                glue("$('td', row).attr('title', data[{crf_name_i}]).addClass('edc_label');"),
+              "}"
+            ),
           )
         ) %>% 
         formatStyle(
