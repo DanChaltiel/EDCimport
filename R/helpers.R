@@ -557,8 +557,8 @@ get_key_cols = function(lookup=edc_lookup()){
 #' @keywords internal
 #'
 #' @examples
-#' get_subjid_cols()
-#' get_crfname_cols()
+#' #get_subjid_cols()
+#' #get_crfname_cols()
 get_subjid_cols = function(lookup=edc_lookup()){
   subjid_cols=getOption("edc_cols_subjid", c("SUBJID", "PTNO"))
   .get_key_cols(subjid_cols, id_name="patient", lookup)
