@@ -183,7 +183,7 @@ extend_lookup = function(lookup, ...,
       n_id = lengths(subjids),
       rows_per_id = round(nrow/n_id, 1),
       rows_per_id = if_else(is.nan(rows_per_id) | is.infinite(rows_per_id), NA, rows_per_id),
-      crfname = map_chr(dataset, ~get_data_name(datasets[[.x]]), crfname=crf_cols)
+      crfname = map_chr(dataset, ~get_data_name(datasets[[.x]], crfname=crf_cols))
     ) %>% 
     arrange(desc(n_id), desc(nrow)) %>% 
     relocate(c(subjids, names, labels), .after=last_col())

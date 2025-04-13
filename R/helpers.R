@@ -548,27 +548,26 @@ get_key_cols = function(lookup=edc_lookup()){
 #' 
 #' @section options:
 #' Use `edc_options()` to set default values:
-#' * `edc_cols_subjid` defaults to `c("PTNO", "SUBJID")`  
-#' * `edc_cols_crfname` defaults to `c("CRFNAME")`
+#' * `edc_cols_subjid` defaults to `c("SUBJID", "PTNO")`  
+#' * `edc_cols_crfname` defaults to `c("FORMDESC", "CRFNAME")`
 #'
 #' @param lookup the lookup table
 #'
 #' @return a character vector
-#' @noRd
 #' @keywords internal
 #'
 #' @examples
 #' get_subjid_cols()
 #' get_crfname_cols()
 get_subjid_cols = function(lookup=edc_lookup()){
-  subjid_cols=getOption("edc_cols_subjid", c("PTNO", "SUBJID"))
+  subjid_cols=getOption("edc_cols_subjid", c("SUBJID", "PTNO"))
   .get_key_cols(subjid_cols, id_name="patient", lookup)
 }
 
 #' @noRd
 #' @keywords internal
 get_crfname_cols = function(lookup=edc_lookup()){
-  crfname_cols=getOption("edc_cols_crfname", "CRFNAME")
+  crfname_cols=getOption("edc_cols_crfname", c("FORMDESC", "CRFNAME"))
   .get_key_cols(crfname_cols, id_name="CRF", lookup)
 }
 
@@ -580,18 +579,17 @@ get_crfname_cols = function(lookup=edc_lookup()){
 .get_key_cols = function(x, id_name, lookup){
   if(is.null(lookup)) return(x)
   
-  f = function(x, y) x[tolower(x) %in% tolower(y)][1] %0% NA 
-  
-  x = map_chr(lookup$names, ~f(.x, x))
+  f = function(x, y) y[tolower(y) %in% tolower(x)][1] %0% NA 
+  rtn = map_chr(lookup$names, ~f(.x, x))
   
   verbose = getOption("edc_get_key_cols_verbose", FALSE)
-  if(verbose && any(is.na(x))){
+  if(verbose && any(is.na(rtn))){
     cli_warn(c("Default {id_name} identificator could not be found in some datasets", 
-               i='Dataset{?s} without identificator: {rtn[is.na(x), "dataset"]}', 
+               i='Dataset{?s} without identificator: {rtn[is.na(rtn), "dataset"]}', 
                i='Use {.run options(edc_cols_id=c("my_id_col", "my_other_id_col"))}'), 
              class="edcimport_get_key_cols_missing")
   }
-  x %>% na.omit() %>% unique() 
+  rtn %>% na.omit() %>% unique()
 }
 
 
