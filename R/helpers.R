@@ -579,7 +579,11 @@ get_crfname_cols = function(lookup=edc_lookup()){
 .get_key_cols = function(x, id_name, lookup){
   if(is.null(lookup)) return(x)
   
-  f = function(x, y) y[tolower(y) %in% tolower(x)][1] %0% NA 
+  f = function(x, y) {
+    a = y[tolower(y) %in% tolower(x)][1] %0% NA 
+    if(!a %in% x) a = tolower(a)
+    a
+  }
   rtn = map_chr(lookup$names, ~f(.x, x))
   
   verbose = getOption("edc_get_key_cols_verbose", FALSE)
