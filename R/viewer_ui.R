@@ -9,6 +9,7 @@ edc_viewer_ui = function(datasets, lookup){
   div=shiny::div;HTML=shiny::HTML;tags=shiny::tags;textOutput=shiny::textOutput
   checkboxInput=shiny::checkboxInput;
   tooltip=bslib::tooltip; icon=shiny::icon; selectizeInput=shiny::selectizeInput;
+  shiny::addResourcePath("www", system.file("edc_viewer/www", package = "EDCimport"))
   
   extraction = attr(lookup, "datetime_extraction")
   EDCimport_version = attr(lookup, "EDCimport_version")
@@ -60,30 +61,12 @@ edc_viewer_ui = function(datasets, lookup){
       )
     ),
     
-    tags$head(tags$style(
-      '.card{overflow: visible !important;}',
-      '.card-body{overflow: visible !important;}',
-      '.modal-dialog{margin: 50px auto;}',
-      '.modal-header{padding-bottom: 0;}',
-      '.modal-title{width: 100%;}',
-      '.bslib-input-switch{font-size: large;}',
-    )), 
-    
-    tags$script(HTML(
-      #Typing Enter in #search_input validate the input
-      "$(document).on('keyup', '#search_input', function(e) {
-        if (e.which == 13) {
-          Shiny.setInputValue('search_validate', true, {priority: 'event'});
-        }
-      });",
-      #Activate JQuery tooltips for Data headers
-      "$(document).on('shiny:value', function(e) {
-        if(e.name != 'table') return(null)
-        setTimeout(function() {
-          $('.edc_label').tooltip();
-        }, 300);
-      });"
-    ))
+    #rstudioapi::documentOpen("inst/edc_viewer/www/edc_viewer.css")
+    tags$head(
+      tags$link(rel="stylesheet", href="www/edc_viewer.css")
+    ),
+    #rstudioapi::documentOpen("inst/edc_viewer/www/edc_viewer.js")
+    tags$script(src="www/edc_viewer.js"),
   )
 }
 

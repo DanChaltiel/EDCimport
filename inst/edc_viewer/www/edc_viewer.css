@@ -1,0 +1,53 @@
+.card {
+  overflow: visible !important;
+}
+
+.card-body {
+  overflow: visible !important;
+}
+
+.modal-dialog {
+  margin: 50px auto;
+}
+
+.modal-header {
+  padding-bottom: 0;
+}
+
+.modal-title {
+  width: 100%;
+}
+
+.bslib-input-switch {
+  font-size: large;
+}
+
+
+
+/*Search button modal dialog*/
+.search-header-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 50px;
+  align-items: center;
+}
+
+.search-input-container {
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+}
+
+.search-options-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.input-switch-container {
+  display: flex;
+  align-items: center;
+  height: 38px;
+}
+
