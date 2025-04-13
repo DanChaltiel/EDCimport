@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9050</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9052</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,7 +57,8 @@
 </ul></div>
 <div class="section level4">
 <h4 id="bug-fixes--improvements-0-6-0">Bug fixes &amp; Improvements<a class="anchor" aria-label="anchor" href="#bug-fixes--improvements-0-6-0"></a></h4>
-<ul><li>New argument <code>lastnews_table(show_delta=TRUE)</code>, which computes the difference between the last <code>prefer</code> date and the actual last date (<a href="https://github.com/DanChaltiel/EDCimport/issues/81" class="external-link">#81</a>)
+<ul><li>New argument <code>unify(collapse_chr=TRUE)</code>, to collapse non-unique character values (<a href="https://github.com/DanChaltiel/EDCimport/issues/99" class="external-link">#99</a>)</li>
+<li>New argument <code>lastnews_table(show_delta=TRUE)</code>, which computes the difference between the last <code>prefer</code> date and the actual last date (<a href="https://github.com/DanChaltiel/EDCimport/issues/81" class="external-link">#81</a>)
 <ul><li>Other improvements: allow regex in <code>except</code> &amp; <code>prefer</code> (with <code>regex=TRUE</code>), improved warning message, and allow saving warnings in a csv file (<a href="https://github.com/DanChaltiel/EDCimport/issues/78" class="external-link">#78</a>)</li>
 </ul></li>
 <li>New argument <code>edc_data_warn(envir)</code>, the environment to evaluate <code>message</code> in.</li>
@@ -85,7 +86,7 @@
 <ul><li>
 <code>split_mixed_datasets</code> becomes <code><a href="../reference/edc_split_mixed.html">edc_split_mixed()</a></code>
 </li>
-<li>Unexport internal functions: <code>build_lookup()</code>, <code>extend_lookup()</code>, <code>get_key_cols()</code>, <code>get_subjid_cols()</code>, <code>get_crfname_cols()</code>, <code>get_meta_cols()</code>, <code>load_as_list()</code>, <code>save_list()</code>
+<li>Unexport internal functions: <code>build_lookup()</code>, <code>extend_lookup()</code>, <code>get_key_cols()</code>, <code><a href="../reference/get_subjid_cols.html">get_subjid_cols()</a></code>, <code>get_crfname_cols()</code>, <code>get_meta_cols()</code>, <code>load_as_list()</code>, <code>save_list()</code>
 </li>
 </ul></div>
 </div>
@@ -155,7 +156,7 @@
 <div class="section level4">
 <h4 id="deprecations-0-5-0">Deprecations<a class="anchor" aria-label="anchor" href="#deprecations-0-5-0"></a></h4>
 <ul><li>
-<code>get_key_cols()</code> is replaced by <code>get_subjid_cols()</code> and <code>get_crfname_cols()</code>.</li>
+<code>get_key_cols()</code> is replaced by <code><a href="../reference/get_subjid_cols.html">get_subjid_cols()</a></code> and <code>get_crfname_cols()</code>.</li>
 <li>
 <code><a href="../reference/edc_warn_patient_diffs.html">check_subjid()</a></code> is replaced by <code><a href="../reference/edc_warn_patient_diffs.html">edc_warn_patient_diffs()</a></code>. It can either take a vector or a dataframe as input, and the message is more informative.</li>
 </ul></div>
