@@ -25,7 +25,7 @@ Use \code{edc_options()} to set default values:
 }
 
 \examples{
-get_subjid_cols()
-get_crfname_cols()
+#get_subjid_cols()
+#get_crfname_cols()
 }
 \keyword{internal}
