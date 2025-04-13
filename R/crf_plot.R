@@ -72,7 +72,7 @@ edc_crf_plot = function(crfstat_col="CRFSTAT",
     }) %>% 
     list_rbind(names_to="dataset")
   if(nrow(df)==0) return(NULL)
-  missing_lvl = setdiff(df$crfstat, crfstat_lvls)
+  missing_lvl = setdiff(df$crfstat, crfstat_lvls) %>% na.omit()
   if(length(missing_lvl)>0){ 
     col = scales::hue_pal()(500)[sample(1:500, length(missing_lvl))]
     cli_warn(c("Palette {.arg pal} is missing the level{?s} {.val {missing_lvl}}.",
