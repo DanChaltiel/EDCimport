@@ -27,6 +27,8 @@ edc_viewer_ui = function(datasets, lookup){
     style = "width: 100%; display: flex; justify-content: space-between; align-items: center;",
     title, 
     div(
+      actionButton("btn_settings", icon=icon("sliders"), label=NULL) |> 
+        tooltip("Settings"),
       actionButton("btn_search", icon=icon("search"), label=NULL) |> 
         tooltip("Search"),
       actionButton("btn_db_summary", icon=icon("circle-question"), label=NULL) |> 
@@ -48,7 +50,7 @@ edc_viewer_ui = function(datasets, lookup){
       ),
       card(
         card_title("Select a dataset:", container = shiny::h3),
-        checkboxInput("hide_filtered", "Hide empty tables"),
+        # checkboxInput("hide_filtered", "Hide empty tables"),
         DTOutput("input_table", fill = FALSE),
       ),
       div(
@@ -60,7 +62,7 @@ edc_viewer_ui = function(datasets, lookup){
     ),
     card(
       card_header(
-        textOutput("dataset_name"),
+        textOutput("dataset_name")
       ),
       card_body(
         DTOutput("table")

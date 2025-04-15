@@ -14,7 +14,8 @@ edc_viewer_server = function(datasets, lookup) {
   showNotification=shiny::showNotification; uiOutput=shiny::uiOutput;
   layout_column_wrap=bslib::layout_column_wrap;styleEqual=DT::styleEqual;
   value_box=bslib::value_box;update_switch=bslib::update_switch;DTOutput=DT::DTOutput;
-  JS=DT::JS;
+  JS=DT::JS;card=bslib::card;reactive=shiny::reactive;checkboxInput=shiny::checkboxInput;
+  sliderInput=shiny::sliderInput;textOutput=shiny::textOutput;
   
   .set_lookup(lookup, verbose=FALSE) #needed for bg launch
   subjid_cols = get_subjid_cols(lookup)
@@ -35,6 +36,14 @@ edc_viewer_server = function(datasets, lookup) {
     selectRows(dataTableProxy("input_table"), selected=1)
     updateSelectInput(session, "subjid_selected", choices=c(ids))
     
+    hidden_common_cols = reactive({
+      if(is.null(input$hide_common) || input$hide_common==0) return(NULL)
+      get_common_cols(lookup) %>% 
+        filter(n_datasets/nrow(lookup) > input$hide_common/100) %>% 
+        filter(!column %in% c(get_subjid_cols(lookup), get_crfname_cols(lookup))) %>% 
+        pull(column)
+    })
+    
     #On row selected: show datatable
     observeEvent(input$input_table_rows_selected, {
       selected = input$input_table_rows_selected
@@ -51,7 +60,30 @@ edc_viewer_server = function(datasets, lookup) {
       update_switch("search_type_value", label=ifelse(input$search_type_value, "for value", "for column"))
     })
     
-    #on Search button: show the whole search dialog
+    #on Button Settings: show the Settings dialog
+    observeEvent(input$btn_settings, {
+      hide_filtered_default = input$hide_filtered %0% FALSE
+      hide_common_default = input$hide_common %0% 0
+      showModal(
+        modalDialog(
+          id="modal_settings",
+          title = "Settings",
+          card(
+            checkboxInput("hide_filtered", "Hide empty datasets in the side panel", 
+                          value=hide_filtered_default)
+          ),
+          card(
+            sliderInput("hide_common", "Hide columns shared by this proportion of datasets (set to 0 to disable)", 
+                        min=0, max=100, value=hide_common_default, post=" %"),
+            textOutput("hide_common_result")
+          ),
+          easyClose = TRUE,
+          footer = NULL
+        )
+      )
+    })
+    
+    #on Button Search: show the Search dialog
     observeEvent(input$btn_search, {
       showModal(
         modalDialog(
@@ -116,7 +148,7 @@ edc_viewer_server = function(datasets, lookup) {
       
     })
     
-    #on Summary button: show modal
+    #on Button Summary: show modal
     observeEvent(input$btn_db_summary, {
       output$crf_plot = renderPlot(p1)
       output$patient_gridplot = renderPlot(p2)
@@ -163,6 +195,13 @@ edc_viewer_server = function(datasets, lookup) {
       glue("Dataset selected: `{a$dataset}` ({a$nrow} x {a$ncol}) - {a$n_id} patients - {layout}")
     })
     
+    #output: hide common columns helper text
+    output$hide_common_result = renderText({
+      x = hidden_common_cols()
+      if(is.null(x)) return("")
+      glue("Columns hided: {paste(x, collapse=', ')}")
+    })
+    
     #output: sidebar data choice list
     output$input_table = renderDT({
       selected_subjid = input$subjid_selected
@@ -179,7 +218,7 @@ edc_viewer_server = function(datasets, lookup) {
       n_filtered = lookup %>% filter(exclude) %>% nrow()
       
       updateCheckboxInput(session, "hide_filtered", 
-                          label=glue("Hide empty tables (N={n_filtered})"))
+                          label=glue("Hide empty datasets in the side panel (N={n_filtered})"))
       
       if(isTRUE(input$hide_filtered) && length(selected_subjid)>0){
         lookup = lookup %>% filter(!exclude)
@@ -221,6 +260,7 @@ edc_viewer_server = function(datasets, lookup) {
       all_selected = length(subjid_selected)==0
       if(is.null(datasets[[dataset_selected()]])) return(tibble())
       data = datasets[[dataset_selected()]] %>% 
+        select(-any_of(hidden_common_cols())) %>% 
         relocate(any_of2(subjid_cols), .before=1) %>% 
         arrange(pick(any_of2(subjid_cols))) %>% 
         filter(if_any(any_of2(subjid_cols), 

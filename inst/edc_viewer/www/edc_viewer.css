@@ -55,3 +55,9 @@
   height: 38px;
 }
 
+/*textOutput("dataset_name")*/
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
