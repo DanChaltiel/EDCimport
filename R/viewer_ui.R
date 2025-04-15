@@ -7,7 +7,7 @@ edc_viewer_ui = function(datasets, lookup){
   DTOutput=DT::DTOutput;
   actionButton=shiny::actionButton;selectInput=shiny::selectInput;actionLink=shiny::actionLink;
   div=shiny::div;HTML=shiny::HTML;tags=shiny::tags;textOutput=shiny::textOutput
-  checkboxInput=shiny::checkboxInput;
+  checkboxInput=shiny::checkboxInput;textInput=shiny::textInput;
   tooltip=bslib::tooltip; icon=shiny::icon; selectizeInput=shiny::selectizeInput;
   shiny::addResourcePath("www", system.file("edc_viewer/www", package = "EDCimport"))
   
@@ -50,7 +50,13 @@ edc_viewer_ui = function(datasets, lookup){
         card_title("Select a dataset:", container = shiny::h3),
         checkboxInput("hide_filtered", "Hide empty tables"),
         DTOutput("input_table", fill = FALSE),
-      )
+      ),
+      div(
+        style="display:none;",
+        textInput("hidden_fixed", label=NULL),
+        textInput("hidden_color", label=NULL),
+        textInput("hidden_group", label=NULL),
+      ),
     ),
     card(
       card_header(

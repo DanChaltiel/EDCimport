@@ -14,6 +14,7 @@ edc_viewer_server = function(datasets, lookup) {
   showNotification=shiny::showNotification; uiOutput=shiny::uiOutput;
   layout_column_wrap=bslib::layout_column_wrap;styleEqual=DT::styleEqual;
   value_box=bslib::value_box;update_switch=bslib::update_switch;DTOutput=DT::DTOutput;
+  JS=DT::JS;
   
   .set_lookup(lookup, verbose=FALSE) #needed for bg launch
   subjid_cols = get_subjid_cols(lookup)
@@ -226,39 +227,79 @@ edc_viewer_server = function(datasets, lookup) {
                       ~all_selected | .x %in% subjid_selected))
       labels = map_chr(data, ~attr(.x, "label") %0% NA)
       
+      
+      #ContextMenu: Row Group
+      i = which(names(data)==input$hidden_group)
+      row_group = list(dataSrc = i)
+      if(length(i)==0) row_group=NULL
+      
+      #ContextMenu: Row Color
+      col_color = data[[input$hidden_color]]
+      row_style = row_style_col = NULL
+      if(!is.null(col_color)){
+        lvl = levels(factor(col_color) %>% forcats::fct_na_value_to_level())
+        pal = scales::viridis_pal(alpha=0.5)(length(lvl))
+        row_style = styleEqual(levels = lvl, values=pal)
+        row_style_col = input$hidden_color
+      }
+      
+      #ContextMenu: Fixed Column
+      fixed = input$hidden_fixed %>% stringr::str_split_1("___")
+      fixed = c(subjid_cols, fixed, input$hidden_group, input$hidden_color) %>% unique()
+      fixed = fixed[nzchar(fixed)]
+      # browser()
+      data = data %>% 
+        relocate(any_of2(fixed), .before=1)
+      
+      
+      
       data %>% 
         mutate_all(~str_remove_all(.x, "<.*?>")) %>% #remove HTML tage
         datatable(
           # rownames = FALSE,
           selection = "none",
           filter = "top",
+          
           # height = "80%",
           # plugins = "ellipsis",
-          extensions = c("FixedHeader", "FixedColumns"),
+          extensions = c("FixedHeader", "FixedColumns", "ColReorder", "RowGroup", "KeyTable"),
           escape = FALSE, # Autorise HTML
           colnames = colnames_with_hover(data), # apply HTML names on hover
           options = lst(
             pageLength = 15,
-            fixedHeader = TRUE,
+            lengthMenu = list(c(15, 50, -1), 
+                              c('15', '50', 'All')),
+            fixedHeader = TRUE, #Not working as datatable not on page top
             # scrollY = "50%",
             # dom = "tp",
+            # dom = 'Blfrtip',
             # autoWidth = TRUE,
             # scrollX = TRUE,
-            columnDefs = dt_ellipsis(data, n=10), 
-            fixedColumns = list(leftColumns = 2),
-            # columnDefs = list(list(
-            #   targets = unname(which(map_lgl(data, ~is.character(.x)||is.factor(.x)))),
-            #   render = JS("$.fn.dataTable.render.ellipsis(17, false )")
-            # ))
+            keys = TRUE, #KeyTable: use keyboard to navigate
+            rowGroup = row_group,
+            colReorder = TRUE,
+            columnDefs = list(hide_first(),
+                              dt_ellipsis(data, n=10)),
+              
+            fixedColumns = list(leftColumns = length(fixed)),
           )
         ) %>% 
         formatStyle(
-          columns = seq_along(colnames(data)),
+          columns = TRUE,
           `white-space` = "nowrap",
           `text-overflow` = "ellipsis",
           `overflow` = "hidden",
           # `max-width` = "150px",
           `height` = "20px"
+        ) %>% 
+        formatStyle(
+          columns = TRUE,
+          valueColumns=row_style_col,
+          backgroundColor = row_style
+        ) %>% 
+        formatStyle(
+          columns = fixed,
+          backgroundColor = "white"
         )
     })
   }
@@ -291,17 +332,22 @@ get_ids = function(datasets, subjid_cols){
 }
 
 
+hide_first = function(){
+  list(targets=0, visible=FALSE)
+}
+
 #' @importFrom glue glue
 #' @importFrom purrr map_lgl
 dt_ellipsis = function(data, n){
   list(list(
     targets = unname(which(map_lgl(data, ~is.character(.x)||is.factor(.x)))),
-    render = DT::JS(glue(
-      "function(data, type, row, meta) {{",
+    render = DT::JS(
+      "function(data, type, row, meta) {",
       "if(data==null || data==undefined) return ' ';",
-      "return type === 'display' && data.length > {n} ?",
-      "'<span title=\"' + data + '\">' + data.substr(0, {n}) + '...</span>' : data;",
-      "}}"))
+      glue("return type === 'display' && data.length > {n} ?"),
+      glue("'<span title=\"' + data + '\">' + data.substr(0, {n}) + '...</span>' : data;"),
+      "}"
+    )
   ))
 }
 
@@ -309,13 +355,14 @@ dt_ellipsis = function(data, n){
 #' Set the "label" dataset attribute on the "title" HTML attribute
 #' Makes the column header show the column label on hover
 #' @noRd
+#' @importFrom purrr imap_chr
 colnames_with_hover = function(data){
   data %>% 
     imap_chr(~{
       p_na = mean(is.na(.x)) %>% percent()
-      label = attr(.x, "label")
-      if (!is.null(label) && label != "") label = paste0(label, "<br>")
-      glue('<span class="edc_label" title="{label}NA: {p_na}" data-bs-html="true">
+      label = attr(.x, "label") %0% ""
+      if(label != "") label = paste0(label, "<br>")
+      glue('<span class="data_column edc_label" title="{label}NA: {p_na}" data-bs-html="true">
            {.y}</span>')
     }) %>% 
     unname()

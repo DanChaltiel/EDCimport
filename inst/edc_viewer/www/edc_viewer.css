@@ -22,6 +22,10 @@
   font-size: large;
 }
 
+.sidebar-content {
+  padding-top: 1.5rem !important;
+}
+
 
 
 /*Search button modal dialog*/
