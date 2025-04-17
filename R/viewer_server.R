@@ -267,6 +267,12 @@ edc_viewer_server = function(datasets, lookup) {
                       ~all_selected | .x %in% subjid_selected))
       labels = map_chr(data, ~attr(.x, "label") %0% NA)
       
+      #ContextMenu: Fixed Column
+      fixed = input$hidden_fixed %>% stringr::str_split_1("___")
+      fixed = c(subjid_cols, fixed, input$hidden_group, input$hidden_color) %>% unique()
+      fixed = fixed[nzchar(fixed)] %>% intersect(names(data))
+      data = data %>% 
+        relocate(any_of2(fixed), .before=1)
       
       #ContextMenu: Row Group
       i = which(names(data)==input$hidden_group)
@@ -282,16 +288,6 @@ edc_viewer_server = function(datasets, lookup) {
         row_style = styleEqual(levels = lvl, values=pal)
         row_style_col = input$hidden_color
       }
-      
-      #ContextMenu: Fixed Column
-      fixed = input$hidden_fixed %>% stringr::str_split_1("___")
-      fixed = c(subjid_cols, fixed, input$hidden_group, input$hidden_color) %>% unique()
-      fixed = fixed[nzchar(fixed)]
-      # browser()
-      data = data %>% 
-        relocate(any_of2(fixed), .before=1)
-      
-      
       
       data %>% 
         mutate_all(~str_remove_all(.x, "<.*?>")) %>% #remove HTML tage
