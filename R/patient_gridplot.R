@@ -38,10 +38,13 @@ edc_patient_gridplot = function(sort_rows=TRUE, sort_cols=TRUE, gradient=FALSE,
                                 palette=c("Yes"="#00468BFF", "No"="#ED0000FF"),
                                 datasets=get_datasets(), lookup=edc_lookup()){
   subjid_cols = get_subjid_cols(lookup=lookup)
-  if(is_formula(preprocess)) preprocess=as_function(preprocess)
   datasets = keep(datasets, is.data.frame)
+  if(is_formula(preprocess)) preprocess = as_function(preprocess)
   if(length(datasets)==0){
     cli_abort("No datasets are availables", .internal=TRUE)
+  }
+  if(length(subjid_cols)==0){
+    cli_abort("Datasets must have a subject identifier for {.fn edc_patient_gridplot} to work.")
   }
   
   subjid_list = datasets %>% 
@@ -67,7 +70,7 @@ edc_patient_gridplot = function(sort_rows=TRUE, sort_cols=TRUE, gradient=FALSE,
     bind_rows(.id="dataset") %>% 
     arrange(dataset) %>% 
     mutate(included = ifelse(included_sum>0, 1, 0)) %>% 
-    mutate(subjid_sum = sum(included), .by=subjid) %>% 
+    mutate(subjid_sum = sum(included), .by=any_of("subjid")) %>% 
     mutate(dataset_sum = sum(included), .by=dataset) %>% 
     mutate(
       included = factor(included, levels=c(0,1), labels=c("No", "Yes")),
