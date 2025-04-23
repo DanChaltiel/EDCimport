@@ -81,11 +81,11 @@ test_that("build_lookup() works", {
 test_that("edc_find_column() works", {
   x = edc_example()
   # x$.lookup %>% unnest() %>% v
-  x1=edc_find_column("visit", data=x$.lookup)
+  x1=edc_find_column("visit", lookup=x$.lookup)
   expect_setequal(x1$names, paste0("date", 1:10))
-  x2=edc_find_column("SUBJ|\\(", data=x$.lookup)
+  x2=edc_find_column("SUBJ|\\(", lookup=x$.lookup)
   expect_equal(unique(x2$names), c("subjid", "age"))
-  x3=edc_find_column("SUBJ|\\(", data=x$.lookup, ignore_case=FALSE)
+  x3=edc_find_column("SUBJ|\\(", lookup=x$.lookup, ignore_case=FALSE)
   expect_equal(unique(x3$names), "age")
 })
 
