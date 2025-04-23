@@ -145,6 +145,29 @@ list_select = function(x, ...){
   x[nm]
 }
 
+#' arrange, but mixed
+#'
+#' @noRd
+#' @importFrom dplyr across all_of select slice
+#' @examples
+#' df = data.frame(x = c("Control", "Aspirin 10mg/day", "Aspirin 50mg/day",
+#'                       "Aspirin 100mg/day", "Acetomycin 100mg/day",
+#'                       "Acetomycin 1000mg/day"),
+#'                 y=1:6)
+#' df %>% mixed_arrange(x, y)
+#' df %>% mixed_arrange(y, x)
+#' df %>% mixed_arrange(any_of("x"))
+#' df %>% mixed_arrange(any_of("foobar"))
+mixed_arrange = function(.data, ...){
+  cols = .data %>% select(...) %>% names()
+  if(length(cols)==0) return(.data)
+  for(i in rev(cols)){
+    .data = .data %>% 
+      slice(across(all_of(i), mixedorder)[[1]])
+  }
+  .data
+}
+
 
 # Parse zip name ------------------------------------------------------------------------------
 

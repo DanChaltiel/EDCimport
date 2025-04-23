@@ -222,16 +222,9 @@ edc_swimmerplot = function(...,
       mutate(id = as.numeric(id)) %>% 
       filter(id>=id_lim[1] & id<=id_lim[2])
   } else if(all(str_detect(data$id, "\\d+"))){
-    if(is_installed("gtools")){
       data = data %>% 
-        slice(gtools::mixedorder(id)) %>% 
+        mixed_arrange(id) %>% 
         mutate(id=as_factor(id))
-    } else {
-      cli_warn(c("{.arg id} contains numbers, you will need the 
-                    {.pkg gtools} package to sort it properly.", 
-                 i='Run {.run utils::install.package("gtools")}'),
-               call=parent.frame())
-    }
   }
   data
 }
