@@ -42,6 +42,7 @@ fct_last = function(f, ...) {
 #' @noRd
 #' @keywords internal
 percent = function(x, digits=0){
+  if(all(is.na(x)|is.nan(x))) return(NA)
   stopifnot(abs(x)<=1)
   x=round(x*100, digits)
   paste0(x,"%")
