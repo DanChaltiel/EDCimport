@@ -6,7 +6,8 @@
 #'
 #' @param keyword The keyword to search for. Regular expressions are only supported in `edc_find_column`.
 #' @param ignore_case Logical. If `TRUE` (default), the search will ignore case differences.
-#' @param data Either a lookup table (`edc_find_column`) or a list of datasets (`edc_find_value()`).
+#' @param lookup A lookup table.
+#' @param data A list of datasets.
 #'
 #' @return a tibble
 #' @export
@@ -27,33 +28,33 @@
 #' #with regex
 #' edc_find_column("\\d")
 #' edc_find_column("\\(") #you need to escape special characters
-edc_find_value = function(keyword, ignore_case=TRUE, data=get_datasets()){
-  subjid = get_subjid_cols()
-  data_labels = edc_lookup() %>% 
+edc_find_value = function(keyword, ignore_case=TRUE, data=get_datasets(), lookup=edc_lookup()){
+  subjid = get_subjid_cols(lookup)
+  data_labels = lookup %>% 
     as_tibble() %>% 
     unnest(labels) %>% 
     pull(labels)
   
   a = data %>% 
+    keep(is.data.frame) %>% 
     map(function(dataset){
-      if(!any(tolower(subjid) %in% tolower(names(dataset)))) return(NULL)
       dataset %>%
         mutate_all(as.character) %>% 
         pivot_longer(-any_of(subjid), names_to="column") %>% 
         filter(str_detect(value, fixed(as.character(keyword), ignore_case=ignore_case)))
     }) %>% 
-    list_rbind(names_to="dataset") %>% 
-    mutate(column_label = unlist(data_labels[column]) %0% NA) %>% 
-    select(any_of(subjid), dataset, column, column_label, value)
+    list_rbind(names_to="dataset")
   
   if(nrow(a)==0){
     return(a)
   }
   
   a %>% 
-    arrange(dataset, column) %>% 
-    slice(across(any_of(subjid), mixedorder)[[1]])
+    mutate(column_label = unlist(data_labels[column]) %0% NA) %>% 
+    select(any_of(subjid), dataset, column, column_label, value) %>% 
+    mixed_arrange(dataset, column, any_of(subjid))
 }
+
 
 
 #' @rdname edc_find_value
@@ -63,12 +64,12 @@ edc_find_value = function(keyword, ignore_case=TRUE, data=get_datasets()){
 #' @importFrom purrr map2_chr map2_dbl
 #' @importFrom stringr str_detect str_trim
 #' @importFrom tidyr unite unnest
-edc_find_column = function(keyword, ignore_case=TRUE, data=edc_lookup()){
+edc_find_column = function(keyword, ignore_case=TRUE, lookup=edc_lookup()){
   invalid=names2=labels2=x=NULL
   f = if(isTRUE(ignore_case)) tolower else identity
   f2 = function(x,y) map2_chr(x, y, ~if(.y) {.x} else {f(.x)})
   keyword = f(str_trim(keyword))
-  tmp = data %>% 
+  tmp = lookup %>% 
     select(-any_of(c("nrow", "ncol", "n_id", "rows_per_id"))) %>% 
     unnest(c(names, labels)) %>% 
     mutate(
