@@ -6,16 +6,23 @@
 \alias{find_keyword}
 \title{Search the whole database}
 \usage{
-edc_find_value(keyword, ignore_case = TRUE, data = get_datasets())
+edc_find_value(
+  keyword,
+  ignore_case = TRUE,
+  data = get_datasets(),
+  lookup = edc_lookup()
+)
 
-edc_find_column(keyword, ignore_case = TRUE, data = edc_lookup())
+edc_find_column(keyword, ignore_case = TRUE, lookup = edc_lookup())
 }
 \arguments{
 \item{keyword}{The keyword to search for. Regular expressions are only supported in \code{edc_find_column}.}
 
 \item{ignore_case}{Logical. If \code{TRUE} (default), the search will ignore case differences.}
 
-\item{data}{Either a lookup table (\code{edc_find_column}) or a list of datasets (\code{edc_find_value()}).}
+\item{data}{A list of datasets.}
+
+\item{lookup}{A lookup table.}
 }
 \value{
 a tibble
