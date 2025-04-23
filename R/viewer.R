@@ -3,16 +3,29 @@
 #' 
 #' Run a Shiny application that allows to browse the datasets.
 #' 
+#' @param data A list of dataframes to view. If `NULL`, defaults to the last datasets loaded using EDCimport functions.
 #' @param background Whether the app should run in a background process.
 #' @param port The TCP port that the application should listen on. 
 #'
 #' @export
 #' @importFrom rlang check_installed
 #' @importFrom utils browseURL
-edc_viewer = function(background=TRUE, port=1209){
+edc_viewer = function(data=NULL, background=TRUE, port=1209){
   check_installed(c("DT", "bslib", "shiny"), "for `edc_viewer()` to work.")
-  lookup = edc_lookup(dataset)
-  datasets = get_datasets(lookup)
+  if(is.null(data)){
+    lookup = edc_lookup(dataset)
+    datasets = get_datasets(lookup)
+  } else {
+    datasets = data
+    if(is.data.frame(data)) datasets = list(data) %>% set_names(caller_arg(data))
+    if(!is_named(data)){
+      cli_abort("Datasets in {.arg data} should have a name.", 
+                class="edc_lookup_unnamed")
+    }    
+    lookup = build_lookup(datasets) %>% 
+      extend_lookup() %>% 
+      arrange(match(dataset, names(datasets)))
+  }
   shiny_url = paste0("http://127.0.0.1:", port)
   
   launch_shiny = function(datasets, lookup, port){

@@ -88,6 +88,7 @@ edc_viewer_server = function(datasets, lookup) {
       showModal(
         modalDialog(
           title = div(
+            id="modal_search_header",
             style = c("width: 100%; display: flex; justify-content: space-between;",
                       "gap: 50px; align-items: center;"),
             div(
@@ -121,10 +122,10 @@ edc_viewer_server = function(datasets, lookup) {
         return(NULL)
       } 
       if(input$search_type_value){
-        result = edc_find_value(keyword)
+        result = edc_find_value(keyword, data=datasets, lookup=lookup)
         term = "value"
       } else {
-        result = edc_find_column(keyword)
+        result = edc_find_column(keyword, lookup=lookup)
         term = "column/label"
       }
       
@@ -361,7 +362,7 @@ get_ids = function(datasets, subjid_cols){
     keep(is.data.frame) %>% 
     map(~select(.x, any_of2(subjid_cols))) %>% 
     unlist() %>% unique() %>% sort()
-  if(can_be_numeric(ids)){
+  if(!is.null(ids) && can_be_numeric(ids)){
     ids = as.numeric(ids) %>% unique() %>% sort()
   }
   ids
