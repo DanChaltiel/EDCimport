@@ -11,7 +11,7 @@ This allows outliers to be easily identified."><meta property="og:image" content
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9056</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9057</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -139,16 +139,16 @@ This allows outliers to be easily identified.</p>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Option <span style="color: #0000BB;">"edc_lookup"</span> has been overwritten.</span>
 <span class="r-in"><span><span class="fu"><a href="load_database.html">load_database</a></span><span class="op">(</span><span class="va">db</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">edc_swimmerplot</span><span class="op">(</span>id_lim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>,<span class="fl">45</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in is.null(id_lim) || id_lim == "deprecated":</span> 'length = 2' in coercion to 'logical(1)'</span>
+<span class="r-plt img"><img src="edc_swimmerplot-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">edc_swimmerplot</span><span class="op">(</span>origin<span class="op">=</span><span class="st">"enrol$enrol_date"</span>, time_unit<span class="op">=</span><span class="st">"months"</span>, </span></span>
 <span class="r-in"><span>                include<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"data1"</span>, <span class="st">"data3"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                exclude<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"DATA1$DATE2"</span>, <span class="st">"data3$date\\d\\d"</span><span class="op">)</span>, </span></span>
 <span class="r-in"><span>                id_sort<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="edc_swimmerplot-1.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="edc_swimmerplot-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">edc_swimmerplot</span><span class="op">(</span>group<span class="op">=</span><span class="st">"enrol$arm"</span>, id_subset<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, aes_color<span class="op">=</span><span class="st">"label"</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="edc_swimmerplot-2.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="edc_swimmerplot-3.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="va">p</span> <span class="op">=</span> <span class="fu">edc_swimmerplot</span><span class="op">(</span>plotly<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
