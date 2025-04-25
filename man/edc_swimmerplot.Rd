@@ -8,34 +8,43 @@ edc_swimmerplot(
   ...,
   group = NULL,
   origin = NULL,
-  id_lim = NULL,
   include = NULL,
   exclude = NULL,
-  id = get_subjid_cols(),
+  id_subset = "all",
+  id_sort = FALSE,
+  id_cols = get_subjid_cols(),
   time_unit = c("days", "weeks", "months", "years"),
   aes_color = c("variable", "label"),
   plotly = getOption("edc_plotly", FALSE),
+  id = "deprecated",
+  id_lim = "deprecated",
   .lookup = "deprecated"
 )
 }
 \arguments{
 \item{...}{not used}
 
-\item{group}{a grouping variable, given as "dataset$column"}
+\item{group}{a grouping variable, given as "dataset$column".}
 
-\item{origin}{a variable to consider as time 0, given as "dataset$column"}
+\item{origin}{a variable to consider as time 0, given as "dataset$column".}
 
-\item{id_lim}{if \code{id} is numeric, a numeric vector of length 2 providing the minimum and maximum \code{id} to subset on.}
+\item{include, exclude}{a character vector of variables to exclude/include, in the form \code{dataset$column}. Can be a regex (apart from \code{$} symbols that will be automatically escaped). Case-insensitive.}
 
-\item{include, exclude}{a character vector of variables to exclude/include, in the form \code{dataset$column}. Can be a regex, but \code{$} symbols don't count. Case-insensitive.}
+\item{id_subset}{the subjects to include in the plot.}
 
-\item{id}{the patient identifier. Will be coerced as numeric if possible.}
+\item{id_sort}{whether to sort subjects by date (or time).}
+
+\item{id_cols}{the subject identifiers columns. Identifiers be coerced as numeric if possible. See \link{get_subjid_cols} if needed.}
 
 \item{time_unit}{if \code{origin!=NULL}, the unit to measure time. One of \code{c("days", "weeks", "months", "years")}.}
 
-\item{aes_color}{either \code{variable} ("\{dataset\} - \{column\}") or \code{label} (the column label)}
+\item{aes_color}{either \code{variable} ("\{dataset\} - \{column\}") or \code{label} (the column label).}
 
-\item{plotly}{whether to use \code{{plotly}} to get an interactive plot}
+\item{plotly}{whether to use \code{{plotly}} to get an interactive plot.}
+
+\item{id}{deprecated}
+
+\item{id_lim}{deprecated}
 
 \item{.lookup}{deprecated}
 }
@@ -44,23 +53,24 @@ either a \code{plotly} or a \code{ggplot}
 }
 \description{
 Join all tables on \code{id} with only date columns to build a ggplot (or a
-plotly if \code{plotly=TRUE}) showing all dates for each patients. This allows
-outliers to be easily identified.
+plotly if \code{plotly=TRUE}) showing all dates for each subject. \cr
+This allows outliers to be easily identified.
 }
 \examples{
 #db = read_trialmaster("filename.zip", pw="xx")
 db = edc_example()
 load_database(db)
-p = edc_swimmerplot(id_lim=c(5,45))
-p
-p2 = edc_swimmerplot(origin="enrol$enrol_date", time_unit="weeks", 
-                     include=c("data1", "data3"),
-                     exclude=c("DATA1$DATE2", "data3$date\\\\d\\\\d"))
-p2
-p3 = edc_swimmerplot(group="enrol$arm", aes_color="label")
-p3
+edc_swimmerplot(id_lim=c(5,45))
+
+edc_swimmerplot(origin="enrol$enrol_date", time_unit="months", 
+                include=c("data1", "data3"),
+                exclude=c("DATA1$DATE2", "data3$date\\\\d\\\\d"), 
+                id_sort=TRUE)
+
+edc_swimmerplot(group="enrol$arm", id_subset=1:10, aes_color="label")
+
 \dontrun{
-#save the plotly plot as HTML to share it
+p = edc_swimmerplot(plotly=TRUE)
 save_plotly(p, "edc_swimmerplot.html")
 }
 }

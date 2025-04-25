@@ -6,17 +6,20 @@
 #' Swimmer plot of all dates columns
 #' 
 #' Join all tables on `id` with only date columns to build a ggplot (or a 
-#' plotly if `plotly=TRUE`) showing all dates for each patients. This allows 
-#' outliers to be easily identified.
+#' plotly if `plotly=TRUE`) showing all dates for each subject. \cr
+#' This allows outliers to be easily identified.
 #'
-#' @param id the patient identifier. Will be coerced as numeric if possible.
-#' @param group a grouping variable, given as "dataset$column"
-#' @param origin a variable to consider as time 0, given as "dataset$column"
-#' @param id_lim if `id` is numeric, a numeric vector of length 2 providing the minimum and maximum `id` to subset on. 
-#' @param include,exclude a character vector of variables to exclude/include, in the form `dataset$column`. Can be a regex, but `$` symbols don't count. Case-insensitive.
+#' @param group a grouping variable, given as "dataset$column".
+#' @param origin a variable to consider as time 0, given as "dataset$column".
+#' @param include,exclude a character vector of variables to exclude/include, in the form `dataset$column`. Can be a regex (apart from `$` symbols that will be automatically escaped). Case-insensitive.
+#' @param id_subset the subjects to include in the plot.
+#' @param id_sort whether to sort subjects by date (or time).
+#' @param id_cols the subject identifiers columns. Identifiers be coerced as numeric if possible. See [get_subjid_cols] if needed.
 #' @param time_unit if `origin!=NULL`, the unit to measure time. One of `c("days", "weeks", "months", "years")`.
-#' @param aes_color either `variable` ("\{dataset\} - \{column\}") or `label` (the column label)
-#' @param plotly whether to use `{plotly}` to get an interactive plot
+#' @param aes_color either `variable` ("\{dataset\} - \{column\}") or `label` (the column label).
+#' @param plotly whether to use `{plotly}` to get an interactive plot.
+#' @param id deprecated
+#' @param id_lim deprecated
 #' @param .lookup deprecated
 #' @param ... not used
 #'
@@ -27,16 +30,17 @@
 #' #db = read_trialmaster("filename.zip", pw="xx")
 #' db = edc_example()
 #' load_database(db)
-#' p = edc_swimmerplot(id_lim=c(5,45))
-#' p
-#' p2 = edc_swimmerplot(origin="enrol$enrol_date", time_unit="weeks", 
-#'                      include=c("data1", "data3"),
-#'                      exclude=c("DATA1$DATE2", "data3$date\\d\\d"))
-#' p2
-#' p3 = edc_swimmerplot(group="enrol$arm", aes_color="label")
-#' p3
+#' edc_swimmerplot(id_lim=c(5,45))
+#' 
+#' edc_swimmerplot(origin="enrol$enrol_date", time_unit="months", 
+#'                 include=c("data1", "data3"),
+#'                 exclude=c("DATA1$DATE2", "data3$date\\d\\d"), 
+#'                 id_sort=TRUE)
+#' 
+#' edc_swimmerplot(group="enrol$arm", id_subset=1:10, aes_color="label")
+#' 
 #' \dontrun{
-#' #save the plotly plot as HTML to share it
+#' p = edc_swimmerplot(plotly=TRUE)
 #' save_plotly(p, "edc_swimmerplot.html")
 #' }
 #' @importFrom cli cli_abort
@@ -48,13 +52,16 @@
 #' @importFrom stringr str_ends str_remove
 edc_swimmerplot = function(..., 
                            group=NULL, origin=NULL, 
-                           id_lim=NULL,
                            include=NULL,
                            exclude=NULL,
-                           id=get_subjid_cols(), 
+                           id_subset="all",
+                           id_sort=FALSE, 
+                           id_cols=get_subjid_cols(), 
                            time_unit=c("days", "weeks", "months", "years"),
                            aes_color=c("variable", "label"), 
                            plotly=getOption("edc_plotly", FALSE),
+                           id="deprecated",
+                           id_lim="deprecated",
                            .lookup="deprecated"){
   check_dots_empty()
   aes_color = match.arg(aes_color)
@@ -62,18 +69,31 @@ edc_swimmerplot = function(...,
   time_unit = match.arg(time_unit[1], c(time_unit, str_remove(time_unit, "s$")))
   if(!str_ends(time_unit, "s")) time_unit = paste0(time_unit, "s")
   parent = parent.frame()
+  if(!missing(id)) {
+    deprecate_warn("0.5.2", "edc_swimmerplot(id)", "edc_swimmerplot(id_cols)")
+    id_cols = id
+  }
   
   dat = get_datasets(envir=parent) %>% 
-    .discard_if_no_id(id=id) %>% 
-    .select_dates(id=id) %>% 
-    .pivot_dates(id=id) %>% 
+    .discard_if_no_id(id=id_cols) %>% 
+    .select_dates(id=id_cols) %>% 
+    .pivot_dates(id=id_cols) %>% 
     list_rbind() %>% 
     .select_columns(include, dir="include") %>% 
     .select_columns(exclude, dir="exclude") %>% 
     arrange(variable)
   
+  if(!isTRUE(id_subset=="all")){
+    if(is.numeric(id_subset) && !is.numeric(dat$id)){
+      id_subset = unique(dat$id)[id_subset]
+    }
+    dat = dat %>% 
+      filter(id %in% id_subset)
+    if(nrow(dat)==0) return(NULL)
+  }
+  
   if(!is.null(group)){
-    dat_group = parse_var(group, id, parent) %>% 
+    dat_group = parse_var(group, id_cols, parent) %>% 
       mutate(id=as.character(id))
     if(anyDuplicated(dat_group$id)!=0){
       cli_abort("{.arg group} ({group}) should identify subjects ({id}) uniquely.", 
@@ -87,7 +107,7 @@ edc_swimmerplot = function(...,
   aes_x = "date"
   vline = NULL
   if(!is.null(origin)){
-    dat_origin = parse_var(origin, id, parent) %>% 
+    dat_origin = parse_var(origin, id_cols, parent) %>% 
       mutate(id=as.character(id))
     values = c(days=1, weeks=7, months=365.24/12, years=365.24)
     if(!inherits(dat_origin$origin, c("Date", "POSIXt"))){
@@ -106,6 +126,11 @@ edc_swimmerplot = function(...,
     vline = geom_vline(xintercept=0)
   }
   
+  if(isTRUE(id_sort)){
+    v = if(!is.null(origin)) dat$time else dat$date
+    dat$id = fct_reorder(dat$id, v, .fun=min, na.rm=TRUE)
+  }
+  
   p = dat %>% 
     .parse_id_to_numeric(id=id, id_lim=id_lim) %>% 
     ggplot(aes(x=!!sym(aes_x), y=id, group=id, date=date)) + 
@@ -114,7 +139,7 @@ edc_swimmerplot = function(...,
     vline +
     geom_line(na.rm=TRUE) +
     geom_point(na.rm=TRUE) +
-    labs(x=x_label, y="Patient", color="Variable")
+    labs(x=x_label, y="Subject", color="Variable")
   
   if(!is.null(group)){
     p = p + facet_wrap(~group, scales="free_y")
@@ -212,7 +237,7 @@ edc_swimmerplot = function(...,
 #' @importFrom rlang is_installed
 #' @importFrom stringr str_detect
 .parse_id_to_numeric = function (data, id, id_lim) {
-  if(is.null(id_lim)) id_lim =c(-Inf, Inf)
+  if(is.null(id_lim) || id_lim=="deprecated") id_lim =c(-Inf, Inf)
   if(!is.numeric(id_lim) && length(id_lim)!=2) {
     cli_abort("{.arg id_lim} should be a numeric vector of length 2.")
   }
