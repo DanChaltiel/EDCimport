@@ -260,13 +260,15 @@ edc_viewer_server = function(datasets, lookup) {
       subjid_selected = input$subjid_selected
       all_selected = length(subjid_selected)==0
       if(is.null(datasets[[dataset_selected()]])) return(tibble())
+      
+      hidden = input$hidden_hide %>% stringr::str_split_1("___")
+      
       data = datasets[[dataset_selected()]] %>% 
-        select(-any_of(hidden_common_cols())) %>% 
+        select(-any_of(hidden_common_cols()), -any_of(hidden)) %>% 
         relocate(any_of2(subjid_cols), .before=1) %>% 
         arrange(pick(any_of2(subjid_cols))) %>% 
         filter(if_any(any_of2(subjid_cols), 
                       ~all_selected | .x %in% subjid_selected))
-      labels = map_chr(data, ~attr(.x, "label") %0% NA)
       
       #ContextMenu: Fixed Column
       fixed = input$hidden_fixed %>% stringr::str_split_1("___")
