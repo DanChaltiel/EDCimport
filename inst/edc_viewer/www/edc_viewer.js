@@ -75,18 +75,22 @@ init_context_menu = function(){
         //Shiny.setInputValue('hidden_group', target.innerText, {priority: 'event'});
     switch (action) {
       case 'hide':
-        $(target).hide();
+        console.log('Hide column:', target.innerText);
+        current = $("#hidden_hide").val().split("___");
+        current.push(target.innerText);
+        new_val = current.join('___');
+        $("#hidden_hide").val(new_val).trigger("change");
         break;
       case 'fix':
         console.log('Fix column to the left:', target.innerText);
-        const current = $("#hidden_fixed").val().split("___");
+        current = $("#hidden_fixed").val().split("___");
         console.log('append to :', current);
         if(current.includes(target.innerText)){
-          current.splice(current.indexOf(target.innerText), 1)
+          current.splice(current.indexOf(target.innerText), 1);
         } else {
-          current.push(target.innerText)
+          current.push(target.innerText);
         }
-        const new_val = current.join('___');
+        new_val = current.join('___');
         $("#hidden_fixed").val(new_val).trigger("change");
         break;
       case 'color':

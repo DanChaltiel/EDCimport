@@ -55,6 +55,7 @@ edc_viewer_ui = function(datasets, lookup){
       ),
       div(
         style="display:none;",
+        textInput("hidden_hide", label=NULL),
         textInput("hidden_fixed", label=NULL),
         textInput("hidden_color", label=NULL),
         textInput("hidden_group", label=NULL),
