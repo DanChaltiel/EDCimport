@@ -237,7 +237,7 @@ edc_swimmerplot = function(...,
 #' @importFrom rlang is_installed
 #' @importFrom stringr str_detect
 .parse_id_to_numeric = function (data, id, id_lim) {
-  if(is.null(id_lim) || id_lim=="deprecated") id_lim =c(-Inf, Inf)
+  if(is.null(id_lim) || identical(id_lim, "deprecated")) id_lim =c(-Inf, Inf)
   if(!is.numeric(id_lim) && length(id_lim)!=2) {
     cli_abort("{.arg id_lim} should be a numeric vector of length 2.")
   }
