@@ -211,28 +211,71 @@ parse_file_projname = function(x){
 
 
 
-#' Get the date of data extraction from the modification time of all files
+#' Get the date of data extraction 
+#' 
+#' Extract it from the folder path, otherwise from the modification time of most files
 #'
-#' @param folder a folder
 #' @return date as a POSIXct scalar
 #' @noRd
 #' @keywords internal
 #' @importFrom cli cli_warn
 #' @importFrom dplyr count slice_max
 get_folder_datetime = function(folder, verbose=TRUE){
-  mtime=NULL
-  rtn = dir(folder, full.names=TRUE) %>% file.info() %>% count(mtime=round(mtime, "secs"))
-  if(isTRUE(verbose) && nrow(rtn)>1){
-    cli_warn(c("Folder {.file {folder}} contains files with different modification times. 
-                    The most frequent one was returned.", 
-                    i="Times: {.val {rtn$mtime}}"),
-                  class="get_folder_datetime_modiftime_warning")
+  mtime = extract_date(folder)
+  if(!is.null(mtime)) return(mtime)
+  
+  rtn = dir(folder, full.names=TRUE) %>% 
+    file.info() %>% 
+    count(mtime=round(mtime, "secs"), sort=TRUE)
+  extraction_datetime = rtn %>% slice_max(n) %>% .[1,"mtime"]
+  extraction_date = format_ymd(extraction_datetime)
+  folder_good = paste0(folder, "_", extraction_date)
+  
+  if(isTRUE(verbose)){
+    cli_warn(c("Folder {.file {folder}} should identify the extraction date.", 
+               i="Renaming suggestion: {.file {folder_good}}", 
+               i="Extraction date will be guessed using files' modification time."),
+             class="get_folder_datetime_warning")
   }
-  rtn %>% slice_max(n) %>% .[1,"mtime"]
+  if(isTRUE(verbose) && nrow(rtn)>1){
+    cli_warn(c("Folder {.file {folder}} contains files with different modification 
+               times: {.val {rtn$mtime}}.", 
+               i="The most frequent one was returned."),
+             class="get_folder_datetime_modiftime_warning")
+  }
+  extraction_datetime
 }
 
 
-
+#' Extract a datetime from any string
+#' @noRd
+#' @importFrom cli cli_warn
+#' @importFrom dplyr last
+#' @importFrom lubridate parse_date_time
+#' @importFrom stringr str_extract_all str_replace_all
+extract_date = function(x, fmt=NULL, warn_call=parent.frame()){
+  stopifnot(length(x)==1)
+  if(is.null(fmt)){
+    fmt = c("ymd", "ymdHM", "ymdHMS", 
+            "dmy", "dmyHM", "dmyHMS")
+  }
+  rtn = x %>% 
+    str_extract_all("(\\d|\\W|_){8,}") %>% unlist() %>% #8+ numbers or delimiters
+    str_replace_all("\\D", " ") %>% #remove non-numbers
+    parse_date_time(orders=fmt, quiet=TRUE) %>% 
+    na.omit()
+  
+  if(length(rtn)==0) return(NULL)
+  
+  if(length(rtn)>1){
+    cli_warn(c("{.file {x}} contains multiple dates: {.val {rtn}}. The last one was used."),
+             class="extract_date_multiple_warning", 
+             call=warn_call)
+    rtn = last(rtn)
+  }
+  
+  rtn
+}
 
 #' @noRd
 #' @keywords internal
