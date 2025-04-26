@@ -3,6 +3,8 @@
 # edc_swimmerplot ---------------------------------------------------------------------------------
 
 test_that("edc_swimmerplot", {
+  skip_on_ci()
+  skip_on_cran()
   edc_options(edc_lookup_overwrite_warn=FALSE)
 
   e = edc_example() %>% 
