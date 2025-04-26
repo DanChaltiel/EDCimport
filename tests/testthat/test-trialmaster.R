@@ -72,8 +72,9 @@ test_that("Read TM without procformat", {
 
 
 test_that("Read TM with a bad name", {
-  expect_warning(w <- read_trialmaster(filename_bad, use_cache=FALSE, verbose=0),
-                 class="edc_tm_bad_name")
+  w = read_trialmaster(filename_bad, use_cache=FALSE, verbose=0) %>% 
+    expect_classed_conditions(warning_class=c("edc_tm_bad_name", 
+                                              "get_folder_datetime_warning"))
   expect_false(is.na(w$datetime_extraction))
   expect_false(is.na(w$date_extraction))
   expect_equal(as.character(w$site$INCLSITE), "Yes")

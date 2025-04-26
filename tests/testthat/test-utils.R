@@ -48,14 +48,37 @@ test_that("save_list() works", {
 })
 
 test_that("get_folder_datetime() works", {
+  
+  #good example
+  get_folder_datetime("data/extraction20000101/") %>% 
+    expect_s3_class(c("POSIXt", "Date")) %>% 
+    as.character() %>% 
+    expect_equal("2000-01-01")
+  get_folder_datetime("data/extraction-2000_1~1/") %>% #bad format though
+    expect_s3_class(c("POSIXt", "Date")) %>% 
+    as.character() %>% 
+    expect_equal("2000-01-01")
+  
+  #Warning: multiple dates
+  get_folder_datetime("data/template_2020_01_01_extraction_2000-01-01/") %>% 
+    expect_classed_conditions(warning_class=c("extract_date_multiple_warning")) %>% 
+    expect_s3_class(c("POSIXt", "Date")) %>% 
+    as.character() %>% 
+    expect_equal("2000-01-01")
+  
+  #Warning: defaults to modification date
   folder = paste0(tempdir(), "/test_get_datetime")
   fs::dir_create(folder)
   fs::file_create(paste0(folder, "/f", 1:5, ".R"))
-  dir(folder, full.names=TRUE)[1:3] %>% purrr::walk(~Sys.setFileTime(.x, "1975-01-01 CET"))
-  # dir(folder, full.names=TRUE) %>% file.info() %>% select(mtime)
-  x = get_folder_datetime(folder) %>% 
-    expect_classed_conditions(warning_class="get_folder_datetime_modiftime_warning")
-  expect_equal(as.character(x), "1975-01-01")
+  dir(folder, full.names=TRUE)[1:3] %>% purrr::walk(~Sys.setFileTime(.x, "2000-01-01 CET"))
+  # dir(folder, full.names=TRUE) %>% file.info() %>% as_tibble(rownames="file")
+  get_folder_datetime(folder) %>% 
+    expect_classed_conditions(warning_class=c("get_folder_datetime_warning", 
+                                              "get_folder_datetime_modiftime_warning")) %>% 
+    expect_s3_class(c("POSIXt", "Date")) %>% 
+    as.character() %>% 
+    expect_equal("2000-01-01")
+  fs::dir_delete(folder)
 })
 
 
