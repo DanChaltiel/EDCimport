@@ -455,7 +455,7 @@ format_ymd = function(x){
 #' @noRd
 #' @keywords internal
 format_ymdhm = function(x){
-  stopifnot(inherits(x, "POSIXct") || inherits(x, "Date"))
+  stopifnot(inherits(x, "POSIXt") || inherits(x, "Date"))
   format(x, "%Y-%m-%d %Hh%M")
 }
 
