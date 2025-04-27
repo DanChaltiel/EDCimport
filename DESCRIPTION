@@ -21,6 +21,7 @@ Imports:
     glue,
     ggplot2,
     haven,
+    lubridate,
     purrr,
     readr,
     rlang,
