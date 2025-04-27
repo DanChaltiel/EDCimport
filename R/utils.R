@@ -221,29 +221,33 @@ parse_file_projname = function(x){
 #' @importFrom cli cli_warn
 #' @importFrom dplyr count slice_max
 get_folder_datetime = function(folder, verbose=TRUE){
-  mtime = extract_date(folder)
-  if(!is.null(mtime)) return(mtime)
+  folder_datetime = extract_date(folder)
+  if(!is.null(folder_datetime)){
+    attr(folder_datetime, "source") = "folder_path"
+    return(folder_datetime)
+  }
   
-  rtn = dir(folder, full.names=TRUE) %>% 
+  mtime = dir(folder, full.names=TRUE) %>% 
     file.info() %>% 
     count(mtime=round(mtime, "secs"), sort=TRUE)
-  extraction_datetime = rtn %>% slice_max(n) %>% .[1,"mtime"]
-  extraction_date = format_ymd(extraction_datetime)
-  folder_good = paste0(folder, "_", extraction_date)
+  folder_datetime = mtime %>% slice_max(n) %>% .[1,"mtime"]
+  attr(folder_datetime, "source") = "folder_modif_time"
   
   if(isTRUE(verbose)){
+    extraction_date = format_ymd(folder_datetime)
+    folder_good = paste0(folder, "_", extraction_date)
     cli_warn(c("Folder {.file {folder}} should identify the extraction date.", 
                i="Renaming suggestion: {.file {folder_good}}", 
-               i="Extraction date will be guessed using files' modification time."),
+               i="Extraction date has been guessed using files' modification time."),
              class="get_folder_datetime_warning")
   }
-  if(isTRUE(verbose) && nrow(rtn)>1){
+  if(isTRUE(verbose) && nrow(mtime)>1){
     cli_warn(c("Folder {.file {folder}} contains files with different modification 
-               times: {.val {rtn$mtime}}.", 
-               i="The most frequent one was returned."),
+               times: {.val {mtime$mtime}}.", 
+               i="The most frequent one was returned: {.val {folder_datetime}}."),
              class="get_folder_datetime_modiftime_warning")
   }
-  extraction_datetime
+  folder_datetime
 }
 
 
