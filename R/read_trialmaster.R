@@ -148,7 +148,7 @@ read_trialmaster = function(archive, ..., use_cache="write",
   .update_lookup(new=rtn$.lookup)
   
   if(isTRUE(use_cache) || use_cache=="write"){
-    if(verbose>0) cli_inform("Writing cache file {.file {cache_file}}", class="read_tm_zip")
+    if(verbose>0) cli_inform("Writing cache file {.file {cache_file}}", class="edc_create_cache")
     saveRDS(rtn, cache_file)
   }
   

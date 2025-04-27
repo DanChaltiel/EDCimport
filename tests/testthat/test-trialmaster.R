@@ -20,7 +20,7 @@ test_that("Read TM with cache", {
   
   #first read, read from zip (default: use_cache=write)
   w = read_trialmaster(filename) %>% 
-    expect_classed_conditions(message_class="read_tm_zip")
+    expect_classed_conditions(message_class=c("read_tm_zip", "edc_create_cache"))
   
   #2nd, use_cache=TRUE -> read from cache
   w = read_trialmaster(filename, use_cache=TRUE) %>%
