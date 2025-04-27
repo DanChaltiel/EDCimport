@@ -29,7 +29,7 @@ test_that("Read TM with cache", {
   
   #3rd, use_cache=write -> read from zip again
   w = read_trialmaster(filename, use_cache="write") %>%
-    expect_classed_conditions(message_class="read_tm_zip",
+    expect_classed_conditions(message_class=c("read_tm_zip", "edc_create_cache"),
                               warning_class="edc_lookup_overwrite_warn")
   
   #4th, use_cache=read -> read from cache again
