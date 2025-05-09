@@ -293,14 +293,14 @@ set_project_name = function(db, name){
                 left=dplyr::left_join, right=dplyr::right_join, 
                 full=dplyr::full_join, inner=dplyr::inner_join)
   
-  function(x, y, by=NULL, suffix=NULL, cols=everything(), remove_dups=TRUE){
+  function(x, y, by=NULL, suffix=NULL, cols=everything(), remove_dups=FALSE){
     subjid_col = get_subjid_cols() %>% intersect(names(x)) %>% intersect(names(y))
     if(length(subjid_col)==0){
       cli_abort(c("Could not find a common primary key for {.arg x} and {.arg y}",
                   i="Primary key in current database: {.val {get_subjid_cols()}}"),
                 class="edc_subjid_not_found")
     }
-    y = y %>% select(subjid_col, !!cols)
+    y = y %>% select(subjid_col, !!enquo(cols))
     if(isTRUE(remove_dups)){
       common_col = intersect(names(x), names(y)) %>% 
         setdiff(subjid_col) %>% 

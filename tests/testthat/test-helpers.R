@@ -66,6 +66,35 @@ test_that("edc_unify_subjid() works", {
 
 
 
+test_that("edc_xxx_join() works", {
+  local_options(edc_lookup_overwrite_warn=FALSE)
+  db = edc_example()
+  a = db$data1
+  b = db$enrol
+  
+  x = a %>% 
+    edc_left_join(b)
+  expect_true(all(c("subjid", "date1", "arm", "crfname_b", "crfstat_b") %in% names(x)))
+  
+  x = a %>% 
+    edc_left_join(b, remove_dups=TRUE)
+  expect_true(all(c("subjid", "date1", "arm", "crfname_b") %in% names(x)))
+  expect_false("crfstat_b" %in% names(x))
+  
+  
+  x = a %>% 
+    edc_left_join(b, cols=arm)
+  expect_false("enrol_date" %in% names(x))
+  
+  x = a %>% 
+    edc_left_join(b, cols=c(treatment=arm))
+  expect_true("treatment" %in% names(x))
+  expect_false("arm" %in% names(x))
+})
+
+
+
+
 test_that("fct_yesno() works", {
   edc_reset_options(quiet=TRUE)
   set.seed(42)
