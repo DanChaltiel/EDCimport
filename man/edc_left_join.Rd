@@ -12,7 +12,7 @@ edc_left_join(
   by = NULL,
   suffix = NULL,
   cols = everything(),
-  remove_dups = TRUE
+  remove_dups = FALSE
 )
 }
 \arguments{
