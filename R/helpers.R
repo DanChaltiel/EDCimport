@@ -243,8 +243,12 @@ edc_unify_subjid = function(database, preprocess=NULL, col_subjid=NULL){
   a = database %>% 
     modify_if(is.data.frame, function(df){
       df %>% 
-        mutate(across(any_of(col_subjid), 
-                      ~factor(preprocess(.x), levels=all_subjid)))
+        mutate(across(any_of(col_subjid), ~{
+          .x %>% 
+            preprocess() %>% 
+            factor(levels=all_subjid) %>%
+            copy_label_from(.x)
+        }))
     }) %>% 
     structure(all_subjid=all_subjid)
   
