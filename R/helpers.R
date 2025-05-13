@@ -315,8 +315,10 @@ set_project_name = function(db, name){
     if(is.null(suffix)){
       suffix = c("", paste0("_", as_label(caller_call(0)[[3]])))
     }
-    
-    dplyr_join(x, y, by=by, suffix=suffix)
+
+    dplyr_join(x, y, by=by, suffix=suffix) %>%
+      copy_label_from(y) %>%
+      copy_label_from(x)
   }
 }
 

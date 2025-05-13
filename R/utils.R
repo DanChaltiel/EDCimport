@@ -316,7 +316,10 @@ copy_label_from = function(x, from){
   }
   from_labs = map_chr(from, ~attr(.x, "label") %||% NA)
   mutate(x, across(everything(), ~{
-    attr(.x, "label") = unname(from_labs[cur_column()])
+    lab = unname(from_labs[cur_column()])
+    if(!is.na(lab)){
+      attr(.x, "label") = lab
+    }
     .x
   }))
 }
