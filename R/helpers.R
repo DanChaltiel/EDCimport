@@ -299,7 +299,7 @@ set_project_name = function(db, name){
   
   function(x, y, by=NULL, suffix=NULL, cols=everything(), remove_dups=FALSE){
     subjid_col = get_subjid_cols() %>% intersect(names(x)) %>% intersect(names(y))
-    if(length(subjid_col)==0){
+    if(length(subjid_col)==0 && is.null(by)){
       cli_abort(c("Could not find a common primary key for {.arg x} and {.arg y}",
                   i="Primary key in current database: {.val {get_subjid_cols()}}"),
                 class="edc_subjid_not_found")

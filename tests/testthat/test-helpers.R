@@ -83,7 +83,6 @@ test_that("edc_xxx_join() works", {
     edc_left_join(b, remove_dups=TRUE)
   expect_true(all(c("subjid", "date1", "arm", "crfname_b") %in% names(x)))
   expect_false("crfstat_b" %in% names(x))
-  
   expect_equal(get_label(x$subjid), get_label(b$subjid))  
   
   x = a %>% 
@@ -95,6 +94,13 @@ test_that("edc_xxx_join() works", {
   expect_true("treatment" %in% names(x))
   expect_false("arm" %in% names(x))
   
+  #defaults to dplyr if arguments are set
+  df=mtcars %>% 
+    tibble::rownames_to_column()
+  expect_identical(
+    left_join(df, df, by="rowname"),
+    edc_left_join(df, df, by="rowname", suffix=c(".x", ".y"))
+  )
 })
 
 
