@@ -336,19 +336,38 @@ edc_data_warnings = function(){
 #' @noRd
 #' @keywords internal
 #' @importFrom cli cli_warn
+#' @importFrom dplyr semi_join
 save_warn_list_item = function(item){
   stopifnot(nrow(item)==1)
+  if(is.na(item$issue_n)) return(NULL)
+  VERBOSE = getOption("edc_warn_duplicate_verbose", TRUE)
+  current = edc_data_warnings()
+  
+  if(item$issue_n=="xx") {
+    n_xx = sum(str_detect(current$issue_n, "^xx\\d+$"))
+    item$issue_n = paste0("xx", n_xx+1)
+  }
   issue_n = item$issue_n
   issue_key = paste0("issue_", item$issue_n)
-  current = edc_data_warnings()
-  if(!is.na(item$issue_n) && item$issue_n %in% current$issue_n){
-    if(item$issue_n=="xx" && !item$message %in% current$message){
-      issue_key = paste0("issue_xx_", nrow(current))
-    } else if(getOption("edc_warn_duplicate_verbose", FALSE)){
-      cli_warn("Duplicate `edc_data_warn()` entry")
+  
+  #warn if same issue number
+  if(issue_n %in% current$issue_n && VERBOSE){
+    cli_warn("Duplicated `edc_data_warn()` entry: issue_n={.val {issue_n}}", 
+             class="save_warn_list_item_dupln_warning")
+  }
+  
+  #warn & skip if same message and data
+  if(nrow(current)>0){
+    m = semi_join(item, current, by=c("message", "data"))
+    if(nrow(m)>0) {
+      cli_warn("Duplicated `edc_data_warn()` entry: {.val {item$message}}", 
+               class="save_warn_list_item_dupl_warning")
+      return(NULL)
     }
   }
+
   edcimport_env$warn_list[[issue_key]] = item
+  NULL
 }
 
 #' @noRd
