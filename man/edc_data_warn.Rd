@@ -46,12 +46,11 @@ edc_data_warnings()
 When checking your data, filter your dataset to get only problematic rows. \cr
 Then, use either:
 \itemize{
-\item \code{edc_data_warn()} to generate a standardized warning that can be forwarded to the datamanager
-\item \code{edc_data_stop()} to abort the script if the problem is too serious
+\item \code{edc_data_warn()} to generate a standardized warning that can be forwarded to the datamanager.
+\item \code{edc_data_stop()} to abort the script if the problem is too serious.
 }
 
-Database issues should be traced in a separate file, each with an identifying row number, and the file should be shared with the data-manager. \cr
-Use \code{edc_data_warnings()} to generate the table for such a file.
+Each time \link{edc_data_warn} is used, the warning is saved internally so that a summary of all your warnings can be retreived using \link{edc_data_warnings}. \cr The result can be saved into an Excel file using \code{\link[=save_edc_data_warnings]{save_edc_data_warnings()}}.
 }
 \examples{
 library(dplyr)

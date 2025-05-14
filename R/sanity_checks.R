@@ -171,11 +171,10 @@ assert_no_duplicate = function(df, by=NULL, id_col=get_subjid_cols()){
 #' 
 #' When checking your data, filter your dataset to get only problematic rows. \cr
 #' Then, use either:
-#'  * `edc_data_warn()` to generate a standardized warning that can be forwarded to the datamanager 
-#'  * `edc_data_stop()` to abort the script if the problem is too serious
+#'  * `edc_data_warn()` to generate a standardized warning that can be forwarded to the datamanager.
+#'  * `edc_data_stop()` to abort the script if the problem is too serious.
 #'  
-#' Database issues should be traced in a separate file, each with an identifying row number, and the file should be shared with the data-manager. \cr
-#' Use `edc_data_warnings()` to generate the table for such a file.
+#' Each time [edc_data_warn] is used, the warning is saved internally so that a summary of all your warnings can be retreived using [edc_data_warnings]. \cr The result can be saved into an Excel file using [save_edc_data_warnings()].
 #'
 #' @param df the filtered dataframe
 #' @param message the message. Can use [cli formats](https://cli.r-lib.org/reference/inline-markup.html#classes). `df` can be accessed using the `.data` special keyword (see example)
