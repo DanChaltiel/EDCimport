@@ -12,9 +12,10 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 -   New functions `edc_patient_gridplot()`, which creates a ggplot matrix giving the presence of all patients in all datasets (#77)
 -   New functions `edc_left_join()`, `edc_right_join()`, and `edc_full_join()`, which perform joins with defaults to subject ID as primary key (#82)
--   New function `edc_viewer()`, which run a shiny application for easily browsing your database (#83)
+-   New function `edc_viewer()`, which runs a shiny application for easily browsing your database (#83)
 -   New function `set_project_name()`, to set the project name when reading from a directory (#96)
 -   New function `edc_find_value()`, which searches the whole database for a value, as `edc_find_column()` searches for column names or labels.
+-   New function `save_edc_data_warnings()`, to save all the warnings triggered by `edc_data_warn()` into a `.xlsx` file for sharing.
 
 ### Bug fixes & Improvements
 

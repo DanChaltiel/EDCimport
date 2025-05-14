@@ -266,6 +266,46 @@ edc_data_warnings = function(){
     add_class("edc_warning_summary")
 }
 
+
+
+#' Save EDCimport warning to Excel
+#' 
+#' Each time [edc_data_warn] is used, the warning is saved internally so that a summary can be retreived using [edc_data_warnings]. This summary can then be saved into a `.xlsx` file using `save_edc_data_warnings()`. 
+#'
+#' @param edc_warnings the result of [edc_data_warnings]
+#' @param path a `.xlsx` file path
+#' @param overwrite If `TRUE`, overwrite any existing file.
+#' @param open If `TRUE`, overwrite any existing file.
+#'
+#' @returns a logical(1), whether the file could be written, invisibly 
+#' @export
+save_edc_data_warnings = function(edc_warnings=edc_data_warnings(), 
+                                  path="edc_data_warnings.xlsx",
+                                  overwrite=TRUE, 
+                                  open=FALSE){
+  check_installed("openxlsx", reason="for `save_edc_data_warnings()` to work.")
+  assert_class(edc_warnings, "edc_warning_summary", null.ok=FALSE)
+  assert(path_ext(path)=="xlsx")
+  
+  edc_warnings$issue_n %>% make.unique
+  
+  wb = openxlsx::createWorkbook()
+  for(i in seq(nrow(edc_warnings))){
+    if(!exists("date_extraction")) date_extraction=NULL
+    x = edc_warnings[i, ]
+    sheet = paste0("issue_", x$issue_n)
+    data = x$data[[1]]
+    color = if(nrow(data)==0) "green" else "red"
+    openxlsx::addWorksheet(wb, sheet, tabColour=color, gridLines=FALSE)
+    openxlsx::writeData(wb, sheet, tibble(date_extraction, x$message), colNames=FALSE)
+    openxlsx::writeDataTable(wb, sheet, data, startRow=2)
+  }
+  rtn = openxlsx::saveWorkbook(wb, path, overwrite=overwrite, returnValue=TRUE)
+  
+  if(isTRUE(open) && isTRUE(rtn)){
+    browseURL(path)
+  }
+  invisible(rtn)
 }
 
 
