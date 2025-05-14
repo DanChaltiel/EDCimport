@@ -229,7 +229,7 @@ edc_data_warn = function(df, message, ...,
   
   if (missing(max_subjid)) max_subjid = getOption("edc_warn_max_subjid", max_subjid)
   check_dots_empty()
-  edc_data_condition(.data=df, message=message, issue_n=issue_n, csv_path=csv_path,
+  edc_data_condition(tbl=df, message=message, issue_n=issue_n, csv_path=csv_path,
                      max_subjid=max_subjid, .envir=envir, col_subjid=col_subjid, 
                      fun=cli_warn)
 }
@@ -246,7 +246,7 @@ edc_data_stop = function(df, message, ...,
   
   if (missing(max_subjid)) max_subjid = getOption("edc_warn_max_subjid", max_subjid)
   check_dots_empty()
-  edc_data_condition(.data=df, message=message, issue_n=issue_n, csv_path=csv_path,
+  edc_data_condition(tbl=df, message=message, issue_n=issue_n, csv_path=csv_path,
                      max_subjid=max_subjid, .envir=envir, col_subjid=col_subjid, 
                      fun=cli_abort)
 }
@@ -262,7 +262,10 @@ edc_data_stop = function(df, message, ...,
 edc_data_warnings = function(){
   edcimport_env$warn_list %>% 
     list_rbind() %>% 
-    arrange(across(any_of(c("issue_n", "message"))))
+    arrange(across(any_of(c("issue_n", "message")))) %>% 
+    add_class("edc_warning_summary")
+}
+
 }
 
 
@@ -278,17 +281,18 @@ edc_data_warnings = function(){
 #' @importFrom stringr str_ends str_pad
 #' @importFrom tibble tibble
 #' @importFrom utils write.csv2
-edc_data_condition = function(.data, message, issue_n, max_subjid, 
+edc_data_condition = function(tbl, message, issue_n, max_subjid, 
                               csv_path, .envir, 
                               col_subjid, fun){
-  if(nrow(.data)>0){
+  if(nrow(tbl)==0) return(invisible(tbl))
+  # if(nrow(tbl)>0){
     if(is.character(csv_path)){
       assert(str_ends(csv_path, "\\.csv"), call=parent.frame())
       dir_create(dirname(csv_path))
-      write.csv2(.data, csv_path, row.names=FALSE)
+      write.csv2(tbl, csv_path, row.names=FALSE)
     }
     
-    env_bind(.envir, .data=.data)
+    env_bind(.envir, tbl=tbl)
     message = format_inline(message, .envir=.envir)
     
     par_issue = par_subj = ""; subj=NULL
@@ -300,7 +304,7 @@ edc_data_condition = function(.data, message, issue_n, max_subjid,
     }
     
     if(!is.null(col_subjid)){
-      col_found = tolower(col_subjid) %in% tolower(names(.data))
+      col_found = tolower(col_subjid) %in% tolower(names(tbl))
       if(sum(col_found)>1){
         cli_warn("Found {length(col_found)} subject identifiers in the input dataset:
                  {.val {col_subjid[col_found]}}. Defaulting to the first one.", 
@@ -311,19 +315,19 @@ edc_data_condition = function(.data, message, issue_n, max_subjid,
         cli_abort("Could not find column {col_subjid} in the input dataset.", 
                   class="edc_data_condition_subjid_error", call=parent.frame())
       }
-      subj = .data %>% pull(any_of2(col_subjid)) %>% unique() %>% sort()
+      subj = tbl %>% pull(any_of2(col_subjid)) %>% unique() %>% sort()
       n_subj = length(subj)
       subj = paste0("#", subj) %>% 
         cli_vec(style=list("vec_trunc"=max_subjid, "vec-trunc-style"="head"))
       par_subj = format_inline(" ({n_subj} patient{?s}: {subj})")
     }
-    fun_name = caller_arg(fun)
-    item = tibble(issue_n, message, subjid=list(subj), fun=fun_name)
+    
+    item = tibble(issue_n, message, subjid=list(subj), data=list(tbl))
     save_warn_list_item(item)
     
     fun("{par_issue}{message}{par_subj}", class="edc_data_condition")
-  }
-  invisible(.data)
+  
+  invisible(tbl)
 }
 
 
