@@ -375,6 +375,7 @@ save_edc_data_warnings = function(edc_warnings=edc_data_warnings(),
 #' @noRd
 #' @keywords internal
 #' @importFrom cli cli_warn
+#' @importFrom rlang has_name
 #' @importFrom dplyr semi_join
 save_warn_list_item = function(item){
   stopifnot(nrow(item)==1)
@@ -396,7 +397,7 @@ save_warn_list_item = function(item){
   }
   
   #warn & skip if same message and data
-  if(nrow(current)>0){
+  if(nrow(current)>0 && all(has_name(item, c("message", "data")))){
     m = semi_join(item, current, by=c("message", "data"))
     if(nrow(m)>0) {
       cli_warn("Duplicated `edc_data_warn()` entry: {.val {item$message}}", 
