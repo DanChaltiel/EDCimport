@@ -329,7 +329,7 @@ save_edc_data_warnings = function(edc_warnings=edc_data_warnings(),
     write.csv2(tbl, csv_path, row.names=FALSE)
   }
   
-  env_bind(.envir, tbl=tbl)
+  env_bind(.envir, .data=tbl)
   message = format_inline(message, .envir=.envir)
   
   par_issue = par_subj = ""; subj=NULL
@@ -361,7 +361,7 @@ save_edc_data_warnings = function(edc_warnings=edc_data_warnings(),
   
   item_subjid = NULL
   if(nrow(tbl)>0){
-    fun("{par_issue}{message}{par_subj}", class=".edc_data_condition")
+    fun("{par_issue}{message}{par_subj}", class="edc_data_condition")
     item_subjid=list(subj)
   }
   

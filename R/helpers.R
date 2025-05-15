@@ -304,7 +304,7 @@ set_project_name = function(db, name){
                   i="Primary key in current database: {.val {get_subjid_cols()}}"),
                 class="edc_subjid_not_found")
     }
-    y = y %>% select(subjid_col, !!enquo(cols))
+    y = y %>% select(any_of(subjid_col), !!enquo(cols))
     if(isTRUE(remove_dups)){
       common_col = intersect(names(x), names(y)) %>% 
         setdiff(subjid_col) %>% 
