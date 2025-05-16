@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9063</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9065</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -131,11 +131,12 @@
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/edc_data_warn.html">edc_data_warnings</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 2 × 4</span></span>
-<span><span class="co">#&gt;   issue_n message                                      subjid    fun     </span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;   &lt;chr&gt;                                        &lt;list&gt;    &lt;chr&gt;   </span></span>
-<span><span class="co">#&gt; 1 01      Patients should be &gt;25yo                     &lt;chr [2]&gt; cli_warn</span></span>
-<span><span class="co">#&gt; 2 03      Treated patients should have been seen later &lt;chr [9]&gt; cli_warn</span></span></code></pre></div>
+<span><span class="co">#&gt; # A tibble: 3 × 4</span></span>
+<span><span class="co">#&gt;   issue_n message                                      subjid    data    </span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;   &lt;chr&gt;                                        &lt;list&gt;    &lt;list&gt;  </span></span>
+<span><span class="co">#&gt; 1 01      Patients should be &gt;25yo                     &lt;chr [2]&gt; &lt;tibble&gt;</span></span>
+<span><span class="co">#&gt; 2 02      Incorrect adverse event grade                &lt;NULL&gt;    &lt;tibble&gt;</span></span>
+<span><span class="co">#&gt; 3 03      Treated patients should have been seen later &lt;chr [9]&gt; &lt;tibble&gt;</span></span></code></pre></div>
 </div>
 </section><section class="level3"><h3 id="fatal-error">Fatal error<a class="anchor" aria-label="anchor" href="#fatal-error"></a>
 </h3>
