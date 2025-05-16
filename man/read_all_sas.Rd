@@ -57,7 +57,7 @@ Otherwise, you can use \code{options(edc_var_format_name="xxx", edc_var_level="x
 path = paste0(tempdir(), "/read_all_sas")
 dir.create(paste0(path, "/subdir"), recursive=TRUE)
 haven::write_sas(attenu, paste0(path, "/attenu.sas7bdat"))
-haven::write_sas(paste0(path, "/mtcars.sas7bdat"))
+haven::write_sas(mtcars, paste0(path, "/mtcars.sas7bdat"))
 haven::write_sas(mtcars, paste0(path, "/subdir/mtcars.sas7bdat"))
 haven::write_sas(esoph, paste0(path, "/esoph.sas7bdat"))
 
