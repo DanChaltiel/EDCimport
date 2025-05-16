@@ -51,7 +51,7 @@ Read all \code{.csv} files in a directory, with labels if specified.
 \code{format_file} should contain the information about SAS formats. It can be either:
 \itemize{
 \item a \code{procformat.sas} file, containing the whole PROC FORMAT
-\item or a data file (.csv or .sas7bdat) containing 3 columns:
+\item or a data file (\code{.csv} or \code{.sas7bdat}) containing 3 columns:
 \itemize{
 \item \code{FMTNAME} the SAS format name (repeated)
 \item \code{START} the variable level

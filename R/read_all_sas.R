@@ -1,7 +1,7 @@
 
 #' Read all `.sas7bdat` files in a directory
 #' 
-#' Read all `.sas7bdat` files in a directory. Formats can be applied from a `procformat.sas` SAS file, from a .
+#' Read all `.sas7bdat` files in a directory. Formats (factors levels) can be applied from a `procformat.sas` SAS file, or from a format dictionnary. See the "Format file" section below. Column labels are read directly from the `.sas7bdat` files.
 #'
 #' @param path \[`character(1)`]\cr the path to the directory containing all `.sas7bdat` files.
 #' @inheritParams read_all_xpt
@@ -16,7 +16,7 @@
 #' @importFrom utils packageVersion
 #' 
 #' @examples
-#' # Create a directory with multiple csv files.
+#' # Create a directory with multiple sas files.
 #' path = paste0(tempdir(), "/read_all_sas")
 #' dir.create(paste0(path, "/subdir"), recursive=TRUE)
 #' haven::write_sas(attenu, paste0(path, "/attenu.sas7bdat"))
@@ -30,10 +30,10 @@
 #' edc_lookup()
 read_all_sas = function(path, ..., 
                         format_file="procformat.sas", 
-                        clean_names_fun=NULL, 
                         subdirectories=FALSE,
                         datetime_extraction="guess", 
-                        verbose=getOption("edc_read_verbose", 1)){
+                        verbose=getOption("edc_read_verbose", 1), 
+                        clean_names_fun=NULL){
   check_dots_empty()
   reset_manual_correction()
   assert(dir_exists(path), msg="Directory {.path {path}} does not exist.")

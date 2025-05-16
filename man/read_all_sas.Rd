@@ -8,10 +8,10 @@ read_all_sas(
   path,
   ...,
   format_file = "procformat.sas",
-  clean_names_fun = NULL,
   subdirectories = FALSE,
   datetime_extraction = "guess",
-  verbose = getOption("edc_read_verbose", 1)
+  verbose = getOption("edc_read_verbose", 1),
+  clean_names_fun = NULL
 )
 }
 \arguments{
@@ -21,26 +21,26 @@ read_all_sas(
 
 \item{format_file}{[\code{character(1)}]\cr the path to the file that should be used to apply formats. See section "Format file" below. Use \code{NULL} to not apply formats.}
 
-\item{clean_names_fun}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} use \code{\link[=edc_clean_names]{edc_clean_names()}} instead.}
-
 \item{subdirectories}{[\code{logical(1)}]\cr whether to read subdirectories}
 
 \item{datetime_extraction}{[\code{POSIXt(1)}]\cr the datetime of the data extraction. Default to the most common date of last modification in \code{path}.}
 
 \item{verbose}{[\code{numeric(1)}]\cr one of \code{c(0, 1, 2)}. The higher, the more information will be printed.}
+
+\item{clean_names_fun}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} use \code{\link[=edc_clean_names]{edc_clean_names()}} instead.}
 }
 \value{
 a list containing one dataframe for each \code{.xpt} file in the folder, the extraction date (\code{datetime_extraction}), and a summary of all imported tables (\code{.lookup}).
 }
 \description{
-Read all \code{.sas7bdat} files in a directory. Formats can be applied from a \code{procformat.sas} SAS file, from a .
+Read all \code{.sas7bdat} files in a directory. Formats (factors levels) can be applied from a \code{procformat.sas} SAS file, or from a format dictionnary. See the "Format file" section below. Column labels are read directly from the \code{.sas7bdat} files.
 }
 \section{Format file}{
 
 \code{format_file} should contain the information about SAS formats. It can be either:
 \itemize{
 \item a \code{procformat.sas} file, containing the whole PROC FORMAT
-\item or a data file (.csv or .sas7bdat) containing 3 columns:
+\item or a data file (\code{.csv} or \code{.sas7bdat}) containing 3 columns:
 \itemize{
 \item \code{FMTNAME} the SAS format name (repeated)
 \item \code{START} the variable level
@@ -53,11 +53,11 @@ Otherwise, you can use \code{options(edc_var_format_name="xxx", edc_var_level="x
 }
 
 \examples{
-# Create a directory with multiple csv files.
+# Create a directory with multiple sas files.
 path = paste0(tempdir(), "/read_all_sas")
 dir.create(paste0(path, "/subdir"), recursive=TRUE)
 haven::write_sas(attenu, paste0(path, "/attenu.sas7bdat"))
-haven::write_sas(mtcars, paste0(path, "/mtcars.sas7bdat"))
+haven::write_sas(paste0(path, "/mtcars.sas7bdat"))
 haven::write_sas(mtcars, paste0(path, "/subdir/mtcars.sas7bdat"))
 haven::write_sas(esoph, paste0(path, "/esoph.sas7bdat"))
 

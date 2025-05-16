@@ -42,14 +42,14 @@ a list containing one dataframe for each \code{.xpt} file in the folder, the ext
 \description{
 Read all \code{.xpt} files in a directory (unzipped TrialMaster archive). \cr
 If \verb{7zip} is installed, you should probably rather use \code{\link[=read_trialmaster]{read_trialmaster()}} instead. \cr
-If a \code{procformat.sas} file exists in the directory, formats will be applied.
+Formats (factors levels) can be applied from a \code{procformat.sas} SAS file, or from a format dictionnary. See the "Format file" section below. Column labels are read directly from the \code{.xpt} files.
 }
 \section{Format file}{
 
 \code{format_file} should contain the information about SAS formats. It can be either:
 \itemize{
 \item a \code{procformat.sas} file, containing the whole PROC FORMAT
-\item or a data file (.csv or .sas7bdat) containing 3 columns:
+\item or a data file (\code{.csv} or \code{.sas7bdat}) containing 3 columns:
 \itemize{
 \item \code{FMTNAME} the SAS format name (repeated)
 \item \code{START} the variable level
@@ -61,6 +61,20 @@ Otherwise, you can use \code{options(edc_var_format_name="xxx", edc_var_level="x
 }
 }
 
+\examples{
+# Create a directory with multiple .xpt files.
+path = paste0(tempdir(), "/read_all_xpt")
+dir.create(paste0(path, "/subdir"), recursive=TRUE)
+haven::write_xpt(attenu, paste0(path, "/attenu.xpt"))
+haven::write_xpt(mtcars, paste0(path, "/mtcars.xpt"))
+haven::write_xpt(mtcars, paste0(path, "/subdir/mtcars.xpt"))
+haven::write_xpt(esoph, paste0(path, "/esoph.xpt"))
+
+db = read_all_xpt(path, format_file=NULL, subdirectories=TRUE) \%>\% 
+  set_project_name("My great project")
+db
+edc_lookup()
+}
 \seealso{
 Other EDCimport reading functions: 
 \code{\link{read_all_csv}()},

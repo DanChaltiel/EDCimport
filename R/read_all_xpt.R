@@ -3,7 +3,7 @@
 #' 
 #' Read all `.xpt` files in a directory (unzipped TrialMaster archive). \cr
 #' If `7zip` is installed, you should probably rather use [read_trialmaster()] instead. \cr
-#' If a `procformat.sas` file exists in the directory, formats will be applied.
+#' Formats (factors levels) can be applied from a `procformat.sas` SAS file, or from a format dictionnary. See the "Format file" section below. Column labels are read directly from the `.xpt` files.
 #'
 #' @param path \[`character(1)`]\cr the path to the directory containing all `.xpt` files.
 #' @param format_file \[`character(1)`]\cr the path to the file that should be used to apply formats. See section "Format file" below. Use `NULL` to not apply formats.
@@ -18,7 +18,7 @@
 #' @section Format file: 
 #' `format_file` should contain the information about SAS formats. It can be either:
 #'  - a `procformat.sas` file, containing the whole PROC FORMAT
-#'  - or a data file (.csv or .sas7bdat) containing 3 columns: 
+#'  - or a data file (`.csv` or `.sas7bdat`) containing 3 columns: 
 #'    -  `FMTNAME` the SAS format name (repeated)
 #'    -  `START` the variable level
 #'    -  `LABEL` the label associated to the level 
@@ -34,6 +34,20 @@
 #' @importFrom fs dir_ls is_dir
 #' @importFrom rlang check_dots_empty
 #' @importFrom utils packageVersion
+#' 
+#' @examples
+#' # Create a directory with multiple .xpt files.
+#' path = paste0(tempdir(), "/read_all_xpt")
+#' dir.create(paste0(path, "/subdir"), recursive=TRUE)
+#' haven::write_xpt(attenu, paste0(path, "/attenu.xpt"))
+#' haven::write_xpt(mtcars, paste0(path, "/mtcars.xpt"))
+#' haven::write_xpt(mtcars, paste0(path, "/subdir/mtcars.xpt"))
+#' haven::write_xpt(esoph, paste0(path, "/esoph.xpt"))
+#' 
+#' db = read_all_xpt(path, format_file=NULL, subdirectories=TRUE) %>% 
+#'   set_project_name("My great project")
+#' db
+#' edc_lookup()
 read_all_xpt = function(path, ..., 
                         format_file="procformat.sas", 
                         datetime_extraction="guess", 
