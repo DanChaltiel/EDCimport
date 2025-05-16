@@ -46,6 +46,7 @@ reference:
 - title: "Checking databases"
 - contents:
   - edc_data_warn
+  - save_edc_data_warnings
   - assert_no_duplicate
   - edc_warn_patient_diffs
   - edc_warn_extraction_date
