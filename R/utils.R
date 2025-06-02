@@ -235,10 +235,10 @@ get_folder_datetime = function(folder, verbose=TRUE){
   
   if(isTRUE(verbose)){
     extraction_date = format_ymd(folder_datetime)
-    folder_good = paste0(folder, "_", extraction_date)
+    folder_good = folder %>% str_remove("/$") %>% paste0("_", extraction_date)
     cli_warn(c("Folder {.file {folder}} should identify the extraction date.", 
-               i="Renaming suggestion: {.file {folder_good}}", 
-               i="Extraction date has been guessed using files' modification time."),
+               i="Renaming suggestion: {.file {folder_good}/}", 
+               i="The extraction date was estimated based on the last modification date of the files."),
              class="get_folder_datetime_warning")
   }
   if(isTRUE(verbose) && nrow(mtime)>1){
