@@ -45,22 +45,36 @@ test_that("edc_warn_patient_diffs() works", {
 
 test_that("edc_unify_subjid() works", {
   #numeric subjid
-  db = list(x=data.frame(subjid=c("1", "2", "3", "005"), a=1))
+  db = list(x=data.frame(subjid=c("1", "3", "2", "005"), a=1))
   h = edc_unify_subjid(db, col_subjid="subjid")
-  expect_identical(h$x$subjid, factor(c("1", "2", "3", "5")))
+  expect_identical(h$x$subjid, factor(c("1", "3", "2", "5"), 
+                                      levels = c("1", "2", "3", "5")))
   h = edc_unify_subjid(db, col_subjid="subjid", preprocess=identity)
-  expect_identical(h$x$subjid, factor(c("1", "2", "3", "005"), 
+  expect_identical(h$x$subjid, factor(c("1", "3", "2", "005"), 
                                       levels = c("1", "2", "3", "005")))
+  h = edc_unify_subjid(db, col_subjid="subjid", mode="numeric")
+  expect_identical(h$x$subjid, c(1, 3, 2, 5))
   
-  #factor subjid
+  #factor subjid are parsed to character
   db = list(x=data.frame(subjid=as_factor(c("1", "2", "7", "5")), a=1))
   h = edc_unify_subjid(db, col_subjid="subjid")
-  expect_identical(h$x$subjid, factor(c("1", "2", "7", "5")))
+  expect_identical(h$x$subjid, factor(c("1", "2", "7", "5"), 
+                                      levels = c("1", "2", "5", "7")))
   
   #character subjid
   db = list(x=data.frame(subjid=c("pat-1", "pat-3", "pat-2"), a=1))
   h = edc_unify_subjid(db, col_subjid="subjid")
   expect_identical(h$x$subjid, factor(c("pat-1", "pat-3", "pat-2")))
+  h = edc_unify_subjid(db, col_subjid="subjid", preprocess=~str_sub(.x,-1))
+  expect_identical(h$x$subjid, factor(c("1", "3", "2"), 
+                                      levels = c("1", "2", "3")))
+  h = edc_unify_subjid(db, col_subjid="subjid", preprocess=~str_sub(.x,-1), mode="numeric")
+  expect_identical(h$x$subjid, c(1, 3, 2))
+  
+  #errors
+  list(x=data.frame(subjid=c("pat-1", "pat-3", "pat-2"), a=1)) %>% 
+    edc_unify_subjid(col_subjid="subjid", mode="numeric") %>% 
+    expect_error(class="edc_unify_subjid_non_numeric_error")
 })
 
 
