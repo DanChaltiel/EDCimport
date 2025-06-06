@@ -121,8 +121,9 @@ can_be_numeric = function(x){
   if(length(x)==0) return(NA)
   if(is.factor(x)) return(FALSE)
   stopifnot(is.atomic(x) || is.list(x))
-  xnum_na <- suppressWarnings(is.na(as.numeric(x)))
-  all(is.na(x)==xnum_na)
+  xnum_na = suppressWarnings(is.na(as.numeric(x)))
+  wrong = x[is.na(x)!=xnum_na]
+  structure(length(wrong)==0, wrong=wrong)
 }
 
 
