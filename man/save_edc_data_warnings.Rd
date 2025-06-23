@@ -24,5 +24,5 @@ save_edc_data_warnings(
 a logical(1), whether the file could be written, invisibly
 }
 \description{
-Each time \link{edc_data_warn} is used, the warning is saved internally so that a summary can be retreived using \link{edc_data_warnings}. This summary can then be saved into a \code{.xlsx} file using \code{save_edc_data_warnings()}.
+Each time \link{edc_data_warn} is used, the warning is saved internally so that a summary can be retrieved using \link{edc_data_warnings}. This summary can then be saved into a \code{.xlsx} file using \code{save_edc_data_warnings()}.
 }

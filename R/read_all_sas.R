@@ -1,7 +1,7 @@
 
 #' Read all `.sas7bdat` files in a directory
 #' 
-#' Read all `.sas7bdat` files in a directory. Formats (factors levels) can be applied from a `procformat.sas` SAS file, or from a format dictionnary. See the "Format file" section below. Column labels are read directly from the `.sas7bdat` files.
+#' Read all `.sas7bdat` files in a directory. Formats (factors levels) can be applied from a `procformat.sas` SAS file, or from a format dictionary. See the "Format file" section below. Column labels are read directly from the `.sas7bdat` files.
 #'
 #' @param path \[`character(1)`]\cr the path to the directory containing all `.sas7bdat` files.
 #' @inheritParams read_all_xpt

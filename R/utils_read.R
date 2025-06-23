@@ -10,7 +10,7 @@
 #' As per now, reading functions are: [read_trialmaster()], [read_all_sas()], [read_all_xpt()], and [read_all_csv()].
 #' 
 #' @section Structure:
-#' While it is not usually usefull to query them, an `edc_database` object is a named list containing:
+#' While it is not usually useful to query them, an `edc_database` object is a named list containing:
 #' - all the datasets from the source files
 #' - `datetime_extraction` and `date_extraction` the inferred date of data extraction
 #' - `.lookup` a temporary copy of the lookup table

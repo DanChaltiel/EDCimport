@@ -32,7 +32,7 @@ db
 load_database(db)
 ```
 
-## Swimmerplot
+## Swimmer plot
 
 Each patient experiences a series of events during their visits, recorded in Date/Datetime columns across your datasets.
 

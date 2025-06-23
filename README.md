@@ -13,7 +13,7 @@
 The **EDCimport** package is designed to simplify the import and management of Electronic Data Capture (EDC) exports, particularly in clinical research settings. It is an opinionated framework, providing multiple streamlined tools for importing, cleaning, and checking your datasets.
 
 > [!WARNING]
-> This package is experimental and under active developement. Retrocompatibility is not a priority for the moment. For reproducibility, use [renv](https://rstudio.github.io/renv/articles/renv.html) to set the package version.
+> This package is experimental and under active development. Backward compatibility is not a priority for the moment. For reproducibility, use [renv](https://rstudio.github.io/renv/articles/renv.html) to set the package version.
 
 
 ## Installation 🛠️

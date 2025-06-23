@@ -50,7 +50,7 @@ Then, use either:
 \item \code{edc_data_stop()} to abort the script if the problem is too serious.
 }
 
-Each time \link{edc_data_warn} is used, the warning is saved internally so that a summary of all your warnings can be retreived using \link{edc_data_warnings}. \cr The result can be saved into an Excel file using \code{\link[=save_edc_data_warnings]{save_edc_data_warnings()}}.
+Each time \link{edc_data_warn} is used, the warning is saved internally so that a summary of all your warnings can be retrieved using \link{edc_data_warnings}. \cr The result can be saved into an Excel file using \code{\link[=save_edc_data_warnings]{save_edc_data_warnings()}}.
 }
 \examples{
 library(dplyr)

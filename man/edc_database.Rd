@@ -15,7 +15,7 @@ As per now, reading functions are: \code{\link[=read_trialmaster]{read_trialmast
 
 \section{Structure}{
 
-While it is not usually usefull to query them, an \code{edc_database} object is a named list containing:
+While it is not usually useful to query them, an \code{edc_database} object is a named list containing:
 \itemize{
 \item all the datasets from the source files
 \item \code{datetime_extraction} and \code{date_extraction} the inferred date of data extraction

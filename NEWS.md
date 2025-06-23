@@ -23,7 +23,7 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 -   New argument `lastnews_table(show_delta=TRUE)`, which computes the difference between the last `prefer` date and the actual last date (#81)
     -   Other improvements: allow regex in `except` & `prefer` (with `regex=TRUE`), improved warning message, and allow saving warnings in a csv file (#78)
 -   New argument `edc_data_warn(envir)`, the environment to evaluate `message` in.
--   New argument `edc_swimmerplot(include)`, to subset the swimmerplot on significant variables only.
+-   New argument `edc_swimmerplot(include)`, to subset the swimmer plot on significant variables only.
 -   New argument `subdirectories` to all reading functions (`read_trialmaster()`, `read_all_xpt()`, `read_all_sas()`, and `read_all_csv()`), to control whether to read sub-directories. Note that until now, those subdirectories were read and could overwrite root files.
 -   Fixed labels being sometimes duplicated.
 
@@ -41,11 +41,11 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 I don't think enough people are using this so that it is necessary to go through the deprecation process.
 
 -   `split_mixed_datasets` becomes `edc_split_mixed()`
--   Unexport internal functions: `build_lookup()`, `extend_lookup()`, `get_key_cols()`, `get_subjid_cols()`, `get_crfname_cols()`, `get_meta_cols()`, `load_as_list()`, `save_list()`
+-   Removed export of internal functions: `build_lookup()`, `extend_lookup()`, `get_key_cols()`, `get_subjid_cols()`, `get_crfname_cols()`, `get_meta_cols()`, `load_as_list()`, `save_list()`
 
 # EDCimport 0.5.2
 
--   Fixed a bug in `lastnews_table()` when subjid is not numeric
+-   Fixed a bug in `lastnews_table()` when SUBJID is not numeric
 -   Fixed a bug in `read_all_sas()` causing metadata (e.g. `date_extraction`) being converted to dataframes
 
 # EDCimport 0.5.1

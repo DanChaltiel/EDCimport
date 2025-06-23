@@ -174,7 +174,7 @@ assert_no_duplicate = function(df, by=NULL, id_col=get_subjid_cols()){
 #'  * `edc_data_warn()` to generate a standardized warning that can be forwarded to the datamanager.
 #'  * `edc_data_stop()` to abort the script if the problem is too serious.
 #'  
-#' Each time [edc_data_warn] is used, the warning is saved internally so that a summary of all your warnings can be retreived using [edc_data_warnings]. \cr The result can be saved into an Excel file using [save_edc_data_warnings()].
+#' Each time [edc_data_warn] is used, the warning is saved internally so that a summary of all your warnings can be retrieved using [edc_data_warnings]. \cr The result can be saved into an Excel file using [save_edc_data_warnings()].
 #'
 #' @param df the filtered dataframe
 #' @param message the message. Can use [cli formats](https://cli.r-lib.org/reference/inline-markup.html#classes). `df` can be accessed using the `.data` special keyword (see example)
@@ -269,7 +269,7 @@ edc_data_warnings = function(){
 
 #' Save EDCimport warning to Excel
 #' 
-#' Each time [edc_data_warn] is used, the warning is saved internally so that a summary can be retreived using [edc_data_warnings]. This summary can then be saved into a `.xlsx` file using `save_edc_data_warnings()`. 
+#' Each time [edc_data_warn] is used, the warning is saved internally so that a summary can be retrieved using [edc_data_warnings]. This summary can then be saved into a `.xlsx` file using `save_edc_data_warnings()`. 
 #'
 #' @param edc_warnings the result of [edc_data_warnings]
 #' @param path a `.xlsx` file path

@@ -27,7 +27,7 @@ However, EDCimport provides a few functions to improve the database before loadi
 
 The Subject ID column, usually `SUBJID` for CDISC data, is the primary key, shared by almost all your datasets.
 
-Using `edc_unify_subjid()`, you can harmonize this column across the whole database, so that it becomes a `factor`, consistant for all datasets. With `preprocess`, you can even customize it.
+Using `edc_unify_subjid()`, you can harmonize this column across the whole database, so that it becomes a `factor`, consistent for all datasets. With `preprocess`, you can even customize it.
 
 This is especially convenient for joining your data and checking for missing patients.
 
@@ -51,7 +51,7 @@ ae$subjid %>%
 ```
 
 ::: callout-note
-If your SUBJID column is numeric and `preprocess` is empty, SUBJID will be casted to numeric.
+If your SUBJID column is numeric and `preprocess` is empty, SUBJID will be cast to numeric.
 :::
 
 ## Clean dataset names

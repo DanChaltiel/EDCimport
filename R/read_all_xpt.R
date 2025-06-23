@@ -3,7 +3,7 @@
 #' 
 #' Read all `.xpt` files in a directory (unzipped TrialMaster archive). \cr
 #' If `7zip` is installed, you should probably rather use [read_trialmaster()] instead. \cr
-#' Formats (factors levels) can be applied from a `procformat.sas` SAS file, or from a format dictionnary. See the "Format file" section below. Column labels are read directly from the `.xpt` files.
+#' Formats (factors levels) can be applied from a `procformat.sas` SAS file, or from a format dictionary. See the "Format file" section below. Column labels are read directly from the `.xpt` files.
 #'
 #' @param path \[`character(1)`]\cr the path to the directory containing all `.xpt` files.
 #' @param format_file \[`character(1)`]\cr the path to the file that should be used to apply formats. See section "Format file" below. Use `NULL` to not apply formats.
@@ -12,7 +12,7 @@
 #' @param clean_names_fun `r lifecycle::badge("deprecated")` use [edc_clean_names()] instead.
 #' @param subdirectories \[`logical(1)`]\cr whether to read subdirectories
 #' @param verbose \[`numeric(1)`]\cr one of `c(0, 1, 2)`. The higher, the more information will be printed.
-#' @param directory deprecated in favour for `path`
+#' @param directory deprecated in favor for `path`
 #' @param key_columns deprecated
 #' 
 #' @section Format file: 

@@ -32,7 +32,7 @@ read_all_xpt(
 
 \item{clean_names_fun}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} use \code{\link[=edc_clean_names]{edc_clean_names()}} instead.}
 
-\item{directory}{deprecated in favour for \code{path}}
+\item{directory}{deprecated in favor for \code{path}}
 
 \item{key_columns}{deprecated}
 }
@@ -42,7 +42,7 @@ a list containing one dataframe for each \code{.xpt} file in the folder, the ext
 \description{
 Read all \code{.xpt} files in a directory (unzipped TrialMaster archive). \cr
 If \verb{7zip} is installed, you should probably rather use \code{\link[=read_trialmaster]{read_trialmaster()}} instead. \cr
-Formats (factors levels) can be applied from a \code{procformat.sas} SAS file, or from a format dictionnary. See the "Format file" section below. Column labels are read directly from the \code{.xpt} files.
+Formats (factors levels) can be applied from a \code{procformat.sas} SAS file, or from a format dictionary. See the "Format file" section below. Column labels are read directly from the \code{.xpt} files.
 }
 \section{Format file}{
 
