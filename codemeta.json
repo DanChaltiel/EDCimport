@@ -8,13 +8,19 @@
   "codeRepository": "https://github.com/DanChaltiel/EDCimport",
   "issueTracker": "https://github.com/DanChaltiel/EDCimport/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "0.5.2",
+  "version": "0.5.2.9070",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
     "url": "https://r-project.org"
   },
   "runtimePlatform": "R version 4.4.1 (2024-06-14 ucrt)",
+  "provider": {
+    "@id": "https://cran.r-project.org",
+    "@type": "Organization",
+    "name": "Comprehensive R Archive Network (CRAN)",
+    "url": "https://cran.r-project.org"
+  },
   "author": [
     {
       "@type": "Person",
@@ -34,6 +40,18 @@
     }
   ],
   "softwareSuggestions": [
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "bslib",
+      "name": "bslib",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=bslib"
+    },
     {
       "@type": "SoftwareApplication",
       "identifier": "callr",
@@ -57,6 +75,18 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=crosstable"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "DT",
+      "name": "DT",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=DT"
     },
     {
       "@type": "SoftwareApplication",
@@ -193,6 +223,18 @@
     },
     {
       "@type": "SoftwareApplication",
+      "identifier": "shiny",
+      "name": "shiny",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=shiny"
+    },
+    {
+      "@type": "SoftwareApplication",
       "identifier": "usethis",
       "name": "usethis",
       "provider": {
@@ -321,6 +363,18 @@
     },
     "9": {
       "@type": "SoftwareApplication",
+      "identifier": "lubridate",
+      "name": "lubridate",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=lubridate"
+    },
+    "10": {
+      "@type": "SoftwareApplication",
       "identifier": "purrr",
       "name": "purrr",
       "provider": {
@@ -331,7 +385,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=purrr"
     },
-    "10": {
+    "11": {
       "@type": "SoftwareApplication",
       "identifier": "readr",
       "name": "readr",
@@ -343,7 +397,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=readr"
     },
-    "11": {
+    "12": {
       "@type": "SoftwareApplication",
       "identifier": "rlang",
       "name": "rlang",
@@ -355,7 +409,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=rlang"
     },
-    "12": {
+    "13": {
       "@type": "SoftwareApplication",
       "identifier": "scales",
       "name": "scales",
@@ -367,7 +421,12 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=scales"
     },
-    "13": {
+    "14": {
+      "@type": "SoftwareApplication",
+      "identifier": "stats",
+      "name": "stats"
+    },
+    "15": {
       "@type": "SoftwareApplication",
       "identifier": "stringr",
       "name": "stringr",
@@ -379,7 +438,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=stringr"
     },
-    "14": {
+    "16": {
       "@type": "SoftwareApplication",
       "identifier": "tibble",
       "name": "tibble",
@@ -391,7 +450,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=tibble"
     },
-    "15": {
+    "17": {
       "@type": "SoftwareApplication",
       "identifier": "tidyr",
       "name": "tidyr",
@@ -403,7 +462,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=tidyr"
     },
-    "16": {
+    "18": {
       "@type": "SoftwareApplication",
       "identifier": "tidyselect",
       "name": "tidyselect",
@@ -415,12 +474,12 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=tidyselect"
     },
-    "17": {
+    "19": {
       "@type": "SoftwareApplication",
       "identifier": "utils",
       "name": "utils"
     },
-    "18": {
+    "20": {
       "@type": "SoftwareApplication",
       "identifier": "lifecycle",
       "name": "lifecycle",
@@ -434,7 +493,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "680.489KB",
+  "fileSize": "7766.313KB",
   "releaseNotes": "https://github.com/DanChaltiel/EDCimport/blob/master/NEWS.md",
   "readme": "https://github.com/DanChaltiel/EDCimport/blob/main/README.md",
   "contIntegration": "https://github.com/DanChaltiel/EDCimport/actions/workflows/check-standard.yaml",
