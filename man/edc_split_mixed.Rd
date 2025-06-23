@@ -15,7 +15,7 @@ edc_split_mixed(
 \arguments{
 \item{database}{an \link{edc_database} object, from \code{\link[=read_trialmaster]{read_trialmaster()}} or other EDCimport reading functions.}
 
-\item{datasets}{\if{html}{\out{<tidyselect>}} datasets to split in the database}
+\item{datasets}{<\link[dplyr:dplyr_tidy_select]{tidy-select}> datasets to split in the database}
 
 \item{...}{not used, ensure arguments are named}
 

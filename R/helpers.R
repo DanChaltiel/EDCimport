@@ -282,9 +282,9 @@ set_project_name = function(db, name){
 #' join logic.
 #'
 #' @param x,y Data frames to join
-#' @param by The key to join on. Defaults to `get_subjid_cols()`
+#' @param by The key to join on, as character. Defaults to `get_subjid_cols()`
 #' @param suffix The disambiguation suffix. Defaults to the actual name of the `y` dataset.
-#' @param cols The columns to select in `y` before joining.
+#' @param cols <[tidy-select][dplyr::dplyr_tidy_select]> The columns to select in `y` before joining.
 #' @param remove_dups Whether to remove columns in `y` that already exist in `x`.
 #'
 #' @returns a dataframe

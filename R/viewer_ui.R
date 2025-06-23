@@ -27,11 +27,11 @@ edc_viewer_ui = function(datasets, lookup){
     style = "width: 100%; display: flex; justify-content: space-between; align-items: center;",
     title, 
     div(
-      actionButton("btn_settings", icon=icon("sliders"), label=NULL) |> 
+      actionButton("btn_settings", icon=icon("sliders"), label=NULL) %>% 
         tooltip("Settings"),
-      actionButton("btn_search", icon=icon("search"), label=NULL) |> 
+      actionButton("btn_search", icon=icon("search"), label=NULL) %>% 
         tooltip("Search"),
-      actionButton("btn_db_summary", icon=icon("circle-question"), label=NULL) |> 
+      actionButton("btn_db_summary", icon=icon("circle-question"), label=NULL) %>% 
         tooltip("Database summary")
     )
   )

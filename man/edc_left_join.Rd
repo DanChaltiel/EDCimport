@@ -18,11 +18,11 @@ edc_left_join(
 \arguments{
 \item{x, y}{Data frames to join}
 
-\item{by}{The key to join on. Defaults to \code{get_subjid_cols()}}
+\item{by}{The key to join on, as character. Defaults to \code{get_subjid_cols()}}
 
 \item{suffix}{The disambiguation suffix. Defaults to the actual name of the \code{y} dataset.}
 
-\item{cols}{The columns to select in \code{y} before joining.}
+\item{cols}{<\link[dplyr:dplyr_tidy_select]{tidy-select}> The columns to select in \code{y} before joining.}
 
 \item{remove_dups}{Whether to remove columns in \code{y} that already exist in \code{x}.}
 }

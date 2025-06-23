@@ -2,7 +2,7 @@
 
 #' Identify if a dataframe has a long or a wide format
 #' 
-#' A dataset is either in the wide format or in the long format ([link](https://towardsdatascience.com/long-and-wide-formats-in-data-explained-e48d7c9a06cb)). 
+#' A dataset is either in the wide format or in the long format. 
 #' This function identifies the format of a dataframe with respect to a subject ID. 
 #' If a dataframe has some wide and long columns, it is considered "mixed".
 #' 
@@ -16,6 +16,7 @@
 #'
 #' @return a string value in `c("wide", "long", "mixed)`
 #' @export
+#' @seealso <https://tidyr.tidyverse.org/articles/pivot.html>
 #' 
 #' @examples
 #' db = edc_example()
@@ -70,7 +71,7 @@ table_format = function(df, id=get_subjid_cols(), ...,
 #' Split mixed tables, i.e. tables that hold both long data (N values per patient) and short data (one value per patient, duplicated on N lines), into one long table and one short table.
 #'
 #' @param database an [edc_database] object, from [read_trialmaster()] or other EDCimport reading functions.
-#' @param datasets <tidyselect> datasets to split in the database
+#' @param datasets <[tidy-select][dplyr::dplyr_tidy_select]> datasets to split in the database
 #' @param ignore_cols columns to ignore in long tables. Default to `getOption("edc_cols_crfname", "CRFNAME")`. Case-insensitive. Avoid splitting tables for useless columns.
 #' @param verbose whether to print informations about the process.
 #' @param ... not used, ensure arguments are named
