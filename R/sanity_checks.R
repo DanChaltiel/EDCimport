@@ -399,7 +399,7 @@ save_warn_list_item = function(item){
   #warn & skip if same message and data
   if(nrow(current)>0 && all(has_name(item, c("message", "data")))){
     m = semi_join(item, current, by=c("message", "data"))
-    if(nrow(m)>0) {
+    if(nrow(m)>0 && VERBOSE) {
       cli_warn("Duplicated `edc_data_warn()` entry: {.val {item$message}}", 
                class="save_warn_list_item_dupl_warning")
       return(NULL)
