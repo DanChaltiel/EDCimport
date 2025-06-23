@@ -2,7 +2,7 @@
 
 0 errors | 0 warnings | 0 notes
 
-* Checked using local check, GH Actions and `check_win_devel()`, as check_rhub() is down.
+* Checked using local check, GH Actions and `check_win_devel()`.
 
 ## Comments
 
