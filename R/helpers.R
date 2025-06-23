@@ -248,11 +248,31 @@ set_project_name = function(db, name){
       suffix = c("", paste0("_", as_label(caller_call(0)[[3]])))
     }
 
-    dplyr_join(x, y, by=by, suffix=suffix) %>%
-      copy_label_from(y) %>%
+    .safe_join(x, y, by=by, suffix=suffix, fun=dplyr_join) %>% 
+      copy_label_from(y) %>% 
       copy_label_from(x)
   }
 }
+
+#' @noRd
+#' @keywords internal
+#' @importFrom dplyr across all_of mutate
+.safe_join = function(x, y, by, suffix, fun){
+  j = tryCatch(fun(x, y, by=by, suffix=suffix),
+               error=function(e) e)
+  if(inherits(j, "dplyr_error_join_incompatible_type")){
+    f = function(d){
+      d %>% mutate(across(all_of(by), ~copy_label_from(as.character(.x), .x)))
+    }
+    x = f(x)
+    y = f(y)
+    j = fun(x, y, by=by, suffix=suffix)
+  } else if(inherits(j, "error")){
+    stop(j)
+  }
+  j
+}
+
 
 #' Join within the EDCimport framework
 #' 

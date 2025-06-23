@@ -87,11 +87,13 @@ test_that("edc_xxx_join() works", {
   b = db$enrol %>% 
     mutate(subjid=set_label(subjid, "Patient No"))
   
+  #default
   x = a %>% 
     edc_left_join(b)
   expect_true(all(c("subjid", "date1", "arm", "crfname_b", "crfstat_b") %in% names(x)))
   expect_equal(get_label(x$subjid), get_label(a$subjid))  
   
+  #labels are kept
   x = a %>% 
     remove_labels() %>% 
     edc_left_join(b, remove_dups=TRUE)
@@ -99,10 +101,12 @@ test_that("edc_xxx_join() works", {
   expect_false("crfstat_b" %in% names(x))
   expect_equal(get_label(x$subjid), get_label(b$subjid))  
   
+  #column subset
   x = a %>% 
     edc_left_join(b, cols=arm)
   expect_false("enrol_date" %in% names(x))
   
+  #column renaming
   x = a %>% 
     edc_left_join(b, cols=c(treatment=arm))
   expect_true("treatment" %in% names(x))
@@ -115,6 +119,14 @@ test_that("edc_xxx_join() works", {
     left_join(df, df, by="rowname"),
     edc_left_join(df, df, by="rowname", suffix=c(".x", ".y"))
   )
+  
+  #cast to character in case of incompatible types
+  a2 = mutate(a, subjid=factor(subjid)) %>% copy_label_from(a)
+  x = a2 %>% 
+    edc_left_join(b)
+  expect_true(all(c("subjid", "date1", "arm", "crfname_b", "crfstat_b") %in% names(x)))
+  expect_equal(get_label(x$subjid), get_label(a2$subjid)) 
+  
 })
 
 
