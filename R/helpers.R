@@ -231,21 +231,22 @@ set_project_name = function(db, name){
   
   function(x, y, by=NULL, suffix=NULL, cols=everything(), remove_dups=FALSE){
     subjid_col = get_subjid_cols() %>% intersect(names(x)) %>% intersect(names(y))
+    if(is.null(by)) by = subjid_col
+    if(is.null(suffix)){
+      suffix = c("", paste0("_", as_label(caller_call(0)[[3]])))
+    }
+    
     if(length(subjid_col)==0 && is.null(by)){
       cli_abort(c("Could not find a common primary key for {.arg x} and {.arg y}",
                   i="Primary key in current database: {.val {get_subjid_cols()}}"),
                 class="edc_subjid_not_found")
     }
-    y = y %>% select(any_of(subjid_col), !!enquo(cols))
+    y = y %>% select(any_of(by), !!enquo(cols))
     if(isTRUE(remove_dups)){
       common_col = intersect(names(x), names(y)) %>% 
-        setdiff(subjid_col) %>% 
+        setdiff(by) %>% 
         keep(~setequal(x[[.x]], y[[.x]]))
       y = y %>% select(-all_of(common_col))
-    }
-    if(is.null(by)) by = subjid_col
-    if(is.null(suffix)){
-      suffix = c("", paste0("_", as_label(caller_call(0)[[3]])))
     }
 
     .safe_join(x, y, by=by, suffix=suffix, fun=dplyr_join) %>% 
