@@ -37,6 +37,7 @@
 # Local or machine-specific files
 ^.*local.*$
 ^.*trialmaster.*\.rds$
+^vignettes/edc_viewer\.webp$
 
 # Temporary or backup files
 .*~$

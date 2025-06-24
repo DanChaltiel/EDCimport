@@ -78,4 +78,8 @@ load_database(db)
 edc_viewer()
 ```
 
-![](edc_viewer.webp)
+```{r, echo=FALSE, results='asis'}
+if (file.exists("edc_viewer.webp")) {
+  cat('![](edc_viewer.webp)')
+}
+```
