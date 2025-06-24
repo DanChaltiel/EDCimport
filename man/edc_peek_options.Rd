@@ -2,7 +2,7 @@
 % Please edit documentation in R/options.R
 \name{edc_peek_options}
 \alias{edc_peek_options}
-\title{See which \code{EDCimport} option is currently set.}
+\title{See which \code{EDCimport} option is currently set}
 \usage{
 edc_peek_options(keep_null = FALSE)
 }
@@ -13,5 +13,5 @@ edc_peek_options(keep_null = FALSE)
 A named list of EDCimport options
 }
 \description{
-See which \code{EDCimport} option is currently set.
+See which \code{EDCimport} option is currently set
 }

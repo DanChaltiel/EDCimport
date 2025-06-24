@@ -2,7 +2,7 @@
 % Please edit documentation in R/options.R
 \name{edc_reset_options}
 \alias{edc_reset_options}
-\title{Reset all \code{EDCimport} options.}
+\title{Reset all \code{EDCimport} options}
 \usage{
 edc_reset_options(
   except = c("edc_lookup", "trialmaster_pw", "path_7zip"),
@@ -18,5 +18,5 @@ edc_reset_options(
 Nothing, called for its side effects
 }
 \description{
-Reset all \code{EDCimport} options.
+Reset all \code{EDCimport} options
 }

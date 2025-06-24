@@ -56,7 +56,7 @@ edc_options = function(
 }
 
 
-#' See which `EDCimport` option is currently set.
+#' See which `EDCimport` option is currently set
 #'
 #' @param keep_null set to TRUE to get a list
 #'
@@ -71,7 +71,7 @@ edc_peek_options = function(keep_null=FALSE){
   rtn
 }
 
-#' Reset all `EDCimport` options.
+#' Reset all `EDCimport` options
 #'
 #' @param except options that are not reset by default
 #' @param quiet set to `TRUE` to remove the message.
