@@ -1,26 +1,26 @@
 
-#test files
+# Development and debug scripts
 dev-*.R
 debug*.R
 todo*
-DEV\.R
+DEV.R
 
-*.rds
+# Data files and caches
+trialmaster*.rds
+*quicktest*
+*cache*
+*nogit*
+*local*
 
+# R session and project files
 .RData
 .Rproj.user
 .Rhistory
 .Rprofile
 
-
-docs
-inst/doc
-/doc/
-/Meta/
-
-
-*quicktest*
-*cache*
-*nogit*
-*local*
-**/.quarto/
+# Documentation and metadata folders
+Meta/
+doc/
+docs/
+inst/doc/
+.quarto/
