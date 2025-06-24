@@ -1,42 +1,42 @@
-.git
-.git/*
-man/figures/*
-examples/*
+# Project/session files
+^.*\.Rproj$
+^\.Rproj\.user$
+^\.RData$
+^\.Rhistory$
+^\.git$
+^\.github$
 
+# Metadata and CRAN submission files
+^cran-comments\.md$
+^CRAN-RELEASE$
+^CRAN-SUBMISSION$
+^codemeta\.json$
+^Meta$
 
-TODO\.R
-DEV\.R
+# Documentation and pkgdown
+^_pkgdown\.yml$
+^pkgdown$
+^docs?$
+^doc$
+
+# Vignettes build output
+^vignettes/.*_files$
+^vignettes/articles$
+^vignettes/\.quarto$
+
+# Development scripts
+^TODO\.R$
+^DEV\.R$
 ^R/todo_.*\.R$
 ^R/dev-.*\.R$
-^R/knit_print_debug\.R$
 
-.*~.*
-
-[.]rds$
-
-^README.Rmd$
-^\.lintr$
-^.*\.Rproj$
-^.*\.RData$
-^\.github$
-^\.Rproj\.user$
-^\.travis\.yml$
-^_pkgdown\.yml$
-^codecov\.yml$
-^cran-comments\.md$
-^doc$
-^Meta$
-^data-raw$
-^docs$
-^pkgdown$
-^CRAN-RELEASE$
-^codemeta\.json$
-^CRAN-SUBMISSION$
-
-
+# Test files to exclude
 ^tests/testthat/test-utils_pw\.R$
 ^tests/testthat/CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16_pw\.zip$
 
-^vignettes/*_files$
-^vignettes/articles$
-^vignettes/\.quarto$
+# Local or machine-specific files
+^.*local.*$
+^.*trialmaster.*\.rds$
+
+# Temporary or backup files
+.*~$
