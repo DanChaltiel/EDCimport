@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9069</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9070</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,7 +41,7 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.6.0" id="edcimport-060-dev">EDCimport 0.6.0 (dev)<a class="anchor" aria-label="anchor" href="#edcimport-060-dev"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.6.0" id="edcimport-060">EDCimport 0.6.0<a class="anchor" aria-label="anchor" href="#edcimport-060"></a></h2>
 <div class="section level4">
 <h4 id="documentation-0-6-0">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-6-0"></a></h4>
 <ul><li>New vignettes: <code><a href="../articles/reading.html">vignette("reading")</a></code>, <code><a href="../articles/postprocessing.html">vignette("postprocessing")</a></code>, <code><a href="../articles/checking.html">vignette("checking")</a></code>, <code><a href="../articles/visualizing.html">vignette("visualizing")</a></code>, and <code><a href="../articles/utils.html">vignette("utils")</a></code>
@@ -63,7 +63,7 @@
 <ul><li>Other improvements: allow regex in <code>except</code> &amp; <code>prefer</code> (with <code>regex=TRUE</code>), improved warning message, and allow saving warnings in a csv file (<a href="https://github.com/DanChaltiel/EDCimport/issues/78" class="external-link">#78</a>)</li>
 </ul></li>
 <li>New argument <code>edc_data_warn(envir)</code>, the environment to evaluate <code>message</code> in.</li>
-<li>New argument <code>edc_swimmerplot(include)</code>, to subset the swimmerplot on significant variables only.</li>
+<li>New argument <code>edc_swimmerplot(include)</code>, to subset the swimmer plot on significant variables only.</li>
 <li>New argument <code>subdirectories</code> to all reading functions (<code><a href="../reference/read_trialmaster.html">read_trialmaster()</a></code>, <code><a href="../reference/read_all_xpt.html">read_all_xpt()</a></code>, <code><a href="../reference/read_all_sas.html">read_all_sas()</a></code>, and <code><a href="../reference/read_all_csv.html">read_all_csv()</a></code>), to control whether to read sub-directories. Note that until now, those subdirectories were read and could overwrite root files.</li>
 <li>Fixed labels being sometimes duplicated.</li>
 </ul></div>
@@ -87,13 +87,13 @@
 <ul><li>
 <code>split_mixed_datasets</code> becomes <code><a href="../reference/edc_split_mixed.html">edc_split_mixed()</a></code>
 </li>
-<li>Unexport internal functions: <code>build_lookup()</code>, <code>extend_lookup()</code>, <code>get_key_cols()</code>, <code><a href="../reference/get_subjid_cols.html">get_subjid_cols()</a></code>, <code>get_crfname_cols()</code>, <code>get_meta_cols()</code>, <code>load_as_list()</code>, <code>save_list()</code>
+<li>Removed export of internal functions: <code>build_lookup()</code>, <code>extend_lookup()</code>, <code>get_key_cols()</code>, <code><a href="../reference/get_subjid_cols.html">get_subjid_cols()</a></code>, <code>get_crfname_cols()</code>, <code>get_meta_cols()</code>, <code>load_as_list()</code>, <code>save_list()</code>
 </li>
 </ul></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.5.2" id="edcimport-052">EDCimport 0.5.2<a class="anchor" aria-label="anchor" href="#edcimport-052"></a></h2><p class="text-muted">CRAN release: 2024-11-14</p>
-<ul><li>Fixed a bug in <code><a href="../reference/lastnews_table.html">lastnews_table()</a></code> when subjid is not numeric</li>
+<ul><li>Fixed a bug in <code><a href="../reference/lastnews_table.html">lastnews_table()</a></code> when SUBJID is not numeric</li>
 <li>Fixed a bug in <code><a href="../reference/read_all_sas.html">read_all_sas()</a></code> causing metadata (e.g. <code>date_extraction</code>) being converted to dataframes</li>
 </ul></div>
     <div class="section level2">

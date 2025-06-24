@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9069</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9070</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -91,7 +91,7 @@
 </section><section class="level2"><h2 id="harmonize-subject-id-across-the-database">Harmonize Subject ID across the database<a class="anchor" aria-label="anchor" href="#harmonize-subject-id-across-the-database"></a>
 </h2>
 <p>The Subject ID column, usually <code>SUBJID</code> for CDISC data, is the primary key, shared by almost all your datasets.</p>
-<p>Using <code><a href="../reference/edc_unify_subjid.html">edc_unify_subjid()</a></code>, you can harmonize this column across the whole database, so that it becomes a <code>factor</code>, consistant for all datasets. With <code>preprocess</code>, you can even customize it.</p>
+<p>Using <code><a href="../reference/edc_unify_subjid.html">edc_unify_subjid()</a></code>, you can harmonize this column across the whole database, so that it becomes a <code>factor</code>, consistent for all datasets. With <code>preprocess</code>, you can even customize it.</p>
 <p>This is especially convenient for joining your data and checking for missing patients.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
@@ -124,7 +124,7 @@
 <div>
 <blockquote>
 <p><strong>Note</strong></p>
-<p>If your SUBJID column is numeric and <code>preprocess</code> is empty, SUBJID will be casted to numeric.</p>
+<p>If your SUBJID column is numeric and <code>preprocess</code> is empty, SUBJID will be cast to numeric.</p>
 </blockquote>
 </div>
 </section><section class="level2"><h2 id="clean-dataset-names">Clean dataset names<a class="anchor" aria-label="anchor" href="#clean-dataset-names"></a>

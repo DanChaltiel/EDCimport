@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9069</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2.9070</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -193,7 +193,7 @@
 <p>Currently, <code><a href="../reference/edc_example.html">edc_example()</a></code> does not include an explicit table for this scenario, so let’s consider the following example:</p>
 <ul>
 <li><p><code>data3$date10</code> is your last visit date in your followup dataset. It is the origin you should <code>prefer</code> if there is a tie and the reference to identify any inconsistency.</p></li>
-<li><p><code>data1</code> is a dataset of protocolary dates, such as planned medical visits. You should ignore all columns in this dataset, as they do not pertain to the patient’s last known</p></li>
+<li><p><code>data1</code> is a dataset containing scheduled protocol dates, such as planned medical visits. You should ignore all columns in this dataset, as they do not pertain to the patient’s last known</p></li>
 <li><p><code>date8</code> and <code>date9</code> are dates when treatments were administered. They imply that the patient was alive at that time. If a date is after <code>date10</code>, it means that the survival time is underestimated.</p></li>
 </ul>
 <p>Here is how to parameterize <code><a href="../reference/lastnews_table.html">lastnews_table()</a></code> to fit this scenario:</p>
