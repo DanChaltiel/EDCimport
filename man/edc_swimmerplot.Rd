@@ -6,14 +6,15 @@
 \usage{
 edc_swimmerplot(
   ...,
-  group = NULL,
-  origin = NULL,
   include = NULL,
   exclude = NULL,
+  group = NULL,
+  origin = NULL,
   id_subset = "all",
   id_sort = FALSE,
   id_cols = get_subjid_cols(),
   time_unit = c("days", "weeks", "months", "years"),
+  origin_fun = "min",
   aes_color = c("variable", "label"),
   plotly = getOption("edc_plotly", FALSE),
   id = "deprecated",
@@ -24,11 +25,11 @@ edc_swimmerplot(
 \arguments{
 \item{...}{not used}
 
+\item{include, exclude}{a character vector of variables to exclude/include, in the form \code{dataset$column}. Can be a regex (apart from \code{$} symbols that will be automatically escaped). Case-insensitive.}
+
 \item{group}{a grouping variable, given as "dataset$column".}
 
 \item{origin}{a variable to consider as time 0, given as "dataset$column".}
-
-\item{include, exclude}{a character vector of variables to exclude/include, in the form \code{dataset$column}. Can be a regex (apart from \code{$} symbols that will be automatically escaped). Case-insensitive.}
 
 \item{id_subset}{the subjects to include in the plot.}
 
@@ -37,6 +38,8 @@ edc_swimmerplot(
 \item{id_cols}{the subject identifiers columns. Identifiers be coerced as numeric if possible. See \link{get_subjid_cols} if needed.}
 
 \item{time_unit}{if \code{origin!=NULL}, the unit to measure time. One of \code{c("days", "weeks", "months", "years")}.}
+
+\item{origin_fun}{function to summarise the \code{origin} date at the id level.}
 
 \item{aes_color}{either \code{variable} ("\{dataset\} - \{column\}") or \code{label} (the column label).}
 

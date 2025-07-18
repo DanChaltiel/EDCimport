@@ -16,6 +16,7 @@
 #' @param id_sort whether to sort subjects by date (or time).
 #' @param id_cols the subject identifiers columns. Identifiers be coerced as numeric if possible. See [get_subjid_cols] if needed.
 #' @param time_unit if `origin!=NULL`, the unit to measure time. One of `c("days", "weeks", "months", "years")`.
+#' @param origin_fun function to summarise the `origin` date at the id level.
 #' @param aes_color either `variable` ("\{dataset\} - \{column\}") or `label` (the column label).
 #' @param plotly whether to use `{plotly}` to get an interactive plot.
 #' @param id deprecated
@@ -51,13 +52,14 @@
 #' @importFrom rlang check_dots_empty check_installed
 #' @importFrom stringr str_ends str_remove
 edc_swimmerplot = function(..., 
-                           group=NULL, origin=NULL, 
                            include=NULL,
                            exclude=NULL,
+                           group=NULL, origin=NULL, 
                            id_subset="all",
                            id_sort=FALSE, 
                            id_cols=get_subjid_cols(), 
                            time_unit=c("days", "weeks", "months", "years"),
+                           origin_fun="min",
                            aes_color=c("variable", "label"), 
                            plotly=getOption("edc_plotly", FALSE),
                            id="deprecated",
@@ -107,8 +109,11 @@ edc_swimmerplot = function(...,
   aes_x = "date"
   vline = NULL
   if(!is.null(origin)){
+    if(origin_fun=="min") origin_fun = min_narm
+    else if(origin_fun=="max") origin_fun = max_narm
     dat_origin = parse_var(origin, id_cols, parent) %>% 
-      mutate(id=as.character(id))
+      mutate(id=as.character(id)) %>% 
+      summarise(origin=origin_fun(origin), .by=id)
     values = c(days=1, weeks=7, months=365.24/12, years=365.24)
     if(!inherits(dat_origin$origin, c("Date", "POSIXt"))){
       cli_abort("Column {.arg origin} ({.val {origin}}) should be of class
