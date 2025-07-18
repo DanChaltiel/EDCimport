@@ -17,7 +17,7 @@
 #' @param id_sort whether to sort subjects by date (or time).
 #' @param id_cols the subject identifiers columns. Identifiers be coerced as numeric if possible. See [get_subjid_cols] if needed.
 #' @param time_unit if `origin!=NULL`, the unit to measure time. One of `c("days", "weeks", "months", "years")`.
-#' @param origin_fun function to summarise the `origin` date at the id level.
+#' @param origin_fun function to summarise the `origin` date at the id level if needed. Should be named, or at least have a meaningful function name (see example "summarised origin".
 #' @param aes_color either `variable` ("\{dataset\} - \{column\}") or `label` (the column label).
 #' @param plotly whether to use `{plotly}` to get an interactive plot.
 #' @param id deprecated
@@ -34,11 +34,20 @@
 #' load_database(db)
 #' edc_swimmerplot(id_lim=c(5,45))
 #' 
+#' #fixed origin
 #' edc_swimmerplot(origin="enrol$enrol_date", time_unit="months", 
 #'                 include=c("data1", "data3"),
 #'                 exclude=c("DATA1$DATE2", "data3$date\\d\\d"), 
 #'                 id_sort=TRUE)
 #' 
+#' #summarised origin
+#' edc_swimmerplot(origin="data1$date2", time_unit="months", 
+#'                 origin_fun=c("average"=~mean(.x, na.rm=TRUE)),
+#'                 include=c("data1", "data3"),
+#'                 exclude=c("DATA1$DATE2", "data3$date\\d\\d"), 
+#'                 id_sort=TRUE)
+#' 
+#' #id_subset
 #' edc_swimmerplot(group="enrol$arm", id_subset=1:10, aes_color="label")
 #' 
 #' \dontrun{
@@ -114,23 +123,29 @@ edc_swimmerplot = function(...,
   aes_x = "date"
   vline = NULL
   if(!is.null(origin)){
-    if(origin_fun=="min") origin_fun = min_narm
-    else if(origin_fun=="max") origin_fun = max_narm
+    origin_fun = .parse_origin_fun(origin_fun)
     dat_origin = parse_var(origin, id_cols, parent) %>% 
       mutate(id=as.character(id)) %>% 
-      summarise(origin=origin_fun(origin), .by=id)
+      summarise(n=n_distinct(origin),
+                origin=origin_fun$fun(origin), 
+                .by=id)
+    
     values = c(days=1, weeks=7, months=365.24/12, years=365.24)
     if(!inherits(dat_origin$origin, c("Date", "POSIXt"))){
       cli_abort("Column {.arg origin} ({.val {origin}}) should be of class
                 {.cls Date} or {.cls POSIXt}, not {.cls {class(dat_origin$origin)}}.", 
                 class="edc_swimplot_origin_notdate")
     }
+    
     dat = dat %>%
       left_join(dat_origin, by="id") %>% 
       mutate(
         time = as.double(date-origin, units="days") / values[time_unit]
       )
     x_label = glue("Date difference from `{origin}` (in {time_unit})")
+    if(max(dat_origin$n)>1){
+      x_label = glue("Date difference from `{origin_fun$name}({origin})` (in {time_unit})")
+    }
     tooltip = c(tooltip, "date")
     aes_x = "time"
     vline = geom_vline(xintercept=0)
@@ -270,6 +285,16 @@ edc_swimmerplot = function(...,
   chk = suppressWarnings(rtn$palette(n_levels))
   if(any(is.na(chk))) rtn = ggplot2::scale_colour_hue()
   rtn
+}
+
+#' @importFrom tibble lst
+.parse_origin_fun = function(origin_fun){
+  if(identical(origin_fun, "min")) origin_fun = c(min=min_narm)
+  else if(identical(origin_fun, "max")) origin_fun = c(max=max_narm)
+  if(!is.list(origin_fun)) origin_fun = lst(origin_fun)
+  if(length(origin_fun)!=1) cli_abort("{.arg origin_fun} should be of length {.val 1}.")
+  origin_fun = map(origin_fun, as_function)
+  list(name=names(origin_fun), fun=unname(origin_fun[[1]]))
 }
 
 #' @importFrom cli cli_abort
