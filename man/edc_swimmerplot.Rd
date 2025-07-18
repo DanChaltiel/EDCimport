@@ -10,6 +10,7 @@ edc_swimmerplot(
   exclude = NULL,
   group = NULL,
   origin = NULL,
+  data_list = get_datasets(),
   id_subset = "all",
   id_sort = FALSE,
   id_cols = get_subjid_cols(),
@@ -30,6 +31,8 @@ edc_swimmerplot(
 \item{group}{a grouping variable, given as "dataset$column".}
 
 \item{origin}{a variable to consider as time 0, given as "dataset$column".}
+
+\item{data_list}{a named list of data.frames to get the dates from. Default to \link{get_datasets}, which retrieve all raw datasets.}
 
 \item{id_subset}{the subjects to include in the plot.}
 

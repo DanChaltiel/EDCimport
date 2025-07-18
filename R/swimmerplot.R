@@ -12,6 +12,7 @@
 #' @param group a grouping variable, given as "dataset$column".
 #' @param origin a variable to consider as time 0, given as "dataset$column".
 #' @param include,exclude a character vector of variables to exclude/include, in the form `dataset$column`. Can be a regex (apart from `$` symbols that will be automatically escaped). Case-insensitive.
+#' @param data_list a named list of data.frames to get the dates from. Default to [get_datasets], which retrieve all raw datasets.
 #' @param id_subset the subjects to include in the plot.
 #' @param id_sort whether to sort subjects by date (or time).
 #' @param id_cols the subject identifiers columns. Identifiers be coerced as numeric if possible. See [get_subjid_cols] if needed.
@@ -55,6 +56,7 @@ edc_swimmerplot = function(...,
                            include=NULL,
                            exclude=NULL,
                            group=NULL, origin=NULL, 
+                           data_list=get_datasets(),
                            id_subset="all",
                            id_sort=FALSE, 
                            id_cols=get_subjid_cols(), 
@@ -66,6 +68,9 @@ edc_swimmerplot = function(...,
                            id_lim="deprecated",
                            .lookup="deprecated"){
   check_dots_empty()
+  assert_class(data_list, "list")
+  map(data_list, ~assert_class(.x, "data.frame"))
+  
   aes_color = match.arg(aes_color)
   aes_label = if(aes_color=="variable") "label" else "variable"
   time_unit = match.arg(time_unit[1], c(time_unit, str_remove(time_unit, "s$")))
@@ -76,7 +81,7 @@ edc_swimmerplot = function(...,
     id_cols = id
   }
   
-  dat = get_datasets(envir=parent) %>% 
+  dat = data_list %>% 
     .discard_if_no_id(id=id_cols) %>% 
     .select_dates(id=id_cols) %>% 
     .pivot_dates(id=id_cols) %>% 
