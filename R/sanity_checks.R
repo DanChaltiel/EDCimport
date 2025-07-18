@@ -91,14 +91,15 @@ edc_warn_patient_diffs = function(x, ref=getOption("edc_subjid_ref"),
 #'
 #' @return nothing
 #' @export
+#' @importFrom cli cli_warn
 #'
 #' @examples
 #' db = edc_example()
 #' load_database(db)
 #' edc_warn_extraction_date()
-#' @importFrom cli cli_warn
 edc_warn_extraction_date = function(max_days=30){
-  a = round(as.numeric(Sys.time() - datetime_extraction))
+  a = difftime(Sys.time(), datetime_extraction, units="days") %>% 
+    round(1)
   if(a>max_days){
     cli_warn("{col_red('- OUTDATED - ')}Data extraction is {col_red(a)} days old.")
   }
