@@ -342,7 +342,7 @@ parse_var = function(input, id, env){
 #' Save a plotly to an HTML file
 #'
 #' @param p a plot object (`plotly` or `ggplot`)
-#' @param file a file path to save the HTML file
+#' @param file a file path to save the HTML file. Can use the `glue` syntax to add variables.
 #' @param ... passed on to [htmlwidgets::saveWidget]
 #'
 #' @export
@@ -353,10 +353,12 @@ parse_var = function(input, id, env){
 #' db = edc_example()
 #' load_database(db)
 #' p = edc_swimmerplot(id_lim=c(5,45))
-#' save_plotly(p, "graph/swimplots/edc_swimmerplot.html", title="My Swimmerplot")
+#' save_plotly(p, "graph/swimplots_{date_extraction}/edc_swimmerplot.html", 
+#'             title="My Swimmerplot")
 #' }
 #' @importFrom cli cli_abort
 #' @importFrom fs dir_create path_dir
+#' @importFrom glue glue
 #' @importFrom rlang check_installed
 #' @importFrom stringr str_ends
 save_plotly = function(p, file, ...){
@@ -364,6 +366,7 @@ save_plotly = function(p, file, ...){
   check_installed("htmlwidgets", reason="for `save_plotly()` to work.")
   if(inherits(p, "ggplot")) p = plotly::ggplotly(p)
   if(!str_ends(file, "\\.html")) cli_abort('File name should end in ".html"')
+  file = glue(file, .envir=parent.frame())
   dir_create(path_dir(file), recurse=TRUE)
   wd = setwd(path_dir(file))
   on.exit(setwd(wd))

@@ -9,7 +9,7 @@ save_plotly(p, file, ...)
 \arguments{
 \item{p}{a plot object (\code{plotly} or \code{ggplot})}
 
-\item{file}{a file path to save the HTML file}
+\item{file}{a file path to save the HTML file. Can use the \code{glue} syntax to add variables.}
 
 \item{...}{passed on to \link[htmlwidgets:saveWidget]{htmlwidgets::saveWidget}}
 }
@@ -24,6 +24,7 @@ Save a plotly to an HTML file
 db = edc_example()
 load_database(db)
 p = edc_swimmerplot(id_lim=c(5,45))
-save_plotly(p, "graph/swimplots/edc_swimmerplot.html", title="My Swimmerplot")
+save_plotly(p, "graph/swimplots_{date_extraction}/edc_swimmerplot.html", 
+            title="My Swimmerplot")
 }
 }
