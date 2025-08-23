@@ -427,7 +427,7 @@ reset_manual_correction = function(){
 #' @export
 #' @importFrom cli cli_abort cli_warn
 #' @importFrom purrr keep
-get_datasets = function(lookup=edc_lookup(), envir=parent.frame()){
+get_datasets = function(lookup=edc_lookup(), envir=edc_data_env()){
   if(is.null(lookup)){
     cli_abort("lookup cannot be NULL, did you forgot to import your database?")
   }
@@ -555,6 +555,11 @@ get_crfname_cols = function(lookup=edc_lookup()){
   rtn %>% na.omit() %>% unique()
 }
 
+#' @noRd
+#' @keywords internal
+edc_data_env = function(){
+  edcimport_env$data_env
+}
 
 
 #' Get columns shared by most datasets
@@ -675,6 +680,7 @@ load_database = function(db, env=parent.frame(), remove=TRUE){
               class="load_database_unnamed_error")
   }
   list2env(db, env)
+  edcimport_env$data_env = env
   
   if(remove) {
     x_name = caller_arg(db)

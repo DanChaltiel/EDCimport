@@ -26,6 +26,7 @@ tibble::tibble
 edcimport_env = rlang::new_environment()
 edcimport_env$warn_list = list()
 edcimport_env$lookup = NULL
+edcimport_env$data_env = NULL
 
 
 globals = c(
