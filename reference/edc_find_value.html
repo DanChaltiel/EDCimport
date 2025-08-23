@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -89,17 +89,32 @@
 <span class="r-in"><span><span class="fu"><a href="load_database.html">load_database</a></span><span class="op">(</span><span class="va">db</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">edc_find_value</span><span class="op">(</span><span class="st">"respi"</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Could not find 8/8 datasets from the lookup, did you forget to call</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> `load_database()` on your import?</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #0000BB;">"long_pure"</span>, <span style="color: #0000BB;">"data1"</span>, <span style="color: #0000BB;">"long_mixed"</span>, <span style="color: #0000BB;">"data2"</span>, <span style="color: #0000BB;">"data3"</span>, <span style="color: #0000BB;">"enrol"</span>, <span style="color: #0000BB;">"short"</span>, and</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB;">"ae"</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> data frame with 0 columns and 0 rows</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 8 × 5</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   subjid dataset column column_label value                                      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> 10     ae      aesoc  AE SOC       Respiratory, thoracic and mediastinal diso…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> 13     ae      aesoc  AE SOC       Respiratory, thoracic and mediastinal diso…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> 13     ae      aesoc  AE SOC       Respiratory, thoracic and mediastinal diso…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> 17     ae      aesoc  AE SOC       Respiratory, thoracic and mediastinal diso…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> 22     ae      aesoc  AE SOC       Respiratory, thoracic and mediastinal diso…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> 29     ae      aesoc  AE SOC       Respiratory, thoracic and mediastinal diso…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> 44     ae      aesoc  AE SOC       Respiratory, thoracic and mediastinal diso…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> 47     ae      aesoc  AE SOC       Respiratory, thoracic and mediastinal diso…</span>
 <span class="r-in"><span><span class="fu">edc_find_value</span><span class="op">(</span><span class="fl">2010</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Could not find 8/8 datasets from the lookup, did you forget to call</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> `load_database()` on your import?</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #0000BB;">"long_pure"</span>, <span style="color: #0000BB;">"data1"</span>, <span style="color: #0000BB;">"long_mixed"</span>, <span style="color: #0000BB;">"data2"</span>, <span style="color: #0000BB;">"data3"</span>, <span style="color: #0000BB;">"enrol"</span>, <span style="color: #0000BB;">"short"</span>, and</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB;">"ae"</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> data frame with 0 columns and 0 rows</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 700 × 5</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    subjid dataset column column_label    value     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> 1      data1   date1  Date at visit 1 2010-04-26</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> 1      data1   date1  Date at visit 1 2010-04-26</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> 2      data1   date1  Date at visit 1 2010-04-15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> 2      data1   date1  Date at visit 1 2010-04-15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> 3      data1   date1  Date at visit 1 2010-05-08</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> 3      data1   date1  Date at visit 1 2010-05-08</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> 4      data1   date1  Date at visit 1 2010-04-29</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> 4      data1   date1  Date at visit 1 2010-04-29</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> 5      data1   date1  Date at visit 1 2010-04-23</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> 5      data1   date1  Date at visit 1 2010-04-23</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 690 more rows</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">edc_find_column</span><span class="op">(</span><span class="st">"ad"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 4</span></span>
