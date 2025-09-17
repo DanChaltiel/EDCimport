@@ -214,6 +214,15 @@ set_project_name = function(db, name){
   db
 }
 
+#' @rdname set_project_name
+#' @returns the name of the project
+#' @export
+get_project_name = function(lookup=edc_lookup()){
+  if(is.null(lookup)) return(NULL)
+  attr(lookup, "project_name")
+}
+
+
 
 # Joins ---------------------------------------------------------------------------------------
 
