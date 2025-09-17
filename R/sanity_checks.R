@@ -273,7 +273,7 @@ edc_data_warnings = function(){
 #' Each time [edc_data_warn] is used, the warning is saved internally so that a summary can be retrieved using [edc_data_warnings]. This summary can then be saved into a `.xlsx` file using `save_edc_data_warnings()`. 
 #'
 #' @param edc_warnings the result of [edc_data_warnings]
-#' @param output_file,output_dir path to a `.xlsx` file
+#' @param output_file,output_dir path to a `.xlsx` file. Use special values `{proj_name}` and `{date_extraction}`.
 #' @param overwrite If `TRUE`, overwrite any existing file.
 #' @param open If `TRUE`, overwrite any existing file.
 #' @param path deprecated
@@ -331,8 +331,8 @@ save_edc_data_warnings = function(edc_warnings=edc_data_warnings(),
 #' @importFrom tibble tibble
 #' @importFrom utils write.csv2
 .edc_data_condition = function(tbl, message, issue_n, max_subjid, 
-                              csv_path, .envir, 
-                              col_subjid, fun){
+                               csv_path, .envir, 
+                               col_subjid, fun){
   if(is.character(csv_path)){
     assert(str_ends(csv_path, "\\.csv"), call=parent.frame())
     dir_create(dirname(csv_path))
