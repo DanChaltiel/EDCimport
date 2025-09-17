@@ -68,12 +68,12 @@
     Code
       edc_data_warnings()
     Output
-      # A tibble: 5 x 4
-        issue_n message               data              subjid    
-        <chr>   <chr>                 <list>            <list>    
-      1 01      Age should not be >50 <tibble [23 x 6]> <chr [23]>
-      2 02      Age should not be >30 <tibble [47 x 4]> <chr [47]>
-      3 03      Age should not be >20 <tibble [50 x 4]> <chr [2]> 
-      4 xx1     Age should not be >80 <tibble [0 x 3]>  <NULL>    
-      5 xx2     Age should not be >70 <tibble [2 x 3]>  <chr [2]> 
+      # A tibble: 5 x 5
+        issue_n message               data              type  subjid    
+        <chr>   <chr>                 <list>            <chr> <list>    
+      1 01      Age should not be >50 <tibble [23 x 6]> WARN  <chr [23]>
+      2 02      Age should not be >30 <tibble [47 x 4]> WARN  <chr [47]>
+      3 03      Age should not be >20 <tibble [50 x 4]> WARN  <chr [2]> 
+      4 xx1     Age should not be >80 <tibble [0 x 3]>  WARN  <NULL>    
+      5 xx2     Age should not be >70 <tibble [2 x 3]>  WARN  <chr [2]> 
 
