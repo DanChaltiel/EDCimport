@@ -275,7 +275,6 @@ edc_data_warnings = function(){
 #' @param edc_warnings the result of [edc_data_warnings]
 #' @param output_file,output_dir path to a `.xlsx` file. Use special values `{proj_name}` and `{date_extraction}`.
 #' @param overwrite If `TRUE`, overwrite any existing file.
-#' @param open If `TRUE`, overwrite any existing file.
 #' @param hide_resolved If `TRUE`, hide sheets with no data.
 #' @param include_stops If `TRUE`, also include STOP-type warnings.
 #' @param path deprecated
@@ -298,7 +297,6 @@ save_edc_data_warnings = function(edc_warnings=edc_data_warnings(),
   assert(path_ext(path)=="xlsx")
   dir_create(path_dir(path))
   
-  edc_warnings$issue_n %>% make.unique
   if(!isTRUE(include_stops)){
     edc_warnings = edc_warnings %>% 
       filter(type!="STOP")
