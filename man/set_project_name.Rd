@@ -5,7 +5,7 @@
 \alias{get_project_name}
 \title{Set the project name}
 \usage{
-set_project_name(db, name)
+set_project_name(db, name, lookup = edc_lookup())
 
 get_project_name(lookup = edc_lookup())
 }
@@ -13,6 +13,8 @@ get_project_name(lookup = edc_lookup())
 \item{db}{the \link{edc_database}}
 
 \item{name}{the project name}
+
+\item{lookup}{the lookup table}
 }
 \value{
 nothing
