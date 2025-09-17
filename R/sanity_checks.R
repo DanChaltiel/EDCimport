@@ -276,6 +276,7 @@ edc_data_warnings = function(){
 #' @param output_file,output_dir path to a `.xlsx` file. Use special values `{proj_name}` and `{date_extraction}`.
 #' @param overwrite If `TRUE`, overwrite any existing file.
 #' @param open If `TRUE`, overwrite any existing file.
+#' @param hide_resolved If `TRUE`, hide sheets with no data.
 #' @param path deprecated
 #'
 #' @returns a logical(1), whether the file could be written, invisibly 
@@ -285,8 +286,8 @@ edc_data_warnings = function(){
 save_edc_data_warnings = function(edc_warnings=edc_data_warnings(), 
                                   output_file="edc_data_warnings_{project}_{date_extraction}.xlsx",
                                   output_dir="output/check",
-                                  overwrite=TRUE, 
                                   open=FALSE, 
+                                  overwrite=TRUE, hide_resolved=TRUE, 
                                   path="deprecated"){
   check_installed("openxlsx", reason="for `save_edc_data_warnings()` to work.")
   assert_class(edc_warnings, "edc_warning_summary", null.ok=FALSE)
@@ -305,7 +306,8 @@ save_edc_data_warnings = function(edc_warnings=edc_data_warnings(),
     sheet = paste0("issue_", x$issue_n)
     data = x$data[[1]]
     color = if(nrow(data)==0) "green" else "red"
-    openxlsx::addWorksheet(wb, sheet, tabColour=color, gridLines=FALSE)
+    visible = !isTRUE(hide_resolved) || nrow(data)>0
+    openxlsx::addWorksheet(wb, sheet, tabColour=color, visible=visible, gridLines=FALSE)
     openxlsx::writeData(wb, sheet, tibble(date_extraction, ansi_strip(x$message)), colNames=FALSE)
     openxlsx::writeDataTable(wb, sheet, data, startRow=2)
   }
