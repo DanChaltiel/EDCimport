@@ -277,6 +277,7 @@ edc_data_warnings = function(){
 #' @param overwrite If `TRUE`, overwrite any existing file.
 #' @param open If `TRUE`, overwrite any existing file.
 #' @param hide_resolved If `TRUE`, hide sheets with no data.
+#' @param include_stops If `TRUE`, also include STOP-type warnings.
 #' @param path deprecated
 #'
 #' @returns a logical(1), whether the file could be written, invisibly 
@@ -287,7 +288,7 @@ save_edc_data_warnings = function(edc_warnings=edc_data_warnings(),
                                   output_file="edc_data_warnings_{project}_{date_extraction}.xlsx",
                                   output_dir="output/check",
                                   open=FALSE, 
-                                  overwrite=TRUE, hide_resolved=TRUE, 
+                                  overwrite=TRUE, hide_resolved=TRUE, include_stops=FALSE,
                                   path="deprecated"){
   check_installed("openxlsx", reason="for `save_edc_data_warnings()` to work.")
   assert_class(edc_warnings, "edc_warning_summary", null.ok=FALSE)
@@ -298,6 +299,10 @@ save_edc_data_warnings = function(edc_warnings=edc_data_warnings(),
   dir_create(path_dir(path))
   
   edc_warnings$issue_n %>% make.unique
+  if(!isTRUE(include_stops)){
+    edc_warnings = edc_warnings %>% 
+      filter(type!="STOP")
+  }
   
   wb = openxlsx::createWorkbook()
   for(i in seq(nrow(edc_warnings))){
@@ -447,7 +452,7 @@ format_subj = function(subj, max_subjid=5, par=TRUE){
 #' @importFrom fs path path_ext path_ext_remove
 #' @importFrom cli cli_warn
 get_report_path = function(output_dir, output_file){
-  project = edc_lookup() %>% attr("project_name")
+  project = edc_lookup() %>% attr("project_name") %>% edc_make_clean_name(lower=FALSE)
   date_extraction = edc_lookup() %>% attr("datetime_extraction") %>% format("%Y-%m-%d")
   output_path = glue(output_file, .null=NULL,
                      project=project, date_extraction=date_extraction) %>%
