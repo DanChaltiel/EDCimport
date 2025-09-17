@@ -222,7 +222,10 @@ get_project_name = function(lookup=edc_lookup()){
   attr(lookup, "project_name")
 }
 
-
+get_extraction = function(lookup=edc_lookup()){
+  if(is.null(lookup)) return(NULL)
+  attr(lookup, "datetime_extraction")
+}
 
 # Joins ---------------------------------------------------------------------------------------
 
