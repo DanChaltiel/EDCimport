@@ -296,6 +296,10 @@ save_edc_data_warnings = function(edc_warnings=edc_data_warnings(),
   }
   assert(path_ext(path)=="xlsx")
   dir_create(path_dir(path))
+  if(nrow(edc_warnings)==0){
+    cli_warn("No warnings found, nothing to save.")
+    return(FALSE)
+  }
   
   if(!isTRUE(include_stops)){
     edc_warnings = edc_warnings %>% 
