@@ -375,7 +375,8 @@ save_edc_data_warnings = function(edc_warnings=edc_data_warnings(),
     item_subjid=list(subj)
   }
   
-  item = tibble(issue_n, message, subjid=item_subjid, data=list(tbl))
+  type = if(identical(fun, cli_abort)) "STOP" else "WARN"
+  item = tibble(issue_n, message, subjid=item_subjid, data=list(tbl), type)
   save_warn_list_item(item)
     
   invisible(tbl)
