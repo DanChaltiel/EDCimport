@@ -273,19 +273,27 @@ edc_data_warnings = function(){
 #' Each time [edc_data_warn] is used, the warning is saved internally so that a summary can be retrieved using [edc_data_warnings]. This summary can then be saved into a `.xlsx` file using `save_edc_data_warnings()`. 
 #'
 #' @param edc_warnings the result of [edc_data_warnings]
-#' @param path a `.xlsx` file path
+#' @param output_file,output_dir path to a `.xlsx` file
 #' @param overwrite If `TRUE`, overwrite any existing file.
 #' @param open If `TRUE`, overwrite any existing file.
+#' @param path deprecated
 #'
 #' @returns a logical(1), whether the file could be written, invisibly 
+#' @importFrom fs dir_create path_dir path_ext
 #' @export
 save_edc_data_warnings = function(edc_warnings=edc_data_warnings(), 
-                                  path="edc_data_warnings.xlsx",
+                                  output_file="edc_data_warnings_{project}_{date_extraction}.xlsx",
+                                  output_dir="output/check",
                                   overwrite=TRUE, 
-                                  open=FALSE){
+                                  open=FALSE, 
+                                  path="deprecated"){
   check_installed("openxlsx", reason="for `save_edc_data_warnings()` to work.")
   assert_class(edc_warnings, "edc_warning_summary", null.ok=FALSE)
+  if(missing(path)){
+    path = get_report_path(output_dir, output_file)
+  }
   assert(path_ext(path)=="xlsx")
+  dir_create(path_dir(path))
   
   edc_warnings$issue_n %>% make.unique
   
@@ -432,6 +440,27 @@ format_subj = function(subj, max_subjid=5, par=TRUE){
   rtn
 }
 
+#' @importFrom fs path path_ext path_ext_remove
+#' @importFrom cli cli_warn
+get_report_path = function(output_dir, output_file){
+  project = edc_lookup() %>% attr("project_name")
+  date_extraction = edc_lookup() %>% attr("datetime_extraction") %>% format("%Y-%m-%d")
+  output_path = glue(output_file, .null=NULL,
+                     project=project, date_extraction=date_extraction) %>%
+    str_replace_all("__", "_") %>%
+    str_replace_all("_\\.", "\\.")
+  output_path = path(getwd(), output_dir, output_path)
+  if(file.exists(output_path)){
+    output_path2 = paste0(path_ext_remove(output_path), "_bak.", path_ext(output_path))
+    cli_warn("{.arg output_path} already exists and was renamed
+             to {.path {output_path2}}.")
+    if(file.exists(output_path2)){
+      cli_warn("{.arg {output_path2}} already exists and was overwritten.")
+    }
+    file.rename(output_path, output_path2)
+  }
+  output_path
+}
 
 # Deprecated ----------------------------------------------------------------------------------
 

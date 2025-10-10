@@ -6,19 +6,21 @@
 \usage{
 save_edc_data_warnings(
   edc_warnings = edc_data_warnings(),
-  path = "edc_data_warnings.xlsx",
+  output_file = "edc_data_warnings_{project}_{date_extraction}.xlsx",
+  output_dir = "output/check",
   overwrite = TRUE,
-  open = FALSE
+  open = FALSE,
+  path = "deprecated"
 )
 }
 \arguments{
 \item{edc_warnings}{the result of \link{edc_data_warnings}}
 
-\item{path}{a \code{.xlsx} file path}
-
 \item{overwrite}{If \code{TRUE}, overwrite any existing file.}
 
 \item{open}{If \code{TRUE}, overwrite any existing file.}
+
+\item{path}{a \code{.xlsx} file path}
 }
 \value{
 a logical(1), whether the file could be written, invisibly

@@ -2,6 +2,13 @@
 
 EDCimport is a package designed to easily import data from EDC software TrialMaster. Browse code at <https://github.com/DanChaltiel/EDCimport> and read the doc at <https://danchaltiel.github.io/EDCimport/>.
 
+# EDCimport 0.6.1 (dev)
+
+### Bug fixes & Improvements
+
+-   Improved default output path for `save_edc_data_warnings()`
+
+
 # EDCimport 0.6.0
 
 ### Documentation
