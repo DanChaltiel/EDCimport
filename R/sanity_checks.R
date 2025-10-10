@@ -280,6 +280,7 @@ edc_data_warnings = function(){
 #'
 #' @returns a logical(1), whether the file could be written, invisibly 
 #' @importFrom fs dir_create path_dir path_ext
+#' @importFrom cli ansi_strip
 #' @export
 save_edc_data_warnings = function(edc_warnings=edc_data_warnings(), 
                                   output_file="edc_data_warnings_{project}_{date_extraction}.xlsx",
@@ -305,7 +306,7 @@ save_edc_data_warnings = function(edc_warnings=edc_data_warnings(),
     data = x$data[[1]]
     color = if(nrow(data)==0) "green" else "red"
     openxlsx::addWorksheet(wb, sheet, tabColour=color, gridLines=FALSE)
-    openxlsx::writeData(wb, sheet, tibble(date_extraction, x$message), colNames=FALSE)
+    openxlsx::writeData(wb, sheet, tibble(date_extraction, ansi_strip(x$message)), colNames=FALSE)
     openxlsx::writeDataTable(wb, sheet, data, startRow=2)
   }
   rtn = openxlsx::saveWorkbook(wb, path, overwrite=overwrite, returnValue=TRUE)
