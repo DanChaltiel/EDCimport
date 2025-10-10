@@ -16,11 +16,13 @@ save_edc_data_warnings(
 \arguments{
 \item{edc_warnings}{the result of \link{edc_data_warnings}}
 
+\item{output_file, output_dir}{path to a \code{.xlsx} file}
+
 \item{overwrite}{If \code{TRUE}, overwrite any existing file.}
 
 \item{open}{If \code{TRUE}, overwrite any existing file.}
 
-\item{path}{a \code{.xlsx} file path}
+\item{path}{deprecated}
 }
 \value{
 a logical(1), whether the file could be written, invisibly
