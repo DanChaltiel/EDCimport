@@ -273,9 +273,10 @@ edc_data_warnings = function(){
 #' Each time [edc_data_warn] is used, the warning is saved internally so that a summary can be retrieved using [edc_data_warnings]. This summary can then be saved into a `.xlsx` file using `save_edc_data_warnings()`. 
 #'
 #' @param edc_warnings the result of [edc_data_warnings]
-#' @param output_file,output_dir path to a `.xlsx` file
+#' @param output_file,output_dir path to a `.xlsx` file. Use special values `{proj_name}` and `{date_extraction}`.
 #' @param overwrite If `TRUE`, overwrite any existing file.
-#' @param open If `TRUE`, overwrite any existing file.
+#' @param hide_resolved If `TRUE`, hide sheets with no data.
+#' @param include_stops If `TRUE`, also include STOP-type warnings.
 #' @param path deprecated
 #'
 #' @returns a logical(1), whether the file could be written, invisibly 
@@ -285,8 +286,8 @@ edc_data_warnings = function(){
 save_edc_data_warnings = function(edc_warnings=edc_data_warnings(), 
                                   output_file="edc_data_warnings_{project}_{date_extraction}.xlsx",
                                   output_dir="output/check",
-                                  overwrite=TRUE, 
                                   open=FALSE, 
+                                  overwrite=TRUE, hide_resolved=TRUE, include_stops=FALSE,
                                   path="deprecated"){
   check_installed("openxlsx", reason="for `save_edc_data_warnings()` to work.")
   assert_class(edc_warnings, "edc_warning_summary", null.ok=FALSE)
@@ -295,8 +296,15 @@ save_edc_data_warnings = function(edc_warnings=edc_data_warnings(),
   }
   assert(path_ext(path)=="xlsx")
   dir_create(path_dir(path))
+  if(nrow(edc_warnings)==0){
+    cli_warn("No warnings found, nothing to save.")
+    return(FALSE)
+  }
   
-  edc_warnings$issue_n %>% make.unique
+  if(!isTRUE(include_stops)){
+    edc_warnings = edc_warnings %>% 
+      filter(type!="STOP")
+  }
   
   wb = openxlsx::createWorkbook()
   for(i in seq(nrow(edc_warnings))){
@@ -305,7 +313,8 @@ save_edc_data_warnings = function(edc_warnings=edc_data_warnings(),
     sheet = paste0("issue_", x$issue_n)
     data = x$data[[1]]
     color = if(nrow(data)==0) "green" else "red"
-    openxlsx::addWorksheet(wb, sheet, tabColour=color, gridLines=FALSE)
+    visible = !isTRUE(hide_resolved) || nrow(data)>0
+    openxlsx::addWorksheet(wb, sheet, tabColour=color, visible=visible, gridLines=FALSE)
     openxlsx::writeData(wb, sheet, tibble(date_extraction, ansi_strip(x$message)), colNames=FALSE)
     openxlsx::writeDataTable(wb, sheet, data, startRow=2)
   }
@@ -331,8 +340,8 @@ save_edc_data_warnings = function(edc_warnings=edc_data_warnings(),
 #' @importFrom tibble tibble
 #' @importFrom utils write.csv2
 .edc_data_condition = function(tbl, message, issue_n, max_subjid, 
-                              csv_path, .envir, 
-                              col_subjid, fun){
+                               csv_path, .envir, 
+                               col_subjid, fun){
   if(is.character(csv_path)){
     assert(str_ends(csv_path, "\\.csv"), call=parent.frame())
     dir_create(dirname(csv_path))
@@ -375,7 +384,8 @@ save_edc_data_warnings = function(edc_warnings=edc_data_warnings(),
     item_subjid=list(subj)
   }
   
-  item = tibble(issue_n, message, subjid=item_subjid, data=list(tbl))
+  type = if(identical(fun, cli_abort)) "STOP" else "WARN"
+  item = tibble(issue_n, message, subjid=item_subjid, data=list(tbl), type)
   save_warn_list_item(item)
     
   invisible(tbl)
@@ -444,7 +454,7 @@ format_subj = function(subj, max_subjid=5, par=TRUE){
 #' @importFrom fs path path_ext path_ext_remove
 #' @importFrom cli cli_warn
 get_report_path = function(output_dir, output_file){
-  project = edc_lookup() %>% attr("project_name")
+  project = edc_lookup() %>% attr("project_name") %>% edc_make_clean_name(lower=FALSE)
   date_extraction = edc_lookup() %>% attr("datetime_extraction") %>% format("%Y-%m-%d")
   output_path = glue(output_file, .null=NULL,
                      project=project, date_extraction=date_extraction) %>%

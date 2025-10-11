@@ -199,6 +199,7 @@ save_sessioninfo = function(path="check/session_info.txt", with_date=TRUE){
 #'
 #' @param db the [edc_database]
 #' @param name the project name
+#' @param lookup the lookup table
 #'
 #' @returns nothing
 #' @export
@@ -207,13 +208,25 @@ save_sessioninfo = function(path="check/session_info.txt", with_date=TRUE){
 #' db = edc_example() %>% 
 #'  set_project_name("My great project")
 #' edc_lookup()
-set_project_name = function(db, name){
+set_project_name = function(db, name, lookup=edc_lookup()){
   lookup = db$.lookup %>% 
     structure(project_name = name)
   .update_lookup(new=lookup)
   db
 }
 
+#' @rdname set_project_name
+#' @returns the name of the project
+#' @export
+get_project_name = function(lookup=edc_lookup()){
+  if(is.null(lookup)) return(NULL)
+  attr(lookup, "project_name")
+}
+
+get_extraction = function(lookup=edc_lookup()){
+  if(is.null(lookup)) return(NULL)
+  attr(lookup, "datetime_extraction")
+}
 
 # Joins ---------------------------------------------------------------------------------------
 

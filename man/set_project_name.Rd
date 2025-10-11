@@ -2,17 +2,24 @@
 % Please edit documentation in R/helpers.R
 \name{set_project_name}
 \alias{set_project_name}
+\alias{get_project_name}
 \title{Set the project name}
 \usage{
-set_project_name(db, name)
+set_project_name(db, name, lookup = edc_lookup())
+
+get_project_name(lookup = edc_lookup())
 }
 \arguments{
 \item{db}{the \link{edc_database}}
 
 \item{name}{the project name}
+
+\item{lookup}{the lookup table}
 }
 \value{
 nothing
+
+the name of the project
 }
 \description{
 Set or override the project name
