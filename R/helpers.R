@@ -230,18 +230,25 @@ set_project_name = function(db, name){
                 full=dplyr::full_join, inner=dplyr::inner_join)
   
   function(x, y, by=NULL, suffix=NULL, cols=everything(), remove_dups=FALSE){
-    subjid_col = get_subjid_cols() %>% intersect(names(x)) %>% intersect(names(y))
-    if(is.null(by)) by = subjid_col
+    subjid_col = get_subjid_cols()
+    if(is.null(by)) {
+      by_x = names(x)[tolower(names(x)) == tolower(subjid_col)]
+      by_y = names(y)[tolower(names(y)) == tolower(subjid_col)]
+      by = if(length(by_x)>0 && length(by_y)>0) set_names(by_y, by_x) else NULL
+    }
+    if(is.null(by)){
+      l = format_inline("either {.arg x} or {.arg y}")
+      if(length(by_x)>0) l = format_inline("{.arg y}")
+      if(length(by_y)>0) l = format_inline("{.arg x}")
+      cli_abort(c("Could not find a common primary key for {.arg x} and {.arg y}.",
+                  i="Primary key {.val {get_subjid_cols()}} was not found in {l}."),
+                class="edc_subjid_not_found")
+    }
     if(is.null(suffix)){
       suffix = c("", paste0("_", as_label(caller_call(0)[[3]])))
     }
     
-    if(length(subjid_col)==0 && is.null(by)){
-      cli_abort(c("Could not find a common primary key for {.arg x} and {.arg y}",
-                  i="Primary key in current database: {.val {get_subjid_cols()}}"),
-                class="edc_subjid_not_found")
-    }
-    y = y %>% select(any_of(by), !!enquo(cols))
+    y = y %>% select(all_of(by_y), !!enquo(cols))
     if(isTRUE(remove_dups)){
       common_col = intersect(names(x), names(y)) %>% 
         setdiff(by) %>% 
