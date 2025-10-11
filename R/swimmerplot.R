@@ -142,6 +142,11 @@ edc_swimmerplot = function(...,
       mutate(
         time = as.double(date-origin, units="days") / values[time_unit]
       )
+    if(!origin %in% include){
+      dat = dat %>% 
+        filter(variable!=.env$origin)
+    }
+    
     x_label = glue("Date difference from `{origin}` (in {time_unit})")
     if(max(dat_origin$n)>1){
       x_label = glue("Date difference from `{origin_fun$name}({origin})` (in {time_unit})")
@@ -272,9 +277,9 @@ edc_swimmerplot = function(...,
       mutate(id = as.numeric(id)) %>% 
       filter(id>=id_lim[1] & id<=id_lim[2])
   } else if(all(str_detect(data$id, "\\d+"))){
-      data = data %>% 
-        mixed_arrange(id) %>% 
-        mutate(id=as_factor(id))
+    data = data %>% 
+      mixed_arrange(id) %>% 
+      mutate(id=as_factor(id))
   }
   data
 }

@@ -8,7 +8,8 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 -   `edc_data_stop()` now works without a SUBJID and defaults to no issue number (#109).
 -   Fixed bug in `edc_left_join()` with case-sensitivity on SUBJID (#108).
--   Improve `save_edc_data_warnings()` with options to hide the resolved issues and to not include stops, and better default path (#107)
+-   Improved `save_edc_data_warnings()` with options to hide the resolved issues and to not include stops, and better default path (#107)
+-   Improved `edc_swimmerplot()` by removing `origin` by default (#106).
 -   Fixed bug in `assert_no_duplicate()` not stopping in table with both columns `SUBJID` and `subjid` (#105).
 
 
