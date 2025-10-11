@@ -140,17 +140,18 @@ edc_warn_extraction_date = function(max_days=30){
 #' }
 assert_no_duplicate = function(df, by=NULL, id_col=get_subjid_cols()){
   env = current_env()
-  id_col_selected = id_col[tolower(id_col) %in% tolower(names(df))]
+  id_col_selected = names(df)[tolower(names(df)) %in% tolower(id_col)]
   
   if(length(id_col_selected) == 0){
-    cli_abort("Cannot assert the absence of duplicates: no ID column ({.val {id_col}}) in `names(df)`.", 
+    cli_abort("Cannot assert the absence of duplicates: no ID column 
+              ({.val {id_col}}) in `names(df)`.", 
               class="edcimport_assert_no_duplicate_no_col")
   }
   if(length(id_col_selected) > 1){
-    cli_abort("Cannot assert the absence of duplicates: too many ID column ({.val {id_col_selected}}) in `names(df)`.", 
+    cli_abort("Cannot assert the absence of duplicates: too many ID columns 
+              in `names(df)`: {.val {id_col_selected}}.", 
               class="edcimport_assert_no_duplicate_many_col")
   }
-  
   x = df %>% 
     select(any_of2(id_col_selected), {{by}}) %>% 
     count(across(everything())) %>% 
