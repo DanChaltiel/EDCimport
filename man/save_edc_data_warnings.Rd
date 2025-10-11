@@ -8,19 +8,23 @@ save_edc_data_warnings(
   edc_warnings = edc_data_warnings(),
   output_file = "edc_data_warnings_{project}_{date_extraction}.xlsx",
   output_dir = "output/check",
-  overwrite = TRUE,
   open = FALSE,
+  overwrite = TRUE,
+  hide_resolved = TRUE,
+  include_stops = FALSE,
   path = "deprecated"
 )
 }
 \arguments{
 \item{edc_warnings}{the result of \link{edc_data_warnings}}
 
-\item{output_file, output_dir}{path to a \code{.xlsx} file}
+\item{output_file, output_dir}{path to a \code{.xlsx} file. Use special values \code{{proj_name}} and \code{{date_extraction}}.}
 
 \item{overwrite}{If \code{TRUE}, overwrite any existing file.}
 
-\item{open}{If \code{TRUE}, overwrite any existing file.}
+\item{hide_resolved}{If \code{TRUE}, hide sheets with no data.}
+
+\item{include_stops}{If \code{TRUE}, also include STOP-type warnings.}
 
 \item{path}{deprecated}
 }
