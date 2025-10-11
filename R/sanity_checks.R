@@ -239,7 +239,7 @@ edc_data_warn = function(df, message, ...,
 #' @export
 #' @importFrom rlang check_dots_empty
 edc_data_stop = function(df, message, ..., 
-                         issue_n="xx", max_subjid=5, 
+                         issue_n=NULL, max_subjid=5, 
                          csv_path=FALSE, 
                          envir=parent.frame(), 
                          col_subjid=get_subjid_cols()){
@@ -358,15 +358,15 @@ save_edc_data_warnings = function(edc_warnings=edc_data_warnings(),
                class="edc_data_condition_subjid_multiple_warn", call=parent.frame())
       col_subjid = col_subjid[col_found][1]
     }
-    if(!any(col_found)){
-      cli_abort("Could not find column {.val {col_subjid}} in the input dataset.", 
-                class="edc_data_condition_subjid_error", call=parent.frame())
+    if(any(col_found)){
+      subj = tbl %>% pull(any_of2(col_subjid)) %>% unique() %>% sort()
+      n_subj = length(subj)
+      subj = paste0("#", subj) %>% 
+        cli_vec(style=list("vec_trunc"=max_subjid, "vec-trunc-style"="head"))
+      par_subj = format_inline(" ({n_subj} patient{?s}: {subj})")
+    } else {
+      par_subj = format_inline(" ({nrow(tbl)} row{?s})")
     }
-    subj = tbl %>% pull(any_of2(col_subjid)) %>% unique() %>% sort()
-    n_subj = length(subj)
-    subj = paste0("#", subj) %>% 
-      cli_vec(style=list("vec_trunc"=max_subjid, "vec-trunc-style"="head"))
-    par_subj = format_inline(" ({n_subj} patient{?s}: {subj})")
   }
   
   item_subjid = NULL
