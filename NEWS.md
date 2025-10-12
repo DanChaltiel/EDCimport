@@ -4,6 +4,10 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 # EDCimport 0.6.1 (dev)
 
+### New features
+
+-   New arguments in `edc_swimmerplot()`: `origin_fun` to summarise `origin` at patient level using, and `data_list` to control the datasets.
+
 ### Bug fixes & Improvements
 
 -   `edc_data_stop()` now works without a SUBJID and defaults to no issue number (#109).
@@ -11,6 +15,8 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 -   Improved `save_edc_data_warnings()` with options to hide the resolved issues and to not include stops, and better default path (#107)
 -   Improved `edc_swimmerplot()` by removing `origin` by default (#106).
 -   Fixed bug in `assert_no_duplicate()` not stopping in table with both columns `SUBJID` and `subjid` (#105).
+-   Improved `edc_warn_extraction_date()` with a strict unit "days".
+-   Improved `save_plotly()` with a glue syntax for param `file`.
 
 
 # EDCimport 0.6.0
