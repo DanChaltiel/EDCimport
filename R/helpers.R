@@ -243,11 +243,11 @@ get_extraction = function(lookup=edc_lookup()){
                 full=dplyr::full_join, inner=dplyr::inner_join)
   
   function(x, y, by=NULL, suffix=NULL, cols=everything(), remove_dups=FALSE){
-    subjid_col = get_subjid_cols()
-    if(is.null(by)) {
-      by_x = names(x)[tolower(names(x)) == tolower(subjid_col)]
-      by_y = names(y)[tolower(names(y)) == tolower(subjid_col)]
-      by = if(length(by_x)>0 && length(by_y)>0) set_names(by_y, by_x) else NULL
+    subjid_col = getOption("override_subjid_cols", get_subjid_cols())
+    by_x = names(x)[tolower(names(x)) %in% tolower(subjid_col)]
+    by_y = names(y)[tolower(names(y)) %in% tolower(subjid_col)]
+    if(is.null(by) && length(by_x)>0 && length(by_y)>0) {
+      by = set_names(by_y, by_x)
     }
     if(is.null(by)){
       l = format_inline("either {.arg x} or {.arg y}")
@@ -261,7 +261,7 @@ get_extraction = function(lookup=edc_lookup()){
       suffix = c("", paste0("_", as_label(caller_call(0)[[3]])))
     }
     
-    y = y %>% select(all_of(by_y), !!enquo(cols))
+    y = y %>% select(any_of(c(unname(by), by_y)), !!enquo(cols))
     if(isTRUE(remove_dups)){
       common_col = intersect(names(x), names(y)) %>% 
         setdiff(by) %>% 

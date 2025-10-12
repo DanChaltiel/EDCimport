@@ -136,6 +136,9 @@ test_that("edc_xxx_join() works", {
   b$patno = b$subjid
   x = a %>%
     edc_left_join(b, by=c("patno", "subjid"), cols=arm)
+  local_options(override_subjid_cols=c("patno", "subjid"))
+  x = a %>%
+    edc_left_join(b, cols=arm)
   expect_true(all(c("subjid", "patno", "arm") %in% names(x)))
   expect_equal(get_label(x$subjid), get_label(a2$subjid)) 
   
