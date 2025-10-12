@@ -20,6 +20,8 @@ save_edc_data_warnings(
 
 \item{output_file, output_dir}{path to a \code{.xlsx} file. Use special values \code{{proj_name}} and \code{{date_extraction}}.}
 
+\item{open}{If \code{TRUE}, overwrite any existing file.}
+
 \item{overwrite}{If \code{TRUE}, overwrite any existing file.}
 
 \item{hide_resolved}{If \code{TRUE}, hide sheets with no data.}
