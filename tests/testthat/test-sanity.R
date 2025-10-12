@@ -98,7 +98,7 @@ test_that("edc_data_warn errors", {
   enrol %>%
     filter(age>70) %>%
     edc_data_warn("Age should not be >70", issue_n=98, col_subjid=c("PATNO")) %>% 
-    expect_error(class="edc_data_condition_subjid_error")
+    expect_warning(regexp="\\d+ rows")
   
 })
 
