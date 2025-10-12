@@ -1,1 +1,3 @@
-TESTTHAT_CPUS = 5
+# parallel::detectCores()
+# readRenviron("~/.Renviron")
+TESTTHAT_CPUS = 8
