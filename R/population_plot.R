@@ -59,12 +59,12 @@ edc_population_plot = function(x, id_per_row=50, ref="first"){
     mutate(group=cut(subjid, breaks=breaks),
            name=factor(name, levels=rev(names(x))),
            value=fct_yesno(value))
-  dummy = tibble(subjid=range_sup, name=last(df$name), 
-                 value=last(df$value), group=last(df$group))
+  dummy = df %>% tail(1) %>% mutate(subjid=range_sup)
+  
   df %>% 
     ggplot(aes(x=subjid, y=name, fill=value)) +
     geom_tile(color="black") +
-    geom_tile(data=dummy, fill="transparent") +
+    geom_tile(data=dummy, fill=NA, width=1, height=0.9) +
     facet_wrap(~group, ncol=1, scales="free_x", strip.position="right") +
     labs(x="Patient number", y=NULL, fill="Patient included") +
     theme(legend.position="top",
