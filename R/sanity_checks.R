@@ -456,8 +456,8 @@ format_subj = function(subj, max_subjid=5, par=TRUE){
 #' @importFrom fs path path_ext path_ext_remove
 #' @importFrom cli cli_warn
 get_report_path = function(output_dir, output_file){
-  project = edc_lookup() %>% attr("project_name") %>% edc_make_clean_name(lower=FALSE)
-  date_extraction = edc_lookup() %>% attr("datetime_extraction") %>% format("%Y-%m-%d")
+  project = get_project_name() %>% edc_make_clean_name(lower=FALSE) %0% NULL
+  date_extraction = get_extraction() %>% format("%Y-%m-%d") %0% NULL
   output_path = glue(output_file, .null=NULL,
                      project=project, date_extraction=date_extraction) %>%
     str_replace_all("__", "_") %>%
