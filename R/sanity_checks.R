@@ -261,10 +261,15 @@ edc_data_stop = function(df, message, ...,
 #' @importFrom dplyr across any_of arrange
 #' @importFrom purrr list_rbind
 edc_data_warnings = function(){
-  edcimport_env$warn_list %>% 
-    list_rbind() %>% 
-    arrange(across(any_of(c("issue_n", "message")))) %>% 
-    add_class("edc_warning_summary")
+  x = edcimport_env$warn_list %>% 
+    list_rbind() 
+  
+  if("issue_n" %in% names(x)){
+    x = x %>% 
+      slice(mixedorder(issue_n))
+  }
+  
+  x %>% add_class("edc_warning_summary")
 }
 
 
