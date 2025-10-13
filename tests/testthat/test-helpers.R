@@ -34,6 +34,18 @@ test_that("assert_no_duplicate() works", {
 
 
 
+test_that("Modifiers don't strip attributes", {
+  a = edc_example() %>% 
+    edc_clean_names() %>% 
+    edc_unify_subjid() %>%
+    edc_split_mixed() %>%
+    .[[".lookup"]] %>% 
+    attributes()
+  expect_contains(names(a), c("datetime_extraction", "EDCimport_version", "project_name"))
+})
+
+
+
 test_that("edc_warn_patient_diffs() works", {
   local_options(edc_subjid_ref = 1:50)
   

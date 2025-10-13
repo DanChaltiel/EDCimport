@@ -125,7 +125,10 @@ edc_split_mixed = function(database, datasets=everything(),
   }
   database = c(database, db_mixed)
 
-  database$.lookup = database %>% build_lookup() %>% extend_lookup(datasets=database)
+  database$.lookup = database %>%
+    build_lookup() %>% 
+    extend_lookup(datasets=database) %>% 
+    copy_attributes(.lookup, except=names(attributes(tibble())))
   .set_lookup(database$.lookup, verbose=FALSE)
   
   class(database) = "edc_database"

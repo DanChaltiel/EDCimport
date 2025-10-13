@@ -30,7 +30,8 @@ edc_clean_names = function(database, clean_fun=NULL){
 
   database$.lookup = database %>% 
     build_lookup() %>% 
-    extend_lookup(datasets=database)
+    extend_lookup(datasets=database) %>% 
+    copy_attributes(.lookup, except=names(attributes(tibble())))
   
   .set_lookup(database$.lookup, verbose=FALSE)
   class(database) = database_class

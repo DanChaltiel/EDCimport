@@ -423,6 +423,16 @@ add_attributes = function(x, ...){
 
 #' @noRd
 #' @keywords internal
+#' copy_attributes(.lookup, except=names(attributes(tibble())))
+copy_attributes = function(x, y, except=NULL){
+  if(is.null(x)) return(NULL)
+  attr_y = attributes(y) %>% discard_at(except)
+  attributes(x) = modifyList(attributes(x), attr_y)
+  x
+}
+
+#' @noRd
+#' @keywords internal
 add_class = function(x, value){
   class(x) = unique(c(value, class(x)))
   x
