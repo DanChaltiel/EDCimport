@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0.9006</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0.9007</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,7 +48,8 @@
 </ul></div>
 <div class="section level4">
 <h4 id="bug-fixes--improvements-0-6-1">Bug fixes &amp; Improvements<a class="anchor" aria-label="anchor" href="#bug-fixes--improvements-0-6-1"></a></h4>
-<ul><li>
+<ul><li>Fixed modifiers <code><a href="../reference/edc_clean_names.html">edc_clean_names()</a></code>, <code><a href="../reference/edc_unify_subjid.html">edc_unify_subjid()</a></code>, and <code><a href="../reference/edc_split_mixed.html">edc_split_mixed()</a></code> that stripped attributes like project name (<a href="https://github.com/DanChaltiel/EDCimport/issues/111" class="external-link">#111</a>).</li>
+<li>
 <code><a href="../reference/edc_data_warn.html">edc_data_stop()</a></code> now works without a SUBJID and defaults to no issue number (<a href="https://github.com/DanChaltiel/EDCimport/issues/109" class="external-link">#109</a>).</li>
 <li>Fixed bug in <code><a href="../reference/edc_left_join.html">edc_left_join()</a></code> with case-sensitivity on SUBJID (<a href="https://github.com/DanChaltiel/EDCimport/issues/108" class="external-link">#108</a>).</li>
 <li>Improved <code><a href="../reference/save_edc_data_warnings.html">save_edc_data_warnings()</a></code> with options to hide the resolved issues and to not include stops, and better default path (<a href="https://github.com/DanChaltiel/EDCimport/issues/107" class="external-link">#107</a>)</li>
