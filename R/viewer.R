@@ -10,8 +10,9 @@
 #' @export
 #' @importFrom rlang check_installed
 #' @importFrom utils browseURL
-edc_viewer = function(data=NULL, background=TRUE, port=1209){
+edc_viewer = function(data=NULL, ..., background=TRUE, title=NULL, port=1209){
   check_installed(c("DT", "bslib", "shiny"), "for `edc_viewer()` to work.")
+  check_dots_empty()
   if(is.null(data)){
     lookup = edc_lookup(dataset)
     datasets = get_datasets(lookup)
@@ -35,15 +36,15 @@ edc_viewer = function(data=NULL, background=TRUE, port=1209){
   }
   
   browseURL(shiny_url)
-  x=.launch_shiny(datasets, lookup, port)
+  x=.launch_shiny(datasets, lookup, title, port)
   invisible(x)
 }
 
 
 #' @noRd
 #' @keywords internal
-.launch_shiny = function(datasets, lookup, port){
-  app = shiny::shinyApp(edc_viewer_ui(datasets, lookup), 
+.launch_shiny = function(datasets, lookup, title, port){
+  app = shiny::shinyApp(edc_viewer_ui(datasets, lookup, title), 
                         edc_viewer_server(datasets, lookup))
   shiny::runApp(app, launch.browser=FALSE, port=port)
 }

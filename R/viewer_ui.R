@@ -1,7 +1,7 @@
 
 #' @importFrom cli format_inline
 #' @importFrom purrr map_dbl
-edc_viewer_ui = function(datasets, lookup){
+edc_viewer_ui = function(datasets, lookup, title){
   card=bslib::card;card_body=bslib::card_body;card_header=bslib::card_header;
   card_title=bslib::card_title;page_sidebar=bslib::page_sidebar;sidebar=bslib::sidebar;
   DTOutput=DT::DTOutput;
@@ -14,15 +14,10 @@ edc_viewer_ui = function(datasets, lookup){
   extraction = attr(lookup, "datetime_extraction")
   EDCimport_version = attr(lookup, "EDCimport_version")
   project_name = attr(lookup, "project_name")
-  par_extraction = par_version = par_projname = ""
-  if(!is.null(project_name)) 
-    par_projname = format_inline("- {project_name} ")
-  if(!is.null(extraction)) 
-    par_extraction = format_inline("(extraction of {format_ymd(extraction)}) ")
-  if(!is.null(EDCimport_version)) 
-    par_version = format_inline("- EDCimport v{EDCimport_version}")
-  
-  title = format_inline("{{EDCimport}} Data browsing {par_projname}{par_extraction}{par_version}")
+  if(is.null(title)){
+    title = .get_title(extraction, EDCimport_version, project_name)
+  }
+    
   title_div = div(
     style = "width: 100%; display: flex; justify-content: space-between; align-items: center;",
     title, 
@@ -79,3 +74,18 @@ edc_viewer_ui = function(datasets, lookup){
   )
 }
 
+#' @noRD
+#' @keywords internal
+.get_title = function(extraction, EDCimport_version, project_name){
+  par_extraction = par_version = par_projname = ""
+  if(!is.null(project_name)) {
+    par_projname = format_inline("- {project_name} ")
+  }
+  if(!is.null(extraction)) {
+    par_extraction = format_inline("(extraction of {format_ymd(extraction)}) ")
+  }
+  if(!is.null(EDCimport_version)) {
+    par_version = format_inline("- EDCimport v{EDCimport_version}")
+  }
+  format_inline("{{EDCimport}} Data browsing {par_projname}{par_extraction}{par_version}")
+}
