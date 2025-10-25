@@ -20,8 +20,7 @@ edc_viewer_server = function(datasets, lookup) {
   .set_lookup(lookup, verbose=FALSE) #needed for bg launch
   subjid_cols = get_subjid_cols(lookup)
   
-  project_name = attr(lookup, "project_name")
-  if(is.null(project_name)) project_name="" 
+  project_name = attr(lookup, "project_name") %0% ""
   
   function(input, output, session) {
     dataset_selected = reactiveVal(NULL)
@@ -58,6 +57,23 @@ edc_viewer_server = function(datasets, lookup) {
     #on Search type change: update label ----
     observeEvent(input$search_type_value, {
       update_switch("search_type_value", label=ifelse(input$search_type_value, "for value", "for column"))
+    })
+    
+    #on Button Data Info: show infos ----
+    observeEvent(input$btn_data_info, {
+      showModal(
+        modalDialog(
+          id="modal_data_info",
+          title = glue("Details for dataset `{dataset_selected()}`"),
+          size="xl",
+          card(
+            style="height:75vh; overflow:auto;",
+            DTOutput("data_info")
+          ),
+          easyClose = TRUE,
+          footer = NULL
+        )
+      )
     })
     
     #on Button Settings: show the Settings dialog ----
@@ -190,10 +206,22 @@ edc_viewer_server = function(datasets, lookup) {
     #output: datatable header text ----
     output$dataset_name = renderText({
       if(is.null(dataset_selected())) return("Loading")
+      dataset_selected()
+    })
+    output$dataset_dim = renderText({
+      if(is.null(dataset_selected())) return("")
       a = lookup %>% filter(dataset==dataset_selected())
-      layout = ifelse(a$rows_per_id>1, glue("long ({a$rows_per_id} rows per patient)"), "wide")
-      if(nrow(a)==0) return(glue("{name}: Corrupted dataset", name=dataset_selected()))
-      glue("Dataset selected: `{a$dataset}` ({a$nrow} x {a$ncol}) - {a$n_id} patients - {layout}")
+      glue("{a$nrow} x {a$ncol}")
+    })
+    output$dataset_subj = renderText({
+      if(is.null(dataset_selected())) return("")
+      a = lookup %>% filter(dataset==dataset_selected())
+      glue("{a$n_id} patients")
+    })
+    output$dataset_layout = renderText({
+      if(is.null(dataset_selected())) return("")
+      a = lookup %>% filter(dataset==dataset_selected())
+      ifelse(a$rows_per_id>1, glue("long ({a$rows_per_id} rows per patient)"), "wide")
     })
     
     #output: hide common columns helper text ----
@@ -201,6 +229,27 @@ edc_viewer_server = function(datasets, lookup) {
       x = hidden_common_cols()
       if(is.null(x)) return("")
       glue("Columns hided: {paste(x, collapse=', ')}")
+    })
+    
+    #output: data information modal on button click ----
+    output$data_info = renderDT({
+      x = datasets[[dataset_selected()]]
+      tibble(
+        "Index"=seq(ncol(x)), 
+        "Column name"=names(x), 
+        "Label"=unlist(get_label(x)),
+        "NA"=map_dbl(x, ~mean(is.na(.x)))
+      ) %>% 
+        datatable(
+          rownames = FALSE,
+          filter = "top",
+          options = lst(
+            scrollX = TRUE, scrollY = "66vh",
+            pageLength = 500,
+            dom = "t", #table only
+          )
+        ) %>%
+        DT::formatPercentage(columns = 4, digits = 1)
     })
     
     #output: sidebar data choice list ----

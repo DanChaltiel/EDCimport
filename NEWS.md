@@ -11,6 +11,7 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 ### Bug fixes & Improvements
 
 -   `edc_viewer()`: support for multiple instances on different ports(#114).
+-   `edc_viewer()`: new button to browse all the column labels (#113).
 -   Fixed modifiers `edc_clean_names()`, `edc_unify_subjid()`, and `edc_split_mixed()` that stripped attributes like project name (#111).
 -   `edc_data_stop()` now works without a SUBJID and defaults to no issue number (#109).
 -   Fixed bug in `edc_left_join()` with case-sensitivity on SUBJID (#108).

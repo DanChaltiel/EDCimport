@@ -61,3 +61,41 @@
   justify-content: space-between;
   align-items: center;
 }
+.dataset-info {
+  padding-right: 8px;
+  margin-right: 8px;
+  border-right: 1px solid #ccc;
+}
+
+
+/* card_header of the DataTable */
+.datatable-header {
+  width: 100%;
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0;
+  padding: 0;
+}
+
+.datatable-header > div:first-child {
+  display: flex;
+  align-items: stretch;
+  align-self: stretch; 
+}
+
+.datatable-header .shiny-text-output {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  padding-right: 8px;
+  margin-right: 8px;
+  border-right: 1px solid black;
+}
+
+.datatable-header .shiny-text-output:last-of-type {
+  border-right: none;
+  margin-right: 0;
+  padding-right: 0;
+}

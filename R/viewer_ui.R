@@ -58,7 +58,18 @@ edc_viewer_ui = function(datasets, lookup, title){
     ),
     card(
       card_header(
-        textOutput("dataset_name")
+        div(
+          class="datatable-header",
+          div(
+            textOutput("dataset_name"),
+            textOutput("dataset_dim"),
+            textOutput("dataset_subj"),
+            textOutput("dataset_layout"),
+          ),
+          actionButton("btn_data_info", icon=icon("circle-info"), label=NULL) %>% 
+            tooltip("Data info")
+        )
+        
       ),
       card_body(
         DTOutput("table")
