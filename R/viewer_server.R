@@ -44,23 +44,23 @@ edc_viewer_server = function(datasets, lookup) {
         pull(column)
     })
     
-    #On row selected: show datatable
+    #On row selected: show datatable ----
     observeEvent(input$input_table_rows_selected, {
       selected = input$input_table_rows_selected
       dataset_selected(names(datasets[selected]))
     })
     
-    #on Reset button: reset subjid choice
+    #on Reset button: reset subjid choice ----
     observeEvent(input$reset_subjid, {
       updateSelectInput(session, "subjid_selected", choices=c(ids))
     })
     
-    #on Search type change: update label
+    #on Search type change: update label ----
     observeEvent(input$search_type_value, {
       update_switch("search_type_value", label=ifelse(input$search_type_value, "for value", "for column"))
     })
     
-    #on Button Settings: show the Settings dialog
+    #on Button Settings: show the Settings dialog ----
     observeEvent(input$btn_settings, {
       hide_filtered_default = input$hide_filtered %0% FALSE
       hide_common_default = input$hide_common %0% 0
@@ -83,7 +83,7 @@ edc_viewer_server = function(datasets, lookup) {
       )
     })
     
-    #on Button Search: show the Search dialog
+    #on Button Search: show the Search dialog ----
     observeEvent(input$btn_search, {
       showModal(
         modalDialog(
@@ -113,7 +113,7 @@ edc_viewer_server = function(datasets, lookup) {
       )
     })
     
-    #on Search validation: show results
+    #on Search validation: show results ----
     observeEvent(input$search_validate, {
       req(input$search_input)
       keyword = input$search_input
@@ -149,7 +149,7 @@ edc_viewer_server = function(datasets, lookup) {
       
     })
     
-    #on Button Summary: show modal
+    #on Button Summary: show modal ----
     observeEvent(input$btn_db_summary, {
       output$crf_plot = renderPlot(p1)
       output$patient_gridplot = renderPlot(p2)
@@ -187,7 +187,7 @@ edc_viewer_server = function(datasets, lookup) {
     })
     
     
-    #output: datatable header text
+    #output: datatable header text ----
     output$dataset_name = renderText({
       if(is.null(dataset_selected())) return("Loading")
       a = lookup %>% filter(dataset==dataset_selected())
@@ -196,14 +196,14 @@ edc_viewer_server = function(datasets, lookup) {
       glue("Dataset selected: `{a$dataset}` ({a$nrow} x {a$ncol}) - {a$n_id} patients - {layout}")
     })
     
-    #output: hide common columns helper text
+    #output: hide common columns helper text ----
     output$hide_common_result = renderText({
       x = hidden_common_cols()
       if(is.null(x)) return("")
       glue("Columns hided: {paste(x, collapse=', ')}")
     })
     
-    #output: sidebar data choice list
+    #output: sidebar data choice list ----
     output$input_table = renderDT({
       selected_subjid = input$subjid_selected
       all_subjid = unlist(lookup$subjids) %>% unique() %>% sort()
@@ -254,7 +254,7 @@ edc_viewer_server = function(datasets, lookup) {
       rtn
     })
     
-    #output: datatable body
+    #output: datatable body ----
     output$table = renderDT({
       req(dataset_selected())
       subjid_selected = input$subjid_selected
@@ -270,19 +270,19 @@ edc_viewer_server = function(datasets, lookup) {
         filter(if_any(any_of2(subjid_cols), 
                       ~all_selected | .x %in% subjid_selected))
       
-      #ContextMenu: Fixed Column
+      ##ContextMenu: Fixed Column ----
       fixed = input$hidden_fixed %>% stringr::str_split_1("___")
       fixed = c(subjid_cols, fixed, input$hidden_group, input$hidden_color) %>% unique()
       fixed = fixed[nzchar(fixed)] %>% intersect(names(data))
       data = data %>% 
         relocate(any_of2(fixed), .before=1)
       
-      #ContextMenu: Row Group
+      ##ContextMenu: Row Group ----
       i = which(names(data)==input$hidden_group)
       row_group = list(dataSrc = i)
       if(length(i)==0) row_group=NULL
       
-      #ContextMenu: Row Color
+      ##ContextMenu: Row Color ----
       col_color = data[[input$hidden_color]]
       row_style = row_style_col = NULL
       if(!is.null(col_color)){
@@ -358,7 +358,8 @@ import_to_list = function(x){
   paste0(x[-1], "=", x[1], "::", x[-1]) %>% paste(collapse=";")
 }
 
-
+#' @noRd
+#' @keywords internal
 get_ids = function(datasets, subjid_cols){
   ids = datasets %>%
     keep(is.data.frame) %>% 
@@ -371,12 +372,16 @@ get_ids = function(datasets, subjid_cols){
 }
 
 
+#' @noRd
+#' @keywords internal
 hide_first = function(){
   list(targets=0, visible=FALSE)
 }
 
 #' @importFrom glue glue
 #' @importFrom purrr map_lgl
+#' @noRd
+#' @keywords internal
 dt_ellipsis = function(data, n){
   list(list(
     targets = unname(which(map_lgl(data, ~is.character(.x)||is.factor(.x)))),
@@ -394,6 +399,7 @@ dt_ellipsis = function(data, n){
 #' Set the "label" dataset attribute on the "title" HTML attribute
 #' Makes the column header show the column label on hover
 #' @noRd
+#' @keywords internal
 #' @importFrom purrr imap_chr
 colnames_with_hover = function(data){
   data %>% 
