@@ -4,7 +4,7 @@
 \alias{edc_viewer}
 \title{Shiny data explorer}
 \usage{
-edc_viewer(data = NULL, background = TRUE, port = 1209)
+edc_viewer(data = NULL, ..., background = TRUE, title = NULL, port = 1209)
 }
 \arguments{
 \item{data}{A list of dataframes to view. If \code{NULL}, defaults to the last datasets loaded using EDCimport functions.}

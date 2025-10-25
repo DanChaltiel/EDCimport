@@ -85,7 +85,7 @@ edc_viewer_ui = function(datasets, lookup, title){
   )
 }
 
-#' @noRD
+#' @noRd
 #' @keywords internal
 .get_title = function(extraction, EDCimport_version, project_name){
   par_extraction = par_version = par_projname = ""

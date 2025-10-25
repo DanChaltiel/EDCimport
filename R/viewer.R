@@ -31,7 +31,7 @@ edc_viewer = function(data=NULL, ..., background=TRUE, title=NULL, port=1209){
   
   
   if(isTRUE(background)){
-    .run_background(datasets, lookup, port, shiny_url)
+    .run_background(datasets, lookup, title, port, shiny_url)
     return(edcimport_env$process)
   }
   
@@ -51,14 +51,14 @@ edc_viewer = function(data=NULL, ..., background=TRUE, title=NULL, port=1209){
 
 #' @noRd
 #' @keywords internal
-.run_background = function(datasets, lookup, port, shiny_url){
+.run_background = function(datasets, lookup, title, port, shiny_url){
   check_installed("callr", "for `import_review()` to work in background")
   cur_port = paste0("port_", port)
   .check_current_port(cur_port)
   
   p = callr::r_bg(
     .launch_shiny, 
-    args=list(datasets=datasets, lookup=lookup, port=port), 
+    args=list(datasets=datasets, lookup=lookup, title=title, port=port), 
     stdout=NULL, stderr="edc_viewer_errors.txt",
     package="EDCimport"
   )
