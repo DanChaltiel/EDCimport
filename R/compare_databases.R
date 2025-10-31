@@ -60,6 +60,7 @@
 #'   comparison = compare_databases(archives, read_trialmaster, pw="the_password")
 #' }
 compare_databases = function(archives, fun_read=read_trialmaster, ...){
+  check_installed(c("gt", "patchwork"), reason="for `compare_databases()` to work.")
   db_list = archives
   is_database = map_lgl(archives, ~inherits(.x, "edc_database"))
   if(!all(is_database)){
