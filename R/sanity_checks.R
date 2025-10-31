@@ -258,7 +258,7 @@ edc_data_stop = function(df, message, ...,
 #' @rdname edc_data_warn
 #' @usage edc_data_warnings()
 #' @export
-#' @importFrom dplyr across any_of arrange
+#' @importFrom dplyr slice
 #' @importFrom purrr list_rbind
 edc_data_warnings = function(){
   x = edcimport_env$warn_list %>% 
@@ -287,8 +287,12 @@ edc_data_warnings = function(){
 #' @param path deprecated
 #'
 #' @returns a logical(1), whether the file could be written, invisibly 
+#' @importFrom cli ansi_strip cli_warn
+#' @importFrom dplyr filter
 #' @importFrom fs dir_create path_dir path_ext
-#' @importFrom cli ansi_strip
+#' @importFrom rlang check_installed
+#' @importFrom tibble tibble
+#' @importFrom utils browseURL
 #' @export
 save_edc_data_warnings = function(edc_warnings=edc_data_warnings(), 
                                   output_file="edc_data_warnings_{project}_{date_extraction}.xlsx",
@@ -339,10 +343,10 @@ save_edc_data_warnings = function(edc_warnings=edc_data_warnings(),
 
 #' @noRd
 #' @keywords internal
-#' @importFrom cli cli_abort cli_vec cli_warn format_inline
+#' @importFrom cli cli_vec cli_warn format_inline
 #' @importFrom dplyr pull
 #' @importFrom fs dir_create
-#' @importFrom rlang caller_arg env_bind
+#' @importFrom rlang env_bind
 #' @importFrom stringr str_ends str_pad
 #' @importFrom tibble tibble
 #' @importFrom utils write.csv2
@@ -402,8 +406,9 @@ save_edc_data_warnings = function(edc_warnings=edc_data_warnings(),
 #' @noRd
 #' @keywords internal
 #' @importFrom cli cli_warn
-#' @importFrom rlang has_name
 #' @importFrom dplyr semi_join
+#' @importFrom rlang has_name
+#' @importFrom stringr str_detect
 save_warn_list_item = function(item){
   stopifnot(nrow(item)==1)
   if(is.na(item$issue_n)) return(NULL)
@@ -458,8 +463,10 @@ format_subj = function(subj, max_subjid=5, par=TRUE){
   rtn
 }
 
-#' @importFrom fs path path_ext path_ext_remove
 #' @importFrom cli cli_warn
+#' @importFrom fs path path_ext path_ext_remove
+#' @importFrom glue glue
+#' @importFrom stringr str_replace_all
 get_report_path = function(output_dir, output_file){
   project = get_project_name() %>% edc_make_clean_name(lower=FALSE) %0% NULL
   date_extraction = get_extraction() %>% format("%Y-%m-%d") %0% NULL

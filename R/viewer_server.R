@@ -1,7 +1,10 @@
 
-#' @importFrom dplyr arrange filter if_any lst pick relocate select setdiff
+#' @importFrom dplyr any_of arrange as_tibble case_when filter if_any lst mutate mutate_all pick pull relocate select
+#' @importFrom ggplot2 ggplot labs theme
 #' @importFrom glue glue
-#' @importFrom purrr map map_chr map_dbl
+#' @importFrom purrr map_dbl map_lgl
+#' @importFrom stringr str_remove_all str_replace_all
+#' @importFrom tibble tibble
 edc_viewer_server = function(datasets, lookup) {
   datatable=DT::datatable;formatStyle=DT::formatStyle;renderDT=DT::renderDT
   observe=shiny::observe;observeEvent=shiny::observeEvent;reactiveVal=shiny::reactiveVal;
@@ -10,7 +13,7 @@ edc_viewer_server = function(datasets, lookup) {
   icon=shiny::icon;showModal=shiny::showModal;modalDialog=shiny::modalDialog;
   plotOutput=shiny::plotOutput;renderPlot=shiny::renderPlot;
   updateCheckboxInput=shiny::updateCheckboxInput;textInput=shiny::textInput;
-  actionButton=shiny::actionButton;renderUI=shiny::renderUI;
+  actionButton=shiny::actionButton;renderUI=shiny::renderUI;div=shiny::div;
   showNotification=shiny::showNotification; uiOutput=shiny::uiOutput;
   layout_column_wrap=bslib::layout_column_wrap;styleEqual=DT::styleEqual;
   value_box=bslib::value_box;update_switch=bslib::update_switch;DTOutput=DT::DTOutput;
@@ -402,6 +405,7 @@ edc_viewer_server = function(datasets, lookup) {
 #' @examples
 #' import_to_list("#' @importFrom bslib card card_body sidebar")
 #' import_to_list("shiny actionButton selectInput actionLink tags textOutput")
+#' @importFrom stringr str_remove
 import_to_list = function(x){
   x = str_remove(x, "#' @importFrom ") %>% stringr::str_split_1(" ")
   paste0(x[-1], "=", x[1], "::", x[-1]) %>% paste(collapse=";")
@@ -409,6 +413,8 @@ import_to_list = function(x){
 
 #' @noRd
 #' @keywords internal
+#' @importFrom dplyr select
+#' @importFrom purrr keep map
 get_ids = function(datasets, subjid_cols){
   ids = datasets %>%
     keep(is.data.frame) %>% 
@@ -449,6 +455,7 @@ dt_ellipsis = function(data, n){
 #' Makes the column header show the column label on hover
 #' @noRd
 #' @keywords internal
+#' @importFrom glue glue
 #' @importFrom purrr imap_chr
 colnames_with_hover = function(data){
   data %>% 

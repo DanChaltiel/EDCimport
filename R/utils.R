@@ -220,6 +220,7 @@ parse_file_projname = function(x){
 #' @keywords internal
 #' @importFrom cli cli_warn
 #' @importFrom dplyr count slice_max
+#' @importFrom stringr str_remove
 get_folder_datetime = function(folder, verbose=TRUE){
   folder_datetime = extract_date(folder)
   if(!is.null(folder_datetime)){
@@ -256,6 +257,7 @@ get_folder_datetime = function(folder, verbose=TRUE){
 #' @importFrom cli cli_warn
 #' @importFrom dplyr last
 #' @importFrom lubridate parse_date_time
+#' @importFrom stats na.omit
 #' @importFrom stringr str_extract_all str_replace_all
 extract_date = function(x, fmt=NULL, warn_call=parent.frame()){
   stopifnot(length(x)==1)
@@ -424,6 +426,8 @@ add_attributes = function(x, ...){
 #' @noRd
 #' @keywords internal
 #' copy_attributes(.lookup, except=names(attributes(tibble())))
+#' @importFrom purrr discard_at
+#' @importFrom utils modifyList
 copy_attributes = function(x, y, except=NULL){
   if(is.null(x)) return(NULL)
   attr_y = attributes(y) %>% discard_at(except)

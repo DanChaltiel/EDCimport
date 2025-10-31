@@ -31,12 +31,13 @@
 #' edc_population_plot(l, ref=1:200)
 #' edc_population_plot(l, id_per_row=60)
 #' @importFrom cli cli_abort
-#' @importFrom dplyr bind_cols last mutate
+#' @importFrom dplyr bind_cols mutate
 #' @importFrom ggplot2 aes element_blank facet_wrap geom_tile ggplot labs theme
 #' @importFrom purrr iwalk map
 #' @importFrom rlang is_named
 #' @importFrom tibble tibble
 #' @importFrom tidyr pivot_longer
+#' @importFrom utils tail
 edc_population_plot = function(x, id_per_row=50, ref="first"){
   assert_class(x, "list")
   assert_class(id_per_row, c("numeric", "integer", "double"))

@@ -82,6 +82,7 @@ table_format = function(df, id=get_subjid_cols(), ...,
 #' @importFrom dplyr enquo everything
 #' @importFrom purrr discard_at keep
 #' @importFrom rlang as_label check_dots_empty
+#' @importFrom tibble tibble
 #'
 #' @examples
 #' #db = read_trialmaster("filename.zip", pw="xx")

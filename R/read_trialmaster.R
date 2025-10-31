@@ -20,6 +20,7 @@
 #' @export
 #' @importFrom cli cli_inform
 #' @importFrom fs file_exists path_dir
+#' @importFrom purrr discard keep
 #' @importFrom rlang check_dots_empty
 #' @importFrom utils object.size packageVersion
 read_trialmaster = function(archive, ..., use_cache="write", 

@@ -8,7 +8,9 @@
 #' @param port The TCP port that the application should listen on. 
 #'
 #' @export
-#' @importFrom rlang check_installed
+#' @importFrom cli cli_abort
+#' @importFrom dplyr arrange
+#' @importFrom rlang caller_arg check_dots_empty check_installed is_named set_names
 #' @importFrom utils browseURL
 edc_viewer = function(data=NULL, ..., background=TRUE, title=NULL, port=1209){
   check_installed(c("DT", "bslib", "shiny"), "for `edc_viewer()` to work.")
@@ -51,6 +53,10 @@ edc_viewer = function(data=NULL, ..., background=TRUE, title=NULL, port=1209){
 
 #' @noRd
 #' @keywords internal
+#' @importFrom cli cli_inform
+#' @importFrom dplyr lst
+#' @importFrom rlang check_installed
+#' @importFrom utils browseURL
 .run_background = function(datasets, lookup, title, port, shiny_url){
   check_installed("callr", "for `import_review()` to work in background")
   cur_port = paste0("port_", port)
@@ -81,6 +87,9 @@ edc_viewer = function(data=NULL, ..., background=TRUE, title=NULL, port=1209){
 
 #' @noRd
 #' @keywords internal
+#' @importFrom cli cli_abort cli_inform
+#' @importFrom rlang caller_call
+#' @importFrom utils askYesNo
 .check_current_port = function(cur_port){
   cur_viewer = edcimport_env$viewers[[cur_port]]
   p = cur_viewer$process
@@ -100,6 +109,7 @@ edc_viewer = function(data=NULL, ..., background=TRUE, title=NULL, port=1209){
 
 #' @noRd
 #' @keywords internal
+#' @importFrom purrr map
 .edc_viewer_kill = function(){
   edcimport_env$viewers %>% map(~.x$process$kill())
 }
@@ -107,6 +117,7 @@ edc_viewer = function(data=NULL, ..., background=TRUE, title=NULL, port=1209){
 #' @noRd
 #' @keywords internal
 #' @export
+#' @importFrom glue glue
 print.edc_viewer_instance = function(x, ...){
   proj_name = glue(" for {nm}", nm=attr(x$lookup, "project_name")) %0% ""
   pid = x$process$get_pid()

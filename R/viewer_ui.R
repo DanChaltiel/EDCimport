@@ -1,6 +1,5 @@
 
-#' @importFrom cli format_inline
-#' @importFrom purrr map_dbl
+
 edc_viewer_ui = function(datasets, lookup, title){
   card=bslib::card;card_body=bslib::card_body;card_header=bslib::card_header;
   card_title=bslib::card_title;page_sidebar=bslib::page_sidebar;sidebar=bslib::sidebar;
@@ -85,6 +84,7 @@ edc_viewer_ui = function(datasets, lookup, title){
   )
 }
 
+#' @importFrom cli format_inline
 #' @noRd
 #' @keywords internal
 .get_title = function(extraction, EDCimport_version, project_name){

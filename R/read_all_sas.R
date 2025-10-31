@@ -11,7 +11,7 @@
 #' @export
 #' @family EDCimport reading functions
 #' 
-#' @importFrom fs dir_exists dir_ls path_ext
+#' @importFrom fs dir_exists dir_ls
 #' @importFrom rlang check_dots_empty
 #' @importFrom utils packageVersion
 #' 
@@ -64,5 +64,7 @@ read_all_sas = function(path, ...,
   rtn
 }
 
+#' @importFrom fs path_ext
 .is_catalog = function(x) !is.null(x) && path_ext(x)=="sas7bcat"
+#' @importFrom fs path_ext
 .is_not_catalog = function(x) !is.null(x) && path_ext(x) %in% c("sas", "sas7bdat", "csv")

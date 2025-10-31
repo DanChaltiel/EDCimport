@@ -26,6 +26,7 @@ lag = dplyr
 last = dplyr
 last_col = dplyr
 lst = dplyr
+match = base
 matches = tidyselect
 order = base
 plot = base

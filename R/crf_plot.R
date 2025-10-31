@@ -30,13 +30,15 @@
 #' #> [1] "Incomplete"        "No Data Locked"    "No Data"           "Signed"           
 #' #> [5] "Partial Monitored" "Monitored"         "Complete Locked"   "Complete" 
 #' }
-#' @importFrom dplyr arrange count left_join mutate select
+#' @importFrom cli cli_warn
+#' @importFrom dplyr arrange count left_join mutate select setdiff
 #' @importFrom forcats fct_drop fct_inorder fct_reorder2 fct_rev
 #' @importFrom ggplot2 aes geom_col ggplot labs position_fill scale_fill_manual scale_x_continuous theme_minimal
 #' @importFrom glue glue
 #' @importFrom purrr list_rbind map
-#' @importFrom rlang check_dots_empty
+#' @importFrom rlang check_dots_empty set_names
 #' @importFrom scales label_percent
+#' @importFrom stats na.omit
 #' @importFrom stringr str_subset
 #' @importFrom tibble tibble
 edc_crf_plot = function(crfstat_col="CRFSTAT", 
@@ -137,6 +139,8 @@ edc_pal_crf = function(){
 
 #' @noRd
 #' @keywords internal
+#' @importFrom cli cli_warn
+#' @importFrom dplyr setdiff
 #' @importFrom forcats fct_drop fct_expand fct_recode
 edf_crfstat_recode = function(x, do=TRUE){
   x[is.na(x)] = "Missing CRF status"

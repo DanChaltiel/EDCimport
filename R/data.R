@@ -10,6 +10,9 @@
 #'
 #' @return A list of tables of class `edc_database`.
 #' @export
+#' @importFrom dplyr mutate n
+#' @importFrom purrr imap
+#' @importFrom utils packageVersion
 edc_example = function(N=50, seed=42, outdated=FALSE){
   set.seed(seed)
   ext1 = as.POSIXct("2024-01-01 00:00:00 CET")

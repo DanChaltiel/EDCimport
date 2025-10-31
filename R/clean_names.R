@@ -13,6 +13,7 @@
 #' 
 #' @importFrom dplyr rename_with
 #' @importFrom purrr map_if
+#' @importFrom tibble tibble
 #' @export
 #' 
 #' @examples

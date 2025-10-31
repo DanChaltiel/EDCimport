@@ -11,8 +11,8 @@
 #'
 #' @return a tibble
 #' @export
-#' @importFrom dplyr across any_of arrange as_tibble filter mutate mutate_all pull select slice
-#' @importFrom purrr list_rbind map
+#' @importFrom dplyr any_of as_tibble filter mutate mutate_all pull select
+#' @importFrom purrr keep list_rbind map
 #' @importFrom stringr fixed str_detect
 #' @importFrom tidyr pivot_longer unnest
 #' 

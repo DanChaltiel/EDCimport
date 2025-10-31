@@ -17,7 +17,8 @@
 #' @return a factor, or `x` untouched.
 #' @export
 #' @importFrom cli cli_abort
-#' @importFrom dplyr case_match case_when 
+#' @importFrom dplyr case_match case_when setdiff
+#' @importFrom purrr map
 #' @importFrom stringr str_detect
 #'
 #' @examples 
@@ -233,10 +234,10 @@ get_extraction = function(lookup=edc_lookup()){
 
 #' @noRd
 #' @keywords internal
-#' @importFrom cli cli_abort
-#' @importFrom dplyr all_of everything select setdiff
+#' @importFrom cli cli_abort format_inline
+#' @importFrom dplyr all_of any_of enquo everything select setdiff
 #' @importFrom purrr keep
-#' @importFrom rlang as_label caller_call
+#' @importFrom rlang as_label caller_call set_names
 .edc_join = function(type){
   dplyr_join = switch(type, 
                 left=dplyr::left_join, right=dplyr::right_join, 

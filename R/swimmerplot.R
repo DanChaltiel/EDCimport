@@ -55,10 +55,12 @@
 #' save_plotly(p, "edc_swimmerplot.html")
 #' }
 #' @importFrom cli cli_abort
-#' @importFrom dplyr arrange left_join mutate n_distinct sym
+#' @importFrom dplyr arrange filter left_join mutate n_distinct summarise sym
+#' @importFrom forcats fct_reorder
 #' @importFrom ggplot2 aes facet_wrap geom_line geom_point geom_vline ggplot labs
 #' @importFrom glue glue
-#' @importFrom purrr list_rbind
+#' @importFrom lifecycle deprecate_warn
+#' @importFrom purrr list_rbind map
 #' @importFrom rlang check_dots_empty check_installed
 #' @importFrom stringr str_ends str_remove
 edc_swimmerplot = function(..., 
@@ -209,7 +211,7 @@ edc_swimmerplot = function(...,
 #' @noRd
 #' @keywords internal
 #' @importFrom cli cli_abort
-#' @importFrom dplyr rename select where
+#' @importFrom dplyr mutate rename select where
 #' @importFrom purrr discard map
 .select_dates = function(datasets, id){
   data_dates = datasets %>% 
@@ -261,10 +263,9 @@ edc_swimmerplot = function(...,
   data
 }
 
-#' @importFrom cli cli_abort cli_warn
-#' @importFrom dplyr filter mutate slice
+#' @importFrom cli cli_abort
+#' @importFrom dplyr filter mutate
 #' @importFrom forcats as_factor
-#' @importFrom rlang is_installed
 #' @importFrom stringr str_detect
 .parse_id_to_numeric = function (data, id, id_lim) {
   if(is.null(id_lim) || identical(id_lim, "deprecated")) id_lim =c(-Inf, Inf)
@@ -292,7 +293,9 @@ edc_swimmerplot = function(...,
   rtn
 }
 
-#' @importFrom tibble lst
+#' @importFrom cli cli_abort
+#' @importFrom dplyr lst
+#' @importFrom purrr map
 .parse_origin_fun = function(origin_fun){
   if(identical(origin_fun, "min")) origin_fun = c(min=min_narm)
   else if(identical(origin_fun, "max")) origin_fun = c(max=max_narm)

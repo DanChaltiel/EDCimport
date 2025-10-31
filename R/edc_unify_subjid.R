@@ -12,9 +12,10 @@
 #'
 #' @return database, with subject id modified
 #' @export
-#' @importFrom dplyr across any_of mutate select
-#' @importFrom purrr discard_at keep map map_lgl modify_if
-#' @importFrom rlang arg_match as_function
+#' @importFrom cli cli_abort
+#' @importFrom dplyr across any_of mutate
+#' @importFrom purrr map_lgl modify_if
+#' @importFrom rlang arg_match
 #'
 #' @examples
 #' 
@@ -83,6 +84,8 @@ harmonize_subjid = deprecatedly(edc_unify_subjid, when="0.6.0", what="harmonize_
 #' If NULL and not numeric, parsed to character
 #' If not NULL, parsed to rlang function
 #' @noRd
+#' @importFrom purrr map_lgl
+#' @importFrom rlang as_function
 .get_preprocess = function(preprocess, subjid_list) {
   if(is.null(preprocess)){
     numeric_subjid = subjid_list %>% map_lgl(~can_be_numeric(.x))
@@ -95,6 +98,8 @@ harmonize_subjid = deprecatedly(edc_unify_subjid, when="0.6.0", what="harmonize_
 
 #' list of SUBJID vectors for each dataset
 #' @noRd
+#' @importFrom dplyr any_of select
+#' @importFrom purrr discard_at keep map
 .get_subjid_list = function(database, col_subjid) {
   database %>% 
     keep(is.data.frame) %>% 

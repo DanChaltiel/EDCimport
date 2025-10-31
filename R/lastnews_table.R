@@ -16,7 +16,7 @@
 #'
 #' @return a dataframe
 #' @export
-#' @importFrom cli cli_abort
+#' @importFrom cli cli_abort cli_warn
 #' @importFrom dplyr arrange filter left_join mutate rowwise select slice_max ungroup
 #' @importFrom purrr discard discard_at imap list_rbind map_dbl
 #' @importFrom stringr str_detect
