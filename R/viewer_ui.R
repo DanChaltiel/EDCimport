@@ -13,8 +13,10 @@ edc_viewer_ui = function(datasets, lookup, title){
   extraction = attr(lookup, "datetime_extraction")
   EDCimport_version = attr(lookup, "EDCimport_version")
   project_name = attr(lookup, "project_name")
+  window_title = title
   if(is.null(title)){
     title = .get_title(extraction, EDCimport_version, project_name)
+    window_title = paste(project_name, " - EDCimport")
   }
     
   title_div = div(
@@ -31,7 +33,7 @@ edc_viewer_ui = function(datasets, lookup, title){
   )
   
   page_sidebar(
-    window_title = paste(project_name, " - EDCimport"),
+    window_title = window_title,
     title = title_div,
     height = "100vh",
     sidebar = sidebar(
