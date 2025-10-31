@@ -4,12 +4,12 @@
 \alias{compare_databases}
 \title{Compare multiple EDC database extractions}
 \usage{
-compare_databases(archives, fun_read = read_trialmaster, ...)
+compare_databases(databases, fun_read = read_trialmaster, ...)
 }
 \arguments{
-\item{archives}{file paths to read using \code{fun_read}. Can also be a list of \code{edc_database} objects.}
+\item{databases}{file paths to read using \code{fun_read}. Can also be a list of \code{edc_database} objects.}
 
-\item{fun_read}{Reading function to use on \code{archives}}
+\item{fun_read}{Reading function to use on \code{databases}}
 
 \item{...}{arguments passed to \code{fun_read}}
 }
@@ -24,46 +24,21 @@ Compares several EDC database extractions and returns:
 }
 }
 \examples{
+#list of 3 edc_databases, each being a list of multiple datasets
+databases = edc_example_multiple() 
 
-#helper
-mutate_list = function(.x, ...) {
-  dots = rlang::enquos(...)
-  for (nm in names(dots)) {
-    .x[[nm]] = rlang::eval_tidy(dots[[nm]], data = .x)
-  }
-  .x
-}
-
-db1 = edc_example()
-db2 = edc_example(N=60) \%>\% 
-  mutate_list(
-    data99 = data1, #new data
-    enrol = enrol \%>\% mutate(a=1, b=2), #add columns
-    data1 = data1 \%>\% select(-date2, -date3), #remove columns
-    data2 = data2 \%>\% mutate(a=1, date5=NULL), #both
-    datetime_extraction = as.POSIXct("2024-02-01")
-  )
-db3 = db2 \%>\% 
-  mutate_list(
-    data99 = data1, #new data
-    enrol = enrol \%>\% mutate(c=1, d=2), #add columns
-    data1 = data1 \%>\% select(-crfstat), #remove columns
-    data2 = data2 \%>\% mutate(b=1, date6=NULL), #both
-    datetime_extraction = as.POSIXct("2024-04-01")
-  )
-
-comparison = compare_databases(list(db1, db2, db3))
-  
+comparison = compare_databases(databases)
 comparison$table
 comparison$figures
 
-#in real world, you should better use archive paths:
+#in real world, you should better use paths with a reader function:
 \dontrun{
-  archives = c(
+  databases = c(
     "data/MYPROJECT_ExportTemplate_xxx_SAS_XPORT_2024_06_01_12_00.zip",
     "data/MYPROJECT_ExportTemplate_xxx_SAS_XPORT_2024_08_01_12_00.zip",
     "data/MYPROJECT_ExportTemplate_xxx_SAS_XPORT_2024_09_01_12_00.zip",
   )
-  comparison = compare_databases(archives, read_trialmaster, pw="the_password")
+  #`pw` is passed to `read_trialmaster()`
+  comparison = compare_databases(databases, fun_read=read_trialmaster, pw="the_password")
 }
 }
