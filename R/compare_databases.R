@@ -7,8 +7,8 @@
 #' - a summary table of the detected differences,
 #' - a set of diagnostic figures.
 #' #' 
-#' @param archives file paths to read using `fun_read`. Can also be a list of `edc_database` objects.
-#' @param fun_read Reading function to use on `archives`
+#' @param databases file paths to read using `fun_read`. Can also be a list of `edc_database` objects.
+#' @param fun_read Reading function to use on `databases`
 #' @param ... arguments passed to `fun_read`
 #'
 #' @export
@@ -17,55 +17,30 @@
 #' @importFrom glue glue
 #' @importFrom purrr map map_chr map_lgl
 #' @examples
+#' #list of 3 edc_databases, each being a list of multiple datasets
+#' databases = edc_example_multiple() 
 #' 
-#' #helper
-#' mutate_list = function(.x, ...) {
-#'   dots = rlang::enquos(...)
-#'   for (nm in names(dots)) {
-#'     .x[[nm]] = rlang::eval_tidy(dots[[nm]], data = .x)
-#'   }
-#'   .x
-#' }
-#' 
-#' db1 = edc_example()
-#' db2 = edc_example(N=60) %>% 
-#'   mutate_list(
-#'     data99 = data1, #new data
-#'     enrol = enrol %>% mutate(a=1, b=2), #add columns
-#'     data1 = data1 %>% select(-date2, -date3), #remove columns
-#'     data2 = data2 %>% mutate(a=1, date5=NULL), #both
-#'     datetime_extraction = as.POSIXct("2024-02-01")
-#'   )
-#' db3 = db2 %>% 
-#'   mutate_list(
-#'     data99 = data1, #new data
-#'     enrol = enrol %>% mutate(c=1, d=2), #add columns
-#'     data1 = data1 %>% select(-crfstat), #remove columns
-#'     data2 = data2 %>% mutate(b=1, date6=NULL), #both
-#'     datetime_extraction = as.POSIXct("2024-04-01")
-#'   )
-#' 
-#' comparison = compare_databases(list(db1, db2, db3))
-#'   
+#' comparison = compare_databases(databases)
 #' comparison$table
 #' comparison$figures
 #' 
-#' #in real world, you should better use archive paths:
+#' #in real world, you should better use paths with a reader function:
 #' \dontrun{
-#'   archives = c(
+#'   databases = c(
 #'     "data/MYPROJECT_ExportTemplate_xxx_SAS_XPORT_2024_06_01_12_00.zip",
 #'     "data/MYPROJECT_ExportTemplate_xxx_SAS_XPORT_2024_08_01_12_00.zip",
 #'     "data/MYPROJECT_ExportTemplate_xxx_SAS_XPORT_2024_09_01_12_00.zip",
 #'   )
-#'   comparison = compare_databases(archives, read_trialmaster, pw="the_password")
+#'   #`pw` is passed to `read_trialmaster()`
+#'   comparison = compare_databases(databases, fun_read=read_trialmaster, pw="the_password")
 #' }
-compare_databases = function(archives, fun_read=read_trialmaster, ...){
+compare_databases = function(databases, fun_read=read_trialmaster, ...){
   check_installed(c("gt", "patchwork"), reason="for `compare_databases()` to work.")
-  db_list = archives
-  is_database = map_lgl(archives, ~inherits(.x, "edc_database"))
+  db_list = databases
+  is_database = map_lgl(databases, ~inherits(.x, "edc_database"))
   if(!all(is_database)){
     #FIXME faire ça dans un environnement controlé ? sinon ça plombe un appel antérieur à read_tm
-    db_list = archives %>% 
+    db_list = databases %>% 
       map(~fun_read(.x, ...)) %>% 
       suppressWarnings()
   }

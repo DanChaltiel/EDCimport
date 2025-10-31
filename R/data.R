@@ -52,6 +52,35 @@ edc_example = function(N=50, seed=42, outdated=FALSE){
 edc_example_plot = edc_example
 
 
+#' Example for `compare_databases()`
+#' 
+#' This functions returns a list of 3 `edc_example()` instances, slightly different from one another.
+#' 
+#' @export
+#' @keywords internal
+#' @importFrom dplyr mutate select
+edc_example_multiple = function(){
+  db1 = edc_example()
+  db2 = edc_example(N=60) %>%
+    list_mutate(
+      data99 = data1, #new data
+      enrol = enrol %>% mutate(a=1, b=2), #add columns
+      data1 = data1 %>% select(-date2, -date3), #remove columns
+      data2 = data2 %>% mutate(a=1, date5=NULL), #both
+      datetime_extraction = as.POSIXct("2024-02-01")
+    ) %>% 
+    suppressWarnings()
+  db3 = db2 %>%
+    list_mutate(
+      data99 = data1, #new data
+      enrol = enrol %>% mutate(c=1, d=2), #add columns
+      data1 = data1 %>% select(-crfstat), #remove columns
+      data2 = data2 %>% mutate(b=1, date6=NULL), #both
+      datetime_extraction = as.POSIXct("2024-04-01")
+    ) %>% 
+    suppressWarnings()
+  list(db1, db2, db3)
+}
 
 # Utils ---------------------------------------------------------------------------------------
 
