@@ -9,7 +9,11 @@ edc_viewer(data = NULL, ..., background = TRUE, title = NULL, port = 1209)
 \arguments{
 \item{data}{A list of dataframes to view. If \code{NULL}, defaults to the last datasets loaded using EDCimport functions.}
 
+\item{...}{unused}
+
 \item{background}{Whether the app should run in a background process.}
+
+\item{title}{The app title, in the header and the tab label.}
 
 \item{port}{The TCP port that the application should listen on.}
 }

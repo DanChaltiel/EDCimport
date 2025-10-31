@@ -5,7 +5,9 @@
 #' 
 #' @param data A list of dataframes to view. If `NULL`, defaults to the last datasets loaded using EDCimport functions.
 #' @param background Whether the app should run in a background process.
+#' @param title The app title, in the header and the tab label.
 #' @param port The TCP port that the application should listen on. 
+#' @param ... unused
 #'
 #' @export
 #' @importFrom cli cli_abort
