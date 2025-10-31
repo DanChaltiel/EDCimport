@@ -47,22 +47,7 @@ compare_databases = function(archives, fun_read=read_trialmaster, ...){
     tidyr::complete(source, dataset) %>% 
     arrange(dataset) %>% 
     as_tibble()
-  ## Graphique d'évolution de nrow, ncol, n_id, rows_per_id -----
   
-  ### as facets -----
-  # fig1 =
-  #   lk %>% 
-  #   select(source, dataset, nrow, ncol, n_id, rows_per_id) %>% 
-  #   pivot_longer(-c(source, dataset)) %>% 
-  #   ggplot() +
-  #   aes(x=value, y=dataset, color=source, group=dataset) +
-  #   # geom_point(aes(order=source), na.rm=TRUE, position=position_dodge(width=1.5, orientation="y")) +
-  #   geom_point(na.rm=TRUE) +
-  #   # geom_jitter(width=0) +
-  #   geom_line(na.rm=TRUE) +
-  #   facet_wrap(~name, scales="free_x")
-  
-  ### as list -----
   # https://github.com/tidyverse/ggplot2/issues/6719 for dodging
   v = c("Number of rows"="nrow", "Number of columns"="ncol", 
         "Number of patients"="n_id", "Number of rows per patient"="rows_per_id")
@@ -92,7 +77,6 @@ compare_databases = function(archives, fun_read=read_trialmaster, ...){
   
   #TODO formatter dataset, ajouter get_label en tooltip
   x = db_list %>% 
-    # keep(is_dataset) %>% 
     imap(~{
       .x = .x %>% keep(is_dataset)
       tibble(dataset=names(.x), names=map(.x, names))
@@ -102,7 +86,6 @@ compare_databases = function(archives, fun_read=read_trialmaster, ...){
     arrange(dataset, db)
   
   f=function(x, prefix, fun){
-    # browser()
     map_chr(x, ~{
       if(length(.x)==0) return("")
       glue("{prefix} [{fun(.x)}]")
@@ -127,11 +110,9 @@ compare_databases = function(archives, fun_read=read_trialmaster, ...){
       diff_str = ifelse(ncol==0|row_number()==1, "", glue("{plus_str}\n{minus_str}")),
       diff_dbl = case_when(
         ncol==0 ~ "Absent",
-        # is.na(lag(ncol)) ~ "Present", 
         ncol==plus_dbl ~ "Added", 
         .default = glue("+{plus_dbl} -{minus_dbl}")
       ),
-      # browser(),
       # tooltip = glue("<span title=\"{.escape_html(diff_str)}\">{.escape_html(diff_dbl)}</span>"),
       tooltip = glue("{.escape_html(diff_str)}____{diff_dbl}"),
       .by=dataset
@@ -146,9 +127,7 @@ compare_databases = function(archives, fun_read=read_trialmaster, ...){
     ) %>% 
     select(db, dataset, tooltip) %>%
     pivot_wider(names_from=db, values_from=tooltip) %>% 
-    # mutate_all(~map_chr(.x, html)) %>% 
     gt::gt() %>%
-    # fmt_markdown(columns=-dataset)
     gt::text_transform(
       locations = gt::cells_body(columns = -dataset),
       fn = function(x){
@@ -166,12 +145,12 @@ compare_databases = function(archives, fun_read=read_trialmaster, ...){
 
 
 .escape_html = function(x){
-  x = gsub("&", "&amp;", x, fixed = TRUE)
-  x = gsub("<", "&lt;", x, fixed = TRUE)
-  x = gsub(">", "&gt;", x, fixed = TRUE)
-  x = gsub('"', "&quot;", x, fixed = TRUE)
-  x = gsub("'", "&#39;", x, fixed = TRUE)
-  x
+  x %>%
+    str_replace_all("&", "&amp;") %>%
+    str_replace_all("<", "&lt;") %>%
+    str_replace_all(">", "&gt;") %>%
+    str_replace_all('"', "&quot;") %>%
+    str_replace_all("'", "&#39;")
 }
 
 #' @importFrom purrr map_dbl
