@@ -25,6 +25,15 @@ Compares several EDC database extractions and returns:
 }
 \examples{
 
+#helper
+mutate_list = function(.x, ...) {
+  dots = rlang::enquos(...)
+  for (nm in names(dots)) {
+    .x[[nm]] = rlang::eval_tidy(dots[[nm]], data = .x)
+  }
+  .x
+}
+
 db1 = edc_example()
 db2 = edc_example(N=60) \%>\% 
   mutate_list(
