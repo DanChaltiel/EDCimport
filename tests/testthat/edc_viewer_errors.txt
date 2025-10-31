@@ -1,0 +1,8 @@
+Loading required package: shiny
+
+Listening on http://127.0.0.1:1209
+Error in edc_patient_gridplot(datasets = datasets, lookup = lookup) : 
+  [1m[22mNo datasets are availables
+[36mℹ[39m This is an internal error that was detected in the [34mEDCimport[39m package.
+  Please report it at [3m[34m<https://github.com/DanChaltiel/EDCimport/issues>[39m[23m with a
+  reprex ([3m[34m<https://tidyverse.org/help/>[39m[23m) and the full backtrace.

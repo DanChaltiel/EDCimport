@@ -146,6 +146,19 @@ list_select = function(x, ...){
   x[nm]
 }
 
+
+#' Mutate syntax for lists
+#' @noRd
+#' @keywords internal
+#' @importFrom rlang enquos eval_tidy
+list_mutate = function(.x, ...) {
+  dots = enquos(...)
+  for (nm in names(dots)) {
+    .x[[nm]] = eval_tidy(dots[[nm]], data = .x)
+  }
+  .x
+}
+
 #' arrange, but mixed
 #'
 #' @noRd
