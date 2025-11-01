@@ -41,7 +41,7 @@ compare_databases = function(databases, fun_read=read_trialmaster, ...){
   if(!all(is_database)){
     #FIXME faire ça dans un environnement controlé ? sinon ça plombe un appel antérieur à read_tm
     db_list = databases %>% 
-      map(~fun_read(.x, ...)) %>% 
+      map(function(.x) fun_read(.x, ...)) %>% 
       suppressWarnings()
   }
   
