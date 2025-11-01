@@ -48,7 +48,8 @@ read_trialmaster = function(archive, ..., use_cache="write",
     cache_outdated = packageVersion("EDCimport") > cache_version
     if(cache_outdated){
       cli_inform(c(i="Updating cache with latest {.pkg EDCimport} version
-                      (v{cache_version} to v{packageVersion('EDCimport')})"))
+                      (v{cache_version} to v{packageVersion('EDCimport')})"), 
+                 class="edc_read_from_cache_outdated")
     }
   }
   
