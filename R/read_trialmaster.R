@@ -40,7 +40,7 @@ read_trialmaster = function(archive, ..., use_cache="write",
   cache_file = .get_tm_cache(directory, extract_datetime)
   read_from_cache = file_exists(cache_file) && (isTRUE(use_cache) || use_cache=="read")
   cache_outdated = FALSE
-  cache_version = "inexistant"
+  # cache_version = "inexistant"
   
   if(read_from_cache){
     rtn = .read_tm_cache(cache_file, clean_names_fun, verbose) %>% 
@@ -54,8 +54,8 @@ read_trialmaster = function(archive, ..., use_cache="write",
     }
   }
 
-cl = glue("cache_file={cache_file}, file_exists(cache_file)={file_exists(cache_file)}, use_cache={use_cache}, cache_outdated={cache_outdated}, cache_version={cache_version}, pkg_version={packageVersion('EDCimport')}")
-print(cl)
+# cl = glue("cache_file={cache_file}, file_exists(cache_file)={file_exists(cache_file)}, use_cache={use_cache}, cache_outdated={cache_outdated}, cache_version={cache_version}, pkg_version={packageVersion('EDCimport')}")
+# print(cl)
   
   if(!read_from_cache || cache_outdated){
     rtn = .read_tm_zip(archive=archive, pw=pw, extract_datetime=extract_datetime,
@@ -156,6 +156,9 @@ print(cl)
   if(isTRUE(use_cache) || use_cache=="write"){
     if(verbose>0) cli_inform("Writing cache file {.file {cache_file}}", class="edc_create_cache")
     saveRDS(rtn, cache_file)
+    if(!file_exists(cache_file)) {
+      cli_warn("Could not save cache file", class="read_tm_zip_no_cache_warning")
+    }
   }
   
   class(rtn) = "edc_database"
