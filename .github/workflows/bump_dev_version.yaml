@@ -1,12 +1,15 @@
-on:
-  workflow_dispatch:
-  push:
-    branches:
-      - main
+
 name: Bump dev version
 
+on:
+  workflow_run:
+    workflows: ["R-CMD-check"]
+    types:
+      - completed
+      
 jobs:
   update_version:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
