@@ -21,6 +21,9 @@ test_that("Read TM with cache", {
   #first read, read from zip (default: use_cache=write)
   w = read_trialmaster(filename) %>% 
     expect_classed_conditions(message_class=c("read_tm_zip", "edc_create_cache"))
+  print(fs::file_exists(cachename))
+  Sys.sleep(0.5)
+  expect_true(fs::file_exists(cachename))
   
   #2nd, use_cache=TRUE -> read from cache
   w = read_trialmaster(filename, use_cache=TRUE) %>%
