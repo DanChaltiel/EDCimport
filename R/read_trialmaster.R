@@ -40,6 +40,7 @@ read_trialmaster = function(archive, ..., use_cache="write",
   cache_file = .get_tm_cache(directory, extract_datetime)
   read_from_cache = file_exists(cache_file) && (isTRUE(use_cache) || use_cache=="read")
   cache_outdated = FALSE
+  cache_version = "inexistant"
   
   if(read_from_cache){
     rtn = .read_tm_cache(cache_file, clean_names_fun, verbose) %>% 
@@ -52,6 +53,9 @@ read_trialmaster = function(archive, ..., use_cache="write",
                  class="edc_read_from_cache_outdated")
     }
   }
+
+cl = glue("cache_file={cache_file}, file_exists(cache_file)={file_exists(cache_file)}, use_cache={use_cache}, cache_outdated={cache_outdated}, cache_version={cache_version}, pkg_version={packageVersion('EDCimport')}")
+print(cl)
   
   if(!read_from_cache || cache_outdated){
     rtn = .read_tm_zip(archive=archive, pw=pw, extract_datetime=extract_datetime,
