@@ -79,16 +79,18 @@ compare_databases = function(databases, fun_read=read_trialmaster, ...){
     arrange(dataset) %>% 
     as_tibble()
   
-  # https://github.com/tidyverse/ggplot2/issues/6719 for dodging
   v = c("Number of rows"="nrow", "Number of columns"="ncol", 
         "Number of patients"="n_id", "Number of rows per patient"="rows_per_id")
   p_list = v %>% imap(~{
     lk %>% 
       select(source, dataset, value=all_of(unname(.x))) %>% 
+      mutate(group_dodge = paste(source, dataset)) %>% 
       ggplot() +
       aes(x=value, y=dataset, color=source, group=dataset) +
       # geom_point(aes(order=source), na.rm=TRUE, position=position_dodge(width=1.5, orientation="y")) +
       # geom_jitter(width=0) +
+      # geom_point(na.rm=TRUE, position=position_dodge(width=1.5, orientation="y")) + 
+      # geom_line(aes(group=group_dodge), position=position_dodge(width=1.5, orientation="y"), na.rm=TRUE) +
       geom_point(na.rm=TRUE) + 
       geom_line(na.rm=TRUE) +
       labs(x=.y, y=NULL) +
