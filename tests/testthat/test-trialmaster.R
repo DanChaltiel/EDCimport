@@ -5,12 +5,10 @@
 skip_on_cran()
 edc_options(edc_lookup_overwrite_warn=FALSE)
 
-if(FALSE){
-  cachename = test_path("trialmaster_export_2022-08-25 15h16.rds")
-  filename = test_path("CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16.zip")
-  filename_noformat = test_path("CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16_noformat.zip")
-  filename_bad = test_path("CRF_Dan_Export.zip")
-}
+cachename = test_path("trialmaster_export_2022-08-25 15h16.rds")
+filename = test_path("CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16.zip")
+filename_noformat = test_path("CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16_noformat.zip")
+filename_bad = test_path("CRF_Dan_Export.zip")
 
 
 test_that("Read TM with cache", {
@@ -21,8 +19,6 @@ test_that("Read TM with cache", {
   #first read, read from zip (default: use_cache=write)
   w = read_trialmaster(filename) %>% 
     expect_classed_conditions(message_class=c("read_tm_zip", "edc_create_cache"))
-  print(fs::file_exists(cachename))
-  Sys.sleep(0.5)
   expect_true(fs::file_exists(cachename))
   
   #2nd, use_cache=TRUE -> read from cache
@@ -45,9 +41,7 @@ test_that("Read TM with cache", {
     expect_classed_conditions(message_class="read_tm_zip",
                               warning_class="edc_lookup_overwrite_warn")
   
-  
   expect_length(w, 8)
-
 
   load_database(w, remove=FALSE)
   expect_true(exists("pat"))

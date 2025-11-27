@@ -47,41 +47,17 @@ shhh("dplyr")
 shhh("purrr")
 
 
-# edc_options(
-#   # trialmaster_pw="0", 
-#   edc_lookup_overwrite_warn=FALSE
-# )
-
-# cachename="trialmaster_export_2022-08-25 15h16.rds"
-# filename="CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16.zip"
-# filename_noformat="CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16_noformat.zip"
-# filename_nopw="CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16_nopw.zip"
-# filename_bad="CRF_Dan_Export.zip"
-
-
 cachename = test_path("trialmaster_export_2022-08-25 15h16.rds")
 filename = test_path("CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16.zip")
 filename_noformat = test_path("CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16_noformat.zip")
 filename_bad = test_path("CRF_Dan_Export.zip")
-
-
-# print("uhuhhuhu")
-# print(is_testing())
-# print("uhuhhuhu")
-
-# if(!is_testing()){
-#   cachename=paste0("tests/testthat/", cachename)
-#   filename=paste0("tests/testthat/", filename)
-#   filename_noformat=paste0("tests/testthat/", filename_noformat)
-#   filename_nopw=paste0("tests/testthat/", filename_nopw)
-#   filename_bad=paste0("tests/testthat/", filename_bad)
-# }
-
 clean_cache = function(){
   if(file.exists(cachename)) file.remove(cachename)
   if(file.exists(cachename)) stop("ERROR")
   invisible(TRUE)
 }
+clean_cache()
+
 v=utils::View
 wd=function()browseURL(".")
 
@@ -190,7 +166,6 @@ tryCatch2 = function(expr){
   rtn
 }
 
-# clean_cache()
 cli::cli_inform(c(i="is_testing={.val {is_testing()}}, 
                   is_checking={.val {is_checking()}}, 
                   is_parallel={.val {is_parallel()}}"))
