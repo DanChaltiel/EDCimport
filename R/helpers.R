@@ -449,8 +449,8 @@ reset_manual_correction = function(){
 #' @importFrom cli cli_abort cli_warn
 #' @importFrom purrr keep
 get_datasets = function(lookup=edc_lookup(), envir=edc_data_env()){
-  if(is.null(lookup)){
-    cli_abort("lookup cannot be NULL, did you forgot to import your database?")
+  if(is.null(lookup) || is.null(envir)){
+    cli_abort("lookup and envir cannot be NULL, did you forgot to import your database?")
   }
   rtn = lookup$dataset %>% 
     mget(envir=envir, ifnotfound=list(NULL), mode="list", inherits=TRUE)

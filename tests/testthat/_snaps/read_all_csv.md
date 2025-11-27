@@ -8,11 +8,11 @@
         subjid date1      date2      date3      x     crfname crfstat   
          <int> <chr>      <chr>      <chr>      <chr> <chr>   <chr>     
       1      1 2010-04-26 2010-05-15 2010-05-12 X     data1   Incomplete
-      2      2 2010-04-15 2010-05-13 2010-04-27 Y     data1   Complete  
-      3      3 2010-05-08 2010-04-22 2010-05-24 X     data1   Complete  
-      4      4 2010-04-29 2010-05-21 2010-05-10 X     data1   Incomplete
-      5      5 2010-04-23 2010-04-26 2010-05-08 X     data1   Incomplete
-      6      6 2010-04-25 2010-05-04 2010-04-30 X     data1   Incomplete
+      2      1 2010-04-26 2010-05-15 2010-05-12 X     data1   Complete  
+      3      2 2010-04-15 2010-05-13 2010-04-27 Y     data1   Complete  
+      4      2 2010-04-15 2010-05-13 2010-04-27 Y     data1   Complete  
+      5      3 2010-05-08 2010-04-22 2010-05-24 X     data1   Complete  
+      6      3 2010-05-08 2010-04-22 2010-05-24 X     data1   Complete  
       
       $data2
       # A tibble: 6 x 6

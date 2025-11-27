@@ -7,14 +7,9 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 ### New features
 
 -   New arguments in `edc_swimmerplot()`: `origin_fun` to summarise `origin` at patient level using, and `data_list` to control the datasets.
-
 -   New features in `edc_viewer()`:
-
     -   Support for multiple instances on different ports with custom datasets (#100, #114)\
         For instance, you can now run `edc_viewer(data=lst(iris, mtcars), port=1212)`
-
-    <!-- -->
-
     -   New button to browse all the column labels (#113).
 
 ### Bug fixes & Improvements
@@ -22,9 +17,10 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 -   Fixed modifiers `edc_clean_names()`, `edc_unify_subjid()`, and `edc_split_mixed()` that stripped attributes like project name (#111).
 -   `edc_data_stop()` now works without a SUBJID and defaults to no issue number (#109).
 -   Fixed bug in `edc_left_join()` with case-sensitivity on SUBJID (#108).
--   Improved `save_edc_data_warnings()` with options to hide the resolved issues and to not include stops, and better default path (#107, #110, #112)
--   Improved `edc_swimmerplot()` by removing `origin` by default (#106).
 -   Fixed bug in `assert_no_duplicate()` not stopping in table with both columns `SUBJID` and `subjid` (#105).
+-   Improved `save_edc_data_warnings()` with options to hide the resolved issues and to not include stops, and better default path (#107, #110, #112)
+-   Improved reading functions so that all tables are sorted by SUBJID (#115).
+-   Improved `edc_swimmerplot()` by removing `origin` by default (#106).
 -   Improved `edc_warn_extraction_date()` with a strict unit "days".
 -   Improved `save_plotly()` with a glue syntax for param `file`.
 

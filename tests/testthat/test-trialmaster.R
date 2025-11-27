@@ -55,6 +55,17 @@ test_that("Read TM with cache", {
   expect_s3_class(site$INCLSITE, "factor")
   expect_equal(as.character(site$INCLSITE), "Yes")
   expect_equal(dim(.lookup), c(5,9))
+  
+  #expect SUBJID sorted
+  w %>% 
+    map_lgl(~{
+      if(!is.data.frame(.x) || !"SUBJID" %in% names(.x)) return(NA)
+      # waldo::compare(as.character(.x$SUBJID), as.character(sort(.x$SUBJID)))
+      identical(as.character(.x$SUBJID), as.character(sort(.x$SUBJID)))
+    }) %>% 
+    all(na.rm=TRUE) %>% 
+    expect_true()
+  
   clean_cache()
 })
 
