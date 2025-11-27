@@ -2,8 +2,8 @@
 skip_on_cran()
 edc_options(edc_lookup_overwrite_warn=FALSE)
 
+#Don't use the cache, or there could be interactions with other tests in parallel.
 test_that("Read a TM archive", {
-  clean_cache()
   clean_lookup()
   local_reproducible_output(width=125, unicode=TRUE)
   
@@ -16,7 +16,7 @@ test_that("Read a TM archive", {
   expect_snapshot(transform=f, {
     #read
     filename = test_path("CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16.zip")
-    w = read_trialmaster(filename, use_cache="write", verbose=9)
+    w = read_trialmaster(filename, use_cache=FALSE, verbose=9)
     #print helpers
     w$datetime_extraction
     w$.lookup
@@ -40,6 +40,4 @@ test_that("Read a TM archive", {
         .x %>% select(where(is.factor)) %>% map(~head(levels(.x), 3))
       })
   })
-  
-  clean_cache()
 })
