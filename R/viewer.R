@@ -7,6 +7,7 @@
 #' @param background Whether the app should run in a background process.
 #' @param title The app title, in the header and the tab label.
 #' @param port The TCP port that the application should listen on. 
+#' @param replace whether to replace a previously running app on the same port. 
 #' @param ... unused
 #'
 #' @export
@@ -14,13 +15,14 @@
 #' @importFrom dplyr arrange
 #' @importFrom rlang caller_arg check_dots_empty check_installed is_named set_names
 #' @importFrom utils browseURL
-edc_viewer = function(data=NULL, ..., background=TRUE, title=NULL, port=1209){
+edc_viewer = function(data=NULL, ..., background=TRUE, title=NULL, port=1209, replace=FALSE){
   check_installed(c("DT", "bslib", "shiny"), "for `edc_viewer()` to work.")
   check_dots_empty()
   if(is.null(data)){
     lookup = edc_lookup(dataset)
     datasets = get_datasets(lookup)
   } else {
+    if(inherits(data, "flextable")) data = data$body$dataset
     datasets = data
     if(is.data.frame(data)) datasets = list(data) %>% set_names(caller_arg(data))
     if(!is_named(data)){
@@ -35,7 +37,7 @@ edc_viewer = function(data=NULL, ..., background=TRUE, title=NULL, port=1209){
   
   
   if(isTRUE(background)){
-    .run_background(datasets, lookup, title, port, shiny_url)
+    .run_background(datasets, lookup, title, port, shiny_url, replace)
     return(edcimport_env$process)
   }
   
@@ -59,10 +61,10 @@ edc_viewer = function(data=NULL, ..., background=TRUE, title=NULL, port=1209){
 #' @importFrom dplyr lst
 #' @importFrom rlang check_installed
 #' @importFrom utils browseURL
-.run_background = function(datasets, lookup, title, port, shiny_url){
+.run_background = function(datasets, lookup, title, port, shiny_url, replace){
   check_installed("callr", "for `import_review()` to work in background")
   cur_port = paste0("port_", port)
-  .check_current_port(cur_port)
+  .check_current_port(cur_port, replace)
   
   p = callr::r_bg(
     .launch_shiny, 
@@ -92,20 +94,18 @@ edc_viewer = function(data=NULL, ..., background=TRUE, title=NULL, port=1209){
 #' @importFrom cli cli_abort cli_inform
 #' @importFrom rlang caller_call
 #' @importFrom utils askYesNo
-.check_current_port = function(cur_port){
+.check_current_port = function(cur_port, replace){
   cur_viewer = edcimport_env$viewers[[cur_port]]
   p = cur_viewer$process
-  
   if(!is.null(cur_viewer) && p$is_alive()){
-    cli_inform("An EDCviewer instance is already running on port {cur_viewer$port}:")
-    print(cur_viewer)
-    ok = askYesNo("Replace the running EDCviewer on this port?")
-    if(!isTRUE(ok)){
-      cli_abort("Operation cancelled by the user.", call=caller_call(n=2))
+    if(isTRUE(replace)){
+      p$kill()
+      p$wait(2000) #wait for the kill for 2s max
+      if(p$is_alive()) p$kill_tree()
+    } else {
+      print(cur_viewer)
+      cli_abort(c("An EDCviewer instance is already running on port {cur_viewer$port}. Use {.code edc_viewer(..., replace=TRUE)} to replace it."))
     }
-    p$kill()
-    p$wait(2000) #wait for the kill for 2s max
-    if(p$is_alive()) p$kill_tree()
   }
 }
 

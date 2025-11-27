@@ -4,7 +4,14 @@
 \alias{edc_viewer}
 \title{Shiny data explorer}
 \usage{
-edc_viewer(data = NULL, ..., background = TRUE, title = NULL, port = 1209)
+edc_viewer(
+  data = NULL,
+  ...,
+  background = TRUE,
+  title = NULL,
+  port = 1209,
+  replace = FALSE
+)
 }
 \arguments{
 \item{data}{A list of dataframes to view. If \code{NULL}, defaults to the last datasets loaded using EDCimport functions.}
@@ -16,6 +23,8 @@ edc_viewer(data = NULL, ..., background = TRUE, title = NULL, port = 1209)
 \item{title}{The app title, in the header and the tab label.}
 
 \item{port}{The TCP port that the application should listen on.}
+
+\item{replace}{whether to replace a previously running app on the same port.}
 }
 \description{
 Run a Shiny application that allows to browse the datasets.
