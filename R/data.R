@@ -67,9 +67,10 @@ edc_example_multiple = function(){
       enrol = enrol %>% mutate(a=1, b=2), #add columns
       data1 = data1 %>% select(-date2, -date3), #remove columns
       data2 = data2 %>% mutate(a=1, date5=NULL), #both
-      datetime_extraction = as.POSIXct("2024-02-01")
     ) %>% 
     suppressWarnings()
+  db2$.lookup = build_lookup(db2) %>% extend_lookup()
+  
   db3 = db2 %>%
     list_mutate(
       data99 = data1, #new data
@@ -79,6 +80,8 @@ edc_example_multiple = function(){
       datetime_extraction = as.POSIXct("2024-04-01")
     ) %>% 
     suppressWarnings()
+  db3$.lookup = build_lookup(db3) %>% extend_lookup()
+  
   list(db1, db2, db3)
 }
 

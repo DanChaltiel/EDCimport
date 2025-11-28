@@ -1,35 +1,12 @@
 
-mutate_list = function(.x, ...) {
-  dots = rlang::enquos(...)
-  for (nm in names(dots)) {
-    .x[[nm]] = rlang::eval_tidy(dots[[nm]], data = .x)
-  }
-  .x
-}
 
 edc_options(edc_lookup_overwrite_warn=FALSE)
 
 test_that("compare_databases() works", {
   
-  db1 = edc_example()
-  db2 = edc_example(N=60) %>% 
-    mutate_list(
-      data99 = data1, #new data
-      enrol = enrol %>% mutate(a=1, b=2), #add columns
-      data1 = data1 %>% select(-date2, -date3), #remove columns
-      data2 = data2 %>% mutate(a=1, date5=NULL), #both
-      datetime_extraction = as.POSIXct("2024-02-01")
-    )
-  db3 = db2 %>% 
-    mutate_list(
-      data999 = data1, #new data
-      enrol = enrol %>% mutate(c=1, d=2), #add columns
-      data1 = data1 %>% select(-crfstat), #remove columns
-      data2 = data2 %>% mutate(b=1, date6=NULL), #both
-      datetime_extraction = as.POSIXct("2024-04-01")
-    )
+  mult = edc_example_multiple()
   
-  comparison = compare_databases(list(db1, db2, db3)) %>% 
+  comparison = compare_databases(mult) %>% 
     expect_classed_conditions(warning_class="edc_compare_databases_unique_date_warning")
   
   
