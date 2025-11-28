@@ -39,10 +39,13 @@ compare_databases = function(databases, fun_read=read_trialmaster, ...){
   db_list = databases
   is_database = map_lgl(databases, ~inherits(.x, "edc_database"))
   if(!all(is_database)){
-    #FIXME faire ça dans un environnement controlé ? sinon ça plombe un appel antérieur à read_tm
-    db_list = databases %>% 
-      map(function(.x) fun_read(.x, ...)) %>% 
-      suppressWarnings()
+    check_installed(c("callr"), reason="for `compare_databases()` to read files.")
+    db_list = callr::r(
+      function(databases, fun_read, ...){
+        suppressWarnings(purrr::map(databases, function(.x) fun_read(.x, ...)))
+      }, 
+      args=list(databases=databases, fun_read=fun_read, ...)
+    )
   }
   
   names(db_list) = db_list %>% 
