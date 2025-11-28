@@ -44,13 +44,12 @@
 <h2 class="pkg-version" data-toc-text="0.6.1" id="edcimport-061-dev">EDCimport 0.6.1 (dev)<a class="anchor" aria-label="anchor" href="#edcimport-061-dev"></a></h2>
 <div class="section level4">
 <h4 id="new-features-0-6-1">New features<a class="anchor" aria-label="anchor" href="#new-features-0-6-1"></a></h4>
-<ul><li><p>New arguments in <code><a href="../reference/edc_swimmerplot.html">edc_swimmerplot()</a></code>: <code>origin_fun</code> to summarise <code>origin</code> at patient level using, and <code>data_list</code> to control the datasets.</p></li>
-<li>
-<p>New features in <code><a href="../reference/edc_viewer.html">edc_viewer()</a></code>:</p>
+<ul><li>New arguments in <code><a href="../reference/edc_swimmerplot.html">edc_swimmerplot()</a></code>: <code>origin_fun</code> to summarise <code>origin</code> at patient level using, and <code>data_list</code> to control the datasets.</li>
+<li>New features in <code><a href="../reference/edc_viewer.html">edc_viewer()</a></code>:
 <ul><li>Support for multiple instances on different ports with custom datasets (<a href="https://github.com/DanChaltiel/EDCimport/issues/100" class="external-link">#100</a>, <a href="https://github.com/DanChaltiel/EDCimport/issues/114" class="external-link">#114</a>)<br>
 For instance, you can now run <code>edc_viewer(data=lst(iris, mtcars), port=1212)</code>
 </li>
-</ul><!-- --><ul><li>New button to browse all the column labels (<a href="https://github.com/DanChaltiel/EDCimport/issues/113" class="external-link">#113</a>).</li>
+<li>New button to browse all the column labels (<a href="https://github.com/DanChaltiel/EDCimport/issues/113" class="external-link">#113</a>).</li>
 </ul></li>
 </ul></div>
 <div class="section level4">
@@ -58,10 +57,11 @@ For instance, you can now run <code>edc_viewer(data=lst(iris, mtcars), port=1212
 <ul><li>Fixed modifiers <code><a href="../reference/edc_clean_names.html">edc_clean_names()</a></code>, <code><a href="../reference/edc_unify_subjid.html">edc_unify_subjid()</a></code>, and <code><a href="../reference/edc_split_mixed.html">edc_split_mixed()</a></code> that stripped attributes like project name (<a href="https://github.com/DanChaltiel/EDCimport/issues/111" class="external-link">#111</a>).</li>
 <li>
 <code><a href="../reference/edc_data_warn.html">edc_data_stop()</a></code> now works without a SUBJID and defaults to no issue number (<a href="https://github.com/DanChaltiel/EDCimport/issues/109" class="external-link">#109</a>).</li>
-<li>Fixed bug in <code><a href="../reference/edc_left_join.html">edc_left_join()</a></code> with case-sensitivity on SUBJID (<a href="https://github.com/DanChaltiel/EDCimport/issues/108" class="external-link">#108</a>).</li>
-<li>Improved <code><a href="../reference/save_edc_data_warnings.html">save_edc_data_warnings()</a></code> with options to hide the resolved issues and to not include stops, and better default path (<a href="https://github.com/DanChaltiel/EDCimport/issues/107" class="external-link">#107</a>, <a href="https://github.com/DanChaltiel/EDCimport/issues/110" class="external-link">#110</a>, <a href="https://github.com/DanChaltiel/EDCimport/issues/112" class="external-link">#112</a>)</li>
-<li>Improved <code><a href="../reference/edc_swimmerplot.html">edc_swimmerplot()</a></code> by removing <code>origin</code> by default (<a href="https://github.com/DanChaltiel/EDCimport/issues/106" class="external-link">#106</a>).</li>
+<li>Fixed bugs in <code><a href="../reference/edc_left_join.html">edc_left_join()</a></code> with case-sensitivity on SUBJID (<a href="https://github.com/DanChaltiel/EDCimport/issues/108" class="external-link">#108</a>, <a href="https://github.com/DanChaltiel/EDCimport/issues/117" class="external-link">#117</a>).</li>
 <li>Fixed bug in <code><a href="../reference/assert_no_duplicate.html">assert_no_duplicate()</a></code> not stopping in table with both columns <code>SUBJID</code> and <code>subjid</code> (<a href="https://github.com/DanChaltiel/EDCimport/issues/105" class="external-link">#105</a>).</li>
+<li>Improved <code><a href="../reference/save_edc_data_warnings.html">save_edc_data_warnings()</a></code> with options to hide the resolved issues and to not include stops, and better default path (<a href="https://github.com/DanChaltiel/EDCimport/issues/107" class="external-link">#107</a>, <a href="https://github.com/DanChaltiel/EDCimport/issues/110" class="external-link">#110</a>, <a href="https://github.com/DanChaltiel/EDCimport/issues/112" class="external-link">#112</a>)</li>
+<li>Improved reading functions so that all tables are sorted by SUBJID (<a href="https://github.com/DanChaltiel/EDCimport/issues/115" class="external-link">#115</a>).</li>
+<li>Improved <code><a href="../reference/edc_swimmerplot.html">edc_swimmerplot()</a></code> by removing <code>origin</code> by default (<a href="https://github.com/DanChaltiel/EDCimport/issues/106" class="external-link">#106</a>).</li>
 <li>Improved <code><a href="../reference/edc_warn_extraction_date.html">edc_warn_extraction_date()</a></code> with a strict unit “days”.</li>
 <li>Improved <code><a href="../reference/save_plotly.html">save_plotly()</a></code> with a glue syntax for param <code>file</code>.</li>
 </ul></div>
@@ -279,7 +279,7 @@ For instance, you can now run <code>edc_viewer(data=lst(iris, mtcars), port=1212
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>
