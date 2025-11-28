@@ -247,6 +247,8 @@ get_extraction = function(lookup=edc_lookup()){
     subjid_col = getOption("override_subjid_cols", get_subjid_cols())
     by_x = names(x)[tolower(names(x)) %in% tolower(subjid_col)]
     by_y = names(y)[tolower(names(y)) %in% tolower(subjid_col)]
+    if(length(by_x)>1) by_x = intersect(by_x, by_y)[1] %0% by_x
+    if(length(by_y)>1) by_y = intersect(by_x, by_y)[1] %0% by_y
     if(is.null(by) && length(by_x)>0 && length(by_y)>0) {
       by = set_names(by_y, by_x)
     }

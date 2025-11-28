@@ -35,6 +35,16 @@ test_that("`edc_xxx_join()` works", {
     names() %>% 
     expect_contains(c("subjid", "val1", "enrol_date", "crfname_enrol2"))
   
+  #multiple match
+  short2 = short %>% mutate(SUBJID=Inf)
+  enrol2 = enrol %>% mutate(SUBJID=Inf)
+  ok = function(x) expect_true(names(x)[1]=="subjid")
+  edc_left_join(short2, enrol) %>% ok()
+  edc_left_join(short, enrol2) %>% ok()
+  edc_left_join(enrol, short2) %>% ok()
+  edc_left_join(enrol2, short) %>% ok()
+  
+  
   #Errors
   enrol3 = enrol %>% rename(XXXX=subjid)
   short %>% 
