@@ -12,11 +12,14 @@ test_that("compare_databases() works", {
   data_compare_table = comparison$table$`_data` %>% 
     mutate_all(~.x %>% str_remove_all("\n") %>% str_remove_all(".*____"))
   data_compare_plot = comparison$plot %>% as.list() %>%
-    map("data") %>% list_rbind(names_to="plot")
+    map("data")
   
   expect_snapshot({
     data_compare_table
-    data_compare_plot
+    data_compare_plot[[1]]
+    data_compare_plot[[2]]
+    data_compare_plot[[3]]
+    data_compare_plot[[4]]
   })
   
 })
