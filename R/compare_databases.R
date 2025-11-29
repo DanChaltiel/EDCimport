@@ -59,7 +59,8 @@ compare_databases = function(databases, fun_read=read_trialmaster, ...){
     cli_warn("Some database extraction dates are not unique: {.val {dup}}",
              class="edc_compare_databases_unique_date_warning")
     names(db_list) = names(db_list) %>% 
-      make.unique(sep="_")
+      make.unique(sep="__") %>% 
+      map_chr(~ifelse(.x %in% dup, paste0(.x, "__0"), .x))
   }
   
   tbl = .compare_databases_table(db_list)
@@ -157,10 +158,14 @@ compare_databases = function(databases, fun_read=read_trialmaster, ...){
   
   rng = df %>% filter(ncol>0 & ncol!=plus_dbl) %>% pull(tot_dbl) %>% range(na.rm = TRUE)
   pal = .palette_compare(rng)
-  table = df %>% 
-    mutate(
-      tooltip = glue("{.escape_html(diff_str)}____{diff_dbl}")
-    ) %>% 
+  
+  labs = names(db_list) %>% 
+    str_remove("extract_") %>% 
+    str_replace("__(\\d+)", " (#\\1)") %>% #duplicates
+    str_replace_all("_", "-") %>% 
+    set_names(names(db_list))
+  
+  df %>% 
     select(db, dataset, tooltip) %>%
     pivot_wider(names_from=db, values_from=tooltip) %>% 
     gt::gt() %>%
@@ -172,10 +177,14 @@ compare_databases = function(databases, fun_read=read_trialmaster, ...){
         # glue("<span class='tip' data-tip='{a2[,1]}'>{a2[,2]}</span>")
       }
     ) %>%
+    gt::cols_label(.list=labs) %>%
     gt::data_color(
       columns = -dataset,
       fn = pal
-    )
+    ) %>% 
+    gt::tab_footnote("This table reflects changes in the dataset structure only, 
+                     not in the underlying data.")
+  
 }
 
 
