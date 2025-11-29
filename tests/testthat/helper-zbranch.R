@@ -1,38 +1,50 @@
 
 
 
-mutate_list = function(.x, ...) {
-  dots = rlang::enquos(...)
-  for (nm in names(dots)) {
-    .x[[nm]] = rlang::eval_tidy(dots[[nm]], data = .x)
-  }
-  .x
-}
-
 
 
 if(!is_testing() && !is_checking()){
   
+  # tm = read_atezolacc()
+  # tm = read_hrnbl2_multi()
+  #   
+  # # tm2 = edc_split_mixed(tm, rc, by=c(SUBJID, RCDT))
+  # # tm2 = edc_split_mixed(tm, rc)
+  # 
+  # load_database(tm, remove=FALSE, env=rlang::global_env())
+  # load_database(tm, remove=FALSE)
   
-
-# tm = read_atezolacc()
-# tm = read_hrnbl2_multi()
-#   
-# # tm2 = edc_split_mixed(tm, rc, by=c(SUBJID, RCDT))
-# # tm2 = edc_split_mixed(tm, rc)
-# 
-# load_database(tm, remove=FALSE, env=rlang::global_env())
-# load_database(tm, remove=FALSE)
-
-
-# edc_viewer()
-
-# edc_viewer(background=F, title="prout")
-# edc_viewer(lst(mtcars, iris), background=F, port=1212)
-# edc_viewer(lst(mtcars, iris), port=1209)
-# 
-# print(edcimport_env$viewers)
-# .edc_viewer_kill()
+  
+  # tm = read_atezolacc(use_cache=F)
+  # 
+  # tm %>% map_lgl(~{
+  #   if(!is.data.frame(.x) || !"SUBJID" %in% names(.x)) return(NA)
+  #   # waldo::compare(as.character(.x$SUBJID), as.character(sort(.x$SUBJID)))
+  #   identical(as.character(.x$SUBJID), as.character(sort(.x$SUBJID)))
+  # }) %>% all(na.rm=TRUE)
+  # 
+  # .x=rtn
+  
+  
+  
+  # tm = read_hrnbl2_multi()
+  #   
+  # # tm2 = edc_split_mixed(tm, rc, by=c(SUBJID, RCDT))
+  # # tm2 = edc_split_mixed(tm, rc)
+  # 
+  # load_database(tm, remove=FALSE, env=rlang::global_env())
+  # load_database(tm, remove=FALSE)
+  
+  
+  # edc_viewer()
+  
+  # edc_viewer(background=F, title="prout")
+  # edc_viewer(lst(mtcars, iris), background=F, port=1212)
+  # edc_viewer(lst(mtcars, iris), port=1209)
+  # 
+  # print(edcimport_env$viewers)
+  # .edc_viewer_kill()
+  
 }
 
 
