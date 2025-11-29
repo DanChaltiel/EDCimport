@@ -4,10 +4,12 @@
 
 #### New features
 
-- New arguments in
-  [`edc_swimmerplot()`](https://danchaltiel.github.io/EDCimport/reference/edc_swimmerplot.md):
-  `origin_fun` to summarise `origin` at patient level using, and
-  `data_list` to control the datasets.
+- New function
+  [`compare_databases()`](https://danchaltiel.github.io/EDCimport/reference/compare_databases.md),
+  which compares the structure of several extractions of a database:
+  added/removed columns, number of patients, etc
+  ([\#26](https://github.com/DanChaltiel/EDCimport/issues/26)). See the
+  examples for a demo.
 - New features in
   [`edc_viewer()`](https://danchaltiel.github.io/EDCimport/reference/edc_viewer.md):
   - Support for multiple instances on different ports with custom
@@ -26,20 +28,21 @@
   [`edc_unify_subjid()`](https://danchaltiel.github.io/EDCimport/reference/edc_unify_subjid.md),
   and
   [`edc_split_mixed()`](https://danchaltiel.github.io/EDCimport/reference/edc_split_mixed.md)
-  that stripped attributes like project name
+  so they don’t strip database attributes (like project name)
   ([\#111](https://github.com/DanChaltiel/EDCimport/issues/111)).
-- [`edc_data_stop()`](https://danchaltiel.github.io/EDCimport/reference/edc_data_warn.md)
-  now works without a SUBJID and defaults to no issue number
+- Fixed
+  [`edc_data_stop()`](https://danchaltiel.github.io/EDCimport/reference/edc_data_warn.md)
+  so it works without a SUBJID and defaults to no issue number
   ([\#109](https://github.com/DanChaltiel/EDCimport/issues/109)).
+- Fixed
+  [`assert_no_duplicate()`](https://danchaltiel.github.io/EDCimport/reference/assert_no_duplicate.md)
+  so it works in table with both columns `SUBJID` and `subjid`
+  ([\#105](https://github.com/DanChaltiel/EDCimport/issues/105)).
 - Fixed bugs in
   [`edc_left_join()`](https://danchaltiel.github.io/EDCimport/reference/edc_left_join.md)
   with case-sensitivity on SUBJID
   ([\#108](https://github.com/DanChaltiel/EDCimport/issues/108),
   [\#117](https://github.com/DanChaltiel/EDCimport/issues/117)).
-- Fixed bug in
-  [`assert_no_duplicate()`](https://danchaltiel.github.io/EDCimport/reference/assert_no_duplicate.md)
-  not stopping in table with both columns `SUBJID` and `subjid`
-  ([\#105](https://github.com/DanChaltiel/EDCimport/issues/105)).
 - Improved
   [`save_edc_data_warnings()`](https://danchaltiel.github.io/EDCimport/reference/save_edc_data_warnings.md)
   with options to hide the resolved issues and to not include stops, and
@@ -49,10 +52,17 @@
   [\#112](https://github.com/DanChaltiel/EDCimport/issues/112))
 - Improved reading functions so that all tables are sorted by SUBJID
   ([\#115](https://github.com/DanChaltiel/EDCimport/issues/115)).
+- Improved reading functions so that each dataset has a `label`
+  attribute, taken from `FORMDESC` or `CRFNAME`
+  ([\#118](https://github.com/DanChaltiel/EDCimport/issues/118)).
 - Improved
   [`edc_swimmerplot()`](https://danchaltiel.github.io/EDCimport/reference/edc_swimmerplot.md)
   by removing `origin` by default
   ([\#106](https://github.com/DanChaltiel/EDCimport/issues/106)).
+- Improved
+  [`edc_swimmerplot()`](https://danchaltiel.github.io/EDCimport/reference/edc_swimmerplot.md)
+  by adding arguments `origin_fun` to summarise `origin` at patient
+  level using, and `data_list` to control the datasets.
 - Improved
   [`edc_warn_extraction_date()`](https://danchaltiel.github.io/EDCimport/reference/edc_warn_extraction_date.md)
   with a strict unit “days”.
@@ -76,7 +86,7 @@ CRAN release: 2025-06-24
 
 #### New features
 
-- New functions
+- New function
   [`edc_patient_gridplot()`](https://danchaltiel.github.io/EDCimport/reference/edc_patient_gridplot.md),
   which creates a ggplot matrix giving the presence of all patients in
   all datasets
