@@ -7,7 +7,7 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 ### New features
 
 -   New arguments in `edc_swimmerplot()`: `origin_fun` to summarise `origin` at patient level using, and `data_list` to control the datasets.
--   New function `compare_databases()`, which compares the structure of several extractions of a database: added/removed columns, number of patients, etc. (#26)
+-   New function `compare_databases()`, which compares the structure of several extractions of a database: added/removed columns, number of patients, etc (#26). See the examples for a demo.
 
 ### Bug fixes & Improvements
 
