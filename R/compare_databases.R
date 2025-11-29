@@ -112,11 +112,9 @@ compare_databases = function(databases, fun_read=read_trialmaster, ...){
 #' @importFrom tidyr pivot_wider unnest
 .compare_databases_table = function(db_list){
   
-  #TODO formatter dataset, ajouter get_label en tooltip
   x = db_list %>% 
-    imap(~{
-      .x = .x %>% keep(is_dataset)
-      tibble(dataset=names(.x), names=map(.x, names))
+    map(~{
+      .x$.lookup %>% as_tibble() %>% select(dataset, any_of("crfname"), names)
     }) %>% 
     list_rbind(names_to="db") %>% 
     filter(dataset!=".lookup") %>% 
@@ -130,11 +128,13 @@ compare_databases = function(databases, fun_read=read_trialmaster, ...){
   }
   df = x %>% 
     tidyr::complete(db, dataset) %>% 
+    arrange(dataset) %>% 
     mutate(
       ncol = lengths(names),
       tmp = map2(names, lag(names), ~{
         tibble(plus=list(setdiff(.x, .y)), minus=list(setdiff(.y, .x)))
       }),
+      crfname = replace_na(na.omit(crfname)[1], dataset[1]),
       .by=dataset
     ) %>% 
     unnest(tmp) %>% 
@@ -145,16 +145,16 @@ compare_databases = function(databases, fun_read=read_trialmaster, ...){
       minus_dbl = lengths(minus),
       tot_dbl = plus_dbl + minus_dbl,
       diff_str = ifelse(ncol==0|row_number()==1, "", glue("{plus_str}\n{minus_str}")),
-      diff_dbl = case_when(
+      diff_numbers = case_when(
         ncol==0 ~ "Absent",
         ncol==plus_dbl ~ "Added", 
+        plus_dbl==0 & minus_dbl==0 ~ "Unchanged",
         .default = glue("+{plus_dbl} -{minus_dbl}")
       ),
-      # tooltip = glue("<span title=\"{.escape_html(diff_str)}\">{.escape_html(diff_dbl)}</span>"),
-      tooltip = glue("{.escape_html(diff_str)}____{diff_dbl}"),
+      tooltip = glue("{.escape_html(diff_str)}____{diff_numbers}"),
+      dataset = glue("{crfname}____{dataset}"),
       .by=dataset
-    ) %>% 
-    arrange(dataset)
+    )
   
   rng = df %>% filter(ncol>0 & ncol!=plus_dbl) %>% pull(tot_dbl) %>% range(na.rm = TRUE)
   pal = .palette_compare(rng)
@@ -170,7 +170,7 @@ compare_databases = function(databases, fun_read=read_trialmaster, ...){
     pivot_wider(names_from=db, values_from=tooltip) %>% 
     gt::gt() %>%
     gt::text_transform(
-      locations = gt::cells_body(columns = -dataset),
+      locations = gt::cells_body(columns = everything()),
       fn = function(x){
         a2 = x %>% str_replace("\n", gt::html("&#013;")) %>% str_split_fixed("____", 2)
         glue("<span title=\"{a2[,1]}\">{a2[,2]}</span>")
