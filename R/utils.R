@@ -374,7 +374,6 @@ remove_labels = function(x){
     for (each in seq_along(x)){
       x[[each]] = remove_labels(x[[each]])
     }
-    return(x)
   }
   attr(x, "label") = NULL
   class(x) = setdiff(class(x), c("labelled"))
