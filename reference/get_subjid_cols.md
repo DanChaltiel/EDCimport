@@ -8,8 +8,6 @@ through options.
 
 ``` r
 get_subjid_cols(lookup = edc_lookup())
-
-get_crfname_cols(lookup = edc_lookup())
 ```
 
 ## Arguments
@@ -28,15 +26,13 @@ Use
 [`edc_options()`](https://danchaltiel.github.io/EDCimport/reference/edc_options.md)
 to set default values:
 
-- `edc_cols_subjid` defaults to `c("PTNO", "SUBJID")`
+- `edc_cols_subjid` defaults to `c("SUBJID", "PTNO")`
 
-- `edc_cols_crfname` defaults to `c("CRFNAME")`
+- `edc_cols_crfname` defaults to `c("FORMDESC", "CRFNAME")`
 
 ## Examples
 
 ``` r
-get_subjid_cols()
-#> [1] "SUBJID"
-get_crfname_cols()
-#> [1] "crfname"
+#get_subjid_cols()
+#get_crfname_cols()
 ```

@@ -1,134 +1,119 @@
 # EDCimport
 
-EDCimport is a package designed to easily import data from EDC software
-[TrialMaster](https://www.anjusoftware.com/trial-master/).
+## Introduction 📦
 
-## Installation
+The **EDCimport** package is designed to simplify the import and
+management of Electronic Data Capture (EDC) exports, particularly in
+clinical research settings. It is an opinionated framework, providing
+multiple streamlined tools for importing, cleaning, and checking your
+datasets.
+
+> \[!WARNING\] This package is experimental and under active
+> development. Backward compatibility is not a priority for the moment.
+> For reproducibility, use
+> [renv](https://rstudio.github.io/renv/articles/renv.html) to set the
+> package version.
+
+## Installation 🛠️
 
 ``` r
-# Install last version available on CRAN (once published)
+# Install last version available on CRAN
 install.packages("EDCimport")
 
 # Install development version on Github
-devtools::install_github("DanChaltiel/EDCimport")
+pak::pak("DanChaltiel/EDCimport@v0.5.2.9072")
 ```
 
-You will also need [`7-zip`](https://www.7-zip.org/download.html)
-installed, and preferably added to the
-[`PATH`](https://superuser.com/q/284342/532861).
+> \[!WARNING\] The documentation pertains to the dev version, not the
+> one on CRAN.
 
-> \[!WARNING\] This package was developed to work on Windows and is
-> unlikely to work on any other OS. You are very welcome to submit a PR
-> if you manage to get it to work on Mac or Linux.
+## Features 🚀
 
 ### Load the data
 
-Inside TrialMaster, you should request an export of type `SAS Xport`,
-with the checkbox “Include Codelists” ticked. This export should
-generate a `.zip` archive.
-
-Then, simply use
-[`read_trialmaster()`](https://danchaltiel.github.io/EDCimport/reference/read_trialmaster.md)
-with the archive password (if any) to retrieve the data from the
-archive:
+Use one of
+[`read_all_sas()`](https://danchaltiel.github.io/EDCimport/reference/read_all_sas.md),
+[`read_all_xpt()`](https://danchaltiel.github.io/EDCimport/reference/read_all_xpt.md),
+[`read_all_csv()`](https://danchaltiel.github.io/EDCimport/reference/read_all_csv.md),
+or
+[`read_trialmaster()`](https://danchaltiel.github.io/EDCimport/reference/read_trialmaster.md),
+depending on the type of files in your export directory. You can then
+load your datasets into the global environment with
+[`load_database()`](https://danchaltiel.github.io/EDCimport/reference/load_database.md).
 
 ``` r
 library(EDCimport)
-tm = read_trialmaster("path/to/my/archive.zip", pw="foobar")
-```
-
-The resulting object `tm` is a list containing all the datasets, plus
-metadatas.
-
-You can now use
-[`load_list()`](https://danchaltiel.github.io/EDCimport/reference/load_list.md)
-to import the list in the global environment and use your tables:
-
-``` r
-load_list(tm) #this also removes `tm` to save memory
+db = read_all_sas("path/to/my/files/folder")
+print(db)
+load_database(db) #this also removes `db` to save some RAM
 mean(dataset1$column5)
 ```
 
-There are many other options available (e.g. colnames cleaning & table
-splitting), see
-[`?read_trialmaster`](https://danchaltiel.github.io/EDCimport/reference/read_trialmaster.md)
-for more details.
-
 ### Database management tools
 
-`EDCimport` include a set of useful tools that help with using the
+`EDCimport` includes a set of useful tools that help with using the
 imported database. See
 [References](https://danchaltiel.github.io/EDCimport/reference/index.html)
-for a complete list.
+for the complete list.
 
 #### Database summary
 
-Reading a database using
-[`read_trialmaster()`](https://danchaltiel.github.io/EDCimport/reference/read_trialmaster.md)
-generates the `.lookup` dataframe, which contains for each dataset the
-number of rows, columns, patients, and the CRF name.
-
-`.lookup` is used by many other tools inside EDCimport, be careful not
-to modify or delete it.
+[`edc_lookup()`](https://danchaltiel.github.io/EDCimport/reference/edc_lookup.md)
+returns a dataframe containing the number of rows, columns, patients,
+and the CRF name of each dataset.
 
 #### Search the whole database
 
-Using
-[`find_keyword()`](https://danchaltiel.github.io/EDCimport/reference/find_keyword.md),
-you can run a global search of the database.
+[`find_keyword()`](https://danchaltiel.github.io/EDCimport/reference/edc_find_value.md)
+runs a global search of the database for a given keyword (or regex).
 
-For instance, say you do not remember in which dataset and column is
-located the “date of ECG”.
-[`find_keyword()`](https://danchaltiel.github.io/EDCimport/reference/find_keyword.md)
-will search every column name and label and will give you the answer:
+For instance, say you are looking for the “date of ECG” but don’t know
+where it is, you can run `find_keyword("date")` or
+`find_keyword("ecg")`.
 
-``` r
-find_keyword("date")
-#> # A tibble: 10 x 3
-#>    dataset names   labels                      
-#>    <chr>   <chr>   <chr>                       
-#>  1 pat     PTRNDT  Randomization Date          
-#>  2 pat     RGSTDT  Registration Date           
-#>  3 site    INVDAT  Deactivation date           
-#>  4 site    TRGTDT  Target Enroll Date          
-#>  5 trial   TRSPDT  End Date                    
-#>  6 trial   TRSTDT  Start Date                  
-#>  7 visit   VISIT2  Visit Date                  
-#>  8 visit   EEXPVDT Earliest Expected Visit Date
-#>  9 vs      ECGDAT  Date of ECG                 
-#> 10 vs      VISITDT Visit Date
-```
+It won’t look into the actual data, though, as this would take too much
+computing power.
 
-### Swimmer Plot
+#### Get the last news date of each subject
 
-The
+[`lastnews_table()`](https://danchaltiel.github.io/EDCimport/reference/lastnews_table.md)
+finds the last date of each subject throughout the whole database and
+inform on the date original dataset and column. It has arguments to
+avoid selecting irrelevant dates.
+
+This is very useful to get the actual followup time when fitting
+survival analyses.
+
+#### Data checking system
+
+[`edc_data_warn()`](https://danchaltiel.github.io/EDCimport/reference/edc_data_warn.md)
+throws a warning if an inconsistency is found in a dataset. The
+interface allows to perform multiple checks and get a report as a CSV
+file.
+
+#### Join helpers
+
+As the primary key is almost always the Subject ID, join helpers were
+added to reduce code clutter. Currently, only
+[`edc_left_join()`](https://danchaltiel.github.io/EDCimport/reference/edc_left_join.md),
+[`edc_right_join()`](https://danchaltiel.github.io/EDCimport/reference/edc_left_join.md),
+and
+[`edc_full_join()`](https://danchaltiel.github.io/EDCimport/reference/edc_left_join.md)
+are supported.
+
+#### Shiny browser
+
+[`edc_viewer()`](https://danchaltiel.github.io/EDCimport/reference/edc_viewer.md)
+runs a shiny application that browses the whole database. The HTML
+interface is quicker and less cluttered than it would be in RStudio. It
+also allows filtering by Subject ID.
+
+#### Swimmer Plot
+
 [`edc_swimmerplot()`](https://danchaltiel.github.io/EDCimport/reference/edc_swimmerplot.md)
-function will create a swimmer plot of all date variables in the whole
-database.
-
-There are 2 arguments of interest:
-
-- `group`, a grouping variable (e.g. the treatment arm)
-
-- `origin`, a date variable acting as the time zero (e.g. the date of
-  enrollment)
-
-``` r
-edc_swimmerplot()
-edc_swimmerplot(group="enrolres$arm")
-edc_swimmerplot(origin="enrolres$enroldt")
-```
-
-This outputs a `plotly` interactive graph where you can select the dates
-of interest and zoom in with your mouse.
-
-![](reference/figures/swimmerplot.png)
-
-Note that any modification made after running
-[`read_trialmaster()`](https://danchaltiel.github.io/EDCimport/reference/read_trialmaster.md)
-is taken into account. For instance, mutating a column with
-[`as.Date()`](https://rdrr.io/r/base/as.Date.html) in one of the tables
-will add a new group in the plot.
+creates a swimmer plot of **all date variables** of the whole database.
+This is very useful to find inconsistencies and outliers, especially
+with the `plotly` interactive output.
 
 # Package index
 
@@ -154,23 +139,40 @@ will add a new group in the plot.
 
   Read all `.csv` files in a directory
 
+- [`load_database()`](https://danchaltiel.github.io/EDCimport/reference/load_database.md)
+  : Load a list in an environment
+
+- [`edc_database`](https://danchaltiel.github.io/EDCimport/reference/edc_database.md)
+  : EDCimport Database
+
+- [`edc_lookup()`](https://danchaltiel.github.io/EDCimport/reference/edc_lookup.md)
+  : Retrieve the lookup table from options
+
+## Modifying databases
+
+- [`edc_unify_subjid()`](https://danchaltiel.github.io/EDCimport/reference/edc_unify_subjid.md)
+  : Harmonize the subject ID of the database
+- [`edc_split_mixed()`](https://danchaltiel.github.io/EDCimport/reference/edc_split_mixed.md)
+  : Split mixed datasets
+- [`edc_clean_names()`](https://danchaltiel.github.io/EDCimport/reference/edc_clean_names.md)
+  : Clean up the names of all datasets
+- [`set_project_name()`](https://danchaltiel.github.io/EDCimport/reference/set_project_name.md)
+  : Set the project name
+
 ## Checking databases
 
 - [`edc_data_warn()`](https://danchaltiel.github.io/EDCimport/reference/edc_data_warn.md)
   [`edc_data_stop()`](https://danchaltiel.github.io/EDCimport/reference/edc_data_warn.md)
   [`edc_data_warnings()`](https://danchaltiel.github.io/EDCimport/reference/edc_data_warn.md)
   : Standardized warning system
+- [`save_edc_data_warnings()`](https://danchaltiel.github.io/EDCimport/reference/save_edc_data_warnings.md)
+  : Save EDCimport warning to Excel
 - [`assert_no_duplicate()`](https://danchaltiel.github.io/EDCimport/reference/assert_no_duplicate.md)
   : Assert that a dataframe has one row per patient
 - [`edc_warn_patient_diffs()`](https://danchaltiel.github.io/EDCimport/reference/edc_warn_patient_diffs.md)
   : Check the validity of the subject ID column
 - [`edc_warn_extraction_date()`](https://danchaltiel.github.io/EDCimport/reference/edc_warn_extraction_date.md)
   : Warn if extraction is too old
-- [`crf_status_plot()`](https://danchaltiel.github.io/EDCimport/reference/crf_status_plot.md)
-  [`edc_pal_crf()`](https://danchaltiel.github.io/EDCimport/reference/crf_status_plot.md)
-  : Show the current CRF status distribution
-- [`edc_population_plot()`](https://danchaltiel.github.io/EDCimport/reference/edc_population_plot.md)
-  : Plot the populations
 
 ## Project management
 
@@ -188,8 +190,9 @@ will add a new group in the plot.
 
 ## Searching databases
 
-- [`find_keyword()`](https://danchaltiel.github.io/EDCimport/reference/find_keyword.md)
-  : Find a keyword in the whole database
+- [`edc_find_value()`](https://danchaltiel.github.io/EDCimport/reference/edc_find_value.md)
+  [`edc_find_column()`](https://danchaltiel.github.io/EDCimport/reference/edc_find_value.md)
+  : Search the whole database
 - [`lastnews_table()`](https://danchaltiel.github.io/EDCimport/reference/lastnews_table.md)
   : Get a table with the latest date for each patient
 - [`edc_db_to_excel()`](https://danchaltiel.github.io/EDCimport/reference/edc_db_to_excel.md)
@@ -199,6 +202,8 @@ will add a new group in the plot.
   [`summary(`*`<common_cols>`*`)`](https://danchaltiel.github.io/EDCimport/reference/get_common_cols.md)
   **\[experimental\]** : Get columns that are common to multiple
   datasets
+- [`edc_viewer()`](https://danchaltiel.github.io/EDCimport/reference/edc_viewer.md)
+  : Shiny data explorer
 
 ## Options
 
@@ -210,17 +215,24 @@ will add a new group in the plot.
 - [`edc_peek_options()`](https://danchaltiel.github.io/EDCimport/reference/edc_peek_options.md)
   :
 
-  See which `EDCimport` option is currently set.
+  See which `EDCimport` option is currently set
 
 - [`edc_reset_options()`](https://danchaltiel.github.io/EDCimport/reference/edc_reset_options.md)
   :
 
-  Reset all `EDCimport` options.
+  Reset all `EDCimport` options
 
 ## Graphics
 
 - [`edc_swimmerplot()`](https://danchaltiel.github.io/EDCimport/reference/edc_swimmerplot.md)
   : Swimmer plot of all dates columns
+- [`edc_crf_plot()`](https://danchaltiel.github.io/EDCimport/reference/edc_crf_plot.md)
+  [`edc_pal_crf()`](https://danchaltiel.github.io/EDCimport/reference/edc_crf_plot.md)
+  : Show the current CRF status distribution
+- [`edc_patient_gridplot()`](https://danchaltiel.github.io/EDCimport/reference/edc_patient_gridplot.md)
+  : Patient gridplot
+- [`edc_population_plot()`](https://danchaltiel.github.io/EDCimport/reference/edc_population_plot.md)
+  : Plot the populations
 
 ## Helpers
 
@@ -234,55 +246,33 @@ will add a new group in the plot.
   : Save a plotly to an HTML file
 - [`select_distinct()`](https://danchaltiel.github.io/EDCimport/reference/select_distinct.md)
   : Select only distinct columns
-- [`harmonize_subjid()`](https://danchaltiel.github.io/EDCimport/reference/harmonize_subjid.md)
-  : Harmonize the subject ID of the database
 - [`get_datasets()`](https://danchaltiel.github.io/EDCimport/reference/get_datasets.md)
   : Retrieve the datasets as a list of data.frames
-- [`get_meta_cols()`](https://danchaltiel.github.io/EDCimport/reference/get_meta_cols.md)
-  : Get columns shared by most datasets
-- [`get_subjid_cols()`](https://danchaltiel.github.io/EDCimport/reference/get_subjid_cols.md)
-  [`get_crfname_cols()`](https://danchaltiel.github.io/EDCimport/reference/get_subjid_cols.md)
-  : Get key column names
-- [`get_key_cols()`](https://danchaltiel.github.io/EDCimport/reference/get_key_cols.md)
-  : Important column names
-- [`split_mixed_datasets()`](https://danchaltiel.github.io/EDCimport/reference/split_mixed_datasets.md)
-  : Split mixed datasets
-
-## Lookup Utils
-
-- [`edc_lookup()`](https://danchaltiel.github.io/EDCimport/reference/edc_lookup.md)
-  : Retrieve the lookup table from options
-- [`extend_lookup()`](https://danchaltiel.github.io/EDCimport/reference/extend_lookup.md)
-  : Extend the lookup table
-- [`build_lookup()`](https://danchaltiel.github.io/EDCimport/reference/build_lookup.md)
-  : Generate a lookup table
-
-## List Utils
-
-- [`load_list()`](https://danchaltiel.github.io/EDCimport/reference/load_list.md)
-  : Load a list in an environment
-
-- [`load_as_list()`](https://danchaltiel.github.io/EDCimport/reference/load_as_list.md)
-  :
-
-  Load a `.RData` file as a list
-
-- [`save_list()`](https://danchaltiel.github.io/EDCimport/reference/save_list.md)
-  :
-
-  Save a list as `.RData` file
+- [`edc_left_join()`](https://danchaltiel.github.io/EDCimport/reference/edc_left_join.md)
+  : Join within the EDCimport framework
 
 ## Examples
 
-- [`edc_example_mixed()`](https://danchaltiel.github.io/EDCimport/reference/data_example.md)
-  [`edc_example()`](https://danchaltiel.github.io/EDCimport/reference/data_example.md)
-  [`edc_example_plot()`](https://danchaltiel.github.io/EDCimport/reference/data_example.md)
-  [`edc_example_ae()`](https://danchaltiel.github.io/EDCimport/reference/data_example.md)
-  : Example databases
+- [`edc_example()`](https://danchaltiel.github.io/EDCimport/reference/edc_example.md)
+  : Example database
 
 ## Manual correction
 
 - [`manual_correction()`](https://danchaltiel.github.io/EDCimport/reference/manual_correction.md)
   [`reset_manual_correction()`](https://danchaltiel.github.io/EDCimport/reference/manual_correction.md)
-  : Manual correction
+  **\[experimental\]** : Manual correction
 
+# Articles
+
+### Articles
+
+- [1 - Read your
+  database](https://danchaltiel.github.io/EDCimport/articles/reading.md):
+- [2 - Post
+  processing](https://danchaltiel.github.io/EDCimport/articles/postprocessing.md):
+- [3 - Data
+  checking](https://danchaltiel.github.io/EDCimport/articles/checking.md):
+- [4 - Database
+  Visualizing](https://danchaltiel.github.io/EDCimport/articles/visualizing.md):
+- [5 - Utility
+  Functions](https://danchaltiel.github.io/EDCimport/articles/utils.md):

@@ -1,10 +1,9 @@
 # Identify if a dataframe has a long or a wide format
 
-A dataset is either in the wide format or in the long format
-([link](https://towardsdatascience.com/long-and-wide-formats-in-data-explained-e48d7c9a06cb)).
-This function identifies the format of a dataframe with respect to a
-subject ID. If a dataframe has some wide and long columns, it is
-considered "mixed".
+A dataset is either in the wide format or in the long format. This
+function identifies the format of a dataframe with respect to a subject
+ID. If a dataframe has some wide and long columns, it is considered
+"mixed".
 
 ## Usage
 
@@ -35,8 +34,7 @@ table_format(
 
 - ignore_cols:
 
-  columns to ignore. Usually meta columns (see
-  [get_meta_cols](https://danchaltiel.github.io/EDCimport/reference/get_meta_cols.md)).
+  columns to ignore.
 
 - na_rm:
 
@@ -50,12 +48,28 @@ table_format(
 
 a string value in `c("wide", "long", "mixed)`
 
+## See also
+
+<https://tidyr.tidyverse.org/articles/pivot.html>
+
 ## Examples
 
 ``` r
-tm = edc_example_mixed()
+db = edc_example()
 #> Warning: Option "edc_lookup" has been overwritten.
-sapply(tm, table_format, warn=FALSE) 
+sapply(db, table_format, warn=FALSE) 
+#> $enrol
+#> [1] "wide"
+#> 
+#> $data1
+#> [1] "mixed"
+#> 
+#> $data2
+#> [1] "wide"
+#> 
+#> $data3
+#> [1] "wide"
+#> 
 #> $short
 #> [1] "wide"
 #> 
@@ -65,10 +79,13 @@ sapply(tm, table_format, warn=FALSE)
 #> $long_mixed
 #> [1] "mixed"
 #> 
-#> $date_extraction
-#> NULL
+#> $ae
+#> [1] "mixed"
 #> 
 #> $datetime_extraction
+#> NULL
+#> 
+#> $date_extraction
 #> NULL
 #> 
 #> $.lookup

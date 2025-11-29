@@ -1,6 +1,6 @@
-# See which `EDCimport` option is currently set.
+# See which `EDCimport` option is currently set
 
-See which `EDCimport` option is currently set.
+See which `EDCimport` option is currently set
 
 ## Usage
 

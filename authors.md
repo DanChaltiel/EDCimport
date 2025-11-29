@@ -8,15 +8,15 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/DanChaltiel/EDCimport/blob/v0.5.2/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/DanChaltiel/EDCimport/blob/v0.6.0/DESCRIPTION)
 
 Chaltiel D (2025). *EDCimport: Import Data from EDC Software*. R package
-version 0.5.2, <https://github.com/DanChaltiel/EDCimport>.
+version 0.6.0, <https://github.com/DanChaltiel/EDCimport>.
 
     @Manual{,
       title = {EDCimport: Import Data from EDC Software},
       author = {Dan Chaltiel},
       year = {2025},
-      note = {R package version 0.5.2},
+      note = {R package version 0.6.0},
       url = {https://github.com/DanChaltiel/EDCimport},
     }

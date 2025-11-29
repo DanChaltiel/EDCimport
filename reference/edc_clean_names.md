@@ -35,7 +35,6 @@ object
 #db = read_trialmaster("filename.zip", pw="xx")
 db = edc_example() %>% 
   edc_clean_names()
-#> Warning: Option "edc_lookup" has been overwritten.
 names(db$enrol)
 #> [1] "subjid"     "age"        "enrol_date" "arm"        "crfname"   
 #> [6] "crfstat"   

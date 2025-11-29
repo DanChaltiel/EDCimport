@@ -1,6 +1,6 @@
-# Reset all `EDCimport` options.
+# Reset all `EDCimport` options
 
-Reset all `EDCimport` options.
+Reset all `EDCimport` options
 
 ## Usage
 

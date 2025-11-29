@@ -13,13 +13,9 @@ This summary can then be saved into a `.xlsx` file using
 ``` r
 save_edc_data_warnings(
   edc_warnings = edc_data_warnings(),
-  output_file = "edc_data_warnings_{project}_{date_extraction}.xlsx",
-  output_dir = "output/check",
-  open = FALSE,
+  path = "edc_data_warnings.xlsx",
   overwrite = TRUE,
-  hide_resolved = TRUE,
-  include_stops = FALSE,
-  path = "deprecated"
+  open = FALSE
 )
 ```
 
@@ -30,30 +26,17 @@ save_edc_data_warnings(
   the result of
   [edc_data_warnings](https://danchaltiel.github.io/EDCimport/reference/edc_data_warn.md)
 
-- output_file, output_dir:
+- path:
 
-  path to a `.xlsx` file. Use special values `{proj_name}` and
-  `{date_extraction}`.
-
-- open:
-
-  If `TRUE`, overwrite any existing file.
+  a `.xlsx` file path
 
 - overwrite:
 
   If `TRUE`, overwrite any existing file.
 
-- hide_resolved:
+- open:
 
-  If `TRUE`, hide sheets with no data.
-
-- include_stops:
-
-  If `TRUE`, also include STOP-type warnings.
-
-- path:
-
-  deprecated
+  If `TRUE`, overwrite any existing file.
 
 ## Value
 

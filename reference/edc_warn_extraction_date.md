@@ -21,9 +21,9 @@ nothing
 ## Examples
 
 ``` r
-tm = edc_example()
+db = edc_example()
 #> Warning: Option "edc_lookup" has been overwritten.
-load_list(tm)
+load_database(db)
 edc_warn_extraction_date()
 #> Error in edc_warn_extraction_date(): object 'datetime_extraction' not found
 ```

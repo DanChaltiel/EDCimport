@@ -31,8 +31,9 @@ nothing, used for side effect
 
 ``` r
 if (FALSE) { # \dontrun{
-tm = edc_example_plot()
-p = edc_swimmerplot(tm$.lookup, id_lim=c(5,45))
+db = edc_example()
+load_database(db)
+p = edc_swimmerplot(id_lim=c(5,45))
 save_plotly(p, "graph/swimplots/edc_swimmerplot.html", title="My Swimmerplot")
 } # }
 ```

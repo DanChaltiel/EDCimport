@@ -5,9 +5,7 @@ Set or override the project name
 ## Usage
 
 ``` r
-set_project_name(db, name, lookup = edc_lookup())
-
-get_project_name(lookup = edc_lookup())
+set_project_name(db, name)
 ```
 
 ## Arguments
@@ -21,15 +19,9 @@ get_project_name(lookup = edc_lookup())
 
   the project name
 
-- lookup:
-
-  the lookup table
-
 ## Value
 
 nothing
-
-the name of the project
 
 ## Examples
 

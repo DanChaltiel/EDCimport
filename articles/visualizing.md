@@ -78,6 +78,8 @@ identify any problematic missing records.
 
 ``` r
 edc_patient_gridplot()
+#> Ignoring unknown labels:
+#> • colour : "Included"
 ```
 
 ![](visualizing_files/figure-html/unnamed-chunk-4-1.png)
