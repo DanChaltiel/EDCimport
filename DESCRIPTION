@@ -38,6 +38,7 @@ Suggests:
     callr,
     crosstable,
     DT,
+    gt,
     gtools,
     htmlwidgets,
     janitor,
