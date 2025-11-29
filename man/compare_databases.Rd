@@ -13,14 +13,16 @@ compare_databases(databases, fun_read = read_trialmaster, ...)
 
 \item{...}{arguments passed to \code{fun_read}}
 }
+\value{
+a list of \code{table} (a \code{gt} object with tooltips) and \code{plot} (a \code{patchwork} of ggplots)
+}
 \description{
 Compares several EDC database extractions and returns:
 }
 \details{
 \itemize{
-\item a summary table of the detected differences,
-\item a set of diagnostic figures.
-#'
+\item a summary table of the detected differences in datasets/columns presence
+\item a summary plot of the differences in number of rows, columns, patients, and rows per patient
 }
 }
 \examples{

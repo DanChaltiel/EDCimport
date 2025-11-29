@@ -4,13 +4,14 @@
 #' 
 #' Compares several EDC database extractions and returns:
 #'
-#' - a summary table of the detected differences,
-#' - a set of diagnostic figures.
-#' #' 
+#' - a summary table of the detected differences in datasets/columns presence
+#' - a summary plot of the differences in number of rows, columns, patients, and rows per patient
+#'  
 #' @param databases file paths to read using `fun_read`. Can also be a list of `edc_database` objects.
 #' @param fun_read Reading function to use on `databases`
 #' @param ... arguments passed to `fun_read`
 #'
+#' @returns a list of `table` (a `gt` object with tooltips) and `plot` (a `patchwork` of ggplots)
 #' @export
 #' @importFrom cli cli_warn
 #' @importFrom dplyr lst
@@ -50,7 +51,7 @@ compare_databases = function(databases, fun_read=read_trialmaster, ...){
   
   names(db_list) = db_list %>% 
     map_chr(~{
-      dt = .x$.lookup %>% attr("datetime_extraction")
+      dt = .x$datetime_extraction
       glue("extract_{d}", d=format(dt, "%Y_%m_%d"))
     })
   
@@ -66,7 +67,7 @@ compare_databases = function(databases, fun_read=read_trialmaster, ...){
   tbl = .compare_databases_table(db_list)
   fig = .compare_databases_plots(db_list)
   
-  lst(table=tbl, figures=fig)
+  list(table=tbl, plot=fig)
 }
 
 
