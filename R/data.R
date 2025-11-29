@@ -31,7 +31,8 @@ edc_example = function(N=50, seed=42, outdated=FALSE){
                               prob=c(.7,.1,.2),
                               size=n(), replace=TRUE) %>% 
             set_label("CRF status")
-        )
+        ) %>% 
+        structure(label=.x$crfname[1])
     }) %>% 
     .add_lookup_and_date(
       datetime_extraction=datetime_extraction,

@@ -6,7 +6,6 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 ### New features
 
--   New arguments in `edc_swimmerplot()`: `origin_fun` to summarise `origin` at patient level using, and `data_list` to control the datasets.
 -   New function `compare_databases()`, which compares the structure of several extractions of a database: added/removed columns, number of patients, etc (#26). See the examples for a demo.
 -   New features in `edc_viewer()`:
     -   Support for multiple instances on different ports with custom datasets (#100, #114)\
@@ -15,15 +14,15 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 ### Bug fixes & Improvements
 
--   `edc_viewer()`: support for multiple instances on different ports(#114).
--   `edc_viewer()`: new button to browse all the column labels (#113).
--   Fixed modifiers `edc_clean_names()`, `edc_unify_subjid()`, and `edc_split_mixed()` that stripped attributes like project name (#111).
--   `edc_data_stop()` now works without a SUBJID and defaults to no issue number (#109).
+-   Fixed modifiers `edc_clean_names()`, `edc_unify_subjid()`, and `edc_split_mixed()` so they don't strip database attributes (like project name) (#111).
+-   Fixed `edc_data_stop()` so it works without a SUBJID and defaults to no issue number (#109).
+-   Fixed `assert_no_duplicate()` so it works in table with both columns `SUBJID` and `subjid` (#105).
 -   Fixed bugs in `edc_left_join()` with case-sensitivity on SUBJID (#108, #117).
--   Fixed bug in `assert_no_duplicate()` not stopping in table with both columns `SUBJID` and `subjid` (#105).
 -   Improved `save_edc_data_warnings()` with options to hide the resolved issues and to not include stops, and better default path (#107, #110, #112)
 -   Improved reading functions so that all tables are sorted by SUBJID (#115).
+-   Improved reading functions so that each dataset has a `label` attribute, taken from `FORMDESC` or `CRFNAME` (#118).
 -   Improved `edc_swimmerplot()` by removing `origin` by default (#106).
+-   Improved `edc_swimmerplot()` by adding arguments `origin_fun` to summarise `origin` at patient level using, and `data_list` to control the datasets.
 -   Improved `edc_warn_extraction_date()` with a strict unit "days".
 -   Improved `save_plotly()` with a glue syntax for param `file`.
 

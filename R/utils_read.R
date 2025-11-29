@@ -27,7 +27,7 @@ NULL
 #' @keywords internal
 #' @importFrom dplyr across as_tibble mutate where
 #' @importFrom fs path_ext_remove
-#' @importFrom purrr map
+#' @importFrom purrr map pluck
 #' @importFrom rlang hash set_names
 #' @importFrom stringr fixed str_remove str_replace_all
 .read_all = function(files, read_function, clean_names_fun=NULL, path=NULL, ...){
@@ -42,18 +42,21 @@ NULL
     file_names = basename(files) %>% tolower() %>% path_ext_remove()
   }
   subjid_cols = get_subjid_cols()
+  crf = get_crfname_cols()
   files %>% 
     set_names(file_names) %>% 
     map(function(.x) {
       tbl = tryCatch(read_function(.x, ...), 
                      error = function(e) .flatten_error(e, class="edc_error_data"))
       if(is_edc_error(tbl)) return(tbl)
+      label = tbl %>% select(any_of2(crf)) %>% pluck(1, 1)
       rtn = tbl %>% 
         as_tibble() %>% 
         clean_names_fun() %>% 
         arrange(pick(any_of2(subjid_cols))) %>%
         mutate(across(where(bad_hms), fix_hms))
       attr(rtn, "hash") = hash(rtn)
+      attr(rtn, "label") = label
       rtn
     })
 }
