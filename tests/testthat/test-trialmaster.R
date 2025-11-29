@@ -5,12 +5,10 @@
 skip_on_cran()
 edc_options(edc_lookup_overwrite_warn=FALSE)
 
-if(FALSE){
-  cachename = test_path("trialmaster_export_2022-08-25 15h16.rds")
-  filename = test_path("CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16.zip")
-  filename_noformat = test_path("CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16_noformat.zip")
-  filename_bad = test_path("CRF_Dan_Export.zip")
-}
+cachename = test_path("trialmaster_export_2022-08-25 15h16.rds")
+filename = test_path("CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16.zip")
+filename_noformat = test_path("CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16_noformat.zip")
+filename_bad = test_path("CRF_Dan_Export.zip")
 
 
 test_that("Read TM with cache", {
@@ -21,6 +19,7 @@ test_that("Read TM with cache", {
   #first read, read from zip (default: use_cache=write)
   w = read_trialmaster(filename) %>% 
     expect_classed_conditions(message_class=c("read_tm_zip", "edc_create_cache"))
+  expect_true(fs::file_exists(cachename))
   
   #2nd, use_cache=TRUE -> read from cache
   w = read_trialmaster(filename, use_cache=TRUE) %>%
@@ -42,9 +41,7 @@ test_that("Read TM with cache", {
     expect_classed_conditions(message_class="read_tm_zip",
                               warning_class="edc_lookup_overwrite_warn")
   
-  
   expect_length(w, 8)
-
 
   load_database(w, remove=FALSE)
   expect_true(exists("pat"))
@@ -58,6 +55,17 @@ test_that("Read TM with cache", {
   expect_s3_class(site$INCLSITE, "factor")
   expect_equal(as.character(site$INCLSITE), "Yes")
   expect_equal(dim(.lookup), c(5,9))
+  
+  #expect SUBJID sorted
+  w %>% 
+    map_lgl(~{
+      if(!is.data.frame(.x) || !"SUBJID" %in% names(.x)) return(NA)
+      # waldo::compare(as.character(.x$SUBJID), as.character(sort(.x$SUBJID)))
+      identical(as.character(.x$SUBJID), as.character(sort(.x$SUBJID)))
+    }) %>% 
+    all(na.rm=TRUE) %>% 
+    expect_true()
+  
   clean_cache()
 })
 

@@ -36,7 +36,7 @@ assert_file_exists = function(x, msg=NULL, class=NULL){
     msg = "Missing file{?s}: {.path {x[missing_files]}}"
   }
   if(any(missing_files)){
-    cli_abort(msg, call=parent.frame(), class=class)
+    cli_abort(msg, call=parent.frame(), .envir=parent.frame(), class=class)
   }
 }
 

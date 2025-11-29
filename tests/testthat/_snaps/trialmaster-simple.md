@@ -2,7 +2,7 @@
 
     Code
       filename = test_path("CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16.zip")
-      w = read_trialmaster(filename, use_cache = "write", verbose = 9)
+      w = read_trialmaster(filename, use_cache = FALSE, verbose = 9)
     Message
       Unzipping 'CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16.zip'
       7-Zip Copyright 1999-2016 Igor Pavlov
@@ -21,7 +21,6 @@
       Files: 6
       Size: 61533
       Compressed: 13576
-      Writing cache file './trialmaster_export_2022-08-25 15h16.rds'
       ✔ Database loaded: 5 tables, 000 Kb
     Code
       w$datetime_extraction

@@ -114,9 +114,8 @@ test_that("edc_find_column() works", {
 
 
 test_that("edc_find_column() works with read_trialmaster()", {
-  clean_cache()
-  w = read_trialmaster(filename, use_cache=FALSE, verbose=0)
-  local_options(edc_lookup=w$.lookup)
+  w = read_trialmaster(filename, use_cache="read", verbose=0)
+  # local_options(edc_lookup=w$.lookup)
   x1=edc_find_column("sex")
   expect_equal(x1$names, "SEX")
 })

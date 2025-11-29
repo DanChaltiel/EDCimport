@@ -247,6 +247,8 @@ get_extraction = function(lookup=edc_lookup()){
     subjid_col = getOption("override_subjid_cols", get_subjid_cols())
     by_x = names(x)[tolower(names(x)) %in% tolower(subjid_col)]
     by_y = names(y)[tolower(names(y)) %in% tolower(subjid_col)]
+    if(length(by_x)>1) by_x = intersect(by_x, by_y)[1] %0% by_x
+    if(length(by_y)>1) by_y = intersect(by_x, by_y)[1] %0% by_y
     if(is.null(by) && length(by_x)>0 && length(by_y)>0) {
       by = set_names(by_y, by_x)
     }
@@ -449,8 +451,8 @@ reset_manual_correction = function(){
 #' @importFrom cli cli_abort cli_warn
 #' @importFrom purrr keep
 get_datasets = function(lookup=edc_lookup(), envir=edc_data_env()){
-  if(is.null(lookup)){
-    cli_abort("lookup cannot be NULL, did you forgot to import your database?")
+  if(is.null(lookup) || is.null(envir)){
+    cli_abort("lookup and envir cannot be NULL, did you forgot to import your database?")
   }
   rtn = lookup$dataset %>% 
     mget(envir=envir, ifnotfound=list(NULL), mode="list", inherits=TRUE)

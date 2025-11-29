@@ -41,6 +41,7 @@ NULL
   } else {
     file_names = basename(files) %>% tolower() %>% path_ext_remove()
   }
+  subjid_cols = get_subjid_cols()
   files %>% 
     set_names(file_names) %>% 
     map(function(.x) {
@@ -50,6 +51,7 @@ NULL
       rtn = tbl %>% 
         as_tibble() %>% 
         clean_names_fun() %>% 
+        arrange(pick(any_of2(subjid_cols))) %>%
         mutate(across(where(bad_hms), fix_hms))
       attr(rtn, "hash") = hash(rtn)
       rtn
