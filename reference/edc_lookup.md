@@ -5,7 +5,7 @@ Retrieve the lookup table from options
 ## Usage
 
 ``` r
-edc_lookup(..., check = TRUE)
+edc_lookup(..., check_null = TRUE)
 ```
 
 ## Arguments
@@ -15,42 +15,39 @@ edc_lookup(..., check = TRUE)
   passed on to
   [`dplyr::arrange()`](https://dplyr.tidyverse.org/reference/arrange.html)
 
-- check:
+- check_null:
 
-  whether to check for internal consistency
+  whether to stop if lookup is NULL
 
 ## Value
 
 the lookup dataframe summarizing the database import
 
+## See also
+
+[`build_lookup()`](https://danchaltiel.github.io/EDCimport/reference/build_lookup.md),
+[`extend_lookup()`](https://danchaltiel.github.io/EDCimport/reference/extend_lookup.md)
+
 ## Examples
 
 ``` r
-db = edc_example()
+tm = edc_example()
 #> Warning: Option "edc_lookup" has been overwritten.
-load_database(db)
+load_list(tm)
 edc_lookup()
-#> ── Lookup table - EDCimport example (extraction of 2024-01-01) - EDCimport v0.6.
-#>   dataset     nrow  ncol  n_id rows_per_id crfname                 
-#>   <chr>      <dbl> <dbl> <int>       <dbl> <chr>                   
-#> 1 long_pure    150     4    50         3   long data               
-#> 2 data1        100     7    50         2   data1                   
-#> 3 long_mixed   100     6    50         2   both short and long data
-#> 4 data2         50     6    50         1   data2                   
-#> 5 data3         50     7    50         1   data3                   
-#> 6 enrol         50     6    50         1   enrol                   
-#> 7 short         50     5    50         1   short data              
-#> 8 ae           175     7    48         3.6 Adverse events          
+#> ── Lookup table  ───────────────────────────────────────────────────────────────
+#>   dataset  nrow  ncol
+#>   <chr>   <dbl> <dbl>
+#> 1 db0        50     5
+#> 2 db2        50     5
+#> 3 db3        50     6
+#> 4 db1       100     6
 edc_lookup(dataset)
-#> ── Lookup table - EDCimport example (extraction of 2024-01-01) - EDCimport v0.6.
-#>   dataset     nrow  ncol  n_id rows_per_id crfname                 
-#>   <chr>      <dbl> <dbl> <int>       <dbl> <chr>                   
-#> 1 ae           175     7    48         3.6 Adverse events          
-#> 2 data1        100     7    50         2   data1                   
-#> 3 data2         50     6    50         1   data2                   
-#> 4 data3         50     7    50         1   data3                   
-#> 5 enrol         50     6    50         1   enrol                   
-#> 6 long_mixed   100     6    50         2   both short and long data
-#> 7 long_pure    150     4    50         3   long data               
-#> 8 short         50     5    50         1   short data              
+#> ── Lookup table  ───────────────────────────────────────────────────────────────
+#>   dataset  nrow  ncol
+#>   <chr>   <dbl> <dbl>
+#> 1 db0        50     5
+#> 2 db1       100     6
+#> 3 db2        50     5
+#> 4 db3        50     6
 ```

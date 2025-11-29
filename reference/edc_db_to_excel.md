@@ -53,8 +53,8 @@ nothing
 
 ``` r
 if (FALSE) { # \dontrun{
-  db = edc_example()
-  load_database(db)  
+  tm = edc_example()
+  load_list(tm)  
   edc_db_to_excel() #default arguments are usually OK
   edc_db_to_excel(filename=TRUE)
 } # }

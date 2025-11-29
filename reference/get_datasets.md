@@ -5,7 +5,7 @@ Get the datasets from the lookup table as a list of data.frames.
 ## Usage
 
 ``` r
-get_datasets(lookup = edc_lookup(), envir = edc_data_env())
+get_datasets(lookup = edc_lookup(), envir = parent.frame())
 ```
 
 ## Arguments

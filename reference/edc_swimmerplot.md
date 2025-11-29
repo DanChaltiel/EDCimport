@@ -1,104 +1,71 @@
 # Swimmer plot of all dates columns
 
-Join all tables on `id` with only date columns to build a ggplot (or a
-plotly if `plotly=TRUE`) showing all dates for each subject.  
-This allows outliers to be easily identified.
+Join all tables from `.lookup$dataset` on `id`
 
 ## Usage
 
 ``` r
 edc_swimmerplot(
+  .lookup = edc_lookup(),
   ...,
-  include = NULL,
-  exclude = NULL,
+  id = get_subjid_cols(),
   group = NULL,
   origin = NULL,
-  data_list = get_datasets(),
-  id_subset = "all",
-  id_sort = FALSE,
-  id_cols = get_subjid_cols(),
+  id_lim = NULL,
+  exclude = NULL,
   time_unit = c("days", "weeks", "months", "years"),
-  origin_fun = "min",
   aes_color = c("variable", "label"),
-  plotly = getOption("edc_plotly", FALSE),
-  id = "deprecated",
-  id_lim = "deprecated",
-  .lookup = "deprecated"
+  plotly = getOption("edc_plotly", FALSE)
 )
 ```
 
 ## Arguments
 
+- .lookup:
+
+  the lookup table, default to
+  [`edc_lookup()`](https://danchaltiel.github.io/EDCimport/reference/edc_lookup.md)
+
 - ...:
 
   not used
 
-- include, exclude:
+- id:
 
-  a character vector of variables to exclude/include, in the form
-  `dataset$column`. Can be a regex (apart from `$` symbols that will be
-  automatically escaped). Case-insensitive.
+  the patient identifier. Will be coerced as numeric.
 
 - group:
 
-  a grouping variable, given as "dataset\$column".
+  a grouping variable, given as "dataset\$column"
 
 - origin:
 
-  a variable to consider as time 0, given as "dataset\$column".
+  a variable to consider as time 0, given as "dataset\$column"
 
-- data_list:
+- id_lim:
 
-  a named list of data.frames to get the dates from. Default to
-  [get_datasets](https://danchaltiel.github.io/EDCimport/reference/get_datasets.md),
-  which retrieve all raw datasets.
+  a numeric vector of length 2 providing the minimum and maximum `id` to
+  subset on.
 
-- id_subset:
+- exclude:
 
-  the subjects to include in the plot.
-
-- id_sort:
-
-  whether to sort subjects by date (or time).
-
-- id_cols:
-
-  the subject identifiers columns. Identifiers be coerced as numeric if
-  possible. See
-  [get_subjid_cols](https://danchaltiel.github.io/EDCimport/reference/get_subjid_cols.md)
-  if needed.
+  a character vector of variables to exclude, in the form
+  `dataset$column`. Can be a regex, but `$` symbols don't count.
+  Case-insensitive.
 
 - time_unit:
 
   if `origin!=NULL`, the unit to measure time. One of
   `c("days", "weeks", "months", "years")`.
 
-- origin_fun:
-
-  function to summarise the `origin` date at the id level if needed.
-  Should be named, or at least have a meaningful function name (see
-  example "summarised origin".
-
 - aes_color:
 
   either `variable` ("{dataset} - {column}") or `label` (the column
-  label).
+  label)
 
 - plotly:
 
-  whether to use `{plotly}` to get an interactive plot.
-
-- id:
-
-  deprecated
-
-- id_lim:
-
-  deprecated
-
-- .lookup:
-
-  deprecated
+  whether to use `{plotly}` to get an interactive plot
 
 ## Value
 
@@ -107,34 +74,16 @@ either a `plotly` or a `ggplot`
 ## Examples
 
 ``` r
-#db = read_trialmaster("filename.zip", pw="xx")
-db = edc_example()
+#tm = read_trialmaster("filename.zip", pw="xx")
+tm = edc_example_plot()
 #> Warning: Option "edc_lookup" has been overwritten.
-load_database(db)
-edc_swimmerplot(id_lim=c(5,45))
-
-
-#fixed origin
-edc_swimmerplot(origin="enrol$enrol_date", time_unit="months", 
-                include=c("data1", "data3"),
-                exclude=c("DATA1$DATE2", "data3$date\\d\\d"), 
-                id_sort=TRUE)
-
-
-#summarised origin
-edc_swimmerplot(origin="data1$date2", time_unit="months", 
-                origin_fun=c("average"=~mean(.x, na.rm=TRUE)),
-                include=c("data1", "data3"),
-                exclude=c("DATA1$DATE2", "data3$date\\d\\d"), 
-                id_sort=TRUE)
-
-
-#id_subset
-edc_swimmerplot(group="enrol$arm", id_subset=1:10, aes_color="label")
-
-
+load_list(tm)
+p = edc_swimmerplot(.lookup, id_lim=c(5,45))
+p2 = edc_swimmerplot(.lookup, origin="db0$date_naissance", time_unit="weeks", 
+                     exclude=c("DB1$DATE2", "db3$.*"))
+p3 = edc_swimmerplot(.lookup, group="db0$group", aes_color="label")
 if (FALSE) { # \dontrun{
-p = edc_swimmerplot(plotly=TRUE)
+#save the plotly plot as HTML to share it
 save_plotly(p, "edc_swimmerplot.html")
 } # }
 ```

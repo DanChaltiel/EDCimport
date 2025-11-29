@@ -16,8 +16,7 @@ save_plotly(p, file, ...)
 
 - file:
 
-  a file path to save the HTML file. Can use the `glue` syntax to add
-  variables.
+  a file path to save the HTML file
 
 - ...:
 
@@ -32,10 +31,8 @@ nothing, used for side effect
 
 ``` r
 if (FALSE) { # \dontrun{
-db = edc_example()
-load_database(db)
-p = edc_swimmerplot(id_lim=c(5,45))
-save_plotly(p, "graph/swimplots_{date_extraction}/edc_swimmerplot.html", 
-            title="My Swimmerplot")
+tm = edc_example_plot()
+p = edc_swimmerplot(tm$.lookup, id_lim=c(5,45))
+save_plotly(p, "graph/swimplots/edc_swimmerplot.html", title="My Swimmerplot")
 } # }
 ```

@@ -1,7 +1,5 @@
 # Manual correction
 
-**\[experimental\]**
-
 When finding wrong or unexpected values in an exported dataset, it can
 be useful to temporarily correct them by hard-coding a value. However,
 this manual correction should be undone as soon as the central database

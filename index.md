@@ -1,116 +1,131 @@
 # EDCimport
 
-## Introduction 📦
+EDCimport is a package designed to easily import data from EDC software
+[TrialMaster](https://www.anjusoftware.com/trial-master/).
 
-The **EDCimport** package is designed to simplify the import and
-management of Electronic Data Capture (EDC) exports, particularly in
-clinical research settings. It is an opinionated framework, providing
-multiple streamlined tools for importing, cleaning, and checking your
-datasets.
-
-> \[!WARNING\] This package is experimental and under active
-> development. Backward compatibility is not a priority for the moment.
-> For reproducibility, use
-> [renv](https://rstudio.github.io/renv/articles/renv.html) to set the
-> package version.
-
-## Installation 🛠️
+## Installation
 
 ``` r
-# Install last version available on CRAN
+# Install last version available on CRAN (once published)
 install.packages("EDCimport")
 
 # Install development version on Github
-pak::pak("DanChaltiel/EDCimport@v0.6.0.9014")
+devtools::install_github("DanChaltiel/EDCimport")
 ```
 
-> \[!WARNING\] The documentation pertains to the dev version, not the
-> one on CRAN.
+You will also need [`7-zip`](https://www.7-zip.org/download.html)
+installed, and preferably added to the
+[`PATH`](https://superuser.com/q/284342/532861).
 
-## Features 🚀
+> \[!WARNING\] This package was developed to work on Windows and is
+> unlikely to work on any other OS. You are very welcome to submit a PR
+> if you manage to get it to work on Mac or Linux.
 
 ### Load the data
 
-Use one of
-[`read_all_sas()`](https://danchaltiel.github.io/EDCimport/reference/read_all_sas.md),
-[`read_all_xpt()`](https://danchaltiel.github.io/EDCimport/reference/read_all_xpt.md),
-[`read_all_csv()`](https://danchaltiel.github.io/EDCimport/reference/read_all_csv.md),
-or
-[`read_trialmaster()`](https://danchaltiel.github.io/EDCimport/reference/read_trialmaster.md),
-depending on the type of files in your export directory. You can then
-load your datasets into the global environment with
-[`load_database()`](https://danchaltiel.github.io/EDCimport/reference/load_database.md).
+Inside TrialMaster, you should request an export of type `SAS Xport`,
+with the checkbox “Include Codelists” ticked. This export should
+generate a `.zip` archive.
+
+Then, simply use
+[`read_trialmaster()`](https://danchaltiel.github.io/EDCimport/reference/read_trialmaster.md)
+with the archive password (if any) to retrieve the data from the
+archive:
 
 ``` r
 library(EDCimport)
-db = read_all_sas("path/to/my/files/folder")
-print(db)
-load_database(db) #this also removes `db` to save some RAM
+tm = read_trialmaster("path/to/my/archive.zip", pw="foobar")
+```
+
+The resulting object `tm` is a list containing all the datasets, plus
+metadatas.
+
+You can now use
+[`load_list()`](https://danchaltiel.github.io/EDCimport/reference/load_list.md)
+to import the list in the global environment and use your tables:
+
+``` r
+load_list(tm) #this also removes `tm` to save memory
 mean(dataset1$column5)
 ```
 
+There are many other options available (e.g. colnames cleaning & table
+splitting), see
+[`?read_trialmaster`](https://danchaltiel.github.io/EDCimport/reference/read_trialmaster.md)
+for more details.
+
 ### Database management tools
 
-`EDCimport` includes a set of useful tools that help with using the
+`EDCimport` include a set of useful tools that help with using the
 imported database. See
 [References](https://danchaltiel.github.io/EDCimport/reference/index.html)
-for the complete list.
+for a complete list.
 
 #### Database summary
 
-[`edc_lookup()`](https://danchaltiel.github.io/EDCimport/reference/edc_lookup.md)
-returns a dataframe containing the number of rows, columns, patients,
-and the CRF name of each dataset.
+Reading a database using
+[`read_trialmaster()`](https://danchaltiel.github.io/EDCimport/reference/read_trialmaster.md)
+generates the `.lookup` dataframe, which contains for each dataset the
+number of rows, columns, patients, and the CRF name.
+
+`.lookup` is used by many other tools inside EDCimport, be careful not
+to modify or delete it.
 
 #### Search the whole database
 
-[`find_keyword()`](https://danchaltiel.github.io/EDCimport/reference/edc_find_value.md)
-runs a global search of the database for a given keyword (or regex).
+Using
+[`find_keyword()`](https://danchaltiel.github.io/EDCimport/reference/find_keyword.md),
+you can run a global search of the database.
 
-For instance, say you are looking for the “date of ECG” but don’t know
-where it is, you can run `find_keyword("date")` or
-`find_keyword("ecg")`.
+For instance, say you do not remember in which dataset and column is
+located the “date of ECG”.
+[`find_keyword()`](https://danchaltiel.github.io/EDCimport/reference/find_keyword.md)
+will search every column name and label and will give you the answer:
 
-It won’t look into the actual data, though, as this would take too much
-computing power.
+``` r
+find_keyword("date")
+#> # A tibble: 10 x 3
+#>    dataset names   labels                      
+#>    <chr>   <chr>   <chr>                       
+#>  1 pat     PTRNDT  Randomization Date          
+#>  2 pat     RGSTDT  Registration Date           
+#>  3 site    INVDAT  Deactivation date           
+#>  4 site    TRGTDT  Target Enroll Date          
+#>  5 trial   TRSPDT  End Date                    
+#>  6 trial   TRSTDT  Start Date                  
+#>  7 visit   VISIT2  Visit Date                  
+#>  8 visit   EEXPVDT Earliest Expected Visit Date
+#>  9 vs      ECGDAT  Date of ECG                 
+#> 10 vs      VISITDT Visit Date
+```
 
-#### Get the last news date of each subject
+### Swimmer Plot
 
-[`lastnews_table()`](https://danchaltiel.github.io/EDCimport/reference/lastnews_table.md)
-finds the last date of each subject throughout the whole database and
-inform on the date original dataset and column. It has arguments to
-avoid selecting irrelevant dates.
-
-This is very useful to get the actual followup time when fitting
-survival analyses.
-
-#### Data checking system
-
-[`edc_data_warn()`](https://danchaltiel.github.io/EDCimport/reference/edc_data_warn.md)
-throws a warning if an inconsistency is found in a dataset. The
-interface allows to perform multiple checks and get a report as a CSV
-file.
-
-#### Join helpers
-
-As the primary key is almost always the Subject ID, join helpers were
-added to reduce code clutter. Currently, only
-[`edc_left_join()`](https://danchaltiel.github.io/EDCimport/reference/edc_left_join.md),
-[`edc_right_join()`](https://danchaltiel.github.io/EDCimport/reference/edc_left_join.md),
-and
-[`edc_full_join()`](https://danchaltiel.github.io/EDCimport/reference/edc_left_join.md)
-are supported.
-
-#### Shiny browser
-
-[`edc_viewer()`](https://danchaltiel.github.io/EDCimport/reference/edc_viewer.md)
-runs a shiny application that browses the whole database. The HTML
-interface is quicker and less cluttered than it would be in RStudio. It
-also allows filtering by Subject ID.
-
-#### Swimmer Plot
-
+The
 [`edc_swimmerplot()`](https://danchaltiel.github.io/EDCimport/reference/edc_swimmerplot.md)
-creates a swimmer plot of **all date variables** of the whole database.
-This is very useful to find inconsistencies and outliers, especially
-with the `plotly` interactive output.
+function will create a swimmer plot of all date variables in the whole
+database.
+
+There are 2 arguments of interest:
+
+- `group`, a grouping variable (e.g. the treatment arm)
+
+- `origin`, a date variable acting as the time zero (e.g. the date of
+  enrollment)
+
+``` r
+edc_swimmerplot()
+edc_swimmerplot(group="enrolres$arm")
+edc_swimmerplot(origin="enrolres$enroldt")
+```
+
+This outputs a `plotly` interactive graph where you can select the dates
+of interest and zoom in with your mouse.
+
+![](reference/figures/swimmerplot.png)
+
+Note that any modification made after running
+[`read_trialmaster()`](https://danchaltiel.github.io/EDCimport/reference/read_trialmaster.md)
+is taken into account. For instance, mutating a column with
+[`as.Date()`](https://rdrr.io/r/base/as.Date.html) in one of the tables
+will add a new group in the plot.

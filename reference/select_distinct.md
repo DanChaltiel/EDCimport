@@ -27,14 +27,12 @@ select_distinct(df, .by)
 ## Examples
 
 ``` r
-db = edc_example()
+tm = edc_example_ae()
 #> Warning: Option "edc_lookup" has been overwritten.
-db$ae %>% colnames()
-#> [1] "subjid"  "crfname" "aesoc"   "aegr"    "n_ae"    "sae"     "crfstat"
-#`crfname` has one level for the whole dataset
-db$ae %>% select_distinct() %>% colnames()
+tm$ae %>% names
+#> [1] "subjid"  "aesoc"   "aegr"    "n_ae"    "sae"     "crfname"
+tm$ae %>% select_distinct() %>% names
 #> [1] "crfname"
-#`n_ae` has one level per patient
-db$ae %>% select_distinct(.by=subjid) %>% colnames()
-#> [1] "subjid"  "crfname" "n_ae"   
+tm$ae %>% select_distinct(.by=subjid) %>% names
+#> [1] "subjid"  "n_ae"    "crfname"
 ```

@@ -48,17 +48,19 @@ nothing, called for errors/warnings
 ## Examples
 
 ``` r
-db = edc_example()
+tm = edc_example()
 #> Warning: Option "edc_lookup" has been overwritten.
-load_database(db)
-options(edc_subjid_ref=enrol$subjid)
+load_list(tm)
+options(edc_subjid_ref=db0$SUBJID)
 #usually, you set something like:
 #options(edc_subjid_ref=enrolres$subjid)
-edc_warn_patient_diffs(data1)
-data1 %>% dplyr::filter(subjid>1) %>% edc_warn_patient_diffs(issue_n=NULL)
-#> Warning: `.` has patient discrepancies:
+edc_warn_patient_diffs(db1)
+db1 %>% dplyr::filter(SUBJID>1) %>% edc_warn_patient_diffs()
+#> Warning: In `edc_warn_patient_diffs()`, `data_name` should not be NULL if `issue_n` is
+#> not NULL and function is piped, otherwise the message will be unreadable.
+#> Warning: Issue #xx: `.` has patient discrepancies:
 #> ℹ Missing: 1 patient: #1
-edc_warn_patient_diffs(c(data1$subjid, 99, 999))
-#> Warning: Issue #xx: `c(data1$subjid, 99, 999)` has patient discrepancies:
+edc_warn_patient_diffs(c(db1$SUBJID, 99, 999))
+#> Warning: Issue #xx: `c(db1$SUBJID, 99, 999)` has patient discrepancies:
 #> ℹ Extra: 2 patients: #99 and #999
 ```

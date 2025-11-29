@@ -78,6 +78,8 @@ edc_options(
 
 - edc_cols_subjid, edc_cols_meta:
 
+  **used in
+  [get_key_cols](https://danchaltiel.github.io/EDCimport/reference/get_key_cols.md)**
   the name of the columns holding the subject id (default to
   `c("ptno", "subjid")`) and the CRF form name (default to
   `c("crfname")`). It is case-insensitive.
@@ -101,9 +103,10 @@ edc_options(
   the verbosity of the output of functions
   [read_trialmaster](https://danchaltiel.github.io/EDCimport/reference/read_trialmaster.md)
   and
-  [read_all_xpt](https://danchaltiel.github.io/EDCimport/reference/read_all_xpt.md),
+  [read_tm_all_xpt](https://danchaltiel.github.io/EDCimport/reference/read_all_xpt.md),
+  [manual_correction](https://danchaltiel.github.io/EDCimport/reference/manual_correction.md),
   and
-  [manual_correction](https://danchaltiel.github.io/EDCimport/reference/manual_correction.md).
+  [get_key_cols](https://danchaltiel.github.io/EDCimport/reference/get_key_cols.md).
   For example, set `edc_options(edc_read_verbose=0)` to silence the
   first 2.
 

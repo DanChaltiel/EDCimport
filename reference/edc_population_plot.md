@@ -13,7 +13,7 @@ edc_population_plot(x, id_per_row = 50, ref = "first")
 
 - x:
 
-  a named list of subject ID, as numeric or factor.
+  a named list of subject ID.
 
 - id_per_row:
 
