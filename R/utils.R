@@ -12,7 +12,7 @@
 #' @keywords internal
 #' @importFrom tidyselect matches
 any_of2 = function(x, ignore.case=TRUE, ...){
-  matches(paste(paste0("^",x,"$"), collapse="|"), ignore.case=ignore.case, ...)
+  matches(paste0("^",x,"$"), ignore.case=ignore.case, ...)
 }
 
 #' @noRd
