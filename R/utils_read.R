@@ -41,8 +41,8 @@ NULL
   } else {
     file_names = basename(files) %>% tolower() %>% path_ext_remove()
   }
-  subjid_cols = get_subjid_cols()
-  crf = get_crfname_cols()
+  subjid_cols = get_subjid_cols(lookup=NULL)
+  crf = get_crfname_cols(lookup=NULL)
   files %>% 
     set_names(file_names) %>% 
     map(function(.x) {
