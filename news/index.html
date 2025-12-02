@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0.9015</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,9 +37,36 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/DanChaltiel/EDCimport/blob/v0.6.0/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/DanChaltiel/EDCimport/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.6.1" id="edcimport-061-dev">EDCimport 0.6.1 (dev)<a class="anchor" aria-label="anchor" href="#edcimport-061-dev"></a></h2>
+<div class="section level4">
+<h4 id="new-features-0-6-1">New features<a class="anchor" aria-label="anchor" href="#new-features-0-6-1"></a></h4>
+<ul><li>New function <code><a href="../reference/compare_databases.html">compare_databases()</a></code>, which compares the structure of several extractions of a database: added/removed columns, number of patients, etc (<a href="https://github.com/DanChaltiel/EDCimport/issues/26" class="external-link">#26</a>). See the examples for a demo.</li>
+<li>New features in <code><a href="../reference/edc_viewer.html">edc_viewer()</a></code>:
+<ul><li>Support for multiple instances on different ports with custom datasets (<a href="https://github.com/DanChaltiel/EDCimport/issues/100" class="external-link">#100</a>, <a href="https://github.com/DanChaltiel/EDCimport/issues/114" class="external-link">#114</a>)<br>
+For instance, you can now run <code>edc_viewer(data=lst(iris, mtcars), port=1212)</code>
+</li>
+<li>New button to browse all the column labels (<a href="https://github.com/DanChaltiel/EDCimport/issues/113" class="external-link">#113</a>).</li>
+</ul></li>
+</ul></div>
+<div class="section level4">
+<h4 id="bug-fixes--improvements-0-6-1">Bug fixes &amp; Improvements<a class="anchor" aria-label="anchor" href="#bug-fixes--improvements-0-6-1"></a></h4>
+<ul><li>Fixed modifiers <code><a href="../reference/edc_clean_names.html">edc_clean_names()</a></code>, <code><a href="../reference/edc_unify_subjid.html">edc_unify_subjid()</a></code>, and <code><a href="../reference/edc_split_mixed.html">edc_split_mixed()</a></code> so they don’t strip database attributes (like project name) (<a href="https://github.com/DanChaltiel/EDCimport/issues/111" class="external-link">#111</a>).</li>
+<li>Fixed <code><a href="../reference/edc_data_warn.html">edc_data_stop()</a></code> so it works without a SUBJID and defaults to no issue number (<a href="https://github.com/DanChaltiel/EDCimport/issues/109" class="external-link">#109</a>).</li>
+<li>Fixed <code><a href="../reference/assert_no_duplicate.html">assert_no_duplicate()</a></code> so it works in table with both columns <code>SUBJID</code> and <code>subjid</code> (<a href="https://github.com/DanChaltiel/EDCimport/issues/105" class="external-link">#105</a>).</li>
+<li>Fixed bugs in <code><a href="../reference/edc_left_join.html">edc_left_join()</a></code> with case-sensitivity on SUBJID (<a href="https://github.com/DanChaltiel/EDCimport/issues/108" class="external-link">#108</a>, <a href="https://github.com/DanChaltiel/EDCimport/issues/117" class="external-link">#117</a>).</li>
+<li>Improved <code><a href="../reference/save_edc_data_warnings.html">save_edc_data_warnings()</a></code> with options to hide the resolved issues and to not include stops, and better default path (<a href="https://github.com/DanChaltiel/EDCimport/issues/107" class="external-link">#107</a>, <a href="https://github.com/DanChaltiel/EDCimport/issues/110" class="external-link">#110</a>, <a href="https://github.com/DanChaltiel/EDCimport/issues/112" class="external-link">#112</a>)</li>
+<li>Improved reading functions so that all tables are sorted by SUBJID (<a href="https://github.com/DanChaltiel/EDCimport/issues/115" class="external-link">#115</a>).</li>
+<li>Improved reading functions so that each dataset has a <code>label</code> attribute, taken from <code>FORMDESC</code> or <code>CRFNAME</code> (<a href="https://github.com/DanChaltiel/EDCimport/issues/118" class="external-link">#118</a>).</li>
+<li>Improved <code><a href="../reference/edc_swimmerplot.html">edc_swimmerplot()</a></code> by removing <code>origin</code> by default (<a href="https://github.com/DanChaltiel/EDCimport/issues/106" class="external-link">#106</a>).</li>
+<li>Improved <code><a href="../reference/edc_swimmerplot.html">edc_swimmerplot()</a></code> by adding arguments <code>origin_fun</code> to summarise <code>origin</code> at patient level using, and <code>data_list</code> to control the datasets.</li>
+<li>Improved <code><a href="../reference/edc_warn_extraction_date.html">edc_warn_extraction_date()</a></code> with a strict unit “days”.</li>
+<li>Improved <code><a href="../reference/save_plotly.html">save_plotly()</a></code> with a glue syntax for param <code>file</code>.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.6.0" id="edcimport-060">EDCimport 0.6.0<a class="anchor" aria-label="anchor" href="#edcimport-060"></a></h2><p class="text-muted">CRAN release: 2025-06-24</p>
 <div class="section level4">
@@ -49,7 +76,7 @@
 </ul></div>
 <div class="section level4">
 <h4 id="new-features-0-6-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-6-0"></a></h4>
-<ul><li>New functions <code><a href="../reference/edc_patient_gridplot.html">edc_patient_gridplot()</a></code>, which creates a ggplot matrix giving the presence of all patients in all datasets (<a href="https://github.com/DanChaltiel/EDCimport/issues/77" class="external-link">#77</a>)</li>
+<ul><li>New function <code><a href="../reference/edc_patient_gridplot.html">edc_patient_gridplot()</a></code>, which creates a ggplot matrix giving the presence of all patients in all datasets (<a href="https://github.com/DanChaltiel/EDCimport/issues/77" class="external-link">#77</a>)</li>
 <li>New functions <code><a href="../reference/edc_left_join.html">edc_left_join()</a></code>, <code><a href="../reference/edc_left_join.html">edc_right_join()</a></code>, and <code><a href="../reference/edc_left_join.html">edc_full_join()</a></code>, which perform joins with defaults to subject ID as primary key (<a href="https://github.com/DanChaltiel/EDCimport/issues/82" class="external-link">#82</a>)</li>
 <li>New function <code><a href="../reference/edc_viewer.html">edc_viewer()</a></code>, which runs a shiny application for easily browsing your database (<a href="https://github.com/DanChaltiel/EDCimport/issues/83" class="external-link">#83</a>)</li>
 <li>New function <code><a href="../reference/set_project_name.html">set_project_name()</a></code>, to set the project name when reading from a directory (<a href="https://github.com/DanChaltiel/EDCimport/issues/96" class="external-link">#96</a>)</li>
@@ -106,35 +133,29 @@
 <h4 id="new-features-0-5-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-5-0"></a></h4>
 <div class="section level5">
 <h5 id="read-functions-0-5-0">Read functions<a class="anchor" aria-label="anchor" href="#read-functions-0-5-0"></a></h5>
-<ul><li><p>New function <code><a href="../reference/read_all_sas.html">read_all_sas()</a></code> to read a database of <code>.sas7bdat</code> files.</p></li>
-<li><p>New function <code><a href="../reference/read_all_csv.html">read_all_csv()</a></code> to read a database of <code>.csv</code> files.</p></li>
+<ul><li>New function <code><a href="../reference/read_all_sas.html">read_all_sas()</a></code> to read a database of <code>.sas7bdat</code> files.</li>
+<li>New function <code><a href="../reference/read_all_csv.html">read_all_csv()</a></code> to read a database of <code>.csv</code> files.</li>
 </ul></div>
 <div class="section level5">
 <h5 id="sanity-checks-alerts-0-5-0">Sanity checks alerts<a class="anchor" aria-label="anchor" href="#sanity-checks-alerts-0-5-0"></a></h5>
-<ul><li>
-<p>New functions <code><a href="../reference/edc_data_warn.html">edc_data_warn()</a></code> and <code><a href="../reference/edc_data_warn.html">edc_data_stop()</a></code>, to alert if data has inconsistencies (<a href="https://github.com/DanChaltiel/EDCimport/issues/29" class="external-link">#29</a>, <a href="https://github.com/DanChaltiel/EDCimport/issues/39" class="external-link">#39</a>, <a href="https://github.com/DanChaltiel/EDCimport/issues/43" class="external-link">#43</a>).</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ae</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">grade</span><span class="op">&lt;</span><span class="fl">1</span> <span class="op">|</span> <span class="va">grade</span><span class="op">&gt;</span><span class="fl">5</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/edc_data_warn.html">edc_data_stop</a></span><span class="op">(</span><span class="st">"AE of invalid grade"</span><span class="op">)</span></span>
-<span><span class="va">ae</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">grade</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/edc_data_warn.html">edc_data_warn</a></span><span class="op">(</span><span class="st">"Grade is missing"</span>, issue_n<span class="op">=</span><span class="fl">13</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Issue #13: Grade is missing (8 patients: #21, #28, #39, #95, #97, ...)</span></span></code></pre></div>
-</li>
+<ul><li><p>New functions <code><a href="../reference/edc_data_warn.html">edc_data_warn()</a></code> and <code><a href="../reference/edc_data_warn.html">edc_data_stop()</a></code>, to alert if data has inconsistencies (<a href="https://github.com/DanChaltiel/EDCimport/issues/29" class="external-link">#29</a>, <a href="https://github.com/DanChaltiel/EDCimport/issues/39" class="external-link">#39</a>, <a href="https://github.com/DanChaltiel/EDCimport/issues/43" class="external-link">#43</a>). <code>r     ae %&gt;% filter(grade&lt;1 | grade&gt;5) %&gt;% edc_data_stop("AE of invalid grade")     ae %&gt;% filter(is.na(grade)) %&gt;% edc_data_warn("Grade is missing", issue_n=13)     #&gt; Warning: Issue <a href="https://github.com/DanChaltiel/EDCimport/issues/13" class="external-link">#13</a>: Grade is missing (8 patients: <a href="https://github.com/DanChaltiel/EDCimport/issues/21" class="external-link">#21</a>, <a href="https://github.com/DanChaltiel/EDCimport/issues/28" class="external-link">#28</a>, <a href="https://github.com/DanChaltiel/EDCimport/issues/39" class="external-link">#39</a>, <a href="https://github.com/DanChaltiel/EDCimport/issues/95" class="external-link">#95</a>, <a href="https://github.com/DanChaltiel/EDCimport/issues/97" class="external-link">#97</a>, ...)</code></p></li>
 <li><p>New function <code><a href="../reference/edc_data_warn.html">edc_data_warnings()</a></code>, to get a dataframe of all warnings thrown by <code><a href="../reference/edc_data_warn.html">edc_data_warn()</a></code>.</p></li>
 <li><p>New function <code><a href="../reference/edc_warn_extraction_date.html">edc_warn_extraction_date()</a></code>, to alert if data is too old.</p></li>
 </ul></div>
 <div class="section level5">
 <h5 id="miscellaneous-utils-0-5-0">Miscellaneous utils<a class="anchor" aria-label="anchor" href="#miscellaneous-utils-0-5-0"></a></h5>
-<ul><li><p>New function <code><a href="../reference/select_distinct.html">select_distinct()</a></code> to select all columns that has only one level for a given grouping scope (<a href="https://github.com/DanChaltiel/EDCimport/issues/57" class="external-link">#57</a>).</p></li>
-<li><p>New function <code><a href="../reference/edc_population_plot.html">edc_population_plot()</a></code> to visualize which patient is in which analysis population (<a href="https://github.com/DanChaltiel/EDCimport/issues/56" class="external-link">#56</a>).</p></li>
-<li><p>New function <code><a href="../reference/edc_db_to_excel.html">edc_db_to_excel()</a></code> to export the whole database to an Excel file, easier to browse than RStudio’s table viewer (<a href="https://github.com/DanChaltiel/EDCimport/issues/55" class="external-link">#55</a>). Use <code><a href="../reference/edc_db_to_excel.html">edc_browse_excel()</a></code> to browse the file without knowing its name.</p></li>
-<li><p>New function <code><a href="../reference/edc_inform_code.html">edc_inform_code()</a></code> to show how much code your project contains (<a href="https://github.com/DanChaltiel/EDCimport/issues/49" class="external-link">#49</a>).</p></li>
-<li><p>New function <code><a href="../reference/search_for_newer_data.html">search_for_newer_data()</a></code> to search a path (e.g. Downloads) for a newer data archive (<a href="https://github.com/DanChaltiel/EDCimport/issues/46" class="external-link">#46</a>).</p></li>
-<li><p>New function <code><a href="../reference/edc_crf_plot.html">edc_crf_plot()</a></code> to show the current database completion status (<a href="https://github.com/DanChaltiel/EDCimport/issues/48" class="external-link">#48</a>).</p></li>
-<li><p>New function <code><a href="../reference/save_sessioninfo.html">save_sessioninfo()</a></code>, to save <code><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo()</a></code> into a text file (<a href="https://github.com/DanChaltiel/EDCimport/issues/42" class="external-link">#42</a>).</p></li>
-<li><p>New function <code><a href="../reference/fct_yesno.html">fct_yesno()</a></code>, to easily format Yes/No columns (<a href="https://github.com/DanChaltiel/EDCimport/issues/19" class="external-link">#19</a>, <a href="https://github.com/DanChaltiel/EDCimport/issues/23" class="external-link">#23</a>, <a href="https://github.com/DanChaltiel/EDCimport/issues/40" class="external-link">#40</a>).</p></li>
-<li><p>New function <code><a href="../reference/lastnews_table.html">lastnews_table()</a></code> to find the last date an information has been entered for each patient (<a href="https://github.com/DanChaltiel/EDCimport/issues/37" class="external-link">#37</a>). Useful for survival analyses.</p></li>
-<li><p>New function <code><a href="../reference/edc_unify_subjid.html">edc_unify_subjid()</a></code>, to have the same structure for subject IDs in all the datasets of the database (<a href="https://github.com/DanChaltiel/EDCimport/issues/30" class="external-link">#30</a>).</p></li>
-<li><p>New function <code><a href="../reference/save_plotly.html">save_plotly()</a></code>, to save a <code>plotly</code> to an HTML file (<a href="https://github.com/DanChaltiel/EDCimport/issues/15" class="external-link">#15</a>).</p></li>
-<li><p>New experimental functions <code><a href="../reference/table_format.html">table_format()</a></code>, <code><a href="../reference/get_common_cols.html">get_common_cols()</a></code> and <code>get_meta_cols()</code> that might become useful to find keys to pivot or summarise data.</p></li>
+<ul><li>New function <code><a href="../reference/select_distinct.html">select_distinct()</a></code> to select all columns that has only one level for a given grouping scope (<a href="https://github.com/DanChaltiel/EDCimport/issues/57" class="external-link">#57</a>).</li>
+<li>New function <code><a href="../reference/edc_population_plot.html">edc_population_plot()</a></code> to visualize which patient is in which analysis population (<a href="https://github.com/DanChaltiel/EDCimport/issues/56" class="external-link">#56</a>).</li>
+<li>New function <code><a href="../reference/edc_db_to_excel.html">edc_db_to_excel()</a></code> to export the whole database to an Excel file, easier to browse than RStudio’s table viewer (<a href="https://github.com/DanChaltiel/EDCimport/issues/55" class="external-link">#55</a>). Use <code><a href="../reference/edc_db_to_excel.html">edc_browse_excel()</a></code> to browse the file without knowing its name.</li>
+<li>New function <code><a href="../reference/edc_inform_code.html">edc_inform_code()</a></code> to show how much code your project contains (<a href="https://github.com/DanChaltiel/EDCimport/issues/49" class="external-link">#49</a>).</li>
+<li>New function <code><a href="../reference/search_for_newer_data.html">search_for_newer_data()</a></code> to search a path (e.g. Downloads) for a newer data archive (<a href="https://github.com/DanChaltiel/EDCimport/issues/46" class="external-link">#46</a>).</li>
+<li>New function <code><a href="../reference/edc_crf_plot.html">edc_crf_plot()</a></code> to show the current database completion status (<a href="https://github.com/DanChaltiel/EDCimport/issues/48" class="external-link">#48</a>).</li>
+<li>New function <code><a href="../reference/save_sessioninfo.html">save_sessioninfo()</a></code>, to save <code><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo()</a></code> into a text file (<a href="https://github.com/DanChaltiel/EDCimport/issues/42" class="external-link">#42</a>).</li>
+<li>New function <code><a href="../reference/fct_yesno.html">fct_yesno()</a></code>, to easily format Yes/No columns (<a href="https://github.com/DanChaltiel/EDCimport/issues/19" class="external-link">#19</a>, <a href="https://github.com/DanChaltiel/EDCimport/issues/23" class="external-link">#23</a>, <a href="https://github.com/DanChaltiel/EDCimport/issues/40" class="external-link">#40</a>).</li>
+<li>New function <code><a href="../reference/lastnews_table.html">lastnews_table()</a></code> to find the last date an information has been entered for each patient (<a href="https://github.com/DanChaltiel/EDCimport/issues/37" class="external-link">#37</a>). Useful for survival analyses.</li>
+<li>New function <code><a href="../reference/edc_unify_subjid.html">edc_unify_subjid()</a></code>, to have the same structure for subject IDs in all the datasets of the database (<a href="https://github.com/DanChaltiel/EDCimport/issues/30" class="external-link">#30</a>).</li>
+<li>New function <code><a href="../reference/save_plotly.html">save_plotly()</a></code>, to save a <code>plotly</code> to an HTML file (<a href="https://github.com/DanChaltiel/EDCimport/issues/15" class="external-link">#15</a>).</li>
+<li>New experimental functions <code><a href="../reference/table_format.html">table_format()</a></code>, <code><a href="../reference/get_common_cols.html">get_common_cols()</a></code> and <code>get_meta_cols()</code> that might become useful to find keys to pivot or summarise data.</li>
 </ul></div>
 </div>
 <div class="section level4">
@@ -175,12 +196,12 @@
 <div class="section level4">
 <h4 id="new-features-0-4-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-4-0"></a></h4>
 <ul><li>New function <code><a href="../reference/edc_warn_patient_diffs.html">check_subjid()</a></code> to check if a vector is not missing some patients (<a href="https://github.com/DanChaltiel/EDCimport/issues/8" class="external-link">#8</a>).</li>
-</ul><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+</ul><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>edc_subjid_ref<span class="op">=</span><span class="va">enrolres</span><span class="op">$</span><span class="va">subjid</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/edc_warn_patient_diffs.html">check_subjid</a></span><span class="op">(</span><span class="va">treatment</span><span class="op">$</span><span class="va">subjid</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/edc_warn_patient_diffs.html">check_subjid</a></span><span class="op">(</span><span class="va">ae</span><span class="op">$</span><span class="va">subjid</span><span class="op">)</span></span></code></pre></div>
 <ul><li>New function <code><a href="../reference/assert_no_duplicate.html">assert_no_duplicate()</a></code> to abort if a table has duplicates in a subject ID column(<a href="https://github.com/DanChaltiel/EDCimport/issues/9" class="external-link">#9</a>).</li>
-</ul><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+</ul><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>subjid<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/assert_no_duplicate.html">assert_no_duplicate</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#Error in `assert_no_duplicate()`:</span></span>
 <span><span class="co">#! Duplicate on column "subjid" for value 1.</span></span></code></pre></div>
@@ -207,12 +228,11 @@
 </ul></div>
 </div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.3.0" id="edcimport-030-20230519">EDCimport 0.3.0 <sub><sup>2023/05/19</sup></sub><a class="anchor" aria-label="anchor" href="#edcimport-030-20230519"></a></h2><p class="text-muted">CRAN release: 2023-05-19</p>
+<h2 class="pkg-version" data-toc-text="0.3.0" id="edcimport-030">EDCimport 0.3.0<a class="anchor" aria-label="anchor" href="#edcimport-030"></a></h2><p class="text-muted">CRAN release: 2023-05-19</p>
 <div class="section level4">
 <h4 id="new-features-0-3-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-3-0"></a></h4>
-<ul><li><p>New function <code><a href="../reference/edc_swimmerplot.html">edc_swimmerplot()</a></code> to show a swimmer plot of all dates in the database and easily find outliers.</p></li>
-<li>
-<p>New features in <code><a href="../reference/read_trialmaster.html">read_trialmaster()</a></code>:</p>
+<ul><li>New function <code><a href="../reference/edc_swimmerplot.html">edc_swimmerplot()</a></code> to show a swimmer plot of all dates in the database and easily find outliers.</li>
+<li>New features in <code><a href="../reference/read_trialmaster.html">read_trialmaster()</a></code>:
 <ul><li>
 <code>clean_names_fun=some_fun</code> will clean all names of all tables. For instance, <code>clean_names_fun=janitor::clean_names()</code> will turn default SAS uppercase column names into valid R snake-case column names.</li>
 <li>
@@ -222,23 +242,24 @@
 <li>
 <code>key_columns=get_key_cols()</code> is where you can change the default column names for patient ID and CRF name (used in other new features).</li>
 </ul></li>
-<li><p>Standalone functions <code>extend_lookup()</code> and <code>split_mixed_datasets()</code>.</p></li>
-<li><p>New helper <code><a href="../reference/unify.html">unify()</a></code>, which turns a vector of duplicate values into a vector of length 1.</p></li>
+<li>Standalone functions <code>extend_lookup()</code> and <code>split_mixed_datasets()</code>.</li>
+<li>New helper <code><a href="../reference/unify.html">unify()</a></code>, which turns a vector of duplicate values into a vector of length 1.</li>
 </ul></div>
 <div class="section level4">
 <h4 id="bug-fixes-0-3-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-3-0"></a></h4>
-<ul><li><p>Reading errors are now handled by <code><a href="../reference/read_trialmaster.html">read_trialmaster()</a></code> instead of failing. If one XPT file is corrupted, the resulting object will contain the error message instead of the dataset.</p></li>
-<li><p><code><a href="../reference/edc_find_value.html">find_keyword()</a></code> is now robust to non-UTF8 characters in labels.</p></li>
-<li><p>Option <code>edc_lookup</code> is now set even when reading from cache.</p></li>
-<li><p>SAS formats containing a <code>=</code> now work as intended.</p></li>
+<ul><li>Reading errors are now handled by <code><a href="../reference/read_trialmaster.html">read_trialmaster()</a></code> instead of failing. If one XPT file is corrupted, the resulting object will contain the error message instead of the dataset.</li>
+<li>
+<code><a href="../reference/edc_find_value.html">find_keyword()</a></code> is now robust to non-UTF8 characters in labels.</li>
+<li>Option <code>edc_lookup</code> is now set even when reading from cache.</li>
+<li>SAS formats containing a <code>=</code> now work as intended.</li>
 </ul></div>
 </div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.2.1" id="edcimport-021-20221101">EDCimport 0.2.1 <sub><sup>2022/11/01</sup></sub><a class="anchor" aria-label="anchor" href="#edcimport-021-20221101"></a></h2><p class="text-muted">CRAN release: 2022-12-02</p>
-<ul><li><p>Import your data from TrialMaster using <code>tm = read_trialmaster("path/to/archive.zip")</code>.</p></li>
-<li><p>Search for a keyword in any column name or label using <code>find_keyword("date", data=tm$.lookup)</code>. You can also generate a lookup table for an arbitrary list of dataframe using <code>build_lookup(my_data)</code>.</p></li>
-<li><p>Load the datasets to the global environment using <code>load_list(tm)</code> to avoid typing <code>tm$</code> everywhere.</p></li>
-<li><p>Browse available global options using <code>?EDCimport_options</code>.</p></li>
+<h2 class="pkg-version" data-toc-text="0.2.1" id="edcimport-021">EDCimport 0.2.1<a class="anchor" aria-label="anchor" href="#edcimport-021"></a></h2><p class="text-muted">CRAN release: 2022-12-02</p>
+<ul><li>Import your data from TrialMaster using <code>tm = read_trialmaster("path/to/archive.zip")</code>.</li>
+<li>Search for a keyword in any column name or label using <code>find_keyword("date", data=tm$.lookup)</code>. You can also generate a lookup table for an arbitrary list of dataframe using <code>build_lookup(my_data)</code>.</li>
+<li>Load the datasets to the global environment using <code>load_list(tm)</code> to avoid typing <code>tm$</code> everywhere.</li>
+<li>Browse available global options using <code>?EDCimport_options</code>.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0" id="edcimport-010">EDCimport 0.1.0<a class="anchor" aria-label="anchor" href="#edcimport-010"></a></h2>

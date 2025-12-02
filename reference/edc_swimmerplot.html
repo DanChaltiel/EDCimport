@@ -11,7 +11,7 @@ This allows outliers to be easily identified."><meta property="og:image" content
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0.9015</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,7 +41,7 @@ This allows outliers to be easily identified."><meta property="og:image" content
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Swimmer plot of all dates columns</h1>
-      <small class="dont-index">Source: <a href="https://github.com/DanChaltiel/EDCimport/blob/v0.6.0/R/swimmerplot.R" class="external-link"><code>R/swimmerplot.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/DanChaltiel/EDCimport/blob/main/R/swimmerplot.R" class="external-link"><code>R/swimmerplot.R</code></a></small>
       <div class="d-none name"><code>edc_swimmerplot.Rd</code></div>
     </div>
 
@@ -55,14 +55,16 @@ This allows outliers to be easily identified.</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">edc_swimmerplot</span><span class="op">(</span></span>
 <span>  <span class="va">...</span>,</span>
-<span>  group <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  origin <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  include <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  exclude <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  group <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  origin <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  data_list <span class="op">=</span> <span class="fu"><a href="get_datasets.html">get_datasets</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  id_subset <span class="op">=</span> <span class="st">"all"</span>,</span>
 <span>  id_sort <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  id_cols <span class="op">=</span> <span class="fu"><a href="get_subjid_cols.html">get_subjid_cols</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  time_unit <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"days"</span>, <span class="st">"weeks"</span>, <span class="st">"months"</span>, <span class="st">"years"</span><span class="op">)</span>,</span>
+<span>  origin_fun <span class="op">=</span> <span class="st">"min"</span>,</span>
 <span>  aes_color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"variable"</span>, <span class="st">"label"</span><span class="op">)</span>,</span>
 <span>  plotly <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"edc_plotly"</span>, <span class="cn">FALSE</span><span class="op">)</span>,</span>
 <span>  id <span class="op">=</span> <span class="st">"deprecated"</span>,</span>
@@ -79,6 +81,10 @@ This allows outliers to be easily identified.</p>
 <dd><p>not used</p></dd>
 
 
+<dt id="arg-include-exclude">include, exclude<a class="anchor" aria-label="anchor" href="#arg-include-exclude"></a></dt>
+<dd><p>a character vector of variables to exclude/include, in the form <code>dataset$column</code>. Can be a regex (apart from <code>$</code> symbols that will be automatically escaped). Case-insensitive.</p></dd>
+
+
 <dt id="arg-group">group<a class="anchor" aria-label="anchor" href="#arg-group"></a></dt>
 <dd><p>a grouping variable, given as "dataset$column".</p></dd>
 
@@ -87,8 +93,8 @@ This allows outliers to be easily identified.</p>
 <dd><p>a variable to consider as time 0, given as "dataset$column".</p></dd>
 
 
-<dt id="arg-include-exclude">include, exclude<a class="anchor" aria-label="anchor" href="#arg-include-exclude"></a></dt>
-<dd><p>a character vector of variables to exclude/include, in the form <code>dataset$column</code>. Can be a regex (apart from <code>$</code> symbols that will be automatically escaped). Case-insensitive.</p></dd>
+<dt id="arg-data-list">data_list<a class="anchor" aria-label="anchor" href="#arg-data-list"></a></dt>
+<dd><p>a named list of data.frames to get the dates from. Default to <a href="get_datasets.html">get_datasets</a>, which retrieve all raw datasets.</p></dd>
 
 
 <dt id="arg-id-subset">id_subset<a class="anchor" aria-label="anchor" href="#arg-id-subset"></a></dt>
@@ -105,6 +111,10 @@ This allows outliers to be easily identified.</p>
 
 <dt id="arg-time-unit">time_unit<a class="anchor" aria-label="anchor" href="#arg-time-unit"></a></dt>
 <dd><p>if <code>origin!=NULL</code>, the unit to measure time. One of <code>c("days", "weeks", "months", "years")</code>.</p></dd>
+
+
+<dt id="arg-origin-fun">origin_fun<a class="anchor" aria-label="anchor" href="#arg-origin-fun"></a></dt>
+<dd><p>function to summarise the <code>origin</code> date at the id level if needed. Should be named, or at least have a meaningful function name (see example "summarised origin".</p></dd>
 
 
 <dt id="arg-aes-color">aes_color<a class="anchor" aria-label="anchor" href="#arg-aes-color"></a></dt>
@@ -141,14 +151,24 @@ This allows outliers to be easily identified.</p>
 <span class="r-in"><span><span class="fu">edc_swimmerplot</span><span class="op">(</span>id_lim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>,<span class="fl">45</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="edc_swimmerplot-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#fixed origin</span></span></span>
 <span class="r-in"><span><span class="fu">edc_swimmerplot</span><span class="op">(</span>origin<span class="op">=</span><span class="st">"enrol$enrol_date"</span>, time_unit<span class="op">=</span><span class="st">"months"</span>, </span></span>
 <span class="r-in"><span>                include<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"data1"</span>, <span class="st">"data3"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                exclude<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"DATA1$DATE2"</span>, <span class="st">"data3$date\\d\\d"</span><span class="op">)</span>, </span></span>
 <span class="r-in"><span>                id_sort<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="edc_swimmerplot-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu">edc_swimmerplot</span><span class="op">(</span>group<span class="op">=</span><span class="st">"enrol$arm"</span>, id_subset<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, aes_color<span class="op">=</span><span class="st">"label"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co">#summarised origin</span></span></span>
+<span class="r-in"><span><span class="fu">edc_swimmerplot</span><span class="op">(</span>origin<span class="op">=</span><span class="st">"data1$date2"</span>, time_unit<span class="op">=</span><span class="st">"months"</span>, </span></span>
+<span class="r-in"><span>                origin_fun<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"average"</span><span class="op">=</span><span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">.x</span>, na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                include<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"data1"</span>, <span class="st">"data3"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                exclude<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"DATA1$DATE2"</span>, <span class="st">"data3$date\\d\\d"</span><span class="op">)</span>, </span></span>
+<span class="r-in"><span>                id_sort<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="edc_swimmerplot-3.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#id_subset</span></span></span>
+<span class="r-in"><span><span class="fu">edc_swimmerplot</span><span class="op">(</span>group<span class="op">=</span><span class="st">"enrol$arm"</span>, id_subset<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, aes_color<span class="op">=</span><span class="st">"label"</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="edc_swimmerplot-4.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="va">p</span> <span class="op">=</span> <span class="fu">edc_swimmerplot</span><span class="op">(</span>plotly<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>

@@ -135,7 +135,7 @@ db
 #>   environment.
 #> ℹ Use `EDCimport::edc_lookup()` to see the summary table.
 edc_lookup()
-#> ── Lookup table - My great project (extraction of 2025-11-29) - EDCimport v0.6.0
+#> ── Lookup table - My great project (extraction of 2025-12-02) - EDCimport v0.6.0
 #>   dataset        nrow  ncol  n_id rows_per_id crfname
 #>   <chr>         <dbl> <dbl> <int>       <dbl> <chr>  
 #> 1 airquality      153     7     0          NA NA     

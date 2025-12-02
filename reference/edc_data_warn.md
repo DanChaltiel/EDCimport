@@ -115,12 +115,12 @@ enrol %>%
 #> Warning: Age should not be <25 (1 patient: #18)
   
 edc_data_warnings()
-#> # A tibble: 3 × 4
-#>   issue_n message                                             subjid    data    
-#>   <chr>   <chr>                                               <list>    <list>  
-#> 1 01      Age should not be >70                               <chr [2]> <tibble>
-#> 2 02      Age should not be <25                               <chr [1]> <tibble>
-#> 3 03      There are duplicated patients in `data1` (100 rows) <chr>     <tibble>
+#> # A tibble: 3 × 5
+#>   issue_n message                                          subjid data     type 
+#>   <chr>   <chr>                                            <list> <list>   <chr>
+#> 1 01      Age should not be >70                            <chr>  <tibble> WARN 
+#> 2 02      Age should not be <25                            <chr>  <tibble> WARN 
+#> 3 03      There are duplicated patients in `data1` (100 r… <chr>  <tibble> WARN 
 
 if (FALSE) { # \dontrun{
 enrol %>% 

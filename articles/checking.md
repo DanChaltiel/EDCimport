@@ -78,12 +78,12 @@ to get a summary of all detected issues.
 
 ``` r
 edc_data_warnings()
-#> # A tibble: 3 × 4
-#>   issue_n message                                      subjid    data    
-#>   <chr>   <chr>                                        <list>    <list>  
-#> 1 01      Patients should be >25yo                     <chr [2]> <tibble>
-#> 2 02      Incorrect adverse event grade                <NULL>    <tibble>
-#> 3 03      Treated patients should have been seen later <chr [9]> <tibble>
+#> # A tibble: 3 × 5
+#>   issue_n message                                      subjid    data     type 
+#>   <chr>   <chr>                                        <list>    <list>   <chr>
+#> 1 01      Patients should be >25yo                     <chr [2]> <tibble> WARN 
+#> 2 02      Incorrect adverse event grade                <NULL>    <tibble> WARN 
+#> 3 03      Treated patients should have been seen later <chr [9]> <tibble> WARN
 ```
 
 ### Fatal error

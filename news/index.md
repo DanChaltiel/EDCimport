@@ -1,5 +1,75 @@
 # Changelog
 
+## EDCimport 0.6.1 (dev)
+
+#### New features
+
+- New function
+  [`compare_databases()`](https://danchaltiel.github.io/EDCimport/reference/compare_databases.md),
+  which compares the structure of several extractions of a database:
+  added/removed columns, number of patients, etc
+  ([\#26](https://github.com/DanChaltiel/EDCimport/issues/26)). See the
+  examples for a demo.
+- New features in
+  [`edc_viewer()`](https://danchaltiel.github.io/EDCimport/reference/edc_viewer.md):
+  - Support for multiple instances on different ports with custom
+    datasets
+    ([\#100](https://github.com/DanChaltiel/EDCimport/issues/100),
+    [\#114](https://github.com/DanChaltiel/EDCimport/issues/114))  
+    For instance, you can now run
+    `edc_viewer(data=lst(iris, mtcars), port=1212)`
+  - New button to browse all the column labels
+    ([\#113](https://github.com/DanChaltiel/EDCimport/issues/113)).
+
+#### Bug fixes & Improvements
+
+- Fixed modifiers
+  [`edc_clean_names()`](https://danchaltiel.github.io/EDCimport/reference/edc_clean_names.md),
+  [`edc_unify_subjid()`](https://danchaltiel.github.io/EDCimport/reference/edc_unify_subjid.md),
+  and
+  [`edc_split_mixed()`](https://danchaltiel.github.io/EDCimport/reference/edc_split_mixed.md)
+  so they don’t strip database attributes (like project name)
+  ([\#111](https://github.com/DanChaltiel/EDCimport/issues/111)).
+- Fixed
+  [`edc_data_stop()`](https://danchaltiel.github.io/EDCimport/reference/edc_data_warn.md)
+  so it works without a SUBJID and defaults to no issue number
+  ([\#109](https://github.com/DanChaltiel/EDCimport/issues/109)).
+- Fixed
+  [`assert_no_duplicate()`](https://danchaltiel.github.io/EDCimport/reference/assert_no_duplicate.md)
+  so it works in table with both columns `SUBJID` and `subjid`
+  ([\#105](https://github.com/DanChaltiel/EDCimport/issues/105)).
+- Fixed bugs in
+  [`edc_left_join()`](https://danchaltiel.github.io/EDCimport/reference/edc_left_join.md)
+  with case-sensitivity on SUBJID
+  ([\#108](https://github.com/DanChaltiel/EDCimport/issues/108),
+  [\#117](https://github.com/DanChaltiel/EDCimport/issues/117)).
+- Improved
+  [`save_edc_data_warnings()`](https://danchaltiel.github.io/EDCimport/reference/save_edc_data_warnings.md)
+  with options to hide the resolved issues and to not include stops, and
+  better default path
+  ([\#107](https://github.com/DanChaltiel/EDCimport/issues/107),
+  [\#110](https://github.com/DanChaltiel/EDCimport/issues/110),
+  [\#112](https://github.com/DanChaltiel/EDCimport/issues/112))
+- Improved reading functions so that all tables are sorted by SUBJID
+  ([\#115](https://github.com/DanChaltiel/EDCimport/issues/115)).
+- Improved reading functions so that each dataset has a `label`
+  attribute, taken from `FORMDESC` or `CRFNAME`
+  ([\#118](https://github.com/DanChaltiel/EDCimport/issues/118)).
+- Improved
+  [`edc_swimmerplot()`](https://danchaltiel.github.io/EDCimport/reference/edc_swimmerplot.md)
+  by removing `origin` by default
+  ([\#106](https://github.com/DanChaltiel/EDCimport/issues/106)).
+- Improved
+  [`edc_swimmerplot()`](https://danchaltiel.github.io/EDCimport/reference/edc_swimmerplot.md)
+  by adding arguments `origin_fun` to summarise `origin` at patient
+  level using, and `data_list` to control the datasets.
+- Improved
+  [`edc_warn_extraction_date()`](https://danchaltiel.github.io/EDCimport/reference/edc_warn_extraction_date.md)
+  with a strict unit “days”.
+- Improved
+  [`save_plotly()`](https://danchaltiel.github.io/EDCimport/reference/save_plotly.md)
+  with a glue syntax for param `file`.
+
 ## EDCimport 0.6.0
 
 CRAN release: 2025-06-24
@@ -16,7 +86,7 @@ CRAN release: 2025-06-24
 
 #### New features
 
-- New functions
+- New function
   [`edc_patient_gridplot()`](https://danchaltiel.github.io/EDCimport/reference/edc_patient_gridplot.md),
   which creates a ggplot matrix giving the presence of all patients in
   all datasets
@@ -130,7 +200,6 @@ CRAN release: 2024-10-24
 - New function
   [`read_all_sas()`](https://danchaltiel.github.io/EDCimport/reference/read_all_sas.md)
   to read a database of `.sas7bdat` files.
-
 - New function
   [`read_all_csv()`](https://danchaltiel.github.io/EDCimport/reference/read_all_csv.md)
   to read a database of `.csv` files.
@@ -145,12 +214,7 @@ CRAN release: 2024-10-24
   ([\#29](https://github.com/DanChaltiel/EDCimport/issues/29),
   [\#39](https://github.com/DanChaltiel/EDCimport/issues/39),
   [\#43](https://github.com/DanChaltiel/EDCimport/issues/43)).
-
-  ``` r
-  ae %>% filter(grade<1 | grade>5) %>% edc_data_stop("AE of invalid grade")
-  ae %>% filter(is.na(grade)) %>% edc_data_warn("Grade is missing", issue_n=13)
-  #> Warning: Issue #13: Grade is missing (8 patients: #21, #28, #39, #95, #97, ...)
-  ```
+  `r ae %>% filter(grade<1 | grade>5) %>% edc_data_stop("AE of invalid grade") ae %>% filter(is.na(grade)) %>% edc_data_warn("Grade is missing", issue_n=13) #> Warning: Issue `[`#13`](https://github.com/DanChaltiel/EDCimport/issues/13)`: Grade is missing (8 patients: `[`#21`](https://github.com/DanChaltiel/EDCimport/issues/21)`, `[`#28`](https://github.com/DanChaltiel/EDCimport/issues/28)`, `[`#39`](https://github.com/DanChaltiel/EDCimport/issues/39)`, `[`#95`](https://github.com/DanChaltiel/EDCimport/issues/95)`, `[`#97`](https://github.com/DanChaltiel/EDCimport/issues/97)`, ...)`
 
 - New function
   [`edc_data_warnings()`](https://danchaltiel.github.io/EDCimport/reference/edc_data_warn.md),
@@ -167,12 +231,10 @@ CRAN release: 2024-10-24
   [`select_distinct()`](https://danchaltiel.github.io/EDCimport/reference/select_distinct.md)
   to select all columns that has only one level for a given grouping
   scope ([\#57](https://github.com/DanChaltiel/EDCimport/issues/57)).
-
 - New function
   [`edc_population_plot()`](https://danchaltiel.github.io/EDCimport/reference/edc_population_plot.md)
   to visualize which patient is in which analysis population
   ([\#56](https://github.com/DanChaltiel/EDCimport/issues/56)).
-
 - New function
   [`edc_db_to_excel()`](https://danchaltiel.github.io/EDCimport/reference/edc_db_to_excel.md)
   to export the whole database to an Excel file, easier to browse than
@@ -180,51 +242,42 @@ CRAN release: 2024-10-24
   ([\#55](https://github.com/DanChaltiel/EDCimport/issues/55)). Use
   [`edc_browse_excel()`](https://danchaltiel.github.io/EDCimport/reference/edc_db_to_excel.md)
   to browse the file without knowing its name.
-
 - New function
   [`edc_inform_code()`](https://danchaltiel.github.io/EDCimport/reference/edc_inform_code.md)
   to show how much code your project contains
   ([\#49](https://github.com/DanChaltiel/EDCimport/issues/49)).
-
 - New function
   [`search_for_newer_data()`](https://danchaltiel.github.io/EDCimport/reference/search_for_newer_data.md)
   to search a path (e.g. Downloads) for a newer data archive
   ([\#46](https://github.com/DanChaltiel/EDCimport/issues/46)).
-
 - New function
   [`edc_crf_plot()`](https://danchaltiel.github.io/EDCimport/reference/edc_crf_plot.md)
   to show the current database completion status
   ([\#48](https://github.com/DanChaltiel/EDCimport/issues/48)).
-
 - New function
   [`save_sessioninfo()`](https://danchaltiel.github.io/EDCimport/reference/save_sessioninfo.md),
   to save [`sessionInfo()`](https://rdrr.io/r/utils/sessionInfo.html)
   into a text file
   ([\#42](https://github.com/DanChaltiel/EDCimport/issues/42)).
-
 - New function
   [`fct_yesno()`](https://danchaltiel.github.io/EDCimport/reference/fct_yesno.md),
   to easily format Yes/No columns
   ([\#19](https://github.com/DanChaltiel/EDCimport/issues/19),
   [\#23](https://github.com/DanChaltiel/EDCimport/issues/23),
   [\#40](https://github.com/DanChaltiel/EDCimport/issues/40)).
-
 - New function
   [`lastnews_table()`](https://danchaltiel.github.io/EDCimport/reference/lastnews_table.md)
   to find the last date an information has been entered for each patient
   ([\#37](https://github.com/DanChaltiel/EDCimport/issues/37)). Useful
   for survival analyses.
-
 - New function
   [`edc_unify_subjid()`](https://danchaltiel.github.io/EDCimport/reference/edc_unify_subjid.md),
   to have the same structure for subject IDs in all the datasets of the
   database ([\#30](https://github.com/DanChaltiel/EDCimport/issues/30)).
-
 - New function
   [`save_plotly()`](https://danchaltiel.github.io/EDCimport/reference/save_plotly.md),
   to save a `plotly` to an HTML file
   ([\#15](https://github.com/DanChaltiel/EDCimport/issues/15)).
-
 - New experimental functions
   [`table_format()`](https://danchaltiel.github.io/EDCimport/reference/table_format.md),
   [`get_common_cols()`](https://danchaltiel.github.io/EDCimport/reference/get_common_cols.md)
@@ -339,7 +392,7 @@ tibble(subjid=c(1:10, 1)) %>% assert_no_duplicate() %>% nrow()
   respectively renamed `edc_cols_id`, `edc_cols_crfname`, and
   `edc_read_verbose` for more clarity.
 
-## EDCimport 0.3.0 _(^(2023/05/19))
+## EDCimport 0.3.0
 
 CRAN release: 2023-05-19
 
@@ -349,10 +402,8 @@ CRAN release: 2023-05-19
   [`edc_swimmerplot()`](https://danchaltiel.github.io/EDCimport/reference/edc_swimmerplot.md)
   to show a swimmer plot of all dates in the database and easily find
   outliers.
-
 - New features in
   [`read_trialmaster()`](https://danchaltiel.github.io/EDCimport/reference/read_trialmaster.md):
-
   - `clean_names_fun=some_fun` will clean all names of all tables. For
     instance, `clean_names_fun=janitor::clean_names()` will turn default
     SAS uppercase column names into valid R snake-case column names.
@@ -364,9 +415,7 @@ CRAN release: 2023-05-19
   - `key_columns=get_key_cols()` is where you can change the default
     column names for patient ID and CRF name (used in other new
     features).
-
 - Standalone functions `extend_lookup()` and `split_mixed_datasets()`.
-
 - New helper
   [`unify()`](https://danchaltiel.github.io/EDCimport/reference/unify.md),
   which turns a vector of duplicate values into a vector of length 1.
@@ -377,29 +426,23 @@ CRAN release: 2023-05-19
   [`read_trialmaster()`](https://danchaltiel.github.io/EDCimport/reference/read_trialmaster.md)
   instead of failing. If one XPT file is corrupted, the resulting object
   will contain the error message instead of the dataset.
-
 - [`find_keyword()`](https://danchaltiel.github.io/EDCimport/reference/edc_find_value.md)
   is now robust to non-UTF8 characters in labels.
-
 - Option `edc_lookup` is now set even when reading from cache.
-
 - SAS formats containing a `=` now work as intended.
 
-## EDCimport 0.2.1 _(^(2022/11/01))
+## EDCimport 0.2.1
 
 CRAN release: 2022-12-02
 
 - Import your data from TrialMaster using
   `tm = read_trialmaster("path/to/archive.zip")`.
-
 - Search for a keyword in any column name or label using
   `find_keyword("date", data=tm$.lookup)`. You can also generate a
   lookup table for an arbitrary list of dataframe using
   `build_lookup(my_data)`.
-
 - Load the datasets to the global environment using `load_list(tm)` to
   avoid typing `tm$` everywhere.
-
 - Browse available global options using `?EDCimport_options`.
 
 ## EDCimport 0.1.0

@@ -47,17 +47,32 @@ db = edc_example()
 load_database(db)
 
 edc_find_value("respi")
-#> Warning: Could not find 8/8 datasets from the lookup, did you forget to call
-#> `load_database()` on your import?
-#> ℹ "long_pure", "data1", "long_mixed", "data2", "data3", "enrol", "short", and
-#>   "ae"
-#> data frame with 0 columns and 0 rows
+#> # A tibble: 8 × 5
+#>   subjid dataset column column_label value                                      
+#>   <chr>  <chr>   <chr>  <chr>        <chr>                                      
+#> 1 10     ae      aesoc  AE SOC       Respiratory, thoracic and mediastinal diso…
+#> 2 13     ae      aesoc  AE SOC       Respiratory, thoracic and mediastinal diso…
+#> 3 13     ae      aesoc  AE SOC       Respiratory, thoracic and mediastinal diso…
+#> 4 17     ae      aesoc  AE SOC       Respiratory, thoracic and mediastinal diso…
+#> 5 22     ae      aesoc  AE SOC       Respiratory, thoracic and mediastinal diso…
+#> 6 29     ae      aesoc  AE SOC       Respiratory, thoracic and mediastinal diso…
+#> 7 44     ae      aesoc  AE SOC       Respiratory, thoracic and mediastinal diso…
+#> 8 47     ae      aesoc  AE SOC       Respiratory, thoracic and mediastinal diso…
 edc_find_value(2010)
-#> Warning: Could not find 8/8 datasets from the lookup, did you forget to call
-#> `load_database()` on your import?
-#> ℹ "long_pure", "data1", "long_mixed", "data2", "data3", "enrol", "short", and
-#>   "ae"
-#> data frame with 0 columns and 0 rows
+#> # A tibble: 700 × 5
+#>    subjid dataset column column_label    value     
+#>    <chr>  <chr>   <chr>  <chr>           <chr>     
+#>  1 1      data1   date1  Date at visit 1 2010-04-26
+#>  2 1      data1   date1  Date at visit 1 2010-04-26
+#>  3 2      data1   date1  Date at visit 1 2010-04-15
+#>  4 2      data1   date1  Date at visit 1 2010-04-15
+#>  5 3      data1   date1  Date at visit 1 2010-05-08
+#>  6 3      data1   date1  Date at visit 1 2010-05-08
+#>  7 4      data1   date1  Date at visit 1 2010-04-29
+#>  8 4      data1   date1  Date at visit 1 2010-04-29
+#>  9 5      data1   date1  Date at visit 1 2010-04-23
+#> 10 5      data1   date1  Date at visit 1 2010-04-23
+#> # ℹ 690 more rows
 
 edc_find_column("ad")
 #> # A tibble: 1 × 4

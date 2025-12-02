@@ -40,6 +40,7 @@
 - [`edc_clean_names()`](https://danchaltiel.github.io/EDCimport/reference/edc_clean_names.md)
   : Clean up the names of all datasets
 - [`set_project_name()`](https://danchaltiel.github.io/EDCimport/reference/set_project_name.md)
+  [`get_project_name()`](https://danchaltiel.github.io/EDCimport/reference/set_project_name.md)
   : Set the project name
 
 ## Checking databases
@@ -56,6 +57,8 @@
   : Check the validity of the subject ID column
 - [`edc_warn_extraction_date()`](https://danchaltiel.github.io/EDCimport/reference/edc_warn_extraction_date.md)
   : Warn if extraction is too old
+- [`compare_databases()`](https://danchaltiel.github.io/EDCimport/reference/compare_databases.md)
+  : Compare multiple EDC database extractions
 
 ## Project management
 
