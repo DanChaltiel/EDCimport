@@ -23,7 +23,7 @@
 #' 
 #' comparison = compare_databases(databases)
 #' comparison$table
-#' comparison$figures
+#' comparison$plot
 #' 
 #' #in real world, you should better use paths with a reader function:
 #' \dontrun{
