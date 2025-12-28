@@ -96,6 +96,18 @@ is_testing_in_buildpane = function(){
 
 plot_data = function(p) p$data
 
+# https://testthat.r-lib.org/articles/custom-expectation.html
+expect_edc_database = function(db, datasets=NULL){
+  expect_s3_class(db, "edc_database")
+  expect_s3_class(db$datetime_extraction, "POSIXlt")
+  expect_type(db$date_extraction, "character")
+  if(!is.null(datasets)){
+    expect_in(names(db), datasets)
+  }
+  invisible(db)
+}
+
+
 #' @examples
 #' warn("hello", class="foobar") %>% expect_classed_conditions(warning_class="foo")
 expect_classed_conditions = function(expr, message_class=NULL, warning_class=NULL, error_class=NULL){
