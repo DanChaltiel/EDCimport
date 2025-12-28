@@ -93,11 +93,21 @@ NULL
 #' Change a `try-error` into a simpler character column of class "edc_error_col"
 #' @noRd
 #' @keywords internal
+#' @importFrom purrr map_chr
+#' @importFrom rlang error_cnd
+#' @importFrom stringr str_detect
 .flatten_error = function(e, class="edc_error_col"){
   if(!inherits(e, c("try-error", "error"))) return(e)
   if(inherits(e, c("try-error"))) e = attr(e, "condition")
-  e = e$message
-  class(e) = class
+  e$trace=NULL
+  if(str_detect(e$message, "Corrupt `?Date`? with unknown type character")){
+    m = c("CRF error: some date-type columns are stored as text.",
+          i="Solution: in Trialmaster, set the table attribute to 'Custom' and 
+            fix the date formats (char -> num / 8. / date9.).",
+          i="See the {.vignette [Table Reading Date Error](EDCimport::trialmaster_date_error)} vignette for guidance.")
+    m = map_chr(m, format_inline)
+    e = error_cnd(message=m, use_cli_format=TRUE)
+  }
   e
 }
 

@@ -137,5 +137,6 @@ is.Date = function (x) {
 #' @noRd
 #' @keywords internal
 is_edc_error = function(x){
-  inherits(x, "edc_error") || inherits(x, "edc_error_col") || inherits(x, "edc_error_data")
+  error_classes = c("error", "edc_error", "edc_error_col", "edc_error_data")
+  inherits(x, error_classes)
 }
