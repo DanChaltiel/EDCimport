@@ -5,9 +5,10 @@ articles:
   checking: checking.html
   postprocessing: postprocessing.html
   reading: reading.html
+  trialmaster_date_error: trialmaster_date_error.html
   utils: utils.html
   visualizing: visualizing.html
-last_built: 2025-12-02T11:01Z
+last_built: 2025-12-28T15:25Z
 urls:
   reference: https://danchaltiel.github.io/EDCimport/reference
   article: https://danchaltiel.github.io/EDCimport/articles

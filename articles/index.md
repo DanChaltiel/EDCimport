@@ -12,3 +12,5 @@
   Visualizing](https://danchaltiel.github.io/EDCimport/articles/visualizing.md):
 - [5 - Utility
   Functions](https://danchaltiel.github.io/EDCimport/articles/utils.md):
+- [Table Reading Date
+  Error](https://danchaltiel.github.io/EDCimport/articles/trialmaster_date_error.md):

@@ -133,9 +133,9 @@ Unchanged
 This table reflects changes in the dataset structure only, not in the
 underlying data.
 
-comparison\$figures \#\> NULL \#in real world, you should better use
-paths with a reader function: if (FALSE) { \# \dontrun{ databases =
-[c](https://rdrr.io/r/base/c.html)(
+comparison\$plot ![](compare_databases-1.png) \#in real world, you
+should better use paths with a reader function: if (FALSE) { \#
+\dontrun{ databases = [c](https://rdrr.io/r/base/c.html)(
 "data/MYPROJECT_ExportTemplate_xxx_SAS_XPORT_2024_06_01_12_00.zip",
 "data/MYPROJECT_ExportTemplate_xxx_SAS_XPORT_2024_08_01_12_00.zip",
 "data/MYPROJECT_ExportTemplate_xxx_SAS_XPORT_2024_09_01_12_00.zip", )
