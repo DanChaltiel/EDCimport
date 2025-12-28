@@ -30,7 +30,7 @@ read_all_sas(
 \item{clean_names_fun}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} use \code{\link[=edc_clean_names]{edc_clean_names()}} instead.}
 }
 \value{
-a list containing one dataframe for each \code{.xpt} file in the folder, the extraction date (\code{datetime_extraction}), and a summary of all imported tables (\code{.lookup}).
+a list containing one dataframe for each \code{.sas7bdat} file in the folder, the extraction date (\code{datetime_extraction}), and a summary of all imported tables (\code{.lookup}).
 }
 \description{
 Read all \code{.sas7bdat} files in a directory. Formats (factors levels) can be applied from a \code{procformat.sas} SAS file, or from a format dictionary. See the "Format file" section below. Column labels are read directly from the \code{.sas7bdat} files.

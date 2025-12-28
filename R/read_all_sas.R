@@ -7,7 +7,7 @@
 #' @inheritParams read_all_xpt
 #' @inheritSection read_all_xpt Format file
 #'
-#' @return a list containing one dataframe for each `.xpt` file in the folder, the extraction date (`datetime_extraction`), and a summary of all imported tables (`.lookup`).
+#' @return a list containing one dataframe for each `.sas7bdat` file in the folder, the extraction date (`datetime_extraction`), and a summary of all imported tables (`.lookup`).
 #' @export
 #' @family EDCimport reading functions
 #' 

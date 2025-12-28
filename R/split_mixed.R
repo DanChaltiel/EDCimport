@@ -157,8 +157,7 @@ split_mixed_datasets = function(datasets=get_datasets(), id=get_subjid_cols(), .
 
   id_found = map_lgl(datasets, ~any(tolower(id) %in% tolower(names(.x))))
   if(!any(id_found)){
-    cli_abort("Patient ID column {.val {id}} was not found in any of 
-              {.arg datasets} ( {.val {names(mixed)}}).",
+    cli_abort("Patient ID column {.val {id}} was not found in any of {.arg datasets}.",
               class="edc_subjid_not_found")
   }
   
