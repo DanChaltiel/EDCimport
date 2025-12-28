@@ -19,8 +19,8 @@ trialmaster*.rds
 .Rprofile
 
 # Documentation and metadata folders
-Meta/
-doc/
-docs/
-inst/doc/
-.quarto/
+/Meta/
+/doc/
+/docs/
+/inst/doc/
+/.quarto/
