@@ -61,6 +61,7 @@ NULL
     })
 }
 
+
 #' Build and add lookup, add datetime_extraction, and add `...` as attributes
 #' @noRd
 #' @keywords internal
@@ -137,10 +138,10 @@ NULL
 #' clean all labels for non-UTF8 characters
 #' @noRd
 #' @keywords internal
-#' @importFrom purrr map_if modify
+#' @importFrom purrr modify_if modify
 .clean_labels_utf8 = function(datalist, warn=FALSE){
   datalist %>% 
-    map_if(is.data.frame, function(df){
+    modify_if(is.data.frame, function(df){
       df %>% modify(~{
         attr(.x, "label") = .repair_invalid_utf8(attr(.x, "label"))
         .x

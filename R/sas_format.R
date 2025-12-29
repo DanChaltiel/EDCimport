@@ -87,14 +87,14 @@
 #' @noRd
 #' @keywords internal
 #' @importFrom dplyr across as_tibble everything mutate na_if where
-#' @importFrom purrr map
+#' @importFrom purrr modify
 .apply_sas_formats = function(datalist, format_file){
   if(is.null(format_file)) return(datalist)
   assert_file_exists(format_file)
   
   sas_formats = .read_sas_formats(format_file)
   datalist %>% 
-    map(~{
+    modify(~{
       if(!is.data.frame(.x) || is_lookup(.x)) return(.x)
       .x %>% 
         as_tibble() %>% 

@@ -84,7 +84,7 @@ read_all_csv = function(path, ...,
 #' @noRd
 #' @keywords internal
 #' @importFrom fs path path_ext_remove
-#' @importFrom purrr map
+#' @importFrom purrr modify
 .add_labels = function(datalist, labels_file, path, read_fun){
   if(is.null(labels_file)) return(datalist)
   
@@ -98,7 +98,7 @@ read_all_csv = function(path, ...,
     data_labels = read_fun(labels_file)
   }
   
-  map(datalist, ~.apply_label_lookup(.x, data_labels))
+  modify(datalist, ~.apply_label_lookup(.x, data_labels))
 }
 
 
