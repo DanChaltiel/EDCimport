@@ -144,9 +144,10 @@ read_trialmaster = function(archive, ..., use_cache="write",
   rtn = read_all_xpt(temp_folder, format_file=format_file, 
                      clean_names_fun=clean_names_fun, 
                      key_columns=key_columns,
+                     use_cache=FALSE,
                      subdirectories=subdirectories,
                      datetime_extraction=extract_datetime, 
-                     verbose=verbose)
+                     verbose=0)
   lookup_verbose = FALSE
   
   rtn$.lookup = rtn$.lookup %>% 

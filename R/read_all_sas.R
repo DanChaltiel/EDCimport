@@ -30,6 +30,7 @@
 #' edc_lookup()
 read_all_sas = function(path, ..., 
                         format_file="procformat.sas", 
+                        use_cache="write", 
                         subdirectories=FALSE,
                         datetime_extraction="guess", 
                         verbose=getOption("edc_read_verbose", 1), 
@@ -47,7 +48,7 @@ read_all_sas = function(path, ...,
   
   rtn = dir_ls(path, regexp="\\.sas7bdat$", recurse=subdirectories) %>% 
     .read_all(haven::read_sas, clean_names_fun=clean_names_fun, 
-              catalog_file=catalog_file, path=path) %>%
+              catalog_file=catalog_file, path=path, use_cache=use_cache, verbose=verbose) %>%
     .clean_labels_utf8() %>% 
     .add_lookup_and_date(
       datetime_extraction=datetime_extraction,

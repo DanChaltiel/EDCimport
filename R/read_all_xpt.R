@@ -51,6 +51,7 @@
 read_all_xpt = function(path, ..., 
                         format_file="procformat.sas", 
                         datetime_extraction="guess", 
+                        use_cache="write", 
                         subdirectories=FALSE,
                         verbose=getOption("edc_read_verbose", 1), 
                         clean_names_fun=NULL,
@@ -67,7 +68,8 @@ read_all_xpt = function(path, ...,
   assert_class(datetime_extraction, c("POSIXt", "Date"))
   format_file = .locate_file(format_file, path)
   rtn = dir_ls(path, regexp="\\.xpt$", recurse=subdirectories) %>% 
-    .read_all(haven::read_xpt, clean_names_fun=clean_names_fun, path=path) %>%
+    .read_all(haven::read_xpt, clean_names_fun=clean_names_fun, path=path, use_cache=use_cache, 
+              verbose=verbose) %>%
     .clean_labels_utf8() %>% 
     .apply_sas_formats(format_file) %>% 
     .add_lookup_and_date(

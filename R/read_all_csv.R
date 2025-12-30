@@ -43,6 +43,7 @@
 read_all_csv = function(path, ..., 
                         labels_from=NULL,
                         format_file=NULL, 
+                        use_cache="write", 
                         subdirectories=FALSE,
                         read_fun="guess", 
                         datetime_extraction="guess", 
@@ -62,10 +63,11 @@ read_all_csv = function(path, ...,
     read_fun = guess_read_function(files[1])
   }
   assert_class(read_fun, c("function"))
-
   clean_names_fun = .get_clean_names_fun(clean_names_fun)
+
   rtn = dir_ls(path, regexp="\\.csv", recurse=subdirectories) %>% 
-    .read_all(read_fun, clean_names_fun=clean_names_fun, path=path) %>% 
+    .read_all(read_fun, clean_names_fun=clean_names_fun, path=path, 
+              use_cache=use_cache, verbose=verbose) %>% 
     .add_labels(labels_file=labels_from, path, read_fun) %>% 
     .apply_sas_formats(format_file) %>%
     .add_lookup_and_date(
