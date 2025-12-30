@@ -140,18 +140,15 @@ read_trialmaster = function(archive, ..., use_cache="write",
              class="edc_tm_no_procformat_warning") 
     format_file = NULL
   }
+  projname = parse_file_projname(archive)
   rtn = read_all_xpt(temp_folder, format_file=format_file, 
                      clean_names_fun=clean_names_fun, 
                      key_columns=key_columns,
                      use_cache=FALSE,
                      subdirectories=subdirectories,
                      datetime_extraction=extract_datetime, 
-                     verbose=0)
-  lookup_verbose = FALSE
-  
-  rtn$.lookup = rtn$.lookup %>% 
-    structure(project_name = parse_file_projname(archive))
-  .update_lookup(new=rtn$.lookup)
+                     verbose=0) %>% 
+    set_project_name(projname)
   
   if(isTRUE(use_cache) || use_cache=="write"){
     if(verbose>0) cli_inform("Writing cache file {.file {cache_file}}", class="edc_create_cache")

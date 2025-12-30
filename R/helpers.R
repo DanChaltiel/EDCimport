@@ -209,10 +209,10 @@ save_sessioninfo = function(path="check/session_info.txt", with_date=TRUE){
 #' db = edc_example() %>% 
 #'  set_project_name("My great project")
 #' edc_lookup()
-set_project_name = function(db, name, lookup=edc_lookup()){
-  lookup = db$.lookup %>% 
+set_project_name = function(db, name){
+  db$.lookup = db$.lookup %>% 
     structure(project_name = name)
-  .update_lookup(new=lookup)
+  .update_lookup(new=db$.lookup)
   db
 }
 
