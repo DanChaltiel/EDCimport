@@ -21,16 +21,23 @@
 #' @docType class
 NULL
 
+
 #' Read all files using a specific read function, returning a named list of tibbles
+#' 
+#' @section Collision risk: 
+#' We use 8 hex characters (4*8=32 bits) to identify the cache. The risk of
+#' collision for `x` cache updates is `1-(1-(1/2^32))^x`, so 0.023% for 1e6 updates.
+#' 
 #' @param ... passed to `read_function`
 #' @noRd
 #' @keywords internal
 #' @importFrom dplyr across as_tibble mutate where
 #' @importFrom fs path_ext_remove
 #' @importFrom purrr map pluck
-#' @importFrom rlang hash set_names
+#' @importFrom rlang hash hash_file set_names
 #' @importFrom stringr fixed str_remove str_replace_all
-.read_all = function(files, read_function, clean_names_fun=NULL, path=NULL, ...){
+.read_all = function(files, read_function, ..., path=NULL, 
+                     use_cache, clean_names_fun=NULL, verbose){
   assert_file_exists(files)
   clean_names_fun = .get_clean_names_fun(clean_names_fun)
   if(!is.null(path)){
@@ -43,7 +50,29 @@ NULL
   }
   subjid_cols = get_subjid_cols(lookup=NULL)
   crf = get_crfname_cols(lookup=NULL)
-  files %>% 
+  
+  f_hash = files %>% sort() %>% map_chr(~hash_file(.x)) %>% hash()
+  f_hash8 = f_hash %>% str_sub(1, 8)
+  cache_file = glue("{path}/EDCimport_cache_{f_hash8}.rds")
+  read_from_cache = file_exists(cache_file) && (isTRUE(use_cache) || use_cache=="read")
+  if(read_from_cache){
+    if(verbose>0) cli_inform("Reading cache: {.file {cache_file}}", class="read_tm_cache")
+    rtn = readRDS(cache_file) %>% 
+      structure(source="cache")
+    
+    cache_version = attr(rtn, "EDCimport_version")
+    cache_outdated = packageVersion("EDCimport") > cache_version
+    cache_invalid = attr(rtn, "hash") != f_hash
+    if(cache_outdated || cache_invalid){
+      cli_inform(c(i="Updating cache with latest {.pkg EDCimport} version
+                      (v{cache_version} to v{packageVersion('EDCimport')})"), 
+                 class="edc_read_from_cache_outdated")
+    } else {
+      return(rtn)
+    }
+  }
+  
+  rtn = files %>% 
     set_names(file_names) %>% 
     map(function(.x) {
       tbl = tryCatch(read_function(.x, ...), 
@@ -58,7 +87,20 @@ NULL
       attr(rtn, "hash") = hash(rtn)
       attr(rtn, "label") = label
       rtn
-    })
+    }) %>% 
+    structure(source="files", 
+              EDCimport_version=packageVersion("EDCimport"),
+              hash=f_hash)
+  
+  if(isTRUE(use_cache) || use_cache=="write"){
+    if(verbose>0) cli_inform("Writing cache {.file {cache_file}}", class="edc_create_cache")
+    saveRDS(rtn, cache_file)
+    if(!file_exists(cache_file)) {
+      cli_warn("Could not save cache file", class="read_tm_zip_no_cache_warning")
+    }
+  }
+  
+  rtn
 }
 
 
