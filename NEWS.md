@@ -7,6 +7,7 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 ### New features
 
 -   New function `compare_databases()`, which compares the structure of several extractions of a database: added/removed columns, number of patients, etc (#26). See the examples for a demo.
+-   Cache system is supported in all reading functions `read_all_csv()`, `read_all_sas()`, and `read_all_xpt()` (#75).
 -   New features in `edc_viewer()`:
     -   Support for multiple instances on different ports with custom datasets (#100, #114)\
         For instance, you can now run `edc_viewer(data=lst(iris, mtcars), port=1212)`
