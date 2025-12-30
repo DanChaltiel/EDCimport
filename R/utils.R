@@ -15,28 +15,6 @@ any_of2 = function(x, ignore.case=TRUE, ...){
   matches(paste0("^",x,"$"), ignore.case=ignore.case, ...)
 }
 
-#' @noRd
-#' @keywords internal
-#' @importFrom stringr str_replace_all str_to_lower
-to_snake_case <- function(str) {
-  str %>%
-    str_replace_all("([a-z])([A-Z])", "\\1_\\2") %>%
-    str_replace_all("[^\\w\\s]", "") %>%
-    str_replace_all("\\s+", "_") %>%
-    str_to_lower()
-}
-
-
-#' `fct_relevel` to the end, without warning for missing levels
-#' @noRd
-#' @keywords internal
-#' @importFrom forcats fct_relevel
-fct_last = function(f, ...) {
-  lvl = c(...)
-  lvl = intersect(lvl, levels(f))
-  fct_relevel(f, lvl, after = Inf)
-}
-
 
 
 #' @noRd
@@ -80,40 +58,6 @@ cli_menu <- function(prompt, not_interactive, choices, quit = integer(), .envir 
   selected
 }
 
-
-
-#' @noRd
-#' @keywords internal
-#' @importFrom cli cli_warn
-#' @importFrom dplyr coalesce
-#' @importFrom glue glue
-#' @importFrom purrr possibly
-#' @importFrom rlang set_names
-#' @importFrom stringr str_sub
-.repair_invalid_utf8 = function(x, warn=FALSE){
-  bad = is_invalid_utf8(x)
-  if(!any(bad)) return(x)
-  #most of the time, it is just the last character
-  x2 = ifelse(bad, str_sub(x, end=-2), x)
-  if(!any(is_invalid_utf8(x2))) return(x2)
-  
-  if(any(bad, na.rm=TRUE)){
-    #try main encodings
-    iconv2 = possibly(iconv, otherwise=NA)
-    xbad2 = iconv2(x[bad], from="", to="UTF-8")
-    xbad3 = iconv2(x[bad], from="latin1", to="UTF-8")
-    xbad4 = iconv2(x[bad], from="ASCII", to="UTF-8")
-    xbad5 = iconv2(x[bad], from="ASCII/TRANSLIT", to="UTF-8")
-    xgood = coalesce(xbad2, xbad3, xbad4, xbad5)
-    x[bad] = xgood
-    
-    if(isTRUE(warn)){
-      bad_utf8 = glue("{x$dataset}${x$names} ({x$valid_labels}) ") %>% set_names("i")
-      cli_warn(c("Found {length(bad_utf8)} invalid UTF-8 label{?s}:", bad_utf8))
-    }
-  }
-  x
-}
 
 #' Locate a file in a path if it doesn't exist in the working directory
 #' @noRd
@@ -182,6 +126,51 @@ mixed_arrange = function(.data, ...){
   .data
 }
 
+#' @noRd
+#' @keywords internal
+#' @importFrom cli cli_warn
+#' @importFrom dplyr select
+#' @importFrom rlang is_error
+get_data_name = function(df, crfname=getOption("edc_cols_crfname", "crfname")){
+  if(is_error(df) || is.null(df)) return(NA)
+  if(is_edc_error(df)) return("** Error in source file **")
+  sel = select(df, any_of2(crfname))
+  if(!is.null(attr(df, "data_name"))){
+    attr(df, "data_name")
+  } else if(ncol(sel)>0){
+    if(ncol(sel)>1) cli_warn("Several columns named {.val {crfname}}: {.val {names(sel)}}.")
+    sel[[1]][1]
+  } else {
+    NA
+  }
+}
+
+
+#' @noRd
+#' @keywords internal
+#' @importFrom fs path_ext
+#' @importFrom stats var
+#' @importFrom tidyr replace_na
+guess_read_function = function(file){
+  ext = path_ext(file)
+  if(ext=="xpt") return(haven::read_xpt)
+  if(ext=="sas7bdat") return(haven::read_sas)
+  if(ext=="csv"){
+    first_lines = readLines(file, n=2)
+    n_colons = unique(stringr::str_count(first_lines, ";"))
+    n_commas = unique(stringr::str_count(first_lines, ","))
+    
+    if(length(n_colons)==length(n_commas)){
+      if(mean(n_colons>n_commas)>0.5) return(utils::read.csv2) 
+      else return(utils::read.csv)
+    }
+    if(length(n_colons)==1 & length(n_commas)!=1) return(utils::read.csv2)
+    if(length(n_commas)==1 & length(n_colons)!=1) return(utils::read.csv)
+    
+    if(replace_na(var(n_colons), 0) < replace_na(var(n_commas), 0)) return(utils::read.csv2)
+    return(utils::read.csv)
+  }
+}
 
 # Parse zip name ------------------------------------------------------------------------------
 
@@ -296,115 +285,6 @@ extract_date = function(x, fmt=NULL, warn_call=parent.frame()){
   rtn
 }
 
-#' @noRd
-#' @keywords internal
-#' @importFrom cli cli_warn
-#' @importFrom dplyr select
-#' @importFrom rlang is_error
-get_data_name = function(df, crfname=getOption("edc_cols_crfname", "crfname")){
-  if(is_error(df) || is.null(df)) return(NA)
-  if(is_edc_error(df)) return("** Error in source file **")
-  sel = select(df, any_of2(crfname))
-  if(!is.null(attr(df, "data_name"))){
-    attr(df, "data_name")
-  } else if(ncol(sel)>0){
-    if(ncol(sel)>1) cli_warn("Several columns named {.val {crfname}}: {.val {names(sel)}}.")
-    sel[[1]][1]
-  } else {
-    NA
-  }
-}
-
-
-# Labels --------------------------------------------------------------------------------------
-
-#' @noRd
-#' @keywords internal
-#' @importFrom dplyr across cur_column everything mutate
-#' @importFrom purrr map_chr
-copy_label_from = function(x, from){
-  if(!is.list(x)){
-    from_label = attr(from, "label")
-    if(is.null(from_label)) return(x)
-    attr(x, "label") = from_label
-    return(x)
-  }
-  from_labs = map_chr(from, ~attr(.x, "label") %||% NA)
-  mutate(x, across(everything(), ~{
-    lab = unname(from_labs[cur_column()])
-    if(!is.na(lab)){
-      attr(.x, "label") = lab
-    }
-    .x
-  }))
-}
-
-
-#' @noRd
-#' @keywords internal
-set_label = function(x, lab){
-  attr(x, "label") = lab
-  x
-}
-
-#' @noRd
-#' @keywords internal
-#' @importFrom purrr map map2
-#' @importFrom rlang is_null
-get_label = function(x, default=names(x)){
-  if (is.list(x)) {
-    if (is.null(default)) default = rep(NA, length(x))
-    if(inherits(x, "POSIXlt")) x = as.POSIXct(x)
-    lab = x %>% map(get_label) %>% map2(default, ~{
-      if (is.null(.x)) .y else .x
-    })
-  } else {
-    lab = attr(x, "label", exact=TRUE)
-    if (is_null(lab)) lab = default
-  }
-  lab
-}
-
-#' @noRd
-#' @keywords internal
-#' @importFrom dplyr setdiff
-remove_labels = function(x){
-  if(is.null(x)) return(x)
-  if(is.list(x)){
-    for (each in seq_along(x)){
-      x[[each]] = remove_labels(x[[each]])
-    }
-  }
-  attr(x, "label") = NULL
-  class(x) = setdiff(class(x), c("labelled"))
-  x
-}
-
-#' @noRd
-#' @keywords internal
-#' @importFrom fs path_ext
-#' @importFrom stats var
-#' @importFrom tidyr replace_na
-guess_read_function = function(file){
-  ext = path_ext(file)
-  if(ext=="xpt") return(haven::read_xpt)
-  if(ext=="sas7bdat") return(haven::read_sas)
-  if(ext=="csv"){
-    first_lines = readLines(file, n=2)
-    n_colons = unique(stringr::str_count(first_lines, ";"))
-    n_commas = unique(stringr::str_count(first_lines, ","))
-    
-    if(length(n_colons)==length(n_commas)){
-      if(mean(n_colons>n_commas)>0.5) return(utils::read.csv2) 
-      else return(utils::read.csv)
-    }
-    if(length(n_colons)==1 & length(n_commas)!=1) return(utils::read.csv2)
-    if(length(n_commas)==1 & length(n_colons)!=1) return(utils::read.csv)
-      
-    if(replace_na(var(n_colons), 0) < replace_na(var(n_commas), 0)) return(utils::read.csv2)
-    return(utils::read.csv)
-  }
-}
 
 # NA.RM ---------------------------------------------------------------------------------------
 
@@ -426,14 +306,6 @@ min_narm = function(x, na.rm=TRUE) {
 
 # Classes -------------------------------------------------------------------------------------
 
-#' @noRd
-#' @keywords internal
-#' @examples
-#' iris %>% add_attributes(data_name="Iris") %>% attributes()
-add_attributes = function(x, ...){
-  if(is.null(x)) return(NULL)
-  structure(x, ...)
-}
 
 #' @noRd
 #' @keywords internal
@@ -453,6 +325,7 @@ add_class = function(x, value){
   class(x) = unique(c(value, class(x)))
   x
 }
+
 #' @noRd
 #' @keywords internal
 #' @importFrom dplyr setdiff
@@ -463,10 +336,6 @@ remove_class = function(x, value){
 
 # Dates ---------------------------------------------------------------------------------------
 
-
-#' @noRd
-#' @keywords internal
-NA_Date_ = structure(NA_real_, class = "Date")
 
 #' @noRd
 #' @keywords internal
