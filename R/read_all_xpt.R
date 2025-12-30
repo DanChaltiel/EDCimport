@@ -73,7 +73,7 @@ read_all_xpt = function(path, ...,
               verbose=verbose) %>%
     .clean_labels_utf8() %>% 
     .apply_sas_formats(format_file) %>% 
-    .add_lookup_and_date(
+    new_edc_database(
       datetime_extraction=datetime_extraction,
       clean_names_fun=.get_clean_names_fun(clean_names_fun), 
       EDCimport_version=packageVersion("EDCimport")
@@ -83,7 +83,6 @@ read_all_xpt = function(path, ...,
   .warn_bad_columns(rtn)
   .set_lookup(rtn$.lookup)
   
-  class(rtn) = "edc_database"
   rtn
 }
 

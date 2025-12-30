@@ -161,6 +161,5 @@ read_trialmaster = function(archive, ..., use_cache="write",
     }
   }
   
-  class(rtn) = "edc_database"
   rtn
 }

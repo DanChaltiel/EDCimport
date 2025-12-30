@@ -70,7 +70,7 @@ read_all_csv = function(path, ...,
               use_cache=use_cache, verbose=verbose) %>% 
     .add_labels(labels_file=labels_from, path, read_fun) %>% 
     .apply_sas_formats(format_file) %>%
-    .add_lookup_and_date(
+    new_edc_database(
       datetime_extraction=datetime_extraction,
       clean_names_fun=clean_names_fun, 
       EDCimport_version=packageVersion("EDCimport")
@@ -78,7 +78,6 @@ read_all_csv = function(path, ...,
   
   .set_lookup(rtn$.lookup)
   
-  class(rtn) = "edc_database"
   rtn
 }
 

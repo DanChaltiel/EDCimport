@@ -34,7 +34,7 @@ edc_example = function(N=50, seed=42, outdated=FALSE){
         ) %>% 
         structure(label=.x$crfname[1])
     }) %>% 
-    .add_lookup_and_date(
+    new_edc_database(
       datetime_extraction=datetime_extraction,
       extend_lookup=TRUE,
       EDCimport_version=packageVersion("EDCimport"),
@@ -42,7 +42,6 @@ edc_example = function(N=50, seed=42, outdated=FALSE){
     )
   
   .set_lookup(rtn$.lookup)
-  class(rtn) = "edc_database"
   rtn
 }
 

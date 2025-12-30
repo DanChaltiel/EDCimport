@@ -1,27 +1,5 @@
 
 
-
-#' EDCimport Database
-#' 
-#' This class of object represents a database, as the result of an EDCimport reading function.
-#' It has its own `print()` method.
-#' 
-#' @section Functions returning `edc_database` objects:
-#' As per now, reading functions are: [read_trialmaster()], [read_all_sas()], [read_all_xpt()], and [read_all_csv()].
-#' 
-#' @section Structure:
-#' While it is not usually useful to query them, an `edc_database` object is a named list containing:
-#' - all the datasets from the source files
-#' - `datetime_extraction` and `date_extraction` the inferred date of data extraction
-#' - `.lookup` a temporary copy of the lookup table
-#' 
-#' @seealso [read_trialmaster()]
-#' 
-#' @name edc_database
-#' @docType class
-NULL
-
-
 #' Read all files using a specific read function, returning a named list of tibbles
 #' 
 #' @section Collision risk: 
@@ -104,26 +82,6 @@ NULL
 }
 
 
-#' Build and add lookup, add datetime_extraction, and add `...` as attributes
-#' @noRd
-#' @keywords internal
-.add_lookup_and_date = function(datalist, datetime_extraction, extend_lookup=TRUE, ...){
-  assert_class(datetime_extraction, c("POSIXt", "Date"))
-  .lookup = build_lookup(datalist)
-  if(!is.null(extend_lookup)){
-    .lookup = extend_lookup(.lookup, datasets=datalist)
-  }
-  .lookup = .lookup %>% 
-    structure(datetime_extraction=datetime_extraction,
-              ...)
-  
-  datalist$datetime_extraction = datetime_extraction
-  datalist$date_extraction = format_ymd(datetime_extraction)
-  datalist$.lookup = .lookup
-  
-  datalist
-}
-
 #' Apply `.flatten_error` to all `try-error` columns
 #' @noRd
 #' @keywords internal
@@ -132,6 +90,7 @@ NULL
   df %>% 
     mutate(across(where(~inherits(.x, "try-error")), .flatten_error))
 }
+
 
 #' Change a `try-error` into a simpler character column of class "edc_error_col"
 #' @noRd
@@ -165,6 +124,7 @@ NULL
   if(!is.function(f)) cli_abort("{.arg {caller_arg(f)}} should be a function or a lambda-function, not a {.cls {class(f)}}.")
   f
 }
+
 
 #' clean all names using `clean_names_fun`, or do nothing if `NULL`
 #' @noRd

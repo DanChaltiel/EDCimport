@@ -50,7 +50,7 @@ read_all_sas = function(path, ...,
     .read_all(haven::read_sas, clean_names_fun=clean_names_fun, 
               catalog_file=catalog_file, path=path, use_cache=use_cache, verbose=verbose) %>%
     .clean_labels_utf8() %>% 
-    .add_lookup_and_date(
+    new_edc_database(
       datetime_extraction=datetime_extraction,
       clean_names_fun=.get_clean_names_fun(clean_names_fun), 
       EDCimport_version=packageVersion("EDCimport")
@@ -61,7 +61,6 @@ read_all_sas = function(path, ...,
   .warn_bad_columns(rtn)
   .set_lookup(rtn$.lookup)
   
-  class(rtn) = "edc_database"
   rtn
 }
 
