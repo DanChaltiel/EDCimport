@@ -1,9 +1,11 @@
 
-#' Helper that copy edc_example() to csv files (run manually)
+# Utils ---------------------------------------------------------------------------------------
+
+#' Helper that copy edc_example() to csv files
 example_to_csv = function(dir_path){
   clean_lookup()
   dir_create(path(dir_path, "external"), recurse=TRUE)
-
+  
   data_labels = edc_example() %>% 
     keep_at(~str_detect(.x, "data")) %>%
     imap(~{
@@ -16,31 +18,41 @@ example_to_csv = function(dir_path){
     tibble::enframe(name="name", value="label") %>% 
     filter(!is.na(label)) %>%
     distinct()
-
+  
   write.csv2(data_labels, glue("{dir_path}/labels.csv"), row.names=FALSE)
   write.csv2(data_labels, glue("{dir_path}/external/external_labels.csv"), row.names=FALSE)
 }
 
+
+# Test ----------------------------------------------------------------------------------------
+
 test_that("read_all_csv() works", {
+  local_options(edc_lookup_overwrite_warn=FALSE)
+  
   path = path_temp("csv")
+  unlink(path)
   example_to_csv(path)
-  clean_lookup()
   
-  a = read_all_csv(path, labels_from="labels.csv", verbose=0)
+  #Read from files
+  db = read_all_csv(path, labels_from="labels.csv", verbose=0)
+  expect_edc_database(db)
+  expect_identical(attr(db, "source"), "files")
+  expect_null(db$labels) #labels.csv is not a dataset
   
-  expect_s3_class(a, "edc_database")
-  expect_s3_class(a$datetime_extraction, "POSIXlt")
-  expect_type(a$date_extraction, "character")
-  expect_null(a$labels)
+  #Read from cache
+  db2 = read_all_csv(path, format_file=NULL, verbose=0, use_cache=TRUE)
+  expect_edc_database(db2)
+  expect_identical(attr(db2, "source"), "cache")
+  expect_setequal(c(names(db), "labels"), names(db2))
   
   expect_snapshot({
-    a %>% 
+    db %>% 
       keep_at(~str_detect(.x, "data")) %>% 
       map(head)
   })
   
   expect_snapshot({
-    a %>% 
+    db %>% 
       keep_at(~str_detect(.x, "data")) %>% 
       map(get_label)
   })
@@ -48,14 +60,16 @@ test_that("read_all_csv() works", {
   #read_all_csv() works with external labels
   clean_lookup()
   expect_snapshot({
-    a = read_all_csv(path, labels_from="external/external_labels.csv", verbose=0)
-    head(a$labels) #not NULL, considered as a normal dataset
-    a %>% 
+    db = read_all_csv(path, labels_from="external/external_labels.csv", verbose=0)
+    head(db$labels) #not NULL, considered as a normal dataset
+    db %>% 
       keep_at(~str_detect(.x, "data")) %>% 
       map(get_label)
   })
   
   unlink(path)
 })
+
+
 
 

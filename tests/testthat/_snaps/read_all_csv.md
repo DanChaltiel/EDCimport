@@ -1,7 +1,7 @@
 # read_all_csv() works
 
     Code
-      a %>% keep_at(~ str_detect(.x, "data")) %>% map(head)
+      db %>% keep_at(~ str_detect(.x, "data")) %>% map(head)
     Output
       $data1
       # A tibble: 6 x 7
@@ -40,7 +40,7 @@
 ---
 
     Code
-      a %>% keep_at(~ str_detect(.x, "data")) %>% map(get_label)
+      db %>% keep_at(~ str_detect(.x, "data")) %>% map(get_label)
     Output
       $data1
       $data1$subjid
@@ -112,8 +112,8 @@
 ---
 
     Code
-      a = read_all_csv(path, labels_from = "external/external_labels.csv", verbose = 0)
-      head(a$labels)
+      db = read_all_csv(path, labels_from = "external/external_labels.csv", verbose = 0)
+      head(db$labels)
     Output
       # A tibble: 6 x 2
         name    label
@@ -125,7 +125,7 @@
       5 x       <NA> 
       6 crfname <NA> 
     Code
-      a %>% keep_at(~ str_detect(.x, "data")) %>% map(get_label)
+      db %>% keep_at(~ str_detect(.x, "data")) %>% map(get_label)
     Output
       $data1
       $data1$subjid
