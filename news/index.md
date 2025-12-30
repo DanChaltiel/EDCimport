@@ -10,6 +10,12 @@
   added/removed columns, number of patients, etc
   ([\#26](https://github.com/DanChaltiel/EDCimport/issues/26)). See the
   examples for a demo.
+- Cache system is supported in all reading functions
+  [`read_all_csv()`](https://danchaltiel.github.io/EDCimport/reference/read_all_csv.md),
+  [`read_all_sas()`](https://danchaltiel.github.io/EDCimport/reference/read_all_sas.md),
+  and
+  [`read_all_xpt()`](https://danchaltiel.github.io/EDCimport/reference/read_all_xpt.md)
+  ([\#75](https://github.com/DanChaltiel/EDCimport/issues/75)).
 - New features in
   [`edc_viewer()`](https://danchaltiel.github.io/EDCimport/reference/edc_viewer.md):
   - Support for multiple instances on different ports with custom

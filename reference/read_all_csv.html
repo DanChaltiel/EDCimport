@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0.9017</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0.9018</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,6 +53,7 @@
 <span>  <span class="va">...</span>,</span>
 <span>  labels_from <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  format_file <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  use_cache <span class="op">=</span> <span class="st">"write"</span>,</span>
 <span>  subdirectories <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  read_fun <span class="op">=</span> <span class="st">"guess"</span>,</span>
 <span>  datetime_extraction <span class="op">=</span> <span class="st">"guess"</span>,</span>
@@ -79,6 +80,10 @@
 
 <dt id="arg-format-file">format_file<a class="anchor" aria-label="anchor" href="#arg-format-file"></a></dt>
 <dd><p>[<code>character(1)</code>]<br> the path to the file that should be used to apply formats. See section "Format file" below. Use <code>NULL</code> to not apply formats.</p></dd>
+
+
+<dt id="arg-use-cache">use_cache<a class="anchor" aria-label="anchor" href="#arg-use-cache"></a></dt>
+<dd><p>[<code>mixed(1)</code>: "write"]<br> controls the <code>.rds</code> cache. If <code>TRUE</code>, read the cache if any or extract the archive and create a cache. If <code>FALSE</code> extract the archive without creating a cache file. Can also be <code>"read"</code> or <code>"write"</code>.</p></dd>
 
 
 <dt id="arg-subdirectories">subdirectories<a class="anchor" aria-label="anchor" href="#arg-subdirectories"></a></dt>
@@ -145,6 +150,7 @@ Otherwise, you can use <code>options(edc_var_format_name="xxx", edc_var_level="x
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">db</span> <span class="op">=</span> <span class="fu">read_all_csv</span><span class="op">(</span><span class="va">path</span>, labels_from<span class="op">=</span><span class="st">"labels.csv"</span>, subdirectories<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
 <span class="r-in"><span>  <span class="fu"><a href="set_project_name.html">set_project_name</a></span><span class="op">(</span><span class="st">"My great project"</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Writing cache <span style="color: #0000BB;">/tmp/RtmpyFwGkN/read_all_csv/EDCimport_cache_9cc943d7.rds</span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Option <span style="color: #0000BB;">"edc_lookup"</span> has been overwritten.</span>
 <span class="r-in"><span><span class="va">db</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #FFAFFF;">──</span> <span style="color: #FFAFFF;">EDCimport database</span> <span style="color: #FFAFFF;">──────────────────────────────────────────────────────────</span></span>
@@ -153,7 +159,7 @@ Otherwise, you can use <code>options(edc_var_format_name="xxx", edc_var_level="x
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   environment.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Use `EDCimport::edc_lookup()` to see the summary table.</span>
 <span class="r-in"><span><span class="fu"><a href="edc_lookup.html">edc_lookup</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #FFAFFF;">──</span> <span style="color: #FFAFFF;">Lookup table - My great project (extraction of 2025-12-28) - EDCimport v0.6.0</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #FFAFFF;">──</span> <span style="color: #FFAFFF;">Lookup table - My great project (extraction of 2025-12-30) - EDCimport v0.6.0</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   dataset        nrow  ncol  n_id rows_per_id crfname</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> airquality      153     7     0          <span style="color: #BB0000;">NA</span> <span style="color: #BB0000;">NA</span>     </span>

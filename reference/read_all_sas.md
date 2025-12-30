@@ -12,6 +12,7 @@ read_all_sas(
   path,
   ...,
   format_file = "procformat.sas",
+  use_cache = "write",
   subdirectories = FALSE,
   datetime_extraction = "guess",
   verbose = getOption("edc_read_verbose", 1),
@@ -35,6 +36,13 @@ read_all_sas(
   \[`character(1)`\]  
   the path to the file that should be used to apply formats. See section
   "Format file" below. Use `NULL` to not apply formats.
+
+- use_cache:
+
+  \[`mixed(1)`: "write"\]  
+  controls the `.rds` cache. If `TRUE`, read the cache if any or extract
+  the archive and create a cache. If `FALSE` extract the archive without
+  creating a cache file. Can also be `"read"` or `"write"`.
 
 - subdirectories:
 
@@ -60,9 +68,9 @@ read_all_sas(
 
 ## Value
 
-a list containing one dataframe for each `.xpt` file in the folder, the
-extraction date (`datetime_extraction`), and a summary of all imported
-tables (`.lookup`).
+a list containing one dataframe for each `.sas7bdat` file in the folder,
+the extraction date (`datetime_extraction`), and a summary of all
+imported tables (`.lookup`).
 
 ## Format file
 
@@ -107,6 +115,7 @@ haven::write_sas(esoph, paste0(path, "/esoph.sas7bdat"))
 
 db = read_all_sas(path, format_file=NULL, subdirectories=TRUE) %>% 
   set_project_name("My great project")
+#> Writing cache /tmp/RtmpyFwGkN/read_all_sas/EDCimport_cache_d463ae54.rds
 #> Warning: Option "edc_lookup" has been overwritten.
 db
 #> ── EDCimport database ──────────────────────────────────────────────────────────
@@ -115,7 +124,7 @@ db
 #>   environment.
 #> ℹ Use `EDCimport::edc_lookup()` to see the summary table.
 edc_lookup()
-#> ── Lookup table - My great project (extraction of 2025-12-28) - EDCimport v0.6.0
+#> ── Lookup table - My great project (extraction of 2025-12-30) - EDCimport v0.6.0
 #>   dataset        nrow  ncol  n_id rows_per_id crfname
 #>   <chr>         <dbl> <dbl> <int>       <dbl> <chr>  
 #> 1 attenu          182     5     0          NA NA     

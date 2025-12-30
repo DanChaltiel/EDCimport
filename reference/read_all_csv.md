@@ -10,6 +10,7 @@ read_all_csv(
   ...,
   labels_from = NULL,
   format_file = NULL,
+  use_cache = "write",
   subdirectories = FALSE,
   read_fun = "guess",
   datetime_extraction = "guess",
@@ -40,6 +41,13 @@ read_all_csv(
   \[`character(1)`\]  
   the path to the file that should be used to apply formats. See section
   "Format file" below. Use `NULL` to not apply formats.
+
+- use_cache:
+
+  \[`mixed(1)`: "write"\]  
+  controls the `.rds` cache. If `TRUE`, read the cache if any or extract
+  the archive and create a cache. If `FALSE` extract the archive without
+  creating a cache file. Can also be `"read"` or `"write"`.
 
 - subdirectories:
 
@@ -127,6 +135,7 @@ write.csv(data.frame(name=labs, label=toupper(labs)), paste0(path, "/labels.csv"
 
 db = read_all_csv(path, labels_from="labels.csv", subdirectories=TRUE) %>% 
   set_project_name("My great project")
+#> Writing cache /tmp/RtmpyFwGkN/read_all_csv/EDCimport_cache_9cc943d7.rds
 #> Warning: Option "edc_lookup" has been overwritten.
 db
 #> ── EDCimport database ──────────────────────────────────────────────────────────
@@ -135,7 +144,7 @@ db
 #>   environment.
 #> ℹ Use `EDCimport::edc_lookup()` to see the summary table.
 edc_lookup()
-#> ── Lookup table - My great project (extraction of 2025-12-28) - EDCimport v0.6.0
+#> ── Lookup table - My great project (extraction of 2025-12-30) - EDCimport v0.6.0
 #>   dataset        nrow  ncol  n_id rows_per_id crfname
 #>   <chr>         <dbl> <dbl> <int>       <dbl> <chr>  
 #> 1 airquality      153     7     0          NA NA     

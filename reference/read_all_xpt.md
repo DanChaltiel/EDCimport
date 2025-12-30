@@ -16,6 +16,7 @@ read_all_xpt(
   ...,
   format_file = "procformat.sas",
   datetime_extraction = "guess",
+  use_cache = "write",
   subdirectories = FALSE,
   verbose = getOption("edc_read_verbose", 1),
   clean_names_fun = NULL,
@@ -46,6 +47,13 @@ read_all_xpt(
   \[`POSIXt(1)`\]  
   the datetime of the data extraction. Default to the most common date
   of last modification in `path`.
+
+- use_cache:
+
+  \[`mixed(1)`: "write"\]  
+  controls the `.rds` cache. If `TRUE`, read the cache if any or extract
+  the archive and create a cache. If `FALSE` extract the archive without
+  creating a cache file. Can also be `"read"` or `"write"`.
 
 - subdirectories:
 
@@ -118,6 +126,7 @@ haven::write_xpt(esoph, paste0(path, "/esoph.xpt"))
 
 db = read_all_xpt(path, format_file=NULL, subdirectories=TRUE) %>% 
   set_project_name("My great project")
+#> Writing cache /tmp/RtmpyFwGkN/read_all_xpt/EDCimport_cache_45679493.rds
 #> Warning: Option "edc_lookup" has been overwritten.
 db
 #> ── EDCimport database ──────────────────────────────────────────────────────────
@@ -126,7 +135,7 @@ db
 #>   environment.
 #> ℹ Use `EDCimport::edc_lookup()` to see the summary table.
 edc_lookup()
-#> ── Lookup table - My great project (extraction of 2025-12-28) - EDCimport v0.6.0
+#> ── Lookup table - My great project (extraction of 2025-12-30) - EDCimport v0.6.0
 #>   dataset        nrow  ncol  n_id rows_per_id crfname
 #>   <chr>         <dbl> <dbl> <int>       <dbl> <chr>  
 #> 1 attenu          182     5     0          NA NA     
