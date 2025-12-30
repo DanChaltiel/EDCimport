@@ -9,6 +9,7 @@
 #' @param format_file \[`character(1)`]\cr the path to the file that should be used to apply formats. See section "Format file" below. Use `NULL` to not apply formats.
 #' @param datetime_extraction \[`POSIXt(1)`]\cr the datetime of the data extraction. Default to the most common date of last modification in `path`.
 #' @param ... unused
+#' @param use_cache \[`mixed(1)`: "write"]\cr controls the `.rds` cache. If `TRUE`, read the cache if any or extract the archive and create a cache. If `FALSE` extract the archive without creating a cache file. Can also be `"read"` or `"write"`.
 #' @param clean_names_fun `r lifecycle::badge("deprecated")` use [edc_clean_names()] instead.
 #' @param subdirectories \[`logical(1)`]\cr whether to read subdirectories
 #' @param verbose \[`numeric(1)`]\cr one of `c(0, 1, 2)`. The higher, the more information will be printed.

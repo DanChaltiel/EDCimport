@@ -10,6 +10,7 @@ read_all_xpt(
   ...,
   format_file = "procformat.sas",
   datetime_extraction = "guess",
+  use_cache = "write",
   subdirectories = FALSE,
   verbose = getOption("edc_read_verbose", 1),
   clean_names_fun = NULL,
@@ -25,6 +26,8 @@ read_all_xpt(
 \item{format_file}{[\code{character(1)}]\cr the path to the file that should be used to apply formats. See section "Format file" below. Use \code{NULL} to not apply formats.}
 
 \item{datetime_extraction}{[\code{POSIXt(1)}]\cr the datetime of the data extraction. Default to the most common date of last modification in \code{path}.}
+
+\item{use_cache}{[\code{mixed(1)}: "write"]\cr controls the \code{.rds} cache. If \code{TRUE}, read the cache if any or extract the archive and create a cache. If \code{FALSE} extract the archive without creating a cache file. Can also be \code{"read"} or \code{"write"}.}
 
 \item{subdirectories}{[\code{logical(1)}]\cr whether to read subdirectories}
 

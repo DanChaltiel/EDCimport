@@ -9,6 +9,7 @@ read_all_csv(
   ...,
   labels_from = NULL,
   format_file = NULL,
+  use_cache = "write",
   subdirectories = FALSE,
   read_fun = "guess",
   datetime_extraction = "guess",
@@ -24,6 +25,8 @@ read_all_csv(
 \item{labels_from}{[\code{character(1)}]\cr path to the file containing the labels. See section "Labels file" below.}
 
 \item{format_file}{[\code{character(1)}]\cr the path to the file that should be used to apply formats. See section "Format file" below. Use \code{NULL} to not apply formats.}
+
+\item{use_cache}{[\code{mixed(1)}: "write"]\cr controls the \code{.rds} cache. If \code{TRUE}, read the cache if any or extract the archive and create a cache. If \code{FALSE} extract the archive without creating a cache file. Can also be \code{"read"} or \code{"write"}.}
 
 \item{subdirectories}{[\code{logical(1)}]\cr whether to read subdirectories}
 
