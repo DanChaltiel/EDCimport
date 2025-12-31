@@ -5,6 +5,7 @@
 [![CRAN status](https://www.r-pkg.org/badges/version/EDCimport)](https://CRAN.R-project.org/package=EDCimport) 
 [![Last Commit](https://img.shields.io/github/last-commit/DanChaltiel/EDCimport)](https://github.com/DanChaltiel/EDCimport) 
 [![R-CMD-check](https://github.com/DanChaltiel/EDCimport/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/DanChaltiel/EDCimport/actions/workflows/check-standard.yaml)
+[![Current Version](https://img.shields.io/github/r-package/v/DanChaltiel/EDCimport/main?color=purple\&label=Development%20Version)](https://github.com/DanChaltiel/EDCimport/tree/main)
 <!--[![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/grand-total/EDCimport?color=blue)](https://r-pkg.org/pkg/EDCimport)  --> 
 <!-- badges: end -->
 

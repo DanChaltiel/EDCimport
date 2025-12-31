@@ -8,13 +8,13 @@
   "codeRepository": "https://github.com/DanChaltiel/EDCimport",
   "issueTracker": "https://github.com/DanChaltiel/EDCimport/issues",
   "license": "https://spdx.org/licenses/GPL-3.0",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.4.1 (2024-06-14 ucrt)",
+  "runtimePlatform": "R version 4.4.3 (2025-02-28 ucrt)",
   "provider": {
     "@id": "https://cran.r-project.org",
     "@type": "Organization",
@@ -87,6 +87,18 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=DT"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "gt",
+      "name": "gt",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=gt"
     },
     {
       "@type": "SoftwareApplication",
@@ -493,7 +505,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "1584.675KB",
+  "fileSize": "1722.205KB",
   "releaseNotes": "https://github.com/DanChaltiel/EDCimport/blob/master/NEWS.md",
   "readme": "https://github.com/DanChaltiel/EDCimport/blob/main/README.md",
   "contIntegration": "https://github.com/DanChaltiel/EDCimport/actions/workflows/check-standard.yaml",
