@@ -26,6 +26,7 @@ datetime
 dev
 dplyr
 ggplot
+ggplots
 gridplot
 pipeable
 plotly
@@ -36,6 +37,7 @@ renv
 reproducibility
 summarise
 tibble
+tooltips
 trialmaster
 xlsx
 ️

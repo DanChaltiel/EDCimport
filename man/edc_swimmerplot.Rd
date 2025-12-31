@@ -42,7 +42,7 @@ edc_swimmerplot(
 
 \item{time_unit}{if \code{origin!=NULL}, the unit to measure time. One of \code{c("days", "weeks", "months", "years")}.}
 
-\item{origin_fun}{function to summarise the \code{origin} date at the id level if needed. Should be named, or at least have a meaningful function name (see example "summarised origin".}
+\item{origin_fun}{function to summarise the \code{origin} date at the id level if needed. Should be named, or at least have a meaningful function name (see example "summarized origin".}
 
 \item{aes_color}{either \code{variable} ("\{dataset\} - \{column\}") or \code{label} (the column label).}
 

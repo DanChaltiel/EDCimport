@@ -17,7 +17,7 @@
 #' @param id_sort whether to sort subjects by date (or time).
 #' @param id_cols the subject identifiers columns. Identifiers be coerced as numeric if possible. See [get_subjid_cols] if needed.
 #' @param time_unit if `origin!=NULL`, the unit to measure time. One of `c("days", "weeks", "months", "years")`.
-#' @param origin_fun function to summarise the `origin` date at the id level if needed. Should be named, or at least have a meaningful function name (see example "summarised origin".
+#' @param origin_fun function to summarise the `origin` date at the id level if needed. Should be named, or at least have a meaningful function name (see example "summarized origin".
 #' @param aes_color either `variable` ("\{dataset\} - \{column\}") or `label` (the column label).
 #' @param plotly whether to use `{plotly}` to get an interactive plot.
 #' @param id deprecated
