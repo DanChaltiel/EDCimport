@@ -5,7 +5,7 @@
 \alias{get_project_name}
 \title{Set the project name}
 \usage{
-set_project_name(db, name, lookup = edc_lookup())
+set_project_name(db, name)
 
 get_project_name(lookup = edc_lookup())
 }
