@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">EDCimport</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0.9019</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,9 +42,9 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.6.1" id="edcimport-061-dev">EDCimport 0.6.1 (dev)<a class="anchor" aria-label="anchor" href="#edcimport-061-dev"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.7.0" id="edcimport-070">EDCimport 0.7.0<a class="anchor" aria-label="anchor" href="#edcimport-070"></a></h2>
 <div class="section level4">
-<h4 id="new-features-0-6-1">New features<a class="anchor" aria-label="anchor" href="#new-features-0-6-1"></a></h4>
+<h4 id="new-features-0-7-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-7-0"></a></h4>
 <ul><li>New function <code><a href="../reference/compare_databases.html">compare_databases()</a></code>, which compares the structure of several extractions of a database: added/removed columns, number of patients, etc (<a href="https://github.com/DanChaltiel/EDCimport/issues/26" class="external-link">#26</a>). See the examples for a demo.</li>
 <li>Cache system is supported in all reading functions <code><a href="../reference/read_all_csv.html">read_all_csv()</a></code>, <code><a href="../reference/read_all_sas.html">read_all_sas()</a></code>, and <code><a href="../reference/read_all_xpt.html">read_all_xpt()</a></code> (<a href="https://github.com/DanChaltiel/EDCimport/issues/75" class="external-link">#75</a>).</li>
 <li>New features in <code><a href="../reference/edc_viewer.html">edc_viewer()</a></code>:
@@ -55,7 +55,7 @@ For instance, you can now run <code>edc_viewer(data=lst(iris, mtcars), port=1212
 </ul></li>
 </ul></div>
 <div class="section level4">
-<h4 id="bug-fixes--improvements-0-6-1">Bug fixes &amp; Improvements<a class="anchor" aria-label="anchor" href="#bug-fixes--improvements-0-6-1"></a></h4>
+<h4 id="bug-fixes--improvements-0-7-0">Bug fixes &amp; Improvements<a class="anchor" aria-label="anchor" href="#bug-fixes--improvements-0-7-0"></a></h4>
 <ul><li>Fixed modifiers <code><a href="../reference/edc_clean_names.html">edc_clean_names()</a></code>, <code><a href="../reference/edc_unify_subjid.html">edc_unify_subjid()</a></code>, and <code><a href="../reference/edc_split_mixed.html">edc_split_mixed()</a></code> so they don’t strip database attributes (like project name) (<a href="https://github.com/DanChaltiel/EDCimport/issues/111" class="external-link">#111</a>).</li>
 <li>Fixed <code><a href="../reference/edc_data_warn.html">edc_data_stop()</a></code> so it works without a SUBJID and defaults to no issue number (<a href="https://github.com/DanChaltiel/EDCimport/issues/109" class="external-link">#109</a>).</li>
 <li>Fixed <code><a href="../reference/assert_no_duplicate.html">assert_no_duplicate()</a></code> so it works in table with both columns <code>SUBJID</code> and <code>subjid</code> (<a href="https://github.com/DanChaltiel/EDCimport/issues/105" class="external-link">#105</a>).</li>
@@ -66,7 +66,7 @@ For instance, you can now run <code>edc_viewer(data=lst(iris, mtcars), port=1212
 <li>Improved <code><a href="../reference/edc_swimmerplot.html">edc_swimmerplot()</a></code> by removing <code>origin</code> by default (<a href="https://github.com/DanChaltiel/EDCimport/issues/106" class="external-link">#106</a>).</li>
 <li>Improved <code><a href="../reference/edc_swimmerplot.html">edc_swimmerplot()</a></code> by adding arguments <code>origin_fun</code> to summarise <code>origin</code> at patient level using, and <code>data_list</code> to control the datasets.</li>
 <li>Improved <code><a href="../reference/edc_warn_extraction_date.html">edc_warn_extraction_date()</a></code> with a strict unit “days”.</li>
-<li>Improved <code><a href="../reference/save_plotly.html">save_plotly()</a></code> with a glue syntax for param <code>file</code>.</li>
+<li>Improved <code><a href="../reference/save_plotly.html">save_plotly()</a></code> with a glue syntax for parameter <code>file</code>.</li>
 </ul></div>
 </div>
     <div class="section level2">

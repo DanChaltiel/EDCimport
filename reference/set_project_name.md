@@ -38,7 +38,7 @@ db = edc_example() %>%
  set_project_name("My great project")
 #> Warning: Option "edc_lookup" has been overwritten.
 edc_lookup()
-#> ── Lookup table - My great project (extraction of 2024-01-01) - EDCimport v0.6.0
+#> ── Lookup table - My great project (extraction of 2024-01-01) - EDCimport v0.7.0
 #>   dataset     nrow  ncol  n_id rows_per_id crfname                 
 #>   <chr>      <dbl> <dbl> <int>       <dbl> <chr>                   
 #> 1 long_pure    150     4    50         3   long data               

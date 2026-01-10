@@ -30,7 +30,7 @@ db = edc_example()
 #> Warning: Option "edc_lookup" has been overwritten.
 load_database(db)
 edc_lookup()
-#> ── Lookup table - EDCimport example (extraction of 2024-01-01) - EDCimport v0.6.
+#> ── Lookup table - EDCimport example (extraction of 2024-01-01) - EDCimport v0.7.
 #>   dataset     nrow  ncol  n_id rows_per_id crfname                 
 #>   <chr>      <dbl> <dbl> <int>       <dbl> <chr>                   
 #> 1 long_pure    150     4    50         3   long data               
@@ -42,7 +42,7 @@ edc_lookup()
 #> 7 short         50     5    50         1   short data              
 #> 8 ae           175     7    48         3.6 Adverse events          
 edc_lookup(dataset)
-#> ── Lookup table - EDCimport example (extraction of 2024-01-01) - EDCimport v0.6.
+#> ── Lookup table - EDCimport example (extraction of 2024-01-01) - EDCimport v0.7.
 #>   dataset     nrow  ncol  n_id rows_per_id crfname                 
 #>   <chr>      <dbl> <dbl> <int>       <dbl> <chr>                   
 #> 1 ae           175     7    48         3.6 Adverse events          

@@ -64,7 +64,7 @@ few useful tools:
 db = edc_example()
 load_database(db)
 edc_lookup()
-#> ── Lookup table - EDCimport example (extraction of 2024-01-01) - EDCimport v0.6.
+#> ── Lookup table - EDCimport example (extraction of 2024-01-01) - EDCimport v0.7.
 #>   dataset     nrow  ncol  n_id rows_per_id crfname                 
 #>   <chr>      <dbl> <dbl> <int>       <dbl> <chr>                   
 #> 1 long_pure    150     4    50         3   long data               

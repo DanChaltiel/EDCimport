@@ -77,7 +77,7 @@ edc_swimmerplot(
 
   function to summarise the `origin` date at the id level if needed.
   Should be named, or at least have a meaningful function name (see
-  example "summarised origin".
+  example "summarized origin".
 
 - aes_color:
 

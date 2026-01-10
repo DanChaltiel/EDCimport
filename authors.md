@@ -10,13 +10,13 @@
 Source:
 [`DESCRIPTION`](https://github.com/DanChaltiel/EDCimport/blob/main/DESCRIPTION)
 
-Chaltiel D (2025). *EDCimport: Import Data from EDC Software*. R package
-version 0.6.0.9019, <https://github.com/DanChaltiel/EDCimport>.
+Chaltiel D (2026). *EDCimport: Import Data from EDC Software*. R package
+version 0.7.0, <https://github.com/DanChaltiel/EDCimport>.
 
     @Manual{,
       title = {EDCimport: Import Data from EDC Software},
       author = {Dan Chaltiel},
-      year = {2025},
-      note = {R package version 0.6.0.9019},
+      year = {2026},
+      note = {R package version 0.7.0},
       url = {https://github.com/DanChaltiel/EDCimport},
     }

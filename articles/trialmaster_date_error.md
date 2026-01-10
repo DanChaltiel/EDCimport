@@ -1,6 +1,6 @@
 # Table Reading Date Error
 
-When building a table in **TrialMaster**, an error may occur if:
+When building a table in **TrialBuilder**, an error may occur if:
 
 - The variables have been created.
 - The export is **not rebuilt** but only **refreshed**.

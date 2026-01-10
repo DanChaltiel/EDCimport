@@ -1,6 +1,6 @@
 # Changelog
 
-## EDCimport 0.6.1 (dev)
+## EDCimport 0.7.0
 
 #### New features
 
@@ -74,7 +74,7 @@
   with a strict unit “days”.
 - Improved
   [`save_plotly()`](https://danchaltiel.github.io/EDCimport/reference/save_plotly.md)
-  with a glue syntax for param `file`.
+  with a glue syntax for parameter `file`.
 
 ## EDCimport 0.6.0
 
