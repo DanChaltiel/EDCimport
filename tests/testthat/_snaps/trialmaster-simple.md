@@ -1,6 +1,10 @@
 # Read a TM archive
 
     Code
+      getOption("width")
+    Output
+      [1] 125
+    Code
       filename = test_path("CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16.zip")
       w = read_trialmaster(filename, use_cache = FALSE, verbose = 9)
     Message
@@ -29,7 +33,7 @@
     Code
       w$.lookup
     Output
-      ── Lookup table - CRF (extraction of 2022-08-25) - EDCimport v0.0.0 ────────────────────────────────────────────────────
+      ── Lookup table - CRF (extraction of 2022-08-25) - EDCimport v0.0.0 ─────────────────────────────────────────────────────────
         dataset  nrow  ncol  n_id rows_per_id crfname                       
         <chr>   <dbl> <dbl> <int>       <dbl> <chr>                         
       1 site        1    33     0          NA Trial Site Setup & Information

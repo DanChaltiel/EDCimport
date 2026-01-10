@@ -14,6 +14,8 @@ test_that("Read a TM archive", {
       str_replace_all("v(\\d+\\.?)+", "v0.0.0") #EDCimport version
   }
   expect_snapshot(transform=f, {
+    getOption("width")
+    
     #read
     filename = test_path("CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16.zip")
     w = read_trialmaster(filename, use_cache=FALSE, verbose=9)
