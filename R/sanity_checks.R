@@ -279,7 +279,7 @@ edc_data_warnings = function(){
 #' Each time [edc_data_warn] is used, the warning is saved internally so that a summary can be retrieved using [edc_data_warnings]. This summary can then be saved into a `.xlsx` file using `save_edc_data_warnings()`. 
 #'
 #' @param edc_warnings the result of [edc_data_warnings]
-#' @param output_file,output_dir path to a `.xlsx` file. Use special values `{proj_name}` and `{date_extraction}`.
+#' @param output_file,output_dir path to a `.xlsx` file. Use special values `{project}` and `{date_extraction}`.
 #' @param overwrite If `TRUE`, overwrite any existing file.
 #' @param open If `TRUE`, overwrite any existing file.
 #' @param hide_resolved If `TRUE`, hide sheets with no data.
