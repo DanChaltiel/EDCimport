@@ -76,8 +76,11 @@ extract_7z = function(archive, target_dir, password=NULL, preserve_dirs=TRUE, pa
   }
   
   status = attr(msg, "status")
+  
   if(!nzchar(msg[1])) msg=msg[-1]
   msg = paste(msg, sep="\n")
+  cp = system("chcp", intern = TRUE) %>% str_extract("\\d+")
+  msg = iconv(msg, from=paste0("CP", cp), to="UTF-8")
   # attr(msg, "status") = recode(attr(msg, "status"),
   #                              "0"="No error",
   #                              "1"="Warning",

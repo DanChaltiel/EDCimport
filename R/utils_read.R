@@ -17,7 +17,6 @@
 .read_all = function(files, read_function, ..., path=NULL, 
                      use_cache, clean_names_fun=NULL, verbose){
   assert_file_exists(files)
-  clean_names_fun = .get_clean_names_fun(clean_names_fun)
   if(!is.null(path)){
     path = normalizePath(path, winslash="/")
     file_names = files %>% normalizePath(winslash="/") %>% 
@@ -26,6 +25,7 @@
   } else {
     file_names = basename(files) %>% tolower() %>% path_ext_remove()
   }
+  clean_names_fun = .get_clean_names_fun(clean_names_fun)
   subjid_cols = get_subjid_cols(lookup=NULL)
   crf = get_crfname_cols(lookup=NULL)
   
@@ -50,21 +50,26 @@
     }
   }
   
+  args = lst(clean_names_fun, subjid_cols, crf, read_function)
   rtn = files %>% 
     set_names(file_names) %>% 
     map(function(.x) {
-      tbl = tryCatch(read_function(.x, ...), 
-                     error = function(e) .flatten_error(e, class="edc_error_data"))
-      if(is_edc_error(tbl)) return(tbl)
-      label = tbl %>% select(any_of2(crf)) %>% pluck(1, 1)
-      rtn = tbl %>% 
-        as_tibble() %>% 
-        clean_names_fun() %>% 
-        arrange(pick(any_of2(subjid_cols))) %>%
-        mutate(across(where(bad_hms), fix_hms))
-      attr(rtn, "hash") = hash(rtn)
-      attr(rtn, "label") = label
-      rtn
+      # browser()
+      .read_one(.x, args=args, ...)
+      # tbl = tryCatch(
+      #   read_function(.x, ...), 
+      #   error = function(e) .flatten_error(e, class="edc_error_data")
+      # )
+      # if(is_edc_error(tbl)) return(tbl)
+      # label = tbl %>% select(any_of2(crf)) %>% pluck(1, 1)
+      # rtn = tbl %>% 
+      #   as_tibble() %>% 
+      #   clean_names_fun() %>% 
+      #   arrange(pick(any_of2(subjid_cols))) %>%
+      #   mutate(across(where(bad_hms), fix_hms))
+      # attr(rtn, "hash") = hash(rtn)
+      # attr(rtn, "label") = label
+      # rtn
     }) %>% 
     structure(source="files", 
               EDCimport_version=packageVersion("EDCimport"),
@@ -81,6 +86,41 @@
   rtn
 }
 
+.read_one = function(file, args , ...){
+  subjid_cols = get_subjid_cols(lookup=NULL)
+  crf = get_crfname_cols(lookup=NULL)
+  if(str_detect(tolower(file), "ae.xpt")) browser()
+  
+  REGEX = "String variable '(.*)' has incompatible format '(.*)' and will be returned as a regular string variable."
+  wrong_date_cols = NULL
+  tbl = tryCatch(
+    withCallingHandlers(
+      args$read_function(file, ...),
+      warning = function(w) {
+        msg = conditionMessage(w)
+        # browser()
+        date_col = str_extract(msg, REGEX, group=1)
+        # print(date_col)
+        if (!all(is.na(date_col))) {
+          wrong_date_cols <<- c(wrong_date_cols, date_col)
+          invokeRestart("muffleWarning")
+        }
+      }
+    ),
+    error = function(e) .flatten_error(e, class="edc_error_data")
+  )
+  if(is_edc_error(tbl)) return(tbl)
+  label = tbl %>% select(any_of2(args$crf)) %>% pluck(1, 1)
+  rtn = tbl %>% 
+    as_tibble() %>%
+    mutate(across(any_of(wrong_date_cols), parse_date_time)) %>% 
+    args$clean_names_fun() %>% 
+    arrange(pick(any_of2(args$subjid_cols))) %>%
+    mutate(across(where(bad_hms), fix_hms))
+  attr(rtn, "hash") = hash(rtn)
+  attr(rtn, "label") = label
+  rtn
+}
 
 #' Apply `.flatten_error` to all `try-error` columns
 #' @noRd
