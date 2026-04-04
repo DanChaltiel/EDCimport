@@ -8,6 +8,11 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 -   `edc_*_join()` now supports multiple tables via `...`, enabling sequential joins in a single call (#124)
 
+### Bug fixes & Improvements
+
+-   Fixed `edc_swimmerplot()` throwing an error in case of misread dataset
+
+
 # EDCimport 0.7.0
 
 ### New features

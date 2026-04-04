@@ -80,6 +80,7 @@ edc_swimmerplot = function(...,
                            .lookup="deprecated"){
   check_dots_empty()
   assert_class(data_list, "list")
+  data_list = data_list %>% discard(is_error)
   map(data_list, ~assert_class(.x, "data.frame"))
   
   aes_color = match.arg(aes_color)
