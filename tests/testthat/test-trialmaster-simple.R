@@ -7,13 +7,15 @@ test_that("Read a TM archive", {
   clean_lookup()
   local_reproducible_output(width=125, unicode=TRUE)
   
-  f = function(x) {
+  clean_snap = function(x) {
     x %>% 
       str_replace_all("^7-Zip.*$", "7-Zip Copyright 1999-2016 Igor Pavlov") %>%  #7-Zip version
       str_replace_all(",.*Kb", ", 000 Kb") %>%  #database size
+      str_replace_all("(?<=\\S) +-+$", "----------") %>%  #variable rule width, depending on version
       str_replace_all("v(\\d+\\.?)+", "v0.0.0") #EDCimport version
   }
-  expect_snapshot(transform=f, {
+  
+  expect_snapshot(transform=clean_snap, {
     getOption("width")
     
     #read
