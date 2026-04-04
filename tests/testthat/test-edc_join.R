@@ -1,4 +1,5 @@
 test_that("`edc_xxx_join()` works", {
+  edc_options(edc_lookup_overwrite_warn=FALSE, .local=TRUE)
   db = edc_example()
   load_database(db)
   
@@ -60,4 +61,21 @@ test_that("`edc_xxx_join()` works", {
     rename(XXXX=subjid) %>% 
     edc_left_join(enrol3) %>% 
     expect_error(class="edc_subjid_not_found", regexp="not found in either `x` or `y`")
+})
+
+test_that("`edc_xxx_join()` works with multiple data", {
+  edc_options(edc_lookup_overwrite_warn=FALSE, .local=TRUE)
+  db = edc_example()
+  load_database(db)
+  
+  a = enrol %>% edc_left_join(data2, data3, short)
+  
+  a %>% names() %>% 
+    expect_contains(c("crfname", "crfname_data2", "crfname_data3", "crfname_short"))
+  
+  a %>% select(starts_with("crfname")) %>% get_label() %>% unname() %>% 
+    expect_equal(list("Form name", "Form name", "Form name", "crfname_short"))
+    
+  b = edc_left_join(enrol, data2, data3, short)
+  expect_identical(a, b)
 })

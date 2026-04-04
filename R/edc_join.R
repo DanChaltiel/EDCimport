@@ -13,7 +13,8 @@
                       left=dplyr::left_join, right=dplyr::right_join, 
                       full=dplyr::full_join, inner=dplyr::inner_join)
   
-  function(x, y, by=NULL, suffix=NULL, cols=everything(), remove_dups=FALSE){
+  function(x, y, ..., by=NULL, suffix=NULL, cols=everything(), remove_dups=FALSE){
+    # check_dots_unnamed()
     subjid_col = getOption("override_subjid_cols", get_subjid_cols())
     by_x = names(x)[tolower(names(x)) %in% tolower(subjid_col)]
     by_y = names(y)[tolower(names(y)) %in% tolower(subjid_col)]
@@ -31,7 +32,7 @@
                 class="edc_subjid_not_found")
     }
     if(is.null(suffix)){
-      suffix = c("", paste0("_", as_label(caller_call(0)[[3]])))
+      suffix = c("", paste0("_", as_label(caller_call(n=0)[[3]])))
     }
     
     y = y %>% select(any_of(c(unname(by), by_y)), !!enquo(cols))
@@ -41,10 +42,19 @@
         keep(~setequal(x[[.x]], y[[.x]]))
       y = y %>% select(-all_of(common_col))
     }
-    
-    .safe_join(x, y, by=by, suffix=suffix, fun=dplyr_join) %>% 
+    dots = lst(...)
+    rtn = .safe_join(x, y, by=by, suffix=suffix, fun=dplyr_join)  %>% 
       copy_label_from(y) %>% 
       copy_label_from(x)
+    
+    for(i in names(dots)){
+      cur = dots[[i]]
+      suffix = c("", paste0("_", i))
+      rtn = .safe_join(rtn, cur, by=by, suffix=suffix, fun=dplyr_join)  %>% 
+          copy_label_from(cur)
+    }
+    
+    rtn
   }
 }
 
@@ -78,6 +88,7 @@
 #' join logic.
 #'
 #' @param x,y Data frames to join
+#' @param ... Additional data frames to join sequentially
 #' @param by The key to join on, as character. Defaults to `get_subjid_cols()`
 #' @param suffix The disambiguation suffix. Defaults to the actual name of the `y` dataset.
 #' @param cols <[tidy-select][dplyr::dplyr_tidy_select]> The columns to select in `y` before joining.

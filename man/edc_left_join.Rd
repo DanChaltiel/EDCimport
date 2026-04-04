@@ -9,6 +9,7 @@
 edc_left_join(
   x,
   y,
+  ...,
   by = NULL,
   suffix = NULL,
   cols = everything(),
@@ -17,6 +18,8 @@ edc_left_join(
 }
 \arguments{
 \item{x, y}{Data frames to join}
+
+\item{...}{Additional data frames to join sequentially}
 
 \item{by}{The key to join on, as character. Defaults to \code{get_subjid_cols()}}
 
