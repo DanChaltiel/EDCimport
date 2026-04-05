@@ -26,7 +26,8 @@ NULL
 #' Build and add lookup, add datetime_extraction, and add `...` as attributes
 #' @noRd
 #' @keywords internal
-new_edc_database = function(datalist, datetime_extraction, extend_lookup=TRUE, ...){
+new_edc_database = function(datalist, datetime_extraction, extend_lookup=TRUE, set_lookup=TRUE, verbose=TRUE, ...){
+  if(missing(datetime_extraction)) datetime_extraction = datalist$datetime_extraction
   assert_class(datetime_extraction, c("POSIXt", "Date"))
   .lookup = build_lookup(datalist)
   if(!is.null(extend_lookup)){
@@ -35,6 +36,9 @@ new_edc_database = function(datalist, datetime_extraction, extend_lookup=TRUE, .
   .lookup = .lookup %>% 
     structure(datetime_extraction=datetime_extraction,
               ...)
+  if(set_lookup){
+    .set_lookup(.lookup, verbose=verbose)
+  }
   
   datalist$datetime_extraction = datetime_extraction
   datalist$date_extraction = format_ymd(datetime_extraction)

@@ -82,8 +82,6 @@ read_all_csv = function(path, ...,
       EDCimport_version=packageVersion("EDCimport")
     )
   
-  .set_lookup(rtn$.lookup)
-  
   rtn
 }
 

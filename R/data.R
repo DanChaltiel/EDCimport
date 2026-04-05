@@ -41,7 +41,6 @@ edc_example = function(N=50, seed=42, outdated=FALSE){
       project_name="EDCimport example"
     )
   
-  .set_lookup(rtn$.lookup)
   rtn
 }
 

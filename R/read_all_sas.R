@@ -64,7 +64,6 @@ read_all_sas = function(path, ...,
   
   .warn_bad_tables(rtn)
   .warn_bad_columns(rtn)
-  .set_lookup(rtn$.lookup)
   
   rtn
 }
