@@ -10,6 +10,7 @@ description of the join logic.
 edc_left_join(
   x,
   y,
+  ...,
   by = NULL,
   suffix = NULL,
   cols = everything(),
@@ -22,6 +23,10 @@ edc_left_join(
 - x, y:
 
   Data frames to join
+
+- ...:
+
+  Additional data frames to join sequentially
 
 - by:
 

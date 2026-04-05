@@ -44,6 +44,12 @@ edc_unify_subjid(
 
 database, with subject id modified
 
+## See also
+
+Other postprocessing:
+[`edc_clean_names()`](https://danchaltiel.github.io/EDCimport/reference/edc_clean_names.md),
+[`edc_split_mixed()`](https://danchaltiel.github.io/EDCimport/reference/edc_split_mixed.md)
+
 ## Examples
 
 ``` r

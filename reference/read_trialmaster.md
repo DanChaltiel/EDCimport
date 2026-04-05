@@ -35,7 +35,10 @@ read_trialmaster(
 
 - ...:
 
-  unused
+  passed to
+  [`read_all_xpt()`](https://danchaltiel.github.io/EDCimport/reference/read_all_xpt.md)
+  (and then to
+  [`haven::read_xpt()`](https://haven.tidyverse.org/reference/read_xpt.html))
 
 - use_cache:
 

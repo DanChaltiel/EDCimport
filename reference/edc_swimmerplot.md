@@ -55,7 +55,8 @@ edc_swimmerplot(
 
 - id_subset:
 
-  the subjects to include in the plot.
+  subjects to include in the plot. If numeric and `id_cols` refers to
+  non-numeric values, treated as subject indices.
 
 - id_sort:
 

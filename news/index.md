@@ -2,6 +2,8 @@
 
 ## EDCimport 0.7.0
 
+CRAN release: 2026-01-10
+
 #### New features
 
 - New function

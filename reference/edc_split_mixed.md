@@ -51,6 +51,12 @@ an
 [edc_database](https://danchaltiel.github.io/EDCimport/reference/edc_database.md)
 object
 
+## See also
+
+Other postprocessing:
+[`edc_clean_names()`](https://danchaltiel.github.io/EDCimport/reference/edc_clean_names.md),
+[`edc_unify_subjid()`](https://danchaltiel.github.io/EDCimport/reference/edc_unify_subjid.md)
+
 ## Examples
 
 ``` r

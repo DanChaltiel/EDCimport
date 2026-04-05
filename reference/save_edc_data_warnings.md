@@ -32,7 +32,7 @@ save_edc_data_warnings(
 
 - output_file, output_dir:
 
-  path to a `.xlsx` file. Use special values `{proj_name}` and
+  path to a `.xlsx` file. Use special values `{project}` and
   `{date_extraction}`.
 
 - open:
