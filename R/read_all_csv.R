@@ -51,6 +51,7 @@ read_all_csv = function(path, ...,
                         datetime_extraction="guess", 
                         verbose=getOption("edc_read_verbose", 1),
                         clean_names_fun=NULL){
+  check_dots_named()
   reset_manual_correction()
   assert(is_dir(path))
   

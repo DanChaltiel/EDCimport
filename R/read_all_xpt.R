@@ -58,6 +58,7 @@ read_all_xpt = function(path, ...,
                         clean_names_fun=NULL,
                         directory="deprecated",
                         key_columns="deprecated"){
+  check_dots_named()
   reset_manual_correction()
   if(missing(path)) path = directory
   assert(is_dir(path))

@@ -28,6 +28,7 @@ read_trialmaster = function(archive, ..., use_cache="write",
                             pw=getOption("trialmaster_pw"), 
                             verbose=getOption("edc_read_verbose", 1),
                             key_columns="deprecated"){
+  check_dots_named()
   .check_use_cache(use_cache)
   assert_file_exists(archive, msg="Archive {.val {archive}} does not exist.", 
                      class="edc_tm_404")

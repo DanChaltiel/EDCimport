@@ -172,6 +172,26 @@ guess_read_function = function(file){
   }
 }
 
+#' @importFrom cli cli_abort
+#' @importFrom rlang caller_env caller_call
+check_dots_named = function(env = caller_env(), call = caller_call()) {
+  dot_names = eval(quote(...names()), envir=env)
+  dot_length = eval(quote(...length()), envir=env)
+  bad_i = which(!nzchar(dot_names))
+  if(is.null(dot_names) && dot_length>0){
+    bad_i = seq(dot_length)
+  }
+  if(length(bad_i)>0){
+    cli_abort(
+      c("!"="All arguments in `...` must be named.",
+        "x"="{qty(length(bad_i))} Unnamed argument{?s} at ind{?ex/ices} {bad_i}."), 
+      call=call
+    )
+  }
+  invisible()
+}
+
+
 # Parse zip name ------------------------------------------------------------------------------
 
 #' Parse a file name to get the date of data extraction
