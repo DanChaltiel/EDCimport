@@ -332,8 +332,9 @@ min_narm = function(x, na.rm=TRUE) {
 #' copy_attributes(.lookup, except=names(attributes(tibble())))
 #' @importFrom purrr discard_at
 #' @importFrom utils modifyList
-copy_attributes = function(x, y, except=NULL){
+copy_attributes = function(x, y, except=c("class", "row.names", "names")){
   if(is.null(x)) return(NULL)
+  if(is.null(y)) return(x)
   attr_y = attributes(y) %>% discard_at(except)
   attributes(x) = modifyList(attributes(x), attr_y)
   x
