@@ -10,6 +10,7 @@
 #' @param database an [edc_database] object, from [read_trialmaster()] or other EDCimport reading functions.
 #' @param clean_fun a cleaning function to be applied to column names.
 #' @return an [edc_database] object
+#' @family postprocessing
 #' 
 #' @importFrom dplyr rename_with
 #' @importFrom purrr map_if

@@ -24,3 +24,9 @@ db = edc_example() \%>\%
   edc_clean_names()
 names(db$enrol)
 }
+\seealso{
+Other postprocessing: 
+\code{\link{edc_split_mixed}()},
+\code{\link{edc_unify_subjid}()}
+}
+\concept{postprocessing}

@@ -11,6 +11,8 @@
 #' @param col_subjid names of the subject ID columns (as character)
 #'
 #' @return database, with subject id modified
+#' @family postprocessing
+#' 
 #' @export
 #' @importFrom cli cli_abort
 #' @importFrom dplyr across any_of mutate

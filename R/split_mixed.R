@@ -77,6 +77,8 @@ table_format = function(df, id=get_subjid_cols(), ...,
 #' @param ... not used, ensure arguments are named
 #'
 #' @return an [edc_database] object
+#' @family postprocessing
+#' 
 #' @export
 #' @importFrom cli cli_abort
 #' @importFrom dplyr enquo everything

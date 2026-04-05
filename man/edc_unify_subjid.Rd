@@ -30,7 +30,6 @@ the subjects of the database. Avoid problems when joining tables, and some check
 be performed on the levels. See \code{vignette("postprocessing")} for a real-life case.
 }
 \examples{
-
 db = edc_example()
 db$enrol$subjid \%>\% head()  #double vector
 
@@ -44,3 +43,9 @@ db3$enrol$subjid \%>\% head()
 db4 = edc_unify_subjid(db, preprocess=function(x) as.numeric(x)+1, mode="numeric")
 db4$enrol$subjid \%>\% head()
 }
+\seealso{
+Other postprocessing: 
+\code{\link{edc_clean_names}()},
+\code{\link{edc_split_mixed}()}
+}
+\concept{postprocessing}
