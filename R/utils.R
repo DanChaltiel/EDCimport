@@ -367,13 +367,13 @@ today_ymd = function(){
 #' @noRd
 #' @keywords internal
 format_ymd = function(x){
-  stopifnot(inherits(x, "POSIXt") || inherits(x, "Date"))
+  assert_class(x, c("POSIXt", "Date"))
   format(x, "%Y-%m-%d")
 }
 #' @noRd
 #' @keywords internal
 format_ymdhm = function(x){
-  stopifnot(inherits(x, "POSIXt") || inherits(x, "Date"))
+  assert_class(x, c("POSIXt", "Date"))
   format(x, "%Y-%m-%d %Hh%M")
 }
 
