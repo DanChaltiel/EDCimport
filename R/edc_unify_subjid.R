@@ -20,7 +20,6 @@
 #' @importFrom rlang arg_match
 #'
 #' @examples
-#' 
 #' db = edc_example()
 #' db$enrol$subjid %>% head()  #double vector
 #' 
@@ -68,6 +67,7 @@ edc_unify_subjid = function(database, preprocess=NULL, mode=c("factor", "numeric
             copy_label_from(.x)
         }))
     }) %>% 
+    new_edc_database(verbose=FALSE) %>%
     structure(all_subjid=subjid_vec)
   
   a
