@@ -17,7 +17,7 @@
 #' @return a factor, or `x` untouched.
 #' @export
 #' @importFrom cli cli_abort
-#' @importFrom dplyr case_match case_when setdiff
+#' @importFrom dplyr case_when setdiff
 #' @importFrom purrr map
 #' @importFrom stringr str_detect
 #'
@@ -77,7 +77,7 @@ fct_yesno = function(x,
     is_no  = fun(x) %in% fun(input$no)
     is_na  = fun(x) %in% fun(input$na)
   } else {
-    input = map(input, ~case_match(.x, ""~"^$", .default=.x))
+    input = map(input, ~ifelse(.x == "", "^$", .x))
     is_yes = str_detect(tolower(x), paste(tolower(input$yes), collapse="|"))
     is_no  = str_detect(tolower(x), paste(tolower(input$no ), collapse="|"))
     is_na  = str_detect(tolower(x), paste(tolower(input$na ), collapse="|"))
