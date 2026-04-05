@@ -13,7 +13,7 @@
 #' @param origin a variable to consider as time 0, given as "dataset$column".
 #' @param include,exclude a character vector of variables to exclude/include, in the form `dataset$column`. Can be a regex (apart from `$` symbols that will be automatically escaped). Case-insensitive.
 #' @param data_list a named list of data.frames to get the dates from. Default to [get_datasets], which retrieve all raw datasets.
-#' @param id_subset the subjects to include in the plot.
+#' @param id_subset subjects to include in the plot. If numeric and `id_cols` refers to non-numeric values, treated as subject indices.
 #' @param id_sort whether to sort subjects by date (or time).
 #' @param id_cols the subject identifiers columns. Identifiers be coerced as numeric if possible. See [get_subjid_cols] if needed.
 #' @param time_unit if `origin!=NULL`, the unit to measure time. One of `c("days", "weeks", "months", "years")`.
@@ -103,12 +103,15 @@ edc_swimmerplot = function(...,
     arrange(variable)
   
   if(!isTRUE(id_subset=="all")){
-    if(is.numeric(id_subset) && !is.numeric(dat$id)){
+    if(is.numeric(id_subset) && !can_be_numeric(dat$id)){
       id_subset = unique(dat$id)[id_subset]
     }
     dat = dat %>% 
       filter(id %in% id_subset)
-    if(nrow(dat)==0) return(NULL)
+    if(nrow(dat)==0) {
+      cli_warn("No subjects match {.arg id_subset}. Returning an `NULL`.")
+      return(NULL)
+    }
   }
   
   if(!is.null(group)){

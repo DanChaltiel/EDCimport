@@ -13,6 +13,7 @@ For example, `read_all_csv(nrows=2)` will pass `nrows` to `utils::read.csv()`, o
 ### Bug fixes & Improvements
 
 -   Fixed `edc_swimmerplot()` throwing an error in case of misread dataset
+-   Fixed `edc_swimmerplot()` messing up with numeric `id_subset` when SUBJID is a factor
 
 
 # EDCimport 0.7.0

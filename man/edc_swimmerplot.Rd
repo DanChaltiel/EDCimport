@@ -34,7 +34,7 @@ edc_swimmerplot(
 
 \item{data_list}{a named list of data.frames to get the dates from. Default to \link{get_datasets}, which retrieve all raw datasets.}
 
-\item{id_subset}{the subjects to include in the plot.}
+\item{id_subset}{subjects to include in the plot. If numeric and \code{id_cols} refers to non-numeric values, treated as subject indices.}
 
 \item{id_sort}{whether to sort subjects by date (or time).}
 
