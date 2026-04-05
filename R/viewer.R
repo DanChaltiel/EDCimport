@@ -38,7 +38,7 @@ edc_viewer = function(data=NULL, ..., background=TRUE, title=NULL, port=1209, re
   
   if(isTRUE(background)){
     .run_background(datasets, lookup, title, port, shiny_url, replace)
-    return(edcimport_env$process)
+    return(invisible(edcimport_env$process))
   }
   
   browseURL(shiny_url)
