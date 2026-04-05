@@ -10,7 +10,7 @@
 #'
 #' @param archive \[`character(1)`]\cr the path to the archive
 #' @param pw \[`character(1)`]\cr The password if the archive is protected. To avoid writing passwords in plain text, it is probably better to use `options(trialmaster_pw="xxx")` instead though.
-#' @param ... unused
+#' @param ... passed to [read_all_xpt()] (and then to [haven::read_xpt()])
 #'
 #' @inherit read_all_xpt return
 #' @inheritParams read_all_xpt
@@ -28,8 +28,6 @@ read_trialmaster = function(archive, ..., use_cache="write",
                             pw=getOption("trialmaster_pw"), 
                             verbose=getOption("edc_read_verbose", 1),
                             key_columns="deprecated"){
-  
-  check_dots_empty()
   .check_use_cache(use_cache)
   assert_file_exists(archive, msg="Archive {.val {archive}} does not exist.", 
                      class="edc_tm_404")
@@ -60,7 +58,7 @@ read_trialmaster = function(archive, ..., use_cache="write",
     rtn = .read_tm_zip(archive=archive, pw=pw, extract_datetime=extract_datetime,
                        clean_names_fun=clean_names_fun, key_columns=key_columns, 
                        subdirectories=subdirectories, use_cache=use_cache, 
-                       cache_file=cache_file, verbose=verbose) %>% 
+                       cache_file=cache_file, verbose=verbose, ...) %>% 
       structure(source="zip")
   }
 
@@ -125,7 +123,7 @@ read_trialmaster = function(archive, ..., use_cache="write",
 #' @importFrom stringr str_remove
 .read_tm_zip <- function(archive, pw, extract_datetime, clean_names_fun, 
                          key_columns, subdirectories, use_cache, cache_file, 
-                         verbose) {
+                         verbose, ...) {
   
   if(verbose>0) cli_inform("Unzipping {.file {archive}}", class="read_tm_zip")
   temp_folder = basename(archive) %>% str_remove("\\.zip") %>% path_temp()
@@ -147,7 +145,7 @@ read_trialmaster = function(archive, ..., use_cache="write",
                      use_cache=FALSE,
                      subdirectories=subdirectories,
                      datetime_extraction=extract_datetime, 
-                     verbose=0) %>% 
+                     verbose=0, ...) %>% 
     set_project_name(projname)
   
   if(isTRUE(use_cache) || use_cache=="write"){

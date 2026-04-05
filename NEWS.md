@@ -6,7 +6,9 @@ EDCimport is a package designed to easily import data from EDC software TrialMas
 
 ### New features
 
--   `edc_*_join()` now supports multiple tables via `...`, enabling sequential joins in a single call (#124)
+-   `edc_*_join()` now supports multiple tables via `...`, enabling sequential joins in a single call (#124).
+-   Reading functions `read_all_csv()`, `read_all_sas()`, and `read_all_xpt()` will now pass arguments to their external readers (#122).
+For example, `read_all_csv(nrows=2)` will pass `nrows` to `utils::read.csv()`, or `read_all_sas(n_max=2)` will pass `n_max` to `haven::read_sas()`.
 
 ### Bug fixes & Improvements
 

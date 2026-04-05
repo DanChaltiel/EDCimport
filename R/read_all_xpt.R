@@ -8,7 +8,7 @@
 #' @param path \[`character(1)`]\cr the path to the directory containing all `.xpt` files.
 #' @param format_file \[`character(1)`]\cr the path to the file that should be used to apply formats. See section "Format file" below. Use `NULL` to not apply formats.
 #' @param datetime_extraction \[`POSIXt(1)`]\cr the datetime of the data extraction. Default to the most common date of last modification in `path`.
-#' @param ... unused
+#' @param ... passed to [haven::read_xpt()]
 #' @param use_cache \[`mixed(1)`: "write"]\cr controls the `.rds` cache. If `TRUE`, read the cache if any or extract the archive and create a cache. If `FALSE` extract the archive without creating a cache file. Can also be `"read"` or `"write"`.
 #' @param clean_names_fun `r lifecycle::badge("deprecated")` use [edc_clean_names()] instead.
 #' @param subdirectories \[`logical(1)`]\cr whether to read subdirectories
@@ -58,7 +58,6 @@ read_all_xpt = function(path, ...,
                         clean_names_fun=NULL,
                         directory="deprecated",
                         key_columns="deprecated"){
-  check_dots_empty()
   reset_manual_correction()
   if(missing(path)) path = directory
   assert(is_dir(path))
@@ -68,9 +67,13 @@ read_all_xpt = function(path, ...,
   }
   assert_class(datetime_extraction, c("POSIXt", "Date"))
   format_file = .locate_file(format_file, path)
+  
+  read_function_args = lst(...)
+  .check_fun_args(read_function_args, haven::read_xpt)
+  
   rtn = dir_ls(path, regexp="\\.xpt$", recurse=subdirectories) %>% 
-    .read_all(haven::read_xpt, clean_names_fun=clean_names_fun, path=path, use_cache=use_cache, 
-              verbose=verbose) %>%
+    .read_all(haven::read_xpt, read_function_args, path=path, use_cache=use_cache, 
+              clean_names_fun=clean_names_fun, verbose=verbose) %>%
     .clean_labels_utf8() %>% 
     .apply_sas_formats(format_file) %>% 
     new_edc_database(

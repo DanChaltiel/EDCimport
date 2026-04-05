@@ -6,16 +6,17 @@
 #' We use 8 hex characters (4*8=32 bits) to identify the cache. The risk of
 #' collision for `x` cache updates is `1-(1-(1/2^32))^x`, so 0.023% for 1e6 updates.
 #' 
-#' @param ... passed to `read_function`
+#' @param ... unused, previously passed to `read_function` but replaced by `read_function_args`
 #' @noRd
 #' @keywords internal
 #' @importFrom dplyr across as_tibble mutate where
 #' @importFrom fs path_ext_remove
 #' @importFrom purrr map pluck
-#' @importFrom rlang hash hash_file set_names
+#' @importFrom rlang exec hash hash_file set_names
 #' @importFrom stringr fixed str_remove str_replace_all
-.read_all = function(files, read_function, ..., path=NULL, 
+.read_all = function(files, read_function, read_function_args, ..., path=NULL, 
                      use_cache, clean_names_fun=NULL, verbose){
+  check_dots_empty()
   assert_file_exists(files)
   clean_names_fun = .get_clean_names_fun(clean_names_fun)
   if(!is.null(path)){
@@ -53,8 +54,10 @@
   rtn = files %>% 
     set_names(file_names) %>% 
     map(function(.x) {
-      tbl = tryCatch(read_function(.x, ...), 
-                     error = function(e) .flatten_error(e, class="edc_error_data"))
+      tbl = tryCatch(
+        exec(read_function, .x, !!!read_function_args),
+        error = function(e) .flatten_error(e, class="edc_error_data")
+      )
       if(is_edc_error(tbl)) return(tbl)
       label = tbl %>% select(any_of2(crf)) %>% pluck(1, 1)
       rtn = tbl %>% 
@@ -183,4 +186,27 @@
     }
   }
   x
+}
+
+
+#' @importFrom cli cli_abort
+#' @importFrom dplyr setdiff
+#' @importFrom rlang caller_arg
+.check_fun_args = function(arg_list, fun, oth_fun=NULL, fun_name=NULL){
+  good = names(formals(fun))
+  fun_names = fun_name %0% caller_arg(fun) 
+  if(!is.null(oth_fun)) {
+    good = c(good, names(formals(oth_fun)))
+    fun_names = c(fun_names, caller_arg(oth_fun))
+  }
+  bad = names(arg_list) %>% setdiff(good)
+  if(length(bad)>0){
+    cli_abort(
+      c("{qty(bad)} Unknown argument{?s}: {.val {bad}}.", 
+        i="Passed through {.arg ...}, but not accepted by {.fn {fun_names}}."), 
+      call=caller_env(),
+      class="bad_argument_error"
+    )
+  }
+  NULL
 }

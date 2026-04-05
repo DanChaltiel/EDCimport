@@ -18,7 +18,7 @@ read_all_sas(
 \arguments{
 \item{path}{[\code{character(1)}]\cr the path to the directory containing all \code{.sas7bdat} files.}
 
-\item{...}{unused}
+\item{...}{passed to \code{\link[haven:read_sas]{haven::read_sas()}}}
 
 \item{format_file}{[\code{character(1)}]\cr the path to the file that should be used to apply formats. See section "Format file" below. Use \code{NULL} to not apply formats.}
 

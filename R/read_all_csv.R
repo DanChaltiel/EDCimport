@@ -5,7 +5,8 @@
 #' Read all `.csv` files in a directory, with labels if specified.
 #'
 #' @param path \[`character(1)`]\cr path to the directory containing `.csv` files.
-#' @param ... unused
+#' @param ... passed to [read.csv()] (and [read.table()])
+#' @param na.strings \[`character(1)`]\cr values to be interpreted as [NA] values.
 #' @param labels_from \[`character(1)`]\cr path to the file containing the labels. See section "Labels file" below.
 #' @param read_fun \[`function`]\cr if "guess" doesn't work properly, a function to read the files in path, e.g. `read.csv`, `read.csv2`,...
 #' @param clean_names_fun `r lifecycle::badge("deprecated")` use [edc_clean_names()] instead.
@@ -46,10 +47,10 @@ read_all_csv = function(path, ...,
                         use_cache="write", 
                         subdirectories=FALSE,
                         read_fun="guess", 
+                        na.strings=c("NA", "", " ", "."), 
                         datetime_extraction="guess", 
                         verbose=getOption("edc_read_verbose", 1),
                         clean_names_fun=NULL){
-  check_dots_empty()
   reset_manual_correction()
   assert(is_dir(path))
   
@@ -65,9 +66,13 @@ read_all_csv = function(path, ...,
   assert_class(read_fun, c("function"))
   clean_names_fun = .get_clean_names_fun(clean_names_fun)
 
+  read_function_args = lst(...)
+  if(!"na.string" %in% names(read_function_args)) read_function_args$na.strings = na.strings
+  .check_fun_args(read_function_args, fun=utils::read.csv, oth_fun=utils::read.table)
+  
   rtn = dir_ls(path, regexp="\\.csv", recurse=subdirectories) %>% 
-    .read_all(read_fun, clean_names_fun=clean_names_fun, path=path, 
-              use_cache=use_cache, verbose=verbose) %>% 
+    .read_all(read_fun, read_function_args, path=path, use_cache=use_cache, 
+              clean_names_fun=clean_names_fun, verbose=verbose) %>% 
     .add_labels(labels_file=labels_from, path, read_fun) %>% 
     .apply_sas_formats(format_file) %>%
     new_edc_database(

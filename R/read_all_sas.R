@@ -4,6 +4,7 @@
 #' Read all `.sas7bdat` files in a directory. Formats (factors levels) can be applied from a `procformat.sas` SAS file, or from a format dictionary. See the "Format file" section below. Column labels are read directly from the `.sas7bdat` files.
 #'
 #' @param path \[`character(1)`]\cr the path to the directory containing all `.sas7bdat` files.
+#' @param ... passed to [haven::read_sas()]
 #' @inheritParams read_all_xpt
 #' @inheritSection read_all_xpt Format file
 #'
@@ -35,7 +36,6 @@ read_all_sas = function(path, ...,
                         datetime_extraction="guess", 
                         verbose=getOption("edc_read_verbose", 1), 
                         clean_names_fun=NULL){
-  check_dots_empty()
   reset_manual_correction()
   assert(dir_exists(path), msg="Directory {.path {path}} does not exist.")
   
@@ -46,9 +46,13 @@ read_all_sas = function(path, ...,
   format_file = .locate_file(format_file, path)
   catalog_file = if(.is_catalog(format_file)) format_file else NULL
   
+  read_fun_args = lst(...)
+  read_fun_args$catalog_file = catalog_file
+  .check_fun_args(read_fun_args, haven::read_sas)
+  
   rtn = dir_ls(path, regexp="\\.sas7bdat$", recurse=subdirectories) %>% 
-    .read_all(haven::read_sas, clean_names_fun=clean_names_fun, 
-              catalog_file=catalog_file, path=path, use_cache=use_cache, verbose=verbose) %>%
+    .read_all(haven::read_sas, read_fun_args, path=path, use_cache=use_cache, 
+              clean_names_fun=clean_names_fun, verbose=verbose) %>%
     .clean_labels_utf8() %>% 
     new_edc_database(
       datetime_extraction=datetime_extraction,

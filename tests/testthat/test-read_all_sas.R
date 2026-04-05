@@ -41,6 +41,11 @@ test_that("read_all_sas() works", {
   expect_identical(attr(db2, "source"), "cache")
   expect_identical(names(db2), names(db1))
   
+  #pass n_max to read_sas()
+  db3 = read_all_sas(path, format_file=NULL, verbose=0, use_cache=FALSE, n_max=2)
+  expect_edc_database(db3, datasets=nms)
+  db3 %>% keep(is_dataset) %>% map_dbl(nrow) %>% expect_all_equal(2)
+  
   #errors
   read_all_sas(path, format_file="notfound.sas7bdat", verbose=FALSE) %>% 
     expect_error(class="edc_404_file_not_found")

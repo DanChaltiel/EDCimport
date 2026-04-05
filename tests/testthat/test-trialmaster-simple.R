@@ -45,3 +45,15 @@ test_that("Read a TM archive", {
       })
   })
 })
+
+
+#pass n_max to read_xpt()
+test_that("Add arguments", {
+  clean_lookup()
+
+  filename = test_path("CRF_Dan_Export_SAS_XPORT_2022_08_25_15_16.zip")
+  w = read_trialmaster(filename, use_cache=FALSE, verbose=0, n_max=0)
+  w %>% keep(is_dataset) %>% map_dbl(nrow) %>% expect_all_equal(0)
+  
+})
+

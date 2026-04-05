@@ -21,7 +21,7 @@ read_all_xpt(
 \arguments{
 \item{path}{[\code{character(1)}]\cr the path to the directory containing all \code{.xpt} files.}
 
-\item{...}{unused}
+\item{...}{passed to \code{\link[haven:read_xpt]{haven::read_xpt()}}}
 
 \item{format_file}{[\code{character(1)}]\cr the path to the file that should be used to apply formats. See section "Format file" below. Use \code{NULL} to not apply formats.}
 

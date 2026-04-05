@@ -9,9 +9,9 @@
          <int> <chr>      <chr>      <chr>      <chr> <chr>   <chr>     
       1      1 2010-04-26 2010-05-15 2010-05-12 X     data1   Incomplete
       2      1 2010-04-26 2010-05-15 2010-05-12 X     data1   Complete  
-      3      2 2010-04-15 2010-05-13 2010-04-27 Y     data1   Complete  
+      3      2 <NA>       <NA>       2010-04-27 Y     data1   Complete  
       4      2 2010-04-15 2010-05-13 2010-04-27 Y     data1   Complete  
-      5      3 2010-05-08 2010-04-22 2010-05-24 X     data1   Complete  
+      5      3 <NA>       <NA>       2010-05-24 X     data1   Complete  
       6      3 2010-05-08 2010-04-22 2010-05-24 X     data1   Complete  
       
       $data2
@@ -19,8 +19,8 @@
         subjid date4      date5      date6      crfname crfstat   
          <int> <chr>      <chr>      <chr>      <chr>   <chr>     
       1      1 2010-08-01 2010-05-22 2010-06-11 data2   No Data   
-      2      2 2010-07-31 2010-07-31 2010-06-19 data2   Incomplete
-      3      3 2010-06-03 2010-07-21 2010-06-12 data2   Complete  
+      2      2 <NA>       <NA>       2010-06-19 data2   Incomplete
+      3      3 <NA>       <NA>       2010-06-12 data2   Complete  
       4      4 2010-06-12 2010-06-03 2010-06-19 data2   Complete  
       5      5 2010-05-09 2010-06-14 2010-06-10 data2   Complete  
       6      6 2010-05-11 2010-05-22 2010-06-11 data2   Complete  
@@ -30,8 +30,8 @@
         subjid date7      date8      date9      date10     crfname crfstat   
          <int> <chr>      <chr>      <chr>      <chr>      <chr>   <chr>     
       1      1 2010-06-29 2010-07-15 2010-06-28 2010-08-01 data3   Complete  
-      2      2 2010-06-13 2010-06-23 2010-07-09 2010-07-31 data3   Incomplete
-      3      3 2010-06-29 2010-07-02 2010-07-13 2010-07-21 data3   Complete  
+      2      2 <NA>       <NA>       2010-07-09 2010-07-31 data3   Incomplete
+      3      3 <NA>       <NA>       2010-07-13 2010-07-21 data3   Complete  
       4      4 2010-06-13 2010-07-02 2010-07-07 2010-07-23 data3   Complete  
       5      5 2010-06-17 2010-06-26 2010-07-13 2010-07-14 data3   Complete  
       6      6 2010-07-03 2010-06-22 2010-07-08 2010-07-20 data3   Complete  

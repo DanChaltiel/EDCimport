@@ -18,7 +18,7 @@ read_trialmaster(
 \arguments{
 \item{archive}{[\code{character(1)}]\cr the path to the archive}
 
-\item{...}{unused}
+\item{...}{passed to \code{\link[=read_all_xpt]{read_all_xpt()}} (and then to \code{\link[haven:read_xpt]{haven::read_xpt()}})}
 
 \item{use_cache}{[\code{mixed(1)}: "write"]\cr controls the \code{.rds} cache. If \code{TRUE}, read the cache if any or extract the archive and create a cache. If \code{FALSE} extract the archive without creating a cache file. Can also be \code{"read"} or \code{"write"}.}
 

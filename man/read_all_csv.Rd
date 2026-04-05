@@ -12,6 +12,7 @@ read_all_csv(
   use_cache = "write",
   subdirectories = FALSE,
   read_fun = "guess",
+  na.strings = c("NA", "", " ", "."),
   datetime_extraction = "guess",
   verbose = getOption("edc_read_verbose", 1),
   clean_names_fun = NULL
@@ -20,7 +21,7 @@ read_all_csv(
 \arguments{
 \item{path}{[\code{character(1)}]\cr path to the directory containing \code{.csv} files.}
 
-\item{...}{unused}
+\item{...}{passed to \code{\link[=read.csv]{read.csv()}} (and \code{\link[=read.table]{read.table()}})}
 
 \item{labels_from}{[\code{character(1)}]\cr path to the file containing the labels. See section "Labels file" below.}
 
@@ -31,6 +32,8 @@ read_all_csv(
 \item{subdirectories}{[\code{logical(1)}]\cr whether to read subdirectories}
 
 \item{read_fun}{[\code{function}]\cr if "guess" doesn't work properly, a function to read the files in path, e.g. \code{read.csv}, \code{read.csv2},...}
+
+\item{na.strings}{[\code{character(1)}]\cr values to be interpreted as \link{NA} values.}
 
 \item{datetime_extraction}{[\code{POSIXt(1)}]\cr the datetime of the data extraction. Default to the most common date of last modification in \code{path}.}
 
