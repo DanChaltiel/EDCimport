@@ -151,13 +151,8 @@ sidebar_datatable = function(lookup){
 
 #' @noRd
 #' @keywords internal
-viewer_settings_modal = function(hide_filtered_default, n_filtered, hide_common_default) {
-    #   observe({
-    #   data = data_sidebar()
-    #   n_filtered = data %>% filter(exclude) %>% nrow()
-    #   updateCheckboxInput(session, "hide_filtered", 
-    #                       label=glue("Hide empty datasets in the side panel (N={n_filtered})"))
-    # })
+viewer_settings_modal = function(hide_filtered_default, n_filtered, 
+                                 hide_common_default) {
   hide_filtered_label = glue("Hide empty datasets in the side panel (N={n_filtered})")
   shiny::modalDialog(
     id = "modal_settings",

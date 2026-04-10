@@ -179,6 +179,7 @@ edc_viewer_server = function(datasets, lookup) {
     })
     
     #output: hide common columns helper text ----
+    #should update on slider change, so cannot be in viewer_settings_modal()
     output$hide_common_result = renderText({
       x = hidden_common_cols()
       if(is.null(x)) return("")
@@ -186,7 +187,7 @@ edc_viewer_server = function(datasets, lookup) {
     })
     
     #output: data information modal on button click ----
-    output$data_info = renderDT({
+    dt_info = reactive({
       x = datasets[[dataset_selected()]]
       tibble(
         "Index"=seq(ncol(x)), 
@@ -205,6 +206,9 @@ edc_viewer_server = function(datasets, lookup) {
         ) %>%
         DT::formatPercentage(columns = 4, digits = 1)
     })
+    output$data_info = renderDT({
+      dt_info()
+    })
     
     #reactive for [output: sidebar data choice list] ----
     data_sidebar = reactive({
@@ -219,14 +223,26 @@ edc_viewer_server = function(datasets, lookup) {
           row_color = case_when(!has_subjid~"red", is_error~"grey", .default=NA)
         )
     })
+
+    #output: sidebar data choice list ----
+    dt_sidebar = reactive({
+      lookup_tbl = data_sidebar()
+      if(isTRUE(input$hide_filtered)){
+        lookup_tbl = lookup_tbl %>% filter(!exclude)
+      }    
+      sidebar_datatable(lookup_tbl)
+    })
+    output$input_table = renderDT({
+      dt_sidebar()
+    })
     
     #reactive for [output: datatable body] ----
-    data_current = reactive({
+    data_main = reactive({
       req(dataset_selected())
       dataset = datasets[[dataset_selected()]]
       if (is.null(dataset)) return(tibble())
-      
-      hidden = input$hidden_hide %>% stringr::str_split_1("___")
+      hidden_hide = input$hidden_hide %0% ""
+      hidden = hidden_hide %>% stringr::str_split_1("___")
       subjid_selected = input$subjid_selected
       all_selected = length(subjid_selected) == 0
       no_problem = length(subjid_cols) == 0
@@ -240,25 +256,18 @@ edc_viewer_server = function(datasets, lookup) {
         )
     })
 
-    #output: sidebar data choice list ----
-    output$input_table = renderDT({
-      selected_subjid = input$subjid_selected
-      lookup_tbl = data_sidebar()
-      if(isTRUE(input$hide_filtered)){
-        lookup_tbl = lookup_tbl %>% filter(!exclude)
-      }    
-      sidebar_datatable(lookup_tbl)
-    })
-
     #output: datatable body ----
-    output$table = renderDT({      
-      main_datatable(
-        data = data_current(),
+    dt_main = reactive({
+       main_datatable(
+        data = data_main(),
         subjid_cols = subjid_cols,
         hidden_fixed = input$hidden_fixed,
         hidden_group = input$hidden_group,
         hidden_color = input$hidden_color
       )
+    })
+    output$table = renderDT({
+      dt_main()
     })
   }
 }
