@@ -28,34 +28,40 @@
 edc_viewer = function(data=NULL, ..., background=TRUE, title=NULL, port=1209, replace=FALSE){
   check_installed(c("DT", "bslib", "shiny"), "for `edc_viewer()` to work.")
   check_dots_empty()
+  
+  shiny_url = paste0("http://127.0.0.1:", port)
+  input = .resolve_input(data)
+  
+  if(isTRUE(background)){
+    .run_background(input$datasets, input$lookup, title, port, shiny_url, replace)
+    return(invisible(edcimport_env$process))
+  }
+  
+  browseURL(shiny_url)
+  x=.launch_shiny(input$datasets, input$lookup, title, port)
+  invisible(x)
+}
+
+#' @noRd
+#' @keywords internal
+.resolve_input = function(data){
   if(is.null(data)){
     lookup = edc_lookup(dataset)
     datasets = get_datasets(lookup)
   } else {
     if(inherits(data, "flextable")) data = data$body$dataset
     datasets = data
-    if(is.data.frame(data)) datasets = list(data) %>% set_names(caller_arg(data))
     if(!is_named(data)){
       cli_abort("Datasets in {.arg data} should have a name.", 
                 class="edc_lookup_unnamed")
     }    
+    if(is.data.frame(data)) datasets = list(data) %>% set_names(caller_arg(data))
     lookup = build_lookup(datasets) %>% 
       extend_lookup() %>% 
       arrange(match(dataset, names(datasets)))
   }
-  shiny_url = paste0("http://127.0.0.1:", port)
-  
-  
-  if(isTRUE(background)){
-    .run_background(datasets, lookup, title, port, shiny_url, replace)
-    return(invisible(edcimport_env$process))
-  }
-  
-  browseURL(shiny_url)
-  x=.launch_shiny(datasets, lookup, title, port)
-  invisible(x)
+  lst(datasets, lookup)
 }
-
 
 #' @noRd
 #' @keywords internal
