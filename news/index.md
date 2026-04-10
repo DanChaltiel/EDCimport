@@ -44,7 +44,7 @@ CRAN release: 2026-01-10
   ([\#109](https://github.com/DanChaltiel/EDCimport/issues/109)).
 - Fixed
   [`assert_no_duplicate()`](https://danchaltiel.github.io/EDCimport/reference/assert_no_duplicate.md)
-  so it works in table with both columns `SUBJID` and `subjid`
+  so it works in a table with both columns `SUBJID` and `subjid`
   ([\#105](https://github.com/DanChaltiel/EDCimport/issues/105)).
 - Fixed bugs in
   [`edc_left_join()`](https://danchaltiel.github.io/EDCimport/reference/edc_left_join.md)

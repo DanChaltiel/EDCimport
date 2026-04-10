@@ -127,7 +127,7 @@ haven::write_xpt(esoph, paste0(path, "/esoph.xpt"))
 
 db = read_all_xpt(path, format_file=NULL, subdirectories=TRUE) %>% 
   set_project_name("My great project")
-#> Writing cache /tmp/Rtmpb4UsAR/read_all_xpt/EDCimport_cache_d1da0d1b.rds
+#> Writing cache /tmp/Rtmpx3fTgt/read_all_xpt/EDCimport_cache_5b38f14b.rds
 #> Warning: Option "edc_lookup" has been overwritten.
 db
 #> ── EDCimport database ──────────────────────────────────────────────────────────
@@ -136,7 +136,7 @@ db
 #>   environment.
 #> ℹ Use `EDCimport::edc_lookup()` to see the summary table.
 edc_lookup()
-#> ── Lookup table - My great project (extraction of 2026-04-05) - EDCimport v0.7.0
+#> ── Lookup table - My great project (extraction of 2026-04-10) - EDCimport v0.7.0
 #>   dataset        nrow  ncol  n_id rows_per_id crfname
 #>   <chr>         <dbl> <dbl> <int>       <dbl> <chr>  
 #> 1 attenu          182     5     0          NA NA     

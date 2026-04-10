@@ -41,3 +41,16 @@ edc_viewer(
 - replace:
 
   whether to replace a previously running app on the same port.
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+# View the loaded datasets from the database
+db = edc_example()
+load_database(db)
+edc_viewer()
+# View specific datasets, on another port
+edc_viewer(list(mtcars=mtcars, iris=iris), port=1210)
+} # }  
+```
