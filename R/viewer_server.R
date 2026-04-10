@@ -22,7 +22,6 @@ edc_viewer_server = function(datasets, lookup) {
   
   .set_lookup(lookup, verbose=FALSE) #needed for bg launch
   subjid_cols = get_subjid_cols(lookup)
-  
   project_name = attr(lookup, "project_name") %0% ""
   
   function(input, output, session) {
@@ -35,8 +34,10 @@ edc_viewer_server = function(datasets, lookup) {
     if(inherits(p2, "try-error")) p2=ggplot()
     
     #init
-    selectRows(dataTableProxy("input_table"), selected=1)
-    updateSelectInput(session, "subjid_selected", choices=c(ids))
+    session$onFlushed(once = TRUE, function() {
+      selectRows(dataTableProxy("input_table"), selected=1)
+      updateSelectInput(session, "subjid_selected", choices=c(ids))
+    })
     
     hidden_common_cols = reactive({
       if(is.null(input$hide_common) || input$hide_common==0) return(NULL)
@@ -46,7 +47,7 @@ edc_viewer_server = function(datasets, lookup) {
         pull(column)
     })
     
-    #On row selected: show datatable ----
+    #on row selected: show datatable ----
     observeEvent(input$input_table_rows_selected, {
       selected = input$input_table_rows_selected
       dataset_selected(names(datasets[selected]))
@@ -64,72 +65,24 @@ edc_viewer_server = function(datasets, lookup) {
     
     #on Button Data Info: show infos ----
     observeEvent(input$btn_data_info, {
-      showModal(
-        modalDialog(
-          id="modal_data_info",
-          title = glue("Details for dataset `{dataset_selected()}`"),
-          size="xl",
-          card(
-            style="height:75vh; overflow:auto;",
-            DTOutput("data_info")
-          ),
-          easyClose = TRUE,
-          footer = NULL
-        )
-      )
+      dataset = dataset_selected()
+      showModal(viewer_info_modal(dataset))
     })
     
     #on Button Settings: show the Settings dialog ----
-    observeEvent(input$btn_settings, {
-      hide_filtered_default = input$hide_filtered %0% FALSE
-      hide_common_default = input$hide_common %0% 0
-      showModal(
-        modalDialog(
-          id="modal_settings",
-          title = "Settings",
-          card(
-            checkboxInput("hide_filtered", "Hide empty datasets in the side panel", 
-                          value=hide_filtered_default)
-          ),
-          card(
-            sliderInput("hide_common", "Hide columns shared by this proportion of datasets (set to 0 to disable)", 
-                        min=0, max=100, value=hide_common_default, post=" %"),
-            textOutput("hide_common_result")
-          ),
-          easyClose = TRUE,
-          footer = NULL
-        )
-      )
+    observeEvent(input$btn_settings, {      
+      lookup_tbl = data_sidebar()
+      n_filtered = lookup_tbl %>% filter(exclude) %>% nrow()
+      showModal(viewer_settings_modal(
+        hide_filtered_default = input$hide_filtered %0% FALSE,  
+        n_filtered = n_filtered,
+        hide_common_default = input$hide_common %0% 0
+      ))
     })
     
     #on Button Search: show the Search dialog ----
     observeEvent(input$btn_search, {
-      showModal(
-        modalDialog(
-          title = div(
-            id="modal_search_header",
-            style = c("width: 100%; display: flex; justify-content: space-between;",
-                      "gap: 50px; align-items: center;"),
-            div(
-              style = "display: flex; flex-grow: 1; align-items: center;",
-              textInput("search_input", label=NULL, placeholder="Enter a keyword", width="100%")
-            ),
-            div(
-              style = "display: flex; align-items: center; gap: 10px;",
-              div(
-                style = "display: flex; align-items: center; height: 38px;", # Ajuste la hauteur
-                bslib::input_switch("search_type_value", "for column", width = "175px")
-              ),
-              actionButton("search_validate", "Search", icon = icon("search"))
-            )
-          ),
-          uiOutput("search_error"),
-          DTOutput("search_result"),
-          easyClose = TRUE,
-          size = "xl",
-          footer = NULL
-        )
-      )
+      showModal(viewer_search_modal())
     })
     
     #on Search validation: show results ----
@@ -164,8 +117,7 @@ edc_viewer_server = function(datasets, lookup) {
             datatable(escape=FALSE)
         })
       }
-      
-      
+
     })
     
     #on Button Summary: show modal ----
@@ -205,7 +157,6 @@ edc_viewer_server = function(datasets, lookup) {
       )
     })
     
-    
     #output: datatable header text ----
     output$dataset_name = renderText({
       if(is.null(dataset_selected())) return("Loading")
@@ -231,7 +182,7 @@ edc_viewer_server = function(datasets, lookup) {
     output$hide_common_result = renderText({
       x = hidden_common_cols()
       if(is.null(x)) return("")
-      glue("Columns hided: {paste(x, collapse=', ')}")
+      glue("Columns hidden: {paste(x, collapse=', ')}")
     })
     
     #output: data information modal on button click ----
@@ -255,73 +206,53 @@ edc_viewer_server = function(datasets, lookup) {
         DT::formatPercentage(columns = 4, digits = 1)
     })
     
-    #output: sidebar data choice list ----
-    output$input_table = renderDT({
+    #reactive for [output: sidebar data choice list] ----
+    data_sidebar = reactive({
       selected_subjid = input$subjid_selected
       all_subjid = unlist(lookup$subjids) %>% unique() %>% sort()
       if(is.null(selected_subjid)) selected_subjid = all_subjid
-      
-      lookup = lookup %>% 
+      lookup %>% 
         mutate(
           has_subjid = map_lgl(subjids, ~any(selected_subjid %in% .x)),
           is_error = !is.na(crfname) & crfname=="** Error in source file **",
           exclude = !has_subjid | is_error,
           row_color = case_when(!has_subjid~"red", is_error~"grey", .default=NA)
         )
-      n_filtered = lookup %>% filter(exclude) %>% nrow()
-      
-      updateCheckboxInput(session, "hide_filtered", 
-                          label=glue("Hide empty datasets in the side panel (N={n_filtered})"))
-      
-      if(isTRUE(input$hide_filtered) && length(selected_subjid)>0){
-        lookup = lookup %>% filter(!exclude)
-      }
-      
-      crf_name_i = which(names(lookup)=="crfname") - 1
-      rtn = lookup %>% 
-        as_tibble() %>% 
-        datatable(
-          rownames = FALSE,
-          selection = "single",
-          filter = "none",
-          options = lst(
-            pageLength = 500,
-            dom = "t",
-            columnDefs = list(list(visible=FALSE, targets=seq(3, ncol(lookup)-1))),
-            rowCallback = JS(
-              "function(row, data) {",
-                glue("$('td', row).attr('title', data[{crf_name_i}]).addClass('edc_label');"),
-              "}"
-            ),
-          )
-        ) %>% 
-        formatStyle(
-          columns = TRUE,
-          valueColumns="row_color",
-          color = styleEqual(levels = c("red", "grey"), values = c("red", "grey")),
-          `white-space` = "nowrap",
-          `height` = "20px"
-        )
-      
-      rtn
     })
     
-    #output: datatable body ----
-    output$table = renderDT({
+    #reactive for [output: datatable body] ----
+    data_current = reactive({
       req(dataset_selected())
-      subjid_selected = input$subjid_selected
-      all_selected = length(subjid_selected)==0
-      if(is.null(datasets[[dataset_selected()]])) return(tibble())
+      dataset = datasets[[dataset_selected()]]
+      if (is.null(dataset)) return(tibble())
       
       hidden = input$hidden_hide %>% stringr::str_split_1("___")
-      
-      data = datasets[[dataset_selected()]] %>% 
+      subjid_selected = input$subjid_selected
+      all_selected = length(subjid_selected) == 0
+      no_problem = length(subjid_cols) == 0
+      dataset %>%
         select(-any_of(hidden_common_cols()), -any_of(hidden)) %>% 
         relocate(any_of2(subjid_cols), .before=1) %>% 
         arrange(pick(any_of2(subjid_cols))) %>% 
-        filter(length(subjid_cols) == 0 |
-                 if_any(any_of2(subjid_cols), 
-                        ~all_selected | .x %in% subjid_selected))
+        filter(
+           no_problem | all_selected |
+            if_any(any_of2(subjid_cols), ~ .x %in% subjid_selected)
+        )
+    })
+
+    #output: sidebar data choice list ----
+    output$input_table = renderDT({
+      selected_subjid = input$subjid_selected
+      lookup_tbl = data_sidebar()
+      if(isTRUE(input$hide_filtered)){
+        lookup_tbl = lookup_tbl %>% filter(!exclude)
+      }    
+      sidebar_datatable(lookup_tbl)
+    })
+
+    #output: datatable body ----
+    output$table = renderDT({      
+      data = data_current()
       
       ##ContextMenu: Fixed Column ----
       fixed = input$hidden_fixed %>% stringr::str_split_1("___")
@@ -345,127 +276,13 @@ edc_viewer_server = function(datasets, lookup) {
         row_style_col = input$hidden_color
       }
       
-      data %>% 
-        mutate_all(~str_remove_all(.x, "<.*?>")) %>% #remove HTML tage
-        datatable(
-          # rownames = FALSE,
-          selection = "none",
-          filter = "top",
-          
-          # height = "80%",
-          # plugins = "ellipsis",
-          extensions = c("FixedHeader", "FixedColumns", "ColReorder", "RowGroup", "KeyTable"),
-          escape = FALSE, # Autorise HTML
-          colnames = colnames_with_hover(data), # apply HTML names on hover
-          options = lst(
-            pageLength = 15,
-            lengthMenu = list(c(15, 50, -1), 
-                              c('15', '50', 'All')),
-            fixedHeader = TRUE, #Not working as datatable not on page top
-            # scrollY = "50%",
-            # dom = "tp",
-            # dom = 'Blfrtip',
-            # autoWidth = TRUE,
-            # scrollX = TRUE,
-            keys = TRUE, #KeyTable: use keyboard to navigate
-            rowGroup = row_group,
-            colReorder = TRUE,
-            columnDefs = list(hide_first(),
-                              dt_ellipsis(data, n=10)),
-              
-            fixedColumns = list(leftColumns = length(fixed)),
-          )
-        ) %>% 
-        formatStyle(
-          columns = TRUE,
-          `white-space` = "nowrap",
-          `text-overflow` = "ellipsis",
-          `overflow` = "hidden",
-          # `max-width` = "150px",
-          `height` = "20px"
-        ) %>% 
-        formatStyle(
-          columns = TRUE,
-          valueColumns=row_style_col,
-          backgroundColor = row_style
-        ) %>% 
-        formatStyle(
-          columns = fixed,
-          backgroundColor = "white"
-        )
+      main_datatable(
+        data = data,
+        fixed = fixed,
+        row_group = row_group,
+        row_style = row_style,
+        row_style_col = row_style_col
+      )
     })
   }
-}
-
-
-# Utils ---------------------------------------------------------------------------------------
-
-
-#' Internal util to load functions without importFrom
-#' @noRd
-#' @examples
-#' import_to_list("#' @importFrom bslib card card_body sidebar")
-#' import_to_list("shiny actionButton selectInput actionLink tags textOutput")
-#' @importFrom stringr str_remove
-import_to_list = function(x){
-  x = str_remove(x, "#' @importFrom ") %>% stringr::str_split_1(" ")
-  paste0(x[-1], "=", x[1], "::", x[-1]) %>% paste(collapse=";")
-}
-
-#' @noRd
-#' @keywords internal
-#' @importFrom dplyr select
-#' @importFrom purrr keep map
-get_ids = function(datasets, subjid_cols){
-  ids = datasets %>%
-    keep(is.data.frame) %>% 
-    map(~select(.x, any_of2(subjid_cols))) %>% 
-    unlist() %>% unique() %>% sort()
-  if(!is.null(ids) && can_be_numeric(ids)){
-    ids = as.numeric(ids) %>% unique() %>% sort()
-  }
-  ids
-}
-
-
-#' @noRd
-#' @keywords internal
-hide_first = function(){
-  list(targets=0, visible=FALSE)
-}
-
-#' @importFrom glue glue
-#' @importFrom purrr map_lgl
-#' @noRd
-#' @keywords internal
-dt_ellipsis = function(data, n){
-  list(list(
-    targets = unname(which(map_lgl(data, ~is.character(.x)||is.factor(.x)))),
-    render = DT::JS(
-      "function(data, type, row, meta) {",
-      "if(data==null || data==undefined) return ' ';",
-      glue("return type === 'display' && data.length > {n} ?"),
-      glue("'<span title=\"' + data + '\">' + data.substr(0, {n}) + '...</span>' : data;"),
-      "}"
-    )
-  ))
-}
-
-
-#' Set the "label" dataset attribute on the "title" HTML attribute
-#' Makes the column header show the column label on hover
-#' @noRd
-#' @keywords internal
-#' @importFrom glue glue
-#' @importFrom purrr imap_chr
-colnames_with_hover = function(data){
-  data %>% 
-    imap_chr(~{
-      p_na = mean(is.na(.x)) %>% percent()
-      label = attr(.x, "label") %0% ""
-      if(label != "") label = paste0(label, "<br>")
-      glue('<span class="data_column edc_label" title="{label}NA: {p_na}" data-bs-html="true">
-           {.y}</span>')
-    }) %>% 
-    unname()
 }
