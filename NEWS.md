@@ -12,6 +12,7 @@ For example, `read_all_csv(nrows=2)` will pass `nrows` to `utils::read.csv()`, o
 
 ### Bug fixes & Improvements
 
+-   Fixed `edc_viewer()` not working with custom datasets and improved help
 -   Fixed `edc_swimmerplot()` throwing an error in case of misread dataset
 -   Fixed `edc_swimmerplot()` messing up with numeric `id_subset` when SUBJID is a factor
 
@@ -31,7 +32,7 @@ For example, `read_all_csv(nrows=2)` will pass `nrows` to `utils::read.csv()`, o
 
 -   Fixed modifiers `edc_clean_names()`, `edc_unify_subjid()`, and `edc_split_mixed()` so they don't strip database attributes (like project name) (#111).
 -   Fixed `edc_data_stop()` so it works without a SUBJID and defaults to no issue number (#109).
--   Fixed `assert_no_duplicate()` so it works in table with both columns `SUBJID` and `subjid` (#105).
+-   Fixed `assert_no_duplicate()` so it works in a table with both columns `SUBJID` and `subjid` (#105).
 -   Fixed bugs in `edc_left_join()` with case-sensitivity on SUBJID (#108, #117).
 -   Improved `save_edc_data_warnings()` with options to hide the resolved issues and to not include stops, and better default path (#107, #110, #112)
 -   Improved reading functions so that all tables are sorted by SUBJID (#115).

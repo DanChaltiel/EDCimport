@@ -29,3 +29,13 @@ edc_viewer(
 \description{
 Run a Shiny application that allows to browse the datasets.
 }
+\examples{
+\dontrun{
+# View the loaded datasets from the database
+db = edc_example()
+load_database(db)
+edc_viewer()
+# View specific datasets, on another port
+edc_viewer(list(mtcars=mtcars, iris=iris), port=1210)
+}  
+}

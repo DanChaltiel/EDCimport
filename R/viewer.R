@@ -15,6 +15,16 @@
 #' @importFrom dplyr arrange
 #' @importFrom rlang caller_arg check_dots_empty check_installed is_named set_names
 #' @importFrom utils browseURL
+#' 
+#' @examples
+#' \dontrun{
+#' # View the loaded datasets from the database
+#' db = edc_example()
+#' load_database(db)
+#' edc_viewer()
+#' # View specific datasets, on another port
+#' edc_viewer(list(mtcars=mtcars, iris=iris), port=1210)
+#' }  
 edc_viewer = function(data=NULL, ..., background=TRUE, title=NULL, port=1209, replace=FALSE){
   check_installed(c("DT", "bslib", "shiny"), "for `edc_viewer()` to work.")
   check_dots_empty()
