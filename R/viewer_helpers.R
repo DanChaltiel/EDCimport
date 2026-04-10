@@ -3,7 +3,49 @@
 
 #' @noRd
 #' @keywords internal
-main_datatable = function(data, fixed, row_group, row_style, row_style_col) {
+.prepare_main_datatable = function(data, subjid_cols, hidden_fixed, hidden_group, hidden_color) {
+  hidden_fixed = if (is.null(hidden_fixed)) "" else hidden_fixed
+  hidden_group = if (is.null(hidden_group)) "" else hidden_group
+  hidden_color = if (is.null(hidden_color)) "" else hidden_color
+  
+  fixed = hidden_fixed |>
+    stringr::str_split_1("___")
+  
+  fixed = c(subjid_cols, fixed, hidden_group, hidden_color) |>
+    unique()
+  
+  fixed = fixed[nzchar(fixed)] |>
+    intersect(names(data))
+  
+  data = data |>
+    relocate(any_of2(fixed), .before = 1)
+  
+  i = which(names(data) == hidden_group)
+  row_group = if (length(i) == 0) NULL else list(dataSrc = i)
+  
+  col_color = data[[hidden_color]]
+  row_style = NULL
+  row_style_col = NULL
+  
+  if (!is.null(col_color)) {
+    lvl = levels(factor(col_color) |> forcats::fct_na_value_to_level())
+    pal = scales::viridis_pal(alpha = 0.5)(length(lvl))
+    row_style = DT::styleEqual(levels = lvl, values = pal)
+    row_style_col = hidden_color
+  }
+  
+  list(
+    data = data,
+    fixed = fixed,
+    row_group = row_group,
+    row_style = row_style,
+    row_style_col = row_style_col
+  )
+}
+
+#' @noRd
+#' @keywords internal
+.build_main_datatable = function(data, fixed, row_group, row_style, row_style_col) {
   data %>% 
     mutate(across(where(~ is.character(.x) || is.factor(.x)), 
            ~ str_remove_all(.x, "<.*?>"))) %>% #remove HTML tags
@@ -53,6 +95,26 @@ main_datatable = function(data, fixed, row_group, row_style, row_style_col) {
       columns = fixed,
       backgroundColor = "white"
     )
+}
+
+#' @noRd
+#' @keywords internal
+main_datatable = function(data, subjid_cols, hidden_fixed, hidden_group, hidden_color) {
+  x = .prepare_main_datatable(
+    data = data,
+    subjid_cols = subjid_cols,
+    hidden_fixed = hidden_fixed,
+    hidden_group = hidden_group,
+    hidden_color = hidden_color
+  )
+  
+  .build_main_datatable(
+    data = x$data,
+    fixed = x$fixed,
+    row_group = x$row_group,
+    row_style = x$row_style,
+    row_style_col = x$row_style_col
+  )
 }
 
 #' @noRd

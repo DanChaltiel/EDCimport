@@ -252,36 +252,12 @@ edc_viewer_server = function(datasets, lookup) {
 
     #output: datatable body ----
     output$table = renderDT({      
-      data = data_current()
-      
-      ##ContextMenu: Fixed Column ----
-      fixed = input$hidden_fixed %>% stringr::str_split_1("___")
-      fixed = c(subjid_cols, fixed, input$hidden_group, input$hidden_color) %>% unique()
-      fixed = fixed[nzchar(fixed)] %>% intersect(names(data))
-      data = data %>% 
-        relocate(any_of2(fixed), .before=1)
-      
-      ##ContextMenu: Row Group ----
-      i = which(names(data)==input$hidden_group)
-      row_group = list(dataSrc = i)
-      if(length(i)==0) row_group=NULL
-      
-      ##ContextMenu: Row Color ----
-      col_color = data[[input$hidden_color]]
-      row_style = row_style_col = NULL
-      if(!is.null(col_color)){
-        lvl = levels(factor(col_color) %>% forcats::fct_na_value_to_level())
-        pal = scales::viridis_pal(alpha=0.5)(length(lvl))
-        row_style = styleEqual(levels = lvl, values=pal)
-        row_style_col = input$hidden_color
-      }
-      
       main_datatable(
-        data = data,
-        fixed = fixed,
-        row_group = row_group,
-        row_style = row_style,
-        row_style_col = row_style_col
+        data = data_current(),
+        subjid_cols = subjid_cols,
+        hidden_fixed = input$hidden_fixed,
+        hidden_group = input$hidden_group,
+        hidden_color = input$hidden_color
       )
     })
   }
