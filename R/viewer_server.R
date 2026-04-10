@@ -319,8 +319,9 @@ edc_viewer_server = function(datasets, lookup) {
         select(-any_of(hidden_common_cols()), -any_of(hidden)) %>% 
         relocate(any_of2(subjid_cols), .before=1) %>% 
         arrange(pick(any_of2(subjid_cols))) %>% 
-        filter(if_any(any_of2(subjid_cols), 
-                      ~all_selected | .x %in% subjid_selected))
+        filter(length(subjid_cols) == 0 |
+                 if_any(any_of2(subjid_cols), 
+                        ~all_selected | .x %in% subjid_selected))
       
       ##ContextMenu: Fixed Column ----
       fixed = input$hidden_fixed %>% stringr::str_split_1("___")
