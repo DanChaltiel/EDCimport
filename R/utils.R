@@ -173,21 +173,28 @@ guess_read_function = function(file){
 }
 
 #' @importFrom cli cli_abort
-#' @importFrom rlang caller_env caller_call
+#' @importFrom purrr map_lgl
+#' @importFrom rlang caller_env caller_call is_missing
 check_dots_named = function(env = caller_env(), call = caller_call()) {
-  dot_names = eval(quote(...names()), envir=env)
-  dot_length = eval(quote(...length()), envir=env)
-  bad_i = which(!nzchar(dot_names))
-  if(is.null(dot_names) && dot_length>0){
-    bad_i = seq(dot_length)
+  cl = eval(quote(match.call(expand.dots = FALSE)), envir = env)
+  dots = as.list(cl$...)
+  if (is.null(dots)) {
+    return(invisible())
   }
+  
+  missing_args = map_lgl(dots, is_missing)
+  dot_names = names(dots) %0% rep("", length(dots))
+  bad_i = which(!missing_args & !nzchar(dot_names))
+  
   if(length(bad_i)>0){
     cli_abort(
       c("!"="All arguments in `...` must be named.",
         "x"="{qty(length(bad_i))} Unnamed argument{?s} at ind{?ex/ices} {bad_i}."), 
-      call=call
+      call=call,
+      class="dots_named_error"
     )
   }
+  
   invisible()
 }
 
