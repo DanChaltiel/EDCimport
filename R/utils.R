@@ -172,26 +172,23 @@ guess_read_function = function(file){
   }
 }
 
+
+#' @noRd
+#' @keywords internal
 #' @importFrom cli cli_abort
-#' @importFrom purrr map_lgl
-#' @importFrom rlang call_match caller_env caller_call frame_call frame_fn is_missing
+#' @importFrom rlang caller_env caller_call enquos eval_bare expr names2
 check_dots_named = function(env = caller_env(), call = caller_call()) {
-  cl = call_match(
-    call = frame_call(env),
-    fn = frame_fn(env),
-    dots_env = env,
-    dots_expand = FALSE
+  # !!quote() hides `...` from R CMD check; it is evaluated in `env`.
+  dots = eval_bare(
+    expr(enquos(!!quote(...), .named = FALSE, .ignore_empty = "all")),
+    env = env
   )
   
-  dots = as.list(cl$...)
-  if (is.null(dots)) {
+  if(length(dots)==0) {
     return(invisible())
   }
   
-  missing_args = map_lgl(dots, is_missing)
-  dot_names = names(dots) %0% rep("", length(dots))
-  bad_i = which(!missing_args & !nzchar(dot_names))
-  
+  bad_i = which(names2(dots) == "")
   if(length(bad_i)>0){
     cli_abort(
       c("!"="All arguments in `...` must be named.",

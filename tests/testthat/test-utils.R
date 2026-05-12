@@ -241,8 +241,8 @@ test_that("check_dots_named() works as expected", {
     check_dots_named()
     TRUE
   }
-  g = function(...){
-    f(...)
+  g = function(y, ...){
+    f(x=1, ...)
   }
   
   # empty dots
@@ -252,10 +252,12 @@ test_that("check_dots_named() works as expected", {
   # fully named
   expect_true(f(a = 1))
   expect_true(f(a = 1, b = 2))
+  expect_true(g(a = 1, b = 2))
   
   # unnamed arguments -> error
   expect_true(f(1))
   expect_error(f(1, 2), class = "dots_named_error")
+  expect_error(g(1, 2), class = "dots_named_error")
   
   # trailing comma ignored
   expect_true(f(a = 1, ))
@@ -264,8 +266,10 @@ test_that("check_dots_named() works as expected", {
   # internal empty arguments ignored
   expect_true(f(a = 1, , b = 2))
   expect_true(f(a = 1, , , b = 2, ))
+  expect_true(g(a = 1, , , b = 2, ))
   
   # still reject unnamed args even with empty ones
   expect_error(f(a = 1, 2, 3, ), class = "dots_named_error")
   expect_error(f(a = 1, , 2, b = 3), class = "dots_named_error")
+  expect_error(g(a = 1, , 2, b = 3), class = "dots_named_error")
 })
