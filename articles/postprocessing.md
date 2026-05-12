@@ -31,6 +31,7 @@ This is especially convenient for joining your data and checking for
 missing patients.
 
 ``` r
+
 library(EDCimport)
 db1 = edc_example()
 load_database(db1)
@@ -79,6 +80,7 @@ already provides clean column names, let’s convert all columns to
 **uppercase**:
 
 ``` r
+
 library(EDCimport)
 db = edc_example() %>% 
   edc_clean_names(toupper)
@@ -108,6 +110,7 @@ you have two long-format variables (one value per observation) and one
 wide-format variable (one value per subject).
 
 ``` r
+
 head(long_mixed)
 #> # A tibble: 6 × 6
 #>   SUBJID CRFNAME                    LONG1 LONG2 SHORT CRFSTAT   
@@ -128,6 +131,7 @@ With
 you can split this dataset into two, one `short` and one `long`:
 
 ``` r
+
 db = edc_example() %>% 
   edc_split_mixed(long_mixed)
 load_database(db)
@@ -158,6 +162,7 @@ head(long_mixed_long)  #one row per observation
 Obviously, these functions can be piped to one another:
 
 ``` r
+
 db = edc_example() %>% 
   edc_split_mixed(long_mixed)  %>% 
   edc_unify_subjid(preprocess=~paste0("#", .x))%>% 

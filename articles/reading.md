@@ -40,6 +40,7 @@ You can then load your datasets into the global environment with
 [`load_database()`](https://danchaltiel.github.io/EDCimport/reference/load_database.md).
 
 ``` r
+
 library(EDCimport)
 db = read_all_sas("path/to/my/files/folder", format_file="procformat.sas")
 print(db)
@@ -61,6 +62,7 @@ few useful tools:
   to search the database for a column/label or for an actual value.
 
 ``` r
+
 db = edc_example()
 load_database(db)
 edc_lookup()
@@ -110,6 +112,7 @@ The simplest way to explore your database is by running
 which launches a local Shiny application:
 
 ``` r
+
 db = edc_example()
 load_database(db)
 edc_viewer()

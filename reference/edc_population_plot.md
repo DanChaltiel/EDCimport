@@ -30,6 +30,7 @@ a ggplot
 ## Examples
 
 ``` r
+
 #in real word code, use filter and pull to get these vectors
 pop_total = c(1:180) %>% setdiff(55) #screen failure, no patient 55
 pop_itt = pop_total %>% setdiff(10) #patient 10 has had the wrong treatment

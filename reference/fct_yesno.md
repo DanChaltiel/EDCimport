@@ -52,6 +52,7 @@ a factor, or `x` untouched.
 ## Examples
 
 ``` r
+
 fct_yesno(c("No", "Yes")) #levels are in order
 #> [1] No  Yes
 #> Levels: Yes No

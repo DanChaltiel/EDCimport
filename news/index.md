@@ -222,7 +222,13 @@ CRAN release: 2024-10-24
   ([\#29](https://github.com/DanChaltiel/EDCimport/issues/29),
   [\#39](https://github.com/DanChaltiel/EDCimport/issues/39),
   [\#43](https://github.com/DanChaltiel/EDCimport/issues/43)).
-  `r ae %>% filter(grade<1 | grade>5) %>% edc_data_stop("AE of invalid grade") ae %>% filter(is.na(grade)) %>% edc_data_warn("Grade is missing", issue_n=13) #> Warning: Issue `[`#13`](https://github.com/DanChaltiel/EDCimport/issues/13)`: Grade is missing (8 patients: `[`#21`](https://github.com/DanChaltiel/EDCimport/issues/21)`, `[`#28`](https://github.com/DanChaltiel/EDCimport/issues/28)`, `[`#39`](https://github.com/DanChaltiel/EDCimport/issues/39)`, `[`#95`](https://github.com/DanChaltiel/EDCimport/issues/95)`, `[`#97`](https://github.com/DanChaltiel/EDCimport/issues/97)`, ...)`
+
+  ``` r
+
+  ae %>% filter(grade<1 | grade>5) %>% edc_data_stop("AE of invalid grade")
+  ae %>% filter(is.na(grade)) %>% edc_data_warn("Grade is missing", issue_n=13)
+  #> Warning: Issue #13: Grade is missing (8 patients: #21, #28, #39, #95, #97, ...)
+  ```
 
 - New function
   [`edc_data_warnings()`](https://danchaltiel.github.io/EDCimport/reference/edc_data_warn.md),
@@ -348,6 +354,7 @@ CRAN release: 2023-12-11
   ([\#8](https://github.com/DanChaltiel/EDCimport/issues/8)).
 
 ``` r
+
 options(edc_subjid_ref=enrolres$subjid)
 check_subjid(treatment$subjid)
 check_subjid(ae$subjid)
@@ -359,6 +366,7 @@ check_subjid(ae$subjid)
   column([\#9](https://github.com/DanChaltiel/EDCimport/issues/9)).
 
 ``` r
+
 tibble(subjid=c(1:10, 1)) %>% assert_no_duplicate() %>% nrow()
 #Error in `assert_no_duplicate()`:
 #! Duplicate on column "subjid" for value 1.

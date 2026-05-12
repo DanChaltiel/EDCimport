@@ -15,6 +15,7 @@ but in the real world you should use EDC reading functions. See
 to see how.
 
 ``` r
+
 library(EDCimport)
 library(dplyr)
 db = edc_example(N=200) %>% 
@@ -49,6 +50,7 @@ For example, let’s say that in our study:
 Here’s how you check these conditions:
 
 ``` r
+
 enrol %>% 
   filter(age<25) %>% 
   edc_data_warn("Patients should be >25yo", issue_n=1)
@@ -77,6 +79,7 @@ After running all your checks, you can use
 to get a summary of all detected issues.
 
 ``` r
+
 edc_data_warnings()
 #> # A tibble: 3 × 5
 #>   issue_n message                                      subjid    data     type 
@@ -97,6 +100,7 @@ For example, you can use it to check that some variable construction
 didn’t go wrong:
 
 ``` r
+
 df = mtcars %>% 
   mutate(
     type = case_when(
@@ -124,6 +128,7 @@ This is why you should always include
 in your pipeline if you expect only one row per patient.
 
 ``` r
+
 enrol %>% 
   assert_no_duplicate() %>% 
   count(arm)
@@ -186,6 +191,7 @@ Here is how to parameterize
 to fit this scenario:
 
 ``` r
+
 lastnews_table(prefer="date10", except="data1", show_delta=TRUE) %>% 
   mutate(delta=round(delta)) %>% 
   arrange(desc(delta))

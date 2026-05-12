@@ -15,6 +15,7 @@ but in the real world you should use EDC reading functions. See
 to see how.
 
 ``` r
+
 library(EDCimport) 
 library(dplyr) 
 db = edc_example(N=200) %>%
@@ -31,6 +32,7 @@ As the primary key is almost always SUBJID, {dplyr} joins can be
 simplified with default `by` and `suffix` arguments.
 
 ``` r
+
 data_xx = enrol %>% 
   edc_left_join(data2) %>% 
   edc_right_join(data1) %>% 
@@ -49,6 +51,7 @@ you can harmonize “Yes/No” values into a vector with the “Yes” level
 first:
 
 ``` r
+
 set.seed(42)
 x = tibble(a=c("Yes", "No"), b=c("Oui", "Non"), c=0:1, d=c(TRUE, FALSE))
 x

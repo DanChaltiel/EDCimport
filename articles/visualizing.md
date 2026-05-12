@@ -15,6 +15,7 @@ but in the real world you should use EDC reading functions. See
 to see how.
 
 ``` r
+
 library(EDCimport) 
 library(dplyr) 
 db = edc_example(N=200) %>%
@@ -40,6 +41,7 @@ administered before enrollment and that the latest recorded date appears
 in the follow-up dataset.
 
 ``` r
+
 edc_swimmerplot(origin="enrol$enrol_date")
 ```
 
@@ -51,6 +53,7 @@ vignette, the output can be saved as a standalone HTML file for easy
 sharing.
 
 ``` r
+
 sp = edc_swimmerplot(plotly=TRUE)
 sp
 save_plotly(sp, "swimmerplot.html")
@@ -64,6 +67,7 @@ you can generate a barplot showing the distribution of CRF status
 (Complete, Incomplete, …) for each dataset of the database.
 
 ``` r
+
 edc_crf_plot()
 ```
 
@@ -77,6 +81,7 @@ you can visualize which patients are included in each dataset and
 identify any problematic missing records.
 
 ``` r
+
 edc_patient_gridplot()
 ```
 
@@ -93,6 +98,7 @@ you should probably use
 [`dplyr::filter()`](https://dplyr.tidyverse.org/reference/filter.html).
 
 ``` r
+
 # Total population: all screened patients
 pop_total <- c(1:100) %>% setdiff(12) #Software error, SUBJID attributed twice
 

@@ -17,11 +17,12 @@ datasets.
 ## Installation 🛠️
 
 ``` r
+
 # Install last version available on CRAN
 install.packages("EDCimport")
 
 # Install development version on GitHub
-pak::pak("DanChaltiel/EDCimport@v0.7.0.9001")
+pak::pak("DanChaltiel/EDCimport@v0.7.0.9002")
 ```
 
 > \[!WARNING\] The documentation pertains to the dev version, not the
@@ -42,6 +43,7 @@ load your datasets into the global environment with
 [`load_database()`](https://danchaltiel.github.io/EDCimport/reference/load_database.md).
 
 ``` r
+
 library(EDCimport)
 db = read_all_sas("path/to/my/files/folder")
 print(db)
