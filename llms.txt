@@ -22,7 +22,7 @@ datasets.
 install.packages("EDCimport")
 
 # Install development version on GitHub
-pak::pak("DanChaltiel/EDCimport@v0.7.0.9002")
+pak::pak("DanChaltiel/EDCimport@v0.7.0.9003")
 ```
 
 > \[!WARNING\] The documentation pertains to the dev version, not the

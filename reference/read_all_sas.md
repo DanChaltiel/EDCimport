@@ -116,7 +116,7 @@ haven::write_sas(esoph, paste0(path, "/esoph.sas7bdat"))
 
 db = read_all_sas(path, format_file=NULL, subdirectories=TRUE) %>% 
   set_project_name("My great project")
-#> Writing cache /tmp/RtmpVThPtZ/read_all_sas/EDCimport_cache_422bb454.rds
+#> Writing cache /tmp/RtmplFRPk7/read_all_sas/EDCimport_cache_c1fca1a9.rds
 #> Warning: Option "edc_lookup" has been overwritten.
 db
 #> ── EDCimport database ──────────────────────────────────────────────────────────

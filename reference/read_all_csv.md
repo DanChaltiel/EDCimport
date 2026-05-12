@@ -143,7 +143,7 @@ write.csv(data.frame(name=labs, label=toupper(labs)), paste0(path, "/labels.csv"
 
 db = read_all_csv(path, labels_from="labels.csv", subdirectories=TRUE) %>% 
   set_project_name("My great project")
-#> Writing cache /tmp/RtmpVThPtZ/read_all_csv/EDCimport_cache_48f69d4c.rds
+#> Writing cache /tmp/RtmplFRPk7/read_all_csv/EDCimport_cache_a0313114.rds
 #> Warning: Option "edc_lookup" has been overwritten.
 db
 #> ── EDCimport database ──────────────────────────────────────────────────────────
