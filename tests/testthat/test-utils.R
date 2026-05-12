@@ -241,9 +241,13 @@ test_that("check_dots_named() works as expected", {
     check_dots_named()
     TRUE
   }
+  g = function(...){
+    f(...)
+  }
   
   # empty dots
   expect_true(f())
+  expect_true(g())
   
   # fully named
   expect_true(f(a = 1))

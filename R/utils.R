@@ -174,9 +174,15 @@ guess_read_function = function(file){
 
 #' @importFrom cli cli_abort
 #' @importFrom purrr map_lgl
-#' @importFrom rlang caller_env caller_call is_missing
+#' @importFrom rlang call_match caller_env caller_call frame_call frame_fn is_missing
 check_dots_named = function(env = caller_env(), call = caller_call()) {
-  cl = eval(quote(match.call(expand.dots = FALSE)), envir = env)
+  cl = call_match(
+    call = frame_call(env),
+    fn = frame_fn(env),
+    dots_env = env,
+    dots_expand = FALSE
+  )
+  
   dots = as.list(cl$...)
   if (is.null(dots)) {
     return(invisible())
