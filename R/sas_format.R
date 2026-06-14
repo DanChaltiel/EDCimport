@@ -43,7 +43,6 @@
       }
     }, USE.NAMES = FALSE) 
   
-  
   formats_values %>% 
     set_names(formats_names) %>% 
     compact()
@@ -74,11 +73,16 @@
 #' @keywords internal
 .format_sas_column =  function(x, formats){
   fname = attr(x, "format.sas") #set by haven::read_xpt
-  if (is.null(fname) || is.null(formats) || !fname %in% names(formats)){
+  if (is.null(fname) || is_empty(formats)) {
+    return(x)
+  }
+  formats2 = formats %>% set_names(tolower)
+  fname2 = tolower(fname)
+  if (!fname2 %in% names(formats2)){
     return(x)
   }
   x %>% 
-    structure(labels = formats[[fname]]) %>% 
+    structure(labels = formats2[[fname2]]) %>% 
     add_class("haven_labelled")
 }
 
