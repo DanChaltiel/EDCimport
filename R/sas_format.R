@@ -71,6 +71,7 @@
 
 #' @noRd
 #' @keywords internal
+#' @importFrom rlang is_empty
 .format_sas_column =  function(x, formats){
   fname = attr(x, "format.sas") #set by haven::read_xpt
   if (is.null(fname) || is_empty(formats)) {
