@@ -24,7 +24,7 @@ The **EDCimport** package is designed to simplify the import and management of E
 install.packages("EDCimport")
 
 # Install development version on GitHub
-pak::pak("DanChaltiel/EDCimport@v0.7.0.9004")
+pak::pak("DanChaltiel/EDCimport@v0.7.0.9005")
 ```
 
 > [!WARNING]
