@@ -39,13 +39,23 @@ compare_databases = function(databases, fun_read=read_trialmaster, ...){
   check_installed(c("gt", "patchwork"), reason="for `compare_databases()` to work.")
   db_list = databases
   is_database = map_lgl(databases, ~inherits(.x, "edc_database"))
+  fun_read_expr = rlang::enexpr(fun_read)
+  fun_read_value = rlang::eval_tidy(fun_read_expr)
+  fun_ref = .extract_fun_ref(fun_read_expr, fun_read_value)
   if(!all(is_database)){
     check_installed(c("callr"), reason="for `compare_databases()` to read files.")
+    dots = rlang::list2(...)
     db_list = callr::r(
-      function(databases, fun_read, ...){
-        suppressWarnings(purrr::map(databases, function(.x) fun_read(.x, ...)))
+      function(databases, fun_pkg, fun_read, dots){        
+        loadNamespace(fun_pkg)
+        fun_read = get(fun_read, envir = asNamespace(fun_pkg))
+        suppressWarnings(
+          purrr::map(databases, function(.x) {
+            do.call(fun_read, c(list(.x), dots))
+          })
+        )
       }, 
-      args=list(databases=databases, fun_read=fun_read, ...)
+      args=lst(databases, dots, fun_pkg = fun_ref$fun_pkg, fun_read = fun_ref$fun_read)
     )
   }
   
@@ -223,3 +233,23 @@ compare_databases = function(databases, fun_read=read_trialmaster, ...){
   }
 }
 
+#' @importFrom rlang is_call is_symbol call_args as_string
+#' @importFrom cli cli_abort
+.extract_fun_ref = function(fun_read_expr, fun_read_value) {
+  if (is_call(fun_read_expr, "::")) {
+    args = call_args(fun_read_expr)
+    return(list(
+      fun_pkg = as_string(args[[1]]),
+      fun_read = as_string(args[[2]])
+    ))
+  }
+
+  if (is_symbol(fun_read_expr)) {
+    return(list(
+      fun_pkg = environmentName(environment(fun_read_value)),
+      fun_read = as_string(fun_read_expr)
+    ))
+  }
+
+  cli_abort("`fun_read` must be a function name or a namespaced function.")
+}
