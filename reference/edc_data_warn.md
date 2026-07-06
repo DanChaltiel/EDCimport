@@ -93,9 +93,6 @@ load_database(db)
 enrol %>% 
   filter(age>70) %>% 
   edc_data_warn("Age should not be >70", issue_n=1)
-#> Warning: Datasets from this lookup are not available in the global environment.
-#> ℹ Did you forget to use `EDCimport::load_database(db)` to load the tables?
-#> This warning is displayed once per session.
 #> Warning: Issue #01: Age should not be >70 (2 patients: #9 and #12)
 
 enrol %>% 

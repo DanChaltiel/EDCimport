@@ -47,6 +47,9 @@ db = edc_example()
 load_database(db)
 
 edc_find_value("respi")
+#> Warning: Datasets from this lookup are not available in the global environment.
+#> ℹ Did you forget to use `EDCimport::load_database(db)` to load the tables?
+#> This warning is displayed once per session.
 #> # A tibble: 8 × 5
 #>   subjid dataset column column_label value                                      
 #>   <chr>  <chr>   <chr>  <chr>        <chr>                                      

@@ -7,7 +7,7 @@ through options.
 ## Usage
 
 ``` r
-get_subjid_cols(lookup = edc_lookup())
+get_subjid_cols(lookup = edc_lookup(check = FALSE))
 ```
 
 ## Arguments
