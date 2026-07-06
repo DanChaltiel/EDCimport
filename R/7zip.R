@@ -32,7 +32,7 @@ get_7z_dir = function(){
 #' @param archive the archive file
 #' @param target_dir the target directory
 #' @param password the password of the archive, if any
-#' @param path_7zip See section below. Default to [get_7z_dir()].
+#' @param path_7zip See section below. Default to `get_7z_dir()`.
 #' 
 #' @section Install 7-zip:
 #' 

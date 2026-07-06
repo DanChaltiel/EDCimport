@@ -4,7 +4,7 @@
 \alias{get_subjid_cols}
 \title{Get key column names}
 \usage{
-get_subjid_cols(lookup = edc_lookup())
+get_subjid_cols(lookup = edc_lookup(check = FALSE))
 }
 \arguments{
 \item{lookup}{the lookup table}

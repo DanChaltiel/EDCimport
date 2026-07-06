@@ -12,7 +12,7 @@
 #' lk
 #' lk %>% tidyr::unnest(c(names, labels))  
 #' 
-#' @seealso [extend_lookup()], [edc_lookup()]
+#' @seealso `extend_lookup()`, `edc_lookup()`
 #' 
 #' @noRd
 #' @keywords internal
