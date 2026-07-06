@@ -1,7 +1,7 @@
 
 test_that("edc_data_warn snapshot", {
   clean_lookup()
-  reset_warn_list()
+  clean_warn_list()
   db = edc_example()
   load_database(db)
   
@@ -130,4 +130,13 @@ test_that("edc_data_warn CSV", {
   unlink(path)
   expect_false(file_exists(path))
   
+})
+
+
+test_that("edc_data_warn() standalone", {
+  clean_lookup()
+  clean_warn_list()
+  iris %>% 
+    edc_data_warn("{.fn edc_data_warn} should work without a lookup") %>% 
+    expect_warning(class="edc_data_condition")
 })

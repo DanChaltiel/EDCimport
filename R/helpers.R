@@ -436,14 +436,14 @@ get_key_cols = function(lookup=edc_lookup()){
 #' @examples
 #' #get_subjid_cols()
 #' #get_crfname_cols()
-get_subjid_cols = function(lookup=edc_lookup()){
+get_subjid_cols = function(lookup=edc_lookup(check=FALSE)){
   subjid_cols=getOption("edc_cols_subjid", c("SUBJID", "PTNO"))
   .get_key_cols(subjid_cols, id_name="patient", lookup)
 }
 
 #' @noRd
 #' @keywords internal
-get_crfname_cols = function(lookup=edc_lookup()){
+get_crfname_cols = function(lookup=edc_lookup(check=FALSE)){
   crfname_cols=getOption("edc_cols_crfname", c("FORMDESC", "CRFNAME"))
   .get_key_cols(crfname_cols, id_name="CRF", lookup)
 }

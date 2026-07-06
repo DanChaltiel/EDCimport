@@ -273,7 +273,6 @@ edc_data_warnings = function(){
 }
 
 
-
 #' Save EDCimport warning to Excel
 #' 
 #' Each time [edc_data_warn] is used, the warning is saved internally so that a summary can be retrieved using [edc_data_warnings]. This summary can then be saved into a `.xlsx` file using `save_edc_data_warnings()`. 
@@ -444,7 +443,7 @@ save_warn_list_item = function(item){
 
 #' @noRd
 #' @keywords internal
-reset_warn_list = function(){
+clean_warn_list = function(){
   edcimport_env$warn_list = list()
 }
 
