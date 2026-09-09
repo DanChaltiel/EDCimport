@@ -127,7 +127,7 @@ haven::write_xpt(esoph, paste0(path, "/esoph.xpt"))
 
 db = read_all_xpt(path, format_file=NULL, subdirectories=TRUE) %>% 
   set_project_name("My great project")
-#> Writing cache /tmp/RtmpUuLtBM/read_all_xpt/EDCimport_cache_f12605bc.rds
+#> Writing cache /tmp/RtmpsR2cPJ/read_all_xpt/EDCimport_cache_8bb421ad.rds
 #> Warning: Option "edc_lookup" has been overwritten.
 db
 #> ── EDCimport database ──────────────────────────────────────────────────────────
