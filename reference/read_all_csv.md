@@ -143,7 +143,7 @@ write.csv(data.frame(name=labs, label=toupper(labs)), paste0(path, "/labels.csv"
 
 db = read_all_csv(path, labels_from="labels.csv", subdirectories=TRUE) %>% 
   set_project_name("My great project")
-#> Writing cache /tmp/RtmpQ8sbVh/read_all_csv/EDCimport_cache_24e7ab1d.rds
+#> Writing cache /tmp/RtmpUuLtBM/read_all_csv/EDCimport_cache_97475b1b.rds
 #> Warning: Option "edc_lookup" has been overwritten.
 db
 #> ── EDCimport database ──────────────────────────────────────────────────────────
@@ -152,7 +152,7 @@ db
 #>   environment.
 #> ℹ Use `EDCimport::edc_lookup()` to see the summary table.
 edc_lookup()
-#> ── Lookup table - My great project (extraction of 2026-07-06) - EDCimport v0.7.0
+#> ── Lookup table - My great project (extraction of 2026-09-09) - EDCimport v0.7.0
 #>   dataset        nrow  ncol  n_id rows_per_id crfname
 #>   <chr>         <dbl> <dbl> <int>       <dbl> <chr>  
 #> 1 airquality      153     7     0          NA NA     

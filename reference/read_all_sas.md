@@ -116,7 +116,7 @@ haven::write_sas(esoph, paste0(path, "/esoph.sas7bdat"))
 
 db = read_all_sas(path, format_file=NULL, subdirectories=TRUE) %>% 
   set_project_name("My great project")
-#> Writing cache /tmp/RtmpQ8sbVh/read_all_sas/EDCimport_cache_86a76ece.rds
+#> Writing cache /tmp/RtmpUuLtBM/read_all_sas/EDCimport_cache_b11566c9.rds
 #> Warning: Option "edc_lookup" has been overwritten.
 db
 #> ── EDCimport database ──────────────────────────────────────────────────────────
@@ -125,7 +125,7 @@ db
 #>   environment.
 #> ℹ Use `EDCimport::edc_lookup()` to see the summary table.
 edc_lookup()
-#> ── Lookup table - My great project (extraction of 2026-07-06) - EDCimport v0.7.0
+#> ── Lookup table - My great project (extraction of 2026-09-09) - EDCimport v0.7.0
 #>   dataset        nrow  ncol  n_id rows_per_id crfname
 #>   <chr>         <dbl> <dbl> <int>       <dbl> <chr>  
 #> 1 attenu          182     5     0          NA NA     
