@@ -200,3 +200,41 @@ test_that("dummy metadata and viewer input match an imported database", {
     expect_s3_class(dt_main(), "datatables")
   })
 })
+
+
+test_that("CSV2 dummy follows the usual import and viewer workflow", {
+  real = dummy_test_database()
+  real$subjects$SUBJID = as.integer(seq(7001, 7012))
+  real$visits$SUBJID = rep(as.numeric(real$subjects$SUBJID), each = 2)
+  file = tempfile(fileext = ".csv")
+  on.exit(unlink(file), add = TRUE)
+  real %>% edc_dummy_spec() %>% write.csv2(file, row.names = FALSE)
+
+  db = read.csv2(file) %>%
+    edc_dummy_database(seed = 42) %>%
+    edc_unify_subjid() %>%
+    set_project_name("ATEZOLACC") %>%
+    identity()
+
+  expect_s3_class(db, "edc_database")
+  expect_true(is.factor(db$subjects$SUBJID))
+  expect_identical(attr(db$.lookup, "project_name"), "ATEZOLACC")
+  expect_equal(db$.lookup$n_id[db$.lookup$dataset == "subjects"], 12)
+
+  load_database(db, remove = FALSE)
+  expect_warning(edc_warn_extraction_date(), "OUTDATED")
+  input = .resolve_input(NULL)
+  expect_named(input$datasets, c("subjects", "visits"))
+  expect_identical(attr(input$lookup, "project_name"), "ATEZOLACC")
+
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("DT")
+  skip_if_not_installed("bslib")
+  server = edc_viewer_server(input$datasets, input$lookup)
+  shiny::testServer(server, {
+    session$flushReact()
+    session$setInputs(input_table_rows_selected = 1)
+    expect_s3_class(dt_sidebar(), "datatables")
+    expect_s3_class(dt_main(), "datatables")
+  })
+})
