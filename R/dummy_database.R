@@ -3,9 +3,10 @@
 #' `edc_dummy_database()` only uses the portable specification produced by
 #' [edc_dummy_spec()]. It does not require access to the original database.
 #'
-#' The generated database uses artificial subject identifiers and a fixed
-#' artificial extraction date. Its `.lookup` table is rebuilt from the dummy
-#' datasets. The current implementation preserves only simple univariate
+#' The generated database uses artificial subject identifiers in the type
+#' recorded for `SUBJID` and a fixed artificial extraction date. Its `.lookup`
+#' table is built and extended from the dummy datasets by `new_edc_database()`.
+#' The current implementation preserves only simple univariate
 #' structure and should not be interpreted as an anonymisation or synthetic-data
 #' method preserving clinical or statistical relationships.
 #'
@@ -51,8 +52,9 @@ edc_dummy_database = function(spec, seed = NULL){
   dummy = new_edc_database(
     datalist,
     datetime_extraction = as.POSIXct("2000-01-01 00:00:00", tz = "UTC"),
-    extend_lookup = NULL,
-    set_lookup = FALSE,
+    extend_lookup = TRUE,
+    set_lookup = TRUE,
+    verbose = FALSE,
     dummy = TRUE
   )
   class(dummy) = c("edc_dummy", "edc_database")
@@ -63,7 +65,6 @@ edc_dummy_database = function(spec, seed = NULL){
 .dummy_generate_dataset = function(spec){
   n_rows = unique(as.integer(spec$n_rows))
   n_subjects = unique(as.integer(spec$n_subjects))
-  ids = .dummy_subject_ids(n_subjects)
 
   columns = lapply(seq_len(nrow(spec)), function(i){
     row = spec[i, , drop = FALSE]
@@ -74,7 +75,7 @@ edc_dummy_database = function(spec, seed = NULL){
 
     x = switch(
       generator,
-      identifier = rep(ids, length.out = n_rows),
+      identifier = rep(.dummy_subject_ids(n_subjects, class_string), length.out = n_rows),
       categorical = .dummy_generate_categorical(n_rows, class_string, param1),
       logical = runif(n_rows) < .dummy_number(param1, 0.5),
       integer = .dummy_generate_integer(n_rows, param1, param2),

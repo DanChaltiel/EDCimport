@@ -29,7 +29,7 @@ The current implementation is deliberately minimal. It preserves dataset and col
 
 Real subject identifiers, character values, and calendar dates are not copied into the specification. Factor levels are treated as structural metadata and are currently preserved.
 
-The generated database uses artificial subject identifiers and a fixed artificial extraction date. Its \code{.lookup} table is rebuilt from the dummy datasets. This functionality should not be interpreted as an anonymisation or synthetic-data method preserving clinical or statistical relationships.
+The generated database uses artificial subject identifiers in the type recorded for \code{SUBJID} and a fixed artificial extraction date. Its \code{.lookup} table is built and extended from the dummy datasets by \code{new_edc_database()}. This functionality should not be interpreted as an anonymisation or synthetic-data method preserving clinical or statistical relationships.
 }
 \examples{
 db = edc_example(N = 10)

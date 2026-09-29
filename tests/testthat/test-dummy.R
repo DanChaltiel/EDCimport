@@ -145,3 +145,56 @@ test_that("generation is reproducible and preserves the caller RNG state", {
   edc_dummy_database(spec, seed = 789)
   expect_identical(.Random.seed, rng_before)
 })
+
+
+test_that("numeric subject identifiers remain numeric through CSV and unification", {
+  db = dummy_test_database()
+  db$subjects$SUBJID = as.integer(seq(7001, 7012))
+  db$visits$SUBJID = rep(as.numeric(db$subjects$SUBJID), each = 2)
+  spec = edc_dummy_spec(db)
+  file = tempfile(fileext = ".csv")
+  on.exit(unlink(file), add = TRUE)
+  write.csv(spec, file, row.names = FALSE)
+
+  dummy = read.csv(file) %>% edc_dummy_database(seed = 42)
+
+  expect_type(dummy$subjects$SUBJID, "integer")
+  expect_type(dummy$visits$SUBJID, "double")
+  expect_identical(dummy$subjects$SUBJID, seq_len(12L))
+  expect_setequal(unique(dummy$subjects$SUBJID), unique(dummy$visits$SUBJID))
+  expect_length(intersect(db$subjects$SUBJID, dummy$subjects$SUBJID), 0)
+
+  unified = dummy %>% edc_unify_subjid(mode = "numeric")
+  expect_type(unified$subjects$SUBJID, "double")
+  expect_equal(unified$subjects$SUBJID, as.numeric(seq_len(12L)))
+})
+
+
+test_that("dummy metadata and viewer input match an imported database", {
+  dummy = dummy_test_database() %>% edc_dummy_spec() %>% edc_dummy_database(seed = 42)
+  lookup = dummy$.lookup
+
+  expect_s3_class(lookup, "edc_lookup")
+  expect_true(all(c("subjids", "n_id", "rows_per_id", "crfname") %in% names(lookup)))
+  expect_equal(lookup$n_id[lookup$dataset == "subjects"], 12)
+  expect_equal(lookup$rows_per_id[lookup$dataset == "visits"], 2)
+  expect_setequal(lookup$subjids[[which(lookup$dataset == "subjects")]], dummy$subjects$SUBJID)
+  expect_identical(attr(lookup, "datetime_extraction"), dummy$datetime_extraction)
+  expect_identical(attr(lookup, "dummy"), TRUE)
+  expect_identical(edc_lookup(check = FALSE), lookup)
+
+  input = .resolve_input(dummy)
+  expect_named(input$datasets, c("subjects", "visits"))
+  expect_identical(input$lookup, lookup)
+
+  skip_if_not_installed("shiny")
+  skip_if_not_installed("DT")
+  skip_if_not_installed("bslib")
+  server = edc_viewer_server(input$datasets, input$lookup)
+  shiny::testServer(server, {
+    session$flushReact()
+    session$setInputs(input_table_rows_selected = 1)
+    expect_s3_class(dt_sidebar(), "datatables")
+    expect_s3_class(dt_main(), "datatables")
+  })
+})
