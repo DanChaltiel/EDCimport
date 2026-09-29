@@ -183,7 +183,8 @@ test_that("dummy metadata and viewer input match an imported database", {
   expect_identical(attr(lookup, "dummy"), TRUE)
   expect_identical(edc_lookup(check = FALSE), lookup)
 
-  input = .resolve_input(dummy)
+  load_database(dummy, remove = FALSE)
+  input = .resolve_input(NULL)
   expect_named(input$datasets, c("subjects", "visits"))
   expect_identical(input$lookup$dataset, names(input$datasets))
   expect_identical(attr(input$lookup, "datetime_extraction"), dummy$datetime_extraction)

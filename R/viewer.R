@@ -50,22 +50,15 @@ edc_viewer = function(data=NULL, ..., background=TRUE, title=NULL, port=1209, re
     datasets = get_datasets(lookup)
   } else {
     if(inherits(data, "flextable")) data = data$body$dataset
-    if(inherits(data, "edc_database")){
-      datasets = data[vapply(data, is.data.frame, logical(1)) & names(data) != ".lookup"]
-      lookup = data$.lookup[match(tolower(names(datasets)), data$.lookup$dataset), , drop = FALSE]
-    } else {
-      datasets = data
-    }
+    datasets = data
     if(!is_named(data)){
       cli_abort("Datasets in {.arg data} should have a name.", 
                 class="edc_lookup_unnamed")
     }    
     if(is.data.frame(data)) datasets = list(data) %>% set_names(caller_arg(data))
-    if(!inherits(data, "edc_database")){
-      lookup = build_lookup(datasets) %>%
-        extend_lookup(datasets=datasets) %>%
-        arrange(match(dataset, names(datasets)))
-    }
+    lookup = build_lookup(datasets) %>% 
+      extend_lookup() %>% 
+      arrange(match(dataset, names(datasets)))
   }
   lst(datasets, lookup)
 }
