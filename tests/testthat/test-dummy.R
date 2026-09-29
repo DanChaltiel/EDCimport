@@ -185,7 +185,8 @@ test_that("dummy metadata and viewer input match an imported database", {
 
   input = .resolve_input(dummy)
   expect_named(input$datasets, c("subjects", "visits"))
-  expect_identical(input$lookup, lookup)
+  expect_identical(input$lookup$dataset, names(input$datasets))
+  expect_identical(attr(input$lookup, "datetime_extraction"), dummy$datetime_extraction)
 
   skip_if_not_installed("shiny")
   skip_if_not_installed("DT")

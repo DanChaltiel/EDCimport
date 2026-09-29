@@ -52,7 +52,7 @@ edc_viewer = function(data=NULL, ..., background=TRUE, title=NULL, port=1209, re
     if(inherits(data, "flextable")) data = data$body$dataset
     if(inherits(data, "edc_database")){
       datasets = data[vapply(data, is.data.frame, logical(1)) & names(data) != ".lookup"]
-      lookup = data$.lookup
+      lookup = data$.lookup[match(tolower(names(datasets)), data$.lookup$dataset), , drop = FALSE]
     } else {
       datasets = data
     }
