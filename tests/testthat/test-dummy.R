@@ -221,7 +221,18 @@ test_that("CSV2 dummy follows the usual import and viewer workflow", {
   expect_identical(attr(db$.lookup, "project_name"), "ATEZOLACC")
   expect_equal(db$.lookup$n_id[db$.lookup$dataset == "subjects"], 12)
 
-  load_database(db, remove = FALSE)
+  existing = intersect(names(db), ls(envir = .GlobalEnv, all.names = TRUE))
+  original = mget(existing, envir = .GlobalEnv, inherits = FALSE)
+  original_data_env = edc_data_env()
+  original_lookup = edc_lookup(check = FALSE)
+  on.exit({
+    rm(list = names(db), envir = .GlobalEnv)
+    list2env(original, envir = .GlobalEnv)
+    edcimport_env$data_env = original_data_env
+    .update_lookup(original_lookup)
+  }, add = TRUE)
+
+  load_database(db, env = .GlobalEnv, remove = FALSE)
   expect_warning(edc_warn_extraction_date(), "OUTDATED")
   input = .resolve_input(NULL)
   expect_named(input$datasets, c("subjects", "visits"))
