@@ -177,7 +177,7 @@ test_that("dummy metadata and viewer input match an imported database", {
   expect_s3_class(lookup, "edc_lookup")
   expect_true(all(c("subjids", "n_id", "rows_per_id", "crfname") %in% names(lookup)))
   expect_equal(lookup$n_id[lookup$dataset == "subjects"], 12)
-  expect_equal(lookup$rows_per_id[lookup$dataset == "visits"], 2)
+  expect_equal(unname(lookup$rows_per_id[lookup$dataset == "visits"]), 2)
   expect_setequal(lookup$subjids[[which(lookup$dataset == "subjects")]], dummy$subjects$SUBJID)
   expect_identical(attr(lookup, "datetime_extraction"), dummy$datetime_extraction)
   expect_identical(attr(lookup, "dummy"), TRUE)
