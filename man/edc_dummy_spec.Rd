@@ -5,12 +5,14 @@
 \alias{edc_dummy_database}
 \title{Create and use a portable dummy-data specification}
 \usage{
-edc_dummy_spec(db)
+edc_dummy_spec(db, subjid_collision = NA)
 
 edc_dummy_database(spec, seed = NULL)
 }
 \arguments{
 \item{db}{An \code{edc_database}.}
+
+\item{subjid_collision}{What to do when distinct \code{SUBJID} values in one dataset become identical after numeric conversion (for example \code{"001"} and \code{"1"}). \code{NA} (default) stops with an error; \code{"merge"} treats them as one subject; \code{"split"} keeps them distinct and generates character IDs.}
 
 \item{spec}{A dummy specification produced by \code{edc_dummy_spec()}, including after a CSV round-trip.}
 
@@ -27,7 +29,7 @@ edc_dummy_database(spec, seed = NULL)
 \details{
 The current implementation is deliberately minimal. It preserves dataset and column structure, basic R classes and labels, coarse univariate generation parameters, and missingness. It does not preserve clinical relationships, patient trajectories, or mixed-grain dependencies.
 
-Real subject identifiers, character values, and calendar dates are not copied into the specification. Factor levels are treated as structural metadata and are currently preserved. \code{SUBJID} is harmonized across datasets: if all non-missing source identifiers can be interpreted as finite numbers, the dummy identifiers are integer, even for character values such as \code{"001"}. Otherwise they are character. Differing source classes or numeric compatibility trigger a warning with dataset examples.
+Real subject identifiers, character values, and calendar dates are not copied into the specification. Factor levels are treated as structural metadata and are currently preserved. \code{SUBJID} is harmonized across datasets: if all non-missing source identifiers can be interpreted as finite numbers, the dummy identifiers are integer, even for character values such as \code{"001"}. Otherwise they are character. Differing source classes or numeric compatibility trigger a warning with dataset examples. If distinct IDs in one dataset become identical after numeric conversion, the function stops until \code{subjid_collision} is set to \code{"merge"} or \code{"split"}.
 
 The generated database uses artificial subject identifiers of a single type across all datasets (\code{character} or \code{integer}) and a fixed artificial extraction date. Its \code{.lookup} table is built and extended from the dummy datasets by \code{new_edc_database()}. This functionality should not be interpreted as an anonymisation or synthetic-data method preserving clinical or statistical relationships.
 }
