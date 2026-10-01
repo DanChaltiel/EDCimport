@@ -189,9 +189,9 @@ edc_dummy_spec = function(db, subjid_collision = NA){
     x = x[!is.na(x)]
     length(x) > 1 && !anyDuplicated(x)
   }, logical(1))
-  partners = setNames(vector("list", length(columns)), columns)
+  partners = set_names(vector("list", length(columns)), columns)
   if(length(eligible) > 1){
-    pairs = combn(eligible, 2, simplify = FALSE)
+    pairs = utils::combn(eligible, 2, simplify = FALSE)
     for(pair in pairs){
       observed = data[complete.cases(data[pair]), pair, drop = FALSE]
       if(nrow(observed) > 1 && !anyDuplicated(observed)){

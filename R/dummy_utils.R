@@ -49,6 +49,7 @@
 }
 
 
+#' @importFrom stats complete.cases
 .dummy_check_structure = function(data, spec){
   for(i in seq_len(nrow(spec))){
     column = as.character(spec$column[i])
