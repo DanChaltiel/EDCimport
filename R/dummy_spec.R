@@ -15,16 +15,27 @@
 #' non-missing source identifiers can be interpreted as finite numbers, the
 #' dummy identifiers are integer, even for character values such as `"001"`.
 #' Otherwise they are character. Differing source classes or numeric
-#' compatibility trigger a warning with dataset examples.
+#' compatibility trigger a warning with dataset examples. If distinct IDs in
+#' one dataset become identical after numeric conversion, the function stops
+#' until `subjid_collision` is set to `"merge"` or `"split"`.
 #'
 #' @param db An `edc_database`.
+#' @param subjid_collision What to do when distinct `SUBJID` values in one
+#'   dataset become identical after numeric conversion (for example `"001"`
+#'   and `"1"`). `NA` (default) stops with an error; `"merge"` treats them as
+#'   one subject; `"split"` keeps them distinct and generates character IDs.
 #'
 #' @return A plain `data.frame` that can be written to CSV and read back with
 #'   [utils::write.csv()] and [utils::read.csv()].
 #' @export
-edc_dummy_spec = function(db){
+edc_dummy_spec = function(db, subjid_collision = NA){
   if(!inherits(db, "edc_database")){
     cli_abort("{.arg db} must be an {.cls edc_database}.")
+  }
+  if(length(subjid_collision) != 1 ||
+     !(is.na(subjid_collision) ||
+       (is.character(subjid_collision) && subjid_collision %in% c("merge", "split")))){
+    cli_abort("{.arg subjid_collision} must be {.val NA}, {.val merge}, or {.val split}.")
   }
 
   dataset_names = names(db)[vapply(db, is.data.frame, logical(1))]
@@ -45,12 +56,29 @@ edc_dummy_spec = function(db){
       numeric = vapply(columns, function(column){
         .dummy_numeric_identifier(data[[column]])
       }, logical(1)),
+      collision = vapply(columns, function(column){
+        ids = data[[column]]
+        if(!.dummy_numeric_identifier(ids)) return(FALSE)
+        ids = unique(ids[!is.na(ids)])
+        anyDuplicated(suppressWarnings(as.numeric(ids))) > 0
+      }, logical(1)),
       stringsAsFactors = FALSE
     )
   })
   id_sources = Filter(Negate(is.null), id_sources)
   id_sources = if(length(id_sources) == 0) NULL else do.call(rbind, id_sources)
-  id_class = if(is.null(id_sources)) NULL else if(all(id_sources$numeric)) "integer" else "character"
+
+  if(!is.null(id_sources) && any(id_sources$collision) && is.na(subjid_collision)){
+    datasets = unique(id_sources$dataset[id_sources$collision])
+    cli_abort(c(
+      "Distinct {.field SUBJID} values become identical after numeric conversion in: {.val {datasets}}.",
+      i = "For example, {.val 001} and {.val 1} can represent different subjects.",
+      i = "Choose {.code subjid_collision = 'merge'} for one subject or {.code subjid_collision = 'split'} to keep them distinct."
+    ), class = "edc_dummy_subjid_collision_error")
+  }
+
+  id_class = if(is.null(id_sources)) NULL else if(all(id_sources$numeric) &&
+    !(any(id_sources$collision) && identical(subjid_collision, "split"))) "integer" else "character"
 
   if(!is.null(id_sources) &&
      (length(unique(id_sources$class)) > 1 || length(unique(id_sources$numeric)) > 1)){
@@ -60,7 +88,9 @@ edc_dummy_spec = function(db){
       ifelse(examples$numeric, "numeric-compatible", "not numeric-compatible"), ")",
       collapse = ", "
     )
-    explanation = if(id_class == "integer"){
+    explanation = if(any(id_sources$collision) && identical(subjid_collision, "split")){
+      'Colliding identifiers remain distinct; dummy `SUBJID` will be character.'
+    } else if(id_class == "integer"){
       'All non-missing identifiers are numeric-compatible (e.g. "001" and 1); dummy `SUBJID` will be integer.'
     } else {
       'Some identifiers are not numeric-compatible; dummy `SUBJID` will be character.'
@@ -77,7 +107,11 @@ edc_dummy_spec = function(db){
     n_subjects = nrow(data)
     if(length(id_index) > 0){
       ids = data[[id_index[1]]]
-      if(id_class == "integer") ids = suppressWarnings(as.numeric(ids))
+      if(id_class == "integer" ||
+         (identical(subjid_collision, "merge") &&
+          any(id_sources$collision[id_sources$dataset == dataset_name]))){
+        ids = suppressWarnings(as.numeric(ids))
+      }
       n_subjects = length(unique(ids[!is.na(ids)]))
       if(nrow(data) > 0 && n_subjects == 0) n_subjects = 1L
     }
