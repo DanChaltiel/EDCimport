@@ -1,9 +1,14 @@
+.dummy_identifier_class = function(classes){
+  if(all(vapply(classes, function(x){
+    .dummy_has_class(x, "integer") || .dummy_has_class(x, "numeric") ||
+      .dummy_has_class(x, "double")
+  }, logical(1)))) "integer" else "character"
+}
+
+
 .dummy_subject_ids = function(n, class_string){
   n = as.integer(n)
   if(.dummy_has_class(class_string, "integer")) return(seq_len(n))
-  if(.dummy_has_class(class_string, "numeric") || .dummy_has_class(class_string, "double")){
-    return(as.numeric(seq_len(n)))
-  }
   if(n <= 0) return(character())
   width = max(4L, nchar(as.character(n)))
   paste0("DUMMY_SUBJECT_", sprintf(paste0("%0", width, "d"), seq_len(n)))

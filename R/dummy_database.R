@@ -3,8 +3,9 @@
 #' `edc_dummy_database()` only uses the portable specification produced by
 #' [edc_dummy_spec()]. It does not require access to the original database.
 #'
-#' The generated database uses artificial subject identifiers in the type
-#' recorded for `SUBJID` and a fixed artificial extraction date. Its `.lookup`
+#' The generated database uses artificial subject identifiers of a single type
+#' across all datasets (`character` or `integer`) and a fixed artificial extraction
+#' date. Its `.lookup`
 #' table is built and extended from the dummy datasets by `new_edc_database()`.
 #' The current implementation preserves only simple univariate
 #' structure and should not be interpreted as an anonymisation or synthetic-data
@@ -21,6 +22,9 @@
 edc_dummy_database = function(spec, seed = NULL){
   .dummy_validate_spec(spec)
   spec = as.data.frame(spec, stringsAsFactors = FALSE)
+  spec$class = as.character(spec$class)
+  id_rows = spec$generator == "identifier"
+  if(any(id_rows)) spec$class[id_rows] = .dummy_identifier_class(spec$class[id_rows])
 
   if(!is.null(seed)){
     if(!is.numeric(seed) || length(seed) != 1 || is.na(seed)){

@@ -11,7 +11,10 @@
 #'
 #' Real subject identifiers, character values, and calendar dates are not copied
 #' into the specification. Factor levels are treated as structural metadata and
-#' are currently preserved.
+#' are currently preserved. `SUBJID` is harmonized across datasets: integer
+#' and double source columns yield integer dummy identifiers; if any source
+#' `SUBJID` is character, every dummy identifier is character. Differing
+#' source classes trigger a warning with dataset examples.
 #'
 #' @param db An `edc_database`.
 #'
@@ -27,6 +30,32 @@ edc_dummy_spec = function(db){
   dataset_names = dataset_names[dataset_names != ".lookup"]
   if(length(dataset_names) == 0){
     cli_abort("{.arg db} does not contain any dataset.")
+  }
+
+  id_sources = lapply(dataset_names, function(dataset_name){
+    data = db[[dataset_name]]
+    columns = names(data)[toupper(names(data)) == "SUBJID"]
+    if(length(columns) == 0) return(NULL)
+    data.frame(
+      dataset = dataset_name,
+      class = vapply(columns, function(column){
+        paste(class(data[[column]]), collapse = "|")
+      }, character(1)),
+      stringsAsFactors = FALSE
+    )
+  })
+  id_sources = Filter(Negate(is.null), id_sources)
+  id_sources = if(length(id_sources) == 0) NULL else do.call(rbind, id_sources)
+  id_class = if(is.null(id_sources)) NULL else .dummy_identifier_class(id_sources$class)
+
+  if(!is.null(id_sources) && length(unique(id_sources$class)) > 1){
+    examples = id_sources[!duplicated(id_sources$class), , drop = FALSE]
+    examples = paste0(examples$dataset, " (", examples$class, ")", collapse = ", ")
+    example_id = if(id_class == "integer") "1, 2, 3" else "DUMMY_SUBJECT_0001"
+    cli_warn(c(
+      "`SUBJID` has different classes across datasets, e.g. {examples}.",
+      i = "All dummy identifiers will use {.val {id_class}} (e.g. {.val {example_id}})."
+    ), class = "edc_dummy_subjid_class_warning")
   }
 
   specs = lapply(dataset_names, function(dataset_name){
@@ -49,7 +78,7 @@ edc_dummy_spec = function(db){
         n_subjects = n_subjects,
         column = column_name,
         column_label = .dummy_label(x),
-        class = paste(class(x), collapse = "|"),
+        class = if(profile$generator == "identifier") id_class else paste(class(x), collapse = "|"),
         generator = profile$generator,
         depends_on = NA_character_,
         param1 = profile$param1,

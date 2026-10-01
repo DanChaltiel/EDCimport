@@ -147,11 +147,16 @@ test_that("generation is reproducible and preserves the caller RNG state", {
 })
 
 
-test_that("numeric subject identifiers remain numeric through CSV and unification", {
+test_that("integer and double source identifiers become integer across datasets", {
   db = dummy_test_database()
   db$subjects$SUBJID = as.integer(seq(7001, 7012))
   db$visits$SUBJID = rep(as.numeric(db$subjects$SUBJID), each = 2)
-  spec = edc_dummy_spec(db)
+  expect_warning(
+    {spec = edc_dummy_spec(db)},
+    "subjects \\(integer\\), visits \\(numeric\\)",
+    class = "edc_dummy_subjid_class_warning"
+  )
+  expect_identical(spec$class[spec$generator == "identifier"], c("integer", "integer"))
   file = tempfile(fileext = ".csv")
   on.exit(unlink(file), add = TRUE)
   write.csv(spec, file, row.names = FALSE)
@@ -159,7 +164,7 @@ test_that("numeric subject identifiers remain numeric through CSV and unificatio
   dummy = read.csv(file) %>% edc_dummy_database(seed = 42)
 
   expect_type(dummy$subjects$SUBJID, "integer")
-  expect_type(dummy$visits$SUBJID, "double")
+  expect_type(dummy$visits$SUBJID, "integer")
   expect_identical(dummy$subjects$SUBJID, seq_len(12L))
   expect_setequal(unique(dummy$subjects$SUBJID), unique(dummy$visits$SUBJID))
   expect_length(intersect(db$subjects$SUBJID, dummy$subjects$SUBJID), 0)
@@ -167,6 +172,32 @@ test_that("numeric subject identifiers remain numeric through CSV and unificatio
   unified = dummy %>% edc_unify_subjid(mode = "numeric")
   expect_type(unified$subjects$SUBJID, "double")
   expect_equal(unified$subjects$SUBJID, as.numeric(seq_len(12L)))
+})
+
+
+test_that("a character SUBJID harmonizes all dummy datasets to character", {
+  db = dummy_test_database()
+  db$visits$SUBJID = rep(as.integer(seq(7001, 7012)), each = 2)
+  expect_warning(
+    {spec = edc_dummy_spec(db)},
+    "subjects \\(character\\), visits \\(integer\\)",
+    class = "edc_dummy_subjid_class_warning"
+  )
+  expect_identical(spec$class[spec$generator == "identifier"], c("character", "character"))
+
+  file = tempfile(fileext = ".csv")
+  on.exit(unlink(file), add = TRUE)
+  write.csv(spec, file, row.names = FALSE)
+  dummy = read.csv(file) %>% edc_dummy_database(seed = 42)
+
+  expect_type(dummy$subjects$SUBJID, "character")
+  expect_type(dummy$visits$SUBJID, "character")
+  expect_true(all(grepl("^DUMMY_SUBJECT_", dummy$visits$SUBJID)))
+  expect_setequal(unique(dummy$subjects$SUBJID), unique(dummy$visits$SUBJID))
+
+  spec$class[spec$dataset == "visits" & spec$generator == "identifier"] = "integer"
+  old_dummy = edc_dummy_database(spec, seed = 42)
+  expect_type(old_dummy$visits$SUBJID, "character")
 })
 
 
@@ -208,7 +239,8 @@ test_that("CSV2 dummy follows the usual import and viewer workflow", {
   real$visits$SUBJID = rep(as.numeric(real$subjects$SUBJID), each = 2)
   file = tempfile(fileext = ".csv")
   on.exit(unlink(file), add = TRUE)
-  real %>% edc_dummy_spec() %>% write.csv2(file, row.names = FALSE)
+  expect_warning({spec = edc_dummy_spec(real)}, class = "edc_dummy_subjid_class_warning")
+  write.csv2(spec, file, row.names = FALSE)
 
   db = read.csv2(file) %>%
     edc_dummy_database(seed = 42) %>%
