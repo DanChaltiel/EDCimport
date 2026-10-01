@@ -153,7 +153,7 @@ test_that("integer and double source identifiers become integer across datasets"
   db$visits$SUBJID = rep(as.numeric(db$subjects$SUBJID), each = 2)
   expect_warning(
     {spec = edc_dummy_spec(db)},
-    "subjects \\(integer\\), visits \\(numeric\\)",
+    "subjects \\(integer, numeric-compatible\\), visits \\(numeric, numeric-compatible\\)",
     class = "edc_dummy_subjid_class_warning"
   )
   expect_identical(spec$class[spec$generator == "identifier"], c("integer", "integer"))
@@ -175,12 +175,46 @@ test_that("integer and double source identifiers become integer across datasets"
 })
 
 
+test_that("numeric strings such as 001 generate integer identifiers", {
+  db = dummy_test_database()
+  db$subjects$SUBJID = sprintf("%03d", seq_len(12L))
+  db$visits$SUBJID = rep(db$subjects$SUBJID, each = 2)
+  plain_spec = edc_dummy_spec(db)
+  expect_identical(plain_spec$class[plain_spec$generator == "identifier"], c("integer", "integer"))
+
+  db$visits$SUBJID = rep(as.integer(seq(7001, 7012)), each = 2)
+  expect_warning(
+    {spec = edc_dummy_spec(db)},
+    "subjects \\(character, numeric-compatible\\), visits \\(integer, numeric-compatible\\)",
+    class = "edc_dummy_subjid_class_warning"
+  )
+  expect_identical(spec$class[spec$generator == "identifier"], c("integer", "integer"))
+
+  file = tempfile(fileext = ".csv")
+  on.exit(unlink(file), add = TRUE)
+  write.csv2(spec, file, row.names = FALSE)
+  dummy = read.csv2(file) %>% edc_dummy_database(seed = 42)
+
+  expect_type(dummy$subjects$SUBJID, "integer")
+  expect_type(dummy$visits$SUBJID, "integer")
+  expect_identical(unique(dummy$subjects$SUBJID), seq_len(12L))
+  expect_setequal(unique(dummy$subjects$SUBJID), unique(dummy$visits$SUBJID))
+
+  db$subjects$SUBJID[2] = "1"
+  expect_warning(
+    {spec = edc_dummy_spec(db)},
+    class = "edc_dummy_subjid_class_warning"
+  )
+  expect_identical(unique(spec$n_subjects[spec$dataset == "subjects"]), 11L)
+})
+
+
 test_that("a character SUBJID harmonizes all dummy datasets to character", {
   db = dummy_test_database()
   db$visits$SUBJID = rep(as.integer(seq(7001, 7012)), each = 2)
   expect_warning(
     {spec = edc_dummy_spec(db)},
-    "subjects \\(character\\), visits \\(integer\\)",
+    "subjects \\(character, not numeric-compatible\\), visits \\(integer, numeric-compatible\\)",
     class = "edc_dummy_subjid_class_warning"
   )
   expect_identical(spec$class[spec$generator == "identifier"], c("character", "character"))

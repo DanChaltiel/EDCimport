@@ -11,10 +11,11 @@
 #'
 #' Real subject identifiers, character values, and calendar dates are not copied
 #' into the specification. Factor levels are treated as structural metadata and
-#' are currently preserved. `SUBJID` is harmonized across datasets: integer
-#' and double source columns yield integer dummy identifiers; if any source
-#' `SUBJID` is character, every dummy identifier is character. Differing
-#' source classes trigger a warning with dataset examples.
+#' are currently preserved. `SUBJID` is harmonized across datasets: if all
+#' non-missing source identifiers can be interpreted as finite numbers, the
+#' dummy identifiers are integer, even for character values such as `"001"`.
+#' Otherwise they are character. Differing source classes or numeric
+#' compatibility trigger a warning with dataset examples.
 #'
 #' @param db An `edc_database`.
 #'
@@ -41,20 +42,32 @@ edc_dummy_spec = function(db){
       class = vapply(columns, function(column){
         paste(class(data[[column]]), collapse = "|")
       }, character(1)),
+      numeric = vapply(columns, function(column){
+        .dummy_numeric_identifier(data[[column]])
+      }, logical(1)),
       stringsAsFactors = FALSE
     )
   })
   id_sources = Filter(Negate(is.null), id_sources)
   id_sources = if(length(id_sources) == 0) NULL else do.call(rbind, id_sources)
-  id_class = if(is.null(id_sources)) NULL else .dummy_identifier_class(id_sources$class)
+  id_class = if(is.null(id_sources)) NULL else if(all(id_sources$numeric)) "integer" else "character"
 
-  if(!is.null(id_sources) && length(unique(id_sources$class)) > 1){
-    examples = id_sources[!duplicated(id_sources$class), , drop = FALSE]
-    examples = paste0(examples$dataset, " (", examples$class, ")", collapse = ", ")
-    example_id = if(id_class == "integer") "1, 2, 3" else "DUMMY_SUBJECT_0001"
+  if(!is.null(id_sources) &&
+     (length(unique(id_sources$class)) > 1 || length(unique(id_sources$numeric)) > 1)){
+    examples = id_sources[!duplicated(id_sources[c("class", "numeric")]), , drop = FALSE]
+    examples = paste0(
+      examples$dataset, " (", examples$class, ", ",
+      ifelse(examples$numeric, "numeric-compatible", "not numeric-compatible"), ")",
+      collapse = ", "
+    )
+    explanation = if(id_class == "integer"){
+      'All non-missing identifiers are numeric-compatible (e.g. "001" and 1); dummy `SUBJID` will be integer.'
+    } else {
+      'Some identifiers are not numeric-compatible; dummy `SUBJID` will be character.'
+    }
     cli_warn(c(
-      "`SUBJID` has different classes across datasets, e.g. {examples}.",
-      i = "All dummy identifiers will use {.val {id_class}} (e.g. {.val {example_id}})."
+      "`SUBJID` differs across datasets, e.g. {examples}.",
+      i = "{explanation}"
     ), class = "edc_dummy_subjid_class_warning")
   }
 
@@ -64,6 +77,7 @@ edc_dummy_spec = function(db){
     n_subjects = nrow(data)
     if(length(id_index) > 0){
       ids = data[[id_index[1]]]
+      if(id_class == "integer") ids = suppressWarnings(as.numeric(ids))
       n_subjects = length(unique(ids[!is.na(ids)]))
       if(nrow(data) > 0 && n_subjects == 0) n_subjects = 1L
     }

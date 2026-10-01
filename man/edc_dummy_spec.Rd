@@ -27,7 +27,7 @@ edc_dummy_database(spec, seed = NULL)
 \details{
 The current implementation is deliberately minimal. It preserves dataset and column structure, basic R classes and labels, coarse univariate generation parameters, and missingness. It does not preserve clinical relationships, patient trajectories, or mixed-grain dependencies.
 
-Real subject identifiers, character values, and calendar dates are not copied into the specification. Factor levels are treated as structural metadata and are currently preserved. \code{SUBJID} is harmonized across datasets: integer and double source columns yield integer dummy identifiers; if any source \code{SUBJID} is character, every dummy identifier is character. Differing source classes trigger a warning with dataset examples.
+Real subject identifiers, character values, and calendar dates are not copied into the specification. Factor levels are treated as structural metadata and are currently preserved. \code{SUBJID} is harmonized across datasets: if all non-missing source identifiers can be interpreted as finite numbers, the dummy identifiers are integer, even for character values such as \code{"001"}. Otherwise they are character. Differing source classes or numeric compatibility trigger a warning with dataset examples.
 
 The generated database uses artificial subject identifiers of a single type across all datasets (\code{character} or \code{integer}) and a fixed artificial extraction date. Its \code{.lookup} table is built and extended from the dummy datasets by \code{new_edc_database()}. This functionality should not be interpreted as an anonymisation or synthetic-data method preserving clinical or statistical relationships.
 }

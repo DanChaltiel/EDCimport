@@ -6,6 +6,15 @@
 }
 
 
+.dummy_numeric_identifier = function(x){
+  if(is.factor(x) || !(is.character(x) || is.numeric(x))) return(FALSE)
+  x = x[!is.na(x)]
+  if(length(x) == 0) return(TRUE)
+  if(!isTRUE(can_be_numeric(x))) return(FALSE)
+  all(is.finite(suppressWarnings(as.numeric(x))))
+}
+
+
 .dummy_subject_ids = function(n, class_string){
   n = as.integer(n)
   if(.dummy_has_class(class_string, "integer")) return(seq_len(n))
