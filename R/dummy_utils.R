@@ -24,6 +24,53 @@
 }
 
 
+.dummy_structure_defaults = function(spec){
+  defaults = list(
+    unique = NA_character_, level = NA_integer_,
+    mean_n = NA_real_, mean_rows = NA_real_
+  )
+  for(name in names(defaults)){
+    if(!name %in% names(spec)) spec[[name]] = defaults[[name]]
+  }
+  spec$unique = as.character(spec$unique)
+  spec$depends_on = as.character(spec$depends_on)
+  for(name in c("level", "mean_n", "mean_rows")){
+    spec[[name]] = as.character(spec[[name]])
+  }
+  spec
+}
+
+
+.dummy_group_ids = function(data, columns){
+  if(nrow(data) == 0) return(integer())
+  data %>%
+    group_by(across(all_of(columns))) %>%
+    dplyr::group_indices()
+}
+
+
+.dummy_check_structure = function(data, spec){
+  for(i in seq_len(nrow(spec))){
+    column = as.character(spec$column[i])
+    keys = .dummy_decode_values(spec$depends_on[i])
+    if(is.na(spec$level[i]) && length(keys) > 0 && nrow(data) > 0 &&
+       !.dummy_is_dependency(data, keys, column) && !all(is.na(data[[column]]))){
+      cli_abort("Dataset {.val {spec$dataset[i]}}: generated {.field {column}} violates its dependency. Edit the specification.")
+    }
+    constraints = if(identical(as.character(spec$unique[i]), "*")){
+      list(column)
+    } else lapply(.dummy_decode_values(spec$unique[i]), function(key) c(key, column))
+    for(constraint in constraints){
+      observed = data[complete.cases(data[constraint]), constraint, drop = FALSE]
+      if(anyDuplicated(observed)){
+        cli_abort("Dataset {.val {spec$dataset[i]}}: generated {.field {column}} violates uniqueness. Edit its dependencies, repetition means, or uniqueness constraints.")
+      }
+    }
+  }
+  invisible(data)
+}
+
+
 .dummy_validate_spec = function(spec){
   if(!is.data.frame(spec)){
     cli_abort("{.arg spec} must be a data frame.")
@@ -41,6 +88,7 @@
   if(nrow(spec) == 0){
     cli_abort("{.arg spec} must contain at least one row.")
   }
+  spec = .dummy_structure_defaults(spec)
 
   dataset = as.character(spec$dataset)
   column = as.character(spec$column)
@@ -73,6 +121,37 @@
     }
     if(n_rows > 0 && n_subjects == 0 && any(as.character(rows$generator) == "identifier")){
       cli_abort("Dataset {.val {dataset_name}} needs at least one subject for an identifier generator.")
+    }
+    levels = suppressWarnings(as.numeric(rows$level))
+    if(any(!is.na(rows$level) & (is.na(levels) | !is.finite(levels) | levels < 1 | levels != floor(levels))) ||
+       anyDuplicated(levels[!is.na(levels)])){
+      cli_abort("Dataset {.val {dataset_name}} has invalid or duplicated {.field level} values.")
+    }
+    for(field in c("mean_n", "mean_rows")){
+      values = suppressWarnings(as.numeric(rows[[field]]))
+      if(any(!is.na(levels) & (is.na(values) | !is.finite(values) | values < 1))){
+        cli_abort("Dataset {.val {dataset_name}} needs finite {.field {field}} values of at least one for its levels.")
+      }
+    }
+    for(i in seq_len(nrow(rows))){
+      for(field in c("depends_on", "unique")){
+        value = as.character(rows[[field]][i])
+        if(!is.na(value) && value != "" && !(field == "unique" && value == "*") &&
+           !identical(.dummy_encode_values(.dummy_decode_values(value)), value)){
+          cli_abort("Dataset {.val {dataset_name}}: {.field {field}} must contain an encoded column list, e.g. {.val 1:SUBJID}.")
+        }
+      }
+      keys = .dummy_decode_values(rows$depends_on[i])
+      partners = .dummy_decode_values(rows$unique[i])
+      if(any(!c(keys, partners) %in% rows$column) || rows$column[i] %in% c(keys, partners)){
+        cli_abort("Dataset {.val {dataset_name}}: {.field {rows$column[i]}} refers to missing columns or itself.")
+      }
+      if(!is.na(levels[i])){
+        parent_levels = levels[match(keys, rows$column)]
+        if(any(is.na(parent_levels) | parent_levels >= levels[i])){
+          cli_abort("Dataset {.val {dataset_name}}: level dependencies must refer to earlier levels.")
+        }
+      }
     }
   }
 

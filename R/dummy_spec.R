@@ -4,10 +4,28 @@
 #' CSV-compatible data frame. The specification is intended to be editable and
 #' transportable without the original patient-level database.
 #'
-#' The current implementation is deliberately minimal. It preserves dataset and
-#' column structure, basic R classes and labels, coarse univariate generation
-#' parameters, and missingness. It does not preserve clinical relationships,
-#' patient trajectories, or mixed-grain dependencies.
+#' The specification preserves column structure, classes, labels, coarse
+#' generation parameters, and missingness. It also records observed uniqueness,
+#' functional dependencies, and an inferred hierarchy of repeated observations.
+#' Subject and date columns are considered first; remaining column order
+#' guides the hierarchy.
+#' These observed relationships are editable heuristics, not clinical rules.
+#'
+#' - `unique` is `*` for global uniqueness, or an encoded list of columns:
+#'   each listed column separately forms a unique pair with this column.
+#'   All supported column pairs are checked on complete observations.
+#' - `depends_on` is an encoded list forming one grouping combination. A
+#'   non-level column is generated once per group, then repeated.
+#'   Dependencies are checked against successive hierarchy prefixes and
+#'   earlier non-level columns. Missingness counts as a distinct value.
+#' - `level` orders the inferred hierarchy. Level columns introduce distinct
+#'   values within their parent group.
+#' - `mean_n` is the mean number of child groups per parent; `mean_rows` is
+#'   the mean number of rows per group. Both are rounded to one decimal.
+#'
+#' Column lists use the same encoding as categorical values, for example
+#' `1:SUBJID` or `2:SUBJID|DATE`. Names containing separators are URL-encoded.
+#' The structure fields can be edited or cleared to remove inferred constraints.
 #'
 #' Real subject identifiers, character values, and calendar dates are not copied
 #' into the specification. Factor levels are treated as structural metadata and
@@ -103,6 +121,7 @@ edc_dummy_spec = function(db, subjid_collision = NA){
 
   specs = lapply(dataset_names, function(dataset_name){
     data = db[[dataset_name]]
+    structure_data = data
     id_index = which(toupper(names(data)) == "SUBJID")
     n_subjects = nrow(data)
     if(length(id_index) > 0){
@@ -114,7 +133,9 @@ edc_dummy_spec = function(db, subjid_collision = NA){
       }
       n_subjects = length(unique(ids[!is.na(ids)]))
       if(nrow(data) > 0 && n_subjects == 0) n_subjects = 1L
+      structure_data[[id_index[1]]] = ids
     }
+    structure = .dummy_profile_structure(structure_data)
 
     rows = lapply(names(data), function(column_name){
       x = data[[column_name]]
@@ -128,7 +149,11 @@ edc_dummy_spec = function(db, subjid_collision = NA){
         column_label = .dummy_label(x),
         class = if(profile$generator == "identifier") id_class else paste(class(x), collapse = "|"),
         generator = profile$generator,
-        depends_on = NA_character_,
+        unique = structure$unique[match(column_name, structure$column)],
+        depends_on = structure$depends_on[match(column_name, structure$column)],
+        level = structure$level[match(column_name, structure$column)],
+        mean_n = structure$mean_n[match(column_name, structure$column)],
+        mean_rows = structure$mean_rows[match(column_name, structure$column)],
         param1 = profile$param1,
         param2 = profile$param2,
         param3 = profile$param3,
@@ -143,6 +168,99 @@ edc_dummy_spec = function(db, subjid_collision = NA){
   rtn = do.call(rbind, specs)
   rownames(rtn) = NULL
   rtn
+}
+
+
+.dummy_profile_structure = function(data){
+  columns = names(data)
+  rtn = data.frame(
+    column = columns, unique = NA_character_, depends_on = NA_character_,
+    level = NA_integer_, mean_n = NA_real_, mean_rows = NA_real_,
+    stringsAsFactors = FALSE
+  )
+  if(nrow(data) == 0) return(rtn)
+  supported = vapply(data, function(x){
+    is.atomic(x) && (is.character(x) || is.numeric(x) || is.logical(x) ||
+      is.factor(x) || inherits(x, "Date"))
+  }, logical(1))
+  eligible = columns[supported]
+  global = vapply(eligible, function(column){
+    x = data[[column]]
+    x = x[!is.na(x)]
+    length(x) > 1 && !anyDuplicated(x)
+  }, logical(1))
+  partners = setNames(vector("list", length(columns)), columns)
+  if(length(eligible) > 1){
+    pairs = combn(eligible, 2, simplify = FALSE)
+    for(pair in pairs){
+      observed = data[complete.cases(data[pair]), pair, drop = FALSE]
+      if(nrow(observed) > 1 && !anyDuplicated(observed)){
+        partners[[pair[1]]] = c(partners[[pair[1]]], pair[2])
+        partners[[pair[2]]] = c(partners[[pair[2]]], pair[1])
+      }
+    }
+  }
+  for(column in eligible){
+    i = match(column, columns)
+    if(global[[column]]){
+      rtn$unique[i] = "*"
+    } else if(length(partners[[column]]) > 0){
+      rtn$unique[i] = .dummy_encode_values(partners[[column]])
+    }
+  }
+
+  id = eligible[toupper(eligible) == "SUBJID"]
+  hierarchy = character()
+  processed = character()
+  parent_n = 1L
+  if(length(id) > 0){
+    hierarchy = id[1]
+    processed = id
+    parent_n = nrow(unique(data[hierarchy]))
+    i = match(id[1], columns)
+    rtn$level[i] = 1L
+    rtn$mean_n[i] = parent_n
+    rtn$mean_rows[i] = round(nrow(data) / parent_n, 1)
+  }
+  dates = eligible[vapply(data[eligible], inherits, logical(1), what = "Date")]
+  ordered = unique(c(dates, eligible))
+  for(column in setdiff(ordered, processed)){
+    i = match(column, columns)
+    candidates = lapply(seq_along(hierarchy), function(k) hierarchy[seq_len(k)])
+    other = processed[!processed %in% hierarchy]
+    candidates = c(candidates, lapply(other[!global[other]], function(x) x))
+    dependency = NULL
+    for(keys in candidates){
+      if(.dummy_is_dependency(data, keys, column)){
+        dependency = keys
+        break
+      }
+    }
+    if(!is.null(dependency)){
+      rtn$depends_on[i] = .dummy_encode_values(dependency)
+    } else {
+      child_n = nrow(unique(data[c(hierarchy, column)]))
+      if(child_n > parent_n){
+        if(length(hierarchy) > 0){
+          rtn$depends_on[i] = .dummy_encode_values(hierarchy)
+        }
+        rtn$level[i] = length(hierarchy) + 1L
+        rtn$mean_n[i] = round(child_n / parent_n, 1)
+        rtn$mean_rows[i] = round(nrow(data) / child_n, 1)
+        hierarchy = c(hierarchy, column)
+        parent_n = child_n
+      }
+    }
+    processed = c(processed, column)
+  }
+  rtn
+}
+
+
+.dummy_is_dependency = function(data, keys, column){
+  observed = data[c(keys, column)]
+  if(all(is.na(observed[[column]]))) return(FALSE)
+  nrow(unique(observed)) == nrow(unique(observed[keys]))
 }
 
 
