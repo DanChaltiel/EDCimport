@@ -103,7 +103,7 @@
 
   allowed_generators = c(
     "identifier", "categorical", "logical", "integer", "numeric",
-    "constant", "date", "text", "unsupported"
+    "constant", "date", "date_character", "text", "unsupported"
   )
   bad_generators = unique(generator[!generator %in% allowed_generators])
   if(length(bad_generators) > 0){
@@ -135,6 +135,10 @@
       }
     }
     for(i in seq_len(nrow(rows))){
+      if(rows$generator[i] == "date_character" &&
+         (is.na(rows$param3[i]) || !rows$param3[i] %in% c("%Y/%m", "%Y-%m", "%m/%Y", "%m-%Y", "%Y/%m/%d", "%Y-%m-%d"))){
+        cli_abort("Dataset {.val {dataset_name}}: {.field {rows$column[i]}} has an invalid character date format in {.field param3}.")
+      }
       for(field in c("depends_on", "unique")){
         value = as.character(rows[[field]][i])
         if(!is.na(value) && value != "" && !(field == "unique" && value == "*") &&

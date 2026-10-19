@@ -26,6 +26,11 @@
 #' Column lists use the same encoding as categorical values, for example
 #' `1:SUBJID` or `2:SUBJID|DATE`. Names containing separators are URL-encoded.
 #' The structure fields can be edited or cleared to remove inferred constraints.
+#' Character columns containing a uniform valid date format (`YYYY/MM`,
+#' `YYYY-MM`, `MM/YYYY`, `MM-YYYY`, `YYYY/MM/DD`, or `YYYY-MM-DD`) use
+#' `date_character` generation.
+#' Their class and precision are preserved. `param3` records the format;
+#' `param1` and `param2` give an artificial start and a coarse span in days.
 #'
 #' Real subject identifiers, character values, and calendar dates are not copied
 #' into the specification. Factor levels are treated as structural metadata and
@@ -225,7 +230,9 @@ edc_dummy_spec = function(db, subjid_collision = NA){
     rtn$mean_n[i] = parent_n
     rtn$mean_rows[i] = round(nrow(data) / parent_n, 1)
   }
-  dates = eligible[vapply(data[eligible], inherits, logical(1), what = "Date")]
+  dates = eligible[vapply(data[eligible], function(x){
+    inherits(x, "Date") || !is.na(.dummy_character_date_format(x))
+  }, logical(1))]
   ordered = unique(c(dates, eligible))
   for(column in setdiff(ordered, processed)){
     i = match(column, columns)
@@ -267,6 +274,31 @@ edc_dummy_spec = function(db, subjid_collision = NA){
 }
 
 
+.dummy_character_date_format = function(x){
+  if(!is.character(x)) return(NA_character_)
+  values = unique(x[!is.na(x)])
+  if(length(values) == 0) return(NA_character_)
+  patterns = c(
+    "%Y/%m" = "^[0-9]{4}/(0[1-9]|1[0-2])$",
+    "%Y-%m" = "^[0-9]{4}-(0[1-9]|1[0-2])$",
+    "%m/%Y" = "^(0[1-9]|1[0-2])/[0-9]{4}$",
+    "%m-%Y" = "^(0[1-9]|1[0-2])-[0-9]{4}$",
+    "%Y/%m/%d" = "^[0-9]{4}/(0[1-9]|1[0-2])/[0-9]{2}$",
+    "%Y-%m-%d" = "^[0-9]{4}-(0[1-9]|1[0-2])-[0-9]{2}$"
+  )
+  for(date_format in names(patterns)){
+    if(!all(grepl(patterns[[date_format]], values))) next
+    partial = !grepl("%d", date_format, fixed = TRUE)
+    separator = if(grepl("/", date_format, fixed = TRUE)) "/" else "-"
+    complete = if(partial) paste0(values, separator, "01") else values
+    full_format = if(partial) paste0(date_format, separator, "%d") else date_format
+    parsed = suppressWarnings(as.Date(complete, format = full_format))
+    if(!anyNA(parsed) && all(format(parsed, date_format) == values)) return(date_format)
+  }
+  NA_character_
+}
+
+
 .dummy_profile_column = function(column_name, x){
   missing = list(param1 = NA_character_, param2 = NA_character_, param3 = NA_character_)
 
@@ -280,6 +312,19 @@ edc_dummy_spec = function(db, subjid_collision = NA){
       param1 = "2000-01-01",
       param2 = "365",
       param3 = NA_character_
+    ))
+  }
+
+  date_format = .dummy_character_date_format(x)
+  if(!is.na(date_format)){
+    n_values = length(unique(x[!is.na(x)]))
+    step = if(grepl("%d", date_format, fixed = TRUE)) 1L else 31L
+    span = max(365, 365 * ceiling((n_values - 1) * step / 365))
+    return(list(
+      generator = "date_character",
+      param1 = "2000-01-01",
+      param2 = as.character(span),
+      param3 = date_format
     ))
   }
 

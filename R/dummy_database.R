@@ -96,7 +96,7 @@ edc_dummy_database = function(spec, seed = NULL){
       cli_abort("Dataset {.val {spec$dataset[1]}} has circular dependencies.")
     }
     priority = ifelse(spec$generator[ready] == "identifier", 0L,
-      ifelse(spec$generator[ready] == "date", 1L,
+      ifelse(spec$generator[ready] %in% c("date", "date_character"), 1L,
         ifelse(!is.na(spec$level[ready]), 2L, 3L)))
     i = ready[order(priority, spec$level[ready], na.last = TRUE)[1]]
     row = spec[i, , drop = FALSE]
@@ -238,6 +238,7 @@ edc_dummy_database = function(spec, seed = NULL){
     numeric = .dummy_generate_numeric(n, param1, param2),
     constant = .dummy_generate_constant(n, class_string, param1),
     date = .dummy_generate_date(n, param1, param2),
+    date_character = format(.dummy_generate_date(n, param1, param2), .dummy_scalar_character(row$param3)),
     text = if(n == 0) character() else paste("dummy text", seq_len(n)),
     unsupported = rep(NA, n),
     cli_abort("Unsupported dummy generator {.val {row$generator}}.")
@@ -256,11 +257,15 @@ edc_dummy_database = function(spec, seed = NULL){
   }
   if(row$generator == "logical") return(c(FALSE, TRUE))
   if(row$generator == "constant") return(.dummy_generate_values(row, 1))
-  if(row$generator == "date"){
+  if(row$generator %in% c("date", "date_character")){
     start = suppressWarnings(as.Date(row$param1))
     if(is.na(start)) start = as.Date("2000-01-01")
     span = max(0L, as.integer(.dummy_number(row$param2, 365)))
-    if(span <= 1000000L) return(start + seq.int(0L, span))
+    if(span <= 1000000L){
+      values = start + seq.int(0L, span)
+      if(row$generator == "date_character") return(unique(format(values, .dummy_scalar_character(row$param3))))
+      return(values)
+    }
   }
   if(row$generator == "integer"){
     bounds = sort(c(.dummy_number(row$param1, 0), .dummy_number(row$param2, 10)))
