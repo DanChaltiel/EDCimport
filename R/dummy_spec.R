@@ -100,11 +100,13 @@ edc_dummy_spec = function(db, subjid_collision = NA){
 
   if(!is.null(id_sources) &&
      (length(unique(id_sources$class)) > 1 || length(unique(id_sources$numeric)) > 1)){
-    examples = id_sources[!duplicated(id_sources[c("class", "numeric")]), , drop = FALSE]
-    examples = paste0(
-      examples$dataset, " (", examples$class, ", ",
-      ifelse(examples$numeric, "numeric-compatible", "not numeric-compatible"), ")",
-      collapse = ", "
+    formats = id_sources %>%
+      group_by(across(all_of(c("class", "numeric")))) %>%
+      summarise(datasets = paste(unique(.data$dataset), collapse = ", "), .groups = "drop")
+    details = paste0(
+      "SUBJID is ", formats$class, " (",
+      ifelse(formats$numeric, "numeric-compatible", "not numeric-compatible"),
+      ") in datasets: ", formats$datasets, "."
     )
     explanation = if(any(id_sources$collision) && identical(subjid_collision, "split")){
       'Colliding identifiers remain distinct; dummy `SUBJID` will be character.'
@@ -114,7 +116,8 @@ edc_dummy_spec = function(db, subjid_collision = NA){
       'Some identifiers are not numeric-compatible; dummy `SUBJID` will be character.'
     }
     cli_warn(c(
-      "`SUBJID` differs across datasets, e.g. {examples}.",
+      "`SUBJID` differs across datasets.",
+      set_names(paste0("{details[", seq_along(details), "]}"), rep("i", length(details))),
       i = "{explanation}"
     ), class = "edc_dummy_subjid_class_warning")
   }
