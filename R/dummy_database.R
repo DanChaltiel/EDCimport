@@ -11,6 +11,10 @@
 #' are respected when present in the specification. Values are generated once
 #' at their inferred level and repeated on lower-level rows. Row counts and
 #' missing proportions can therefore differ slightly from the source.
+#' Missing groups are selected jointly with uniqueness constraints. If the
+#' requested non-missing proportion cannot be reached, extra missing groups
+#' are reported with a warning. A column specified without missingness still
+#' raises an error rather than introducing missing values.
 #' This should not be interpreted as an anonymisation or synthetic-data method
 #' preserving clinical or statistical relationships.
 #'
@@ -87,7 +91,10 @@ edc_dummy_database = function(spec, seed = NULL){
     if(length(ready) == 0){
       cli_abort("Dataset {.val {spec$dataset[1]}} has circular dependencies.")
     }
-    i = ready[1]
+    priority = ifelse(spec$generator[ready] == "identifier", 0L,
+      ifelse(spec$generator[ready] == "date", 1L,
+        ifelse(!is.na(spec$level[ready]), 2L, 3L)))
+    i = ready[order(priority, spec$level[ready], na.last = TRUE)[1]]
     row = spec[i, , drop = FALSE]
     name = as.character(row$column)
     keys = .dummy_decode_values(row$depends_on)
@@ -104,23 +111,26 @@ edc_dummy_database = function(spec, seed = NULL){
       x = if(name %in% names(layout$codes)) x[units] else rep(x, length.out = n_rows)
     } else {
       scopes = list()
+      forced_missing = integer()
       if(identical(as.character(row$unique), "*")){
         scopes = list(rep(1L, n_units))
+        forced_missing = which(tabulate(match(units, units[representatives])) > 1L)
       } else {
         partners = intersect(.dummy_decode_values(row$unique), names(columns))
-        scopes = lapply(partners, function(partner){
-          .dummy_group_ids(generated[representatives, , drop = FALSE], partner)
-        })
+        for(partner in partners){
+          values = generated[[partner]]
+          pairs = data.frame(unit = units, value = values)
+          repeated = !is.na(values) & duplicated(pairs)
+          forced_missing = union(forced_missing, match(units[repeated], units[representatives]))
+          scope = .dummy_group_ids(generated[representatives, , drop = FALSE], partner)
+          scope[is.na(values[representatives])] = NA_integer_
+          scopes = c(scopes, list(scope))
+        }
       }
       if(!is.na(row$level) && length(keys) > 0){
         scopes = c(scopes, list(.dummy_group_ids(generated[representatives, , drop = FALSE], keys)))
       }
-      n_missing = round(n_units * as.numeric(row$missing_prop))
-      missing = if(n_missing > 0) sample.int(n_units, n_missing, replace = FALSE) else integer()
-      present = setdiff(seq_len(n_units), missing)
-      x = .dummy_generate_values(row, n_units)
-      x[] = NA
-      x[present] = .dummy_generate_unique(row, length(present), lapply(scopes, function(scope) scope[present]))
+      x = .dummy_generate_missing(row, n_units, scopes, forced_missing)
       x = x[match(units, units[representatives])]
     }
     label = .dummy_scalar_character(row$column_label)
@@ -226,8 +236,7 @@ edc_dummy_database = function(spec, seed = NULL){
   x = .dummy_generate_values(row, n)
   if(n == 0 || length(scopes) == 0 || row$generator %in% c("text", "unsupported")) return(x)
   domain = .dummy_value_domain(row)
-  scopes = unique(lapply(scopes, function(scope) match(scope, unique(scope))))
-  scopes = scopes[vapply(scopes, function(scope) anyDuplicated(scope) > 0, logical(1))]
+  scopes = .dummy_unique_scopes(scopes)
   if(length(scopes) == 0) return(x)
   for(scope in scopes){
     if(!is.null(domain) && max(tabulate(scope)) > length(domain)){
@@ -266,6 +275,62 @@ edc_dummy_database = function(spec, seed = NULL){
         cli_abort("Dataset {.val {row$dataset}}: cannot generate unique values for {.field {row$column}}. Edit the specification.")
       }
     }
+  }
+  x
+}
+
+
+.dummy_unique_scopes = function(scopes){
+  scopes = unique(lapply(scopes, function(scope){
+    missing = is.na(scope)
+    scope = match(scope, unique(scope))
+    if(any(missing)) scope[missing] = max(scope) + seq_len(sum(missing))
+    scope
+  }))
+  scopes[vapply(scopes, function(scope) anyDuplicated(scope) > 0, logical(1))]
+}
+
+
+.dummy_generate_missing = function(row, n, scopes, forced_missing){
+  x = .dummy_generate_values(row, n)
+  if(n == 0) return(x)
+  x[] = NA
+  target = n - round(n * as.numeric(row$missing_prop))
+  candidates = setdiff(sample.int(n), forced_missing)
+  scopes = .dummy_unique_scopes(scopes)
+  domain = if(length(scopes) > 0) .dummy_value_domain(row) else NULL
+  selected = integer()
+  if(is.null(domain)){
+    selected = head(candidates, target)
+    x[selected] = .dummy_generate_unique(row, length(selected), lapply(scopes, function(scope) scope[selected]))
+  } else {
+    used = lapply(scopes, function(scope) vector("list", max(scope)))
+    values = .dummy_generate_values(row, n)
+    for(i in candidates){
+      if(length(selected) >= target) break
+      blocked = unique(unlist(lapply(seq_along(scopes), function(k){
+        used[[k]][[scopes[[k]][i]]]
+      })))
+      available = which(!seq_along(domain) %in% blocked)
+      if(length(available) == 0) next
+      value = match(values[i], domain)
+      if(!value %in% available) value = available[sample.int(length(available), 1L)]
+      x[i] = domain[value]
+      selected = c(selected, i)
+      for(k in seq_along(scopes)){
+        group = scopes[[k]][i]
+        used[[k]][[group]] = c(used[[k]][[group]], value)
+      }
+    }
+  }
+  if(length(selected) < target){
+    if(as.numeric(row$missing_prop) == 0){
+      cli_abort("Dataset {.val {row$dataset}}: {.field {row$column}} cannot satisfy its uniqueness constraints without adding missing values. Edit its repetition structure or uniqueness constraints.")
+    }
+    cli_warn(c(
+      "Dataset {.val {row$dataset}}: extra missing values were needed for {.field {row$column}} to respect uniqueness and dependencies.",
+      i = "Generated {length(selected)} non-missing groups instead of the requested {target}."
+    ), class = "edc_dummy_missingness_warning")
   }
   x
 }
