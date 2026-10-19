@@ -4,6 +4,7 @@ name: Bump dev version
 on:
   workflow_run:
     workflows: ["R-CMD-check"]
+    branches: [main, master]
     types:
       - completed
       
