@@ -15,6 +15,8 @@
 #' requested non-missing proportion cannot be reached, extra missing groups
 #' are reported with a warning. A column specified without missingness still
 #' raises an error rather than introducing missing values.
+#' Finite domains of non-missing unique partners also limit how often a value
+#' can be repeated, accounting for all rows represented by a generated group.
 #' This should not be interpreted as an anonymisation or synthetic-data method
 #' preserving clinical or statistical relationships.
 #'
@@ -130,7 +132,9 @@ edc_dummy_database = function(spec, seed = NULL){
       if(!is.na(row$level) && length(keys) > 0){
         scopes = c(scopes, list(.dummy_group_ids(generated[representatives, , drop = FALSE], keys)))
       }
-      x = .dummy_generate_missing(row, n_units, scopes, forced_missing)
+      weights = tabulate(match(units, units[representatives]), nbins = n_units)
+      capacity = .dummy_partner_capacity(spec, row)
+      x = .dummy_generate_missing(row, n_units, scopes, forced_missing, weights, capacity)
       x = x[match(units, units[representatives])]
     }
     label = .dummy_scalar_character(row$column_label)
@@ -291,31 +295,46 @@ edc_dummy_database = function(spec, seed = NULL){
 }
 
 
-.dummy_generate_missing = function(row, n, scopes, forced_missing){
+.dummy_partner_capacity = function(spec, row){
+  partners = .dummy_decode_values(row$unique)
+  capacities = vapply(seq_len(nrow(spec)), function(i){
+    target = spec[i, , drop = FALSE]
+    related = row$column %in% .dummy_decode_values(target$unique) || target$column %in% partners
+    if(!related || as.numeric(target$missing_prop) > 0) return(Inf)
+    domain = .dummy_value_domain(target)
+    if(is.null(domain)) Inf else length(domain)
+  }, numeric(1))
+  min(capacities)
+}
+
+
+.dummy_generate_missing = function(row, n, scopes, forced_missing, weights, capacity){
   x = .dummy_generate_values(row, n)
   if(n == 0) return(x)
   x[] = NA
   target = n - round(n * as.numeric(row$missing_prop))
-  candidates = setdiff(sample.int(n), forced_missing)
+  candidates = setdiff(sample.int(n), union(forced_missing, which(weights > capacity)))
   scopes = .dummy_unique_scopes(scopes)
-  domain = if(length(scopes) > 0) .dummy_value_domain(row) else NULL
+  domain = if(length(scopes) > 0 || is.finite(capacity)) .dummy_value_domain(row) else NULL
   selected = integer()
   if(is.null(domain)){
     selected = head(candidates, target)
     x[selected] = .dummy_generate_unique(row, length(selected), lapply(scopes, function(scope) scope[selected]))
   } else {
     used = lapply(scopes, function(scope) vector("list", max(scope)))
+    frequency = numeric(length(domain))
     values = .dummy_generate_values(row, n)
     for(i in candidates){
       if(length(selected) >= target) break
       blocked = unique(unlist(lapply(seq_along(scopes), function(k){
         used[[k]][[scopes[[k]][i]]]
       })))
-      available = which(!seq_along(domain) %in% blocked)
+      available = which(!seq_along(domain) %in% blocked & frequency + weights[i] <= capacity)
       if(length(available) == 0) next
       value = match(values[i], domain)
       if(!value %in% available) value = available[sample.int(length(available), 1L)]
       x[i] = domain[value]
+      frequency[value] = frequency[value] + weights[i]
       selected = c(selected, i)
       for(k in seq_along(scopes)){
         group = scopes[[k]][i]
