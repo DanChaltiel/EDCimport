@@ -34,6 +34,7 @@ The specification preserves column structure, classes, labels, coarse generation
 \item \code{depends_on} is an encoded list forming one grouping combination. A non-level column is generated once per group, then repeated. Dependencies are checked against successive hierarchy prefixes and earlier non-level columns. Missing values count as a distinct value for dependency detection.
 \item \code{level} orders the inferred hierarchy. Level columns introduce distinct values within their parent group.
 \item \code{mean_n} is the mean number of child groups per parent; \code{mean_rows} is the mean number of rows per group. Both are rounded to one decimal.
+\item \code{singleton_prop} is the proportion of groups with one row, rounded to one decimal. It preserves small groups that a mean alone would remove.
 }
 
 Column lists use the same encoding as categorical values, for example \code{1:SUBJID} or \code{2:SUBJID|DATE}. Names containing separators are URL-encoded. The new structure fields can be edited or cleared to remove inferred constraints. Specifications without these fields retain independent generation.
@@ -45,6 +46,8 @@ Generation allocates groups and repeated rows approximately evenly, with random 
 Finite domains of non-missing unique partners also constrain earlier generation. If a partner has seven possible values, a value of the current column can appear on at most seven rows. Repeating a value for a group consumes capacity for every row in that group. This prevents independent parent assignments from making a later uniqueness constraint impossible.
 
 Rows are allocated to the first level before constructing child groups. Each parent is split into approximately balanced child groups within its available rows. Rounded means therefore do not compound into excessive row counts for individual subjects. The total row count is capped by the specification's row count and by the capacity of non-missing unique partners of the first level.
+
+When a dependent column can only be non-missing in a group with one row because of pairwise uniqueness, the layout reserves singleton groups at the corresponding level. These parent groups are preferentially kept non-missing to prevent them from merging through missing keys. Reservations are also inferred for older specifications without \code{singleton_prop}; regenerate the specification to retain the observed rounded singleton proportions. Reservations remain subject to available rows and parent groups, and infeasible constraints still produce warnings or errors.
 
 Real subject identifiers, character values, and calendar dates are not copied into the specification. Factor levels are treated as structural metadata and are currently preserved. \code{SUBJID} is harmonized across datasets: if all non-missing source identifiers can be interpreted as finite numbers, the dummy identifiers are integer, even for character values such as \code{"001"}. Otherwise they are character. Differing source classes or numeric compatibility trigger a warning with dataset examples. If distinct IDs in one dataset become identical after numeric conversion, the function stops until \code{subjid_collision} is set to \code{"merge"} or \code{"split"}.
 

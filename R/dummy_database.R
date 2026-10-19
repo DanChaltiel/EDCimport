@@ -19,6 +19,8 @@
 #' can be repeated, accounting for all rows represented by a generated group.
 #' Rows are allocated to the first level before constructing child groups,
 #' so rounding at successive levels does not compound within a subject.
+#' Singleton proportions and constraints on sparse dependent columns reserve
+#' groups with one row. Such parent groups are preferentially kept non-missing.
 #' This should not be interpreted as an anonymisation or synthetic-data method
 #' preserving clinical or statistical relationships.
 #'
@@ -82,15 +84,26 @@ edc_dummy_database = function(spec, seed = NULL){
   spec$level = as.numeric(spec$level)
   spec$mean_n = as.numeric(spec$mean_n)
   spec$mean_rows = as.numeric(spec$mean_rows)
+  spec$singleton_prop = as.numeric(spec$singleton_prop)
+  structure = .dummy_compile_structure(spec)
   n_rows = unique(as.integer(spec$n_rows))
   n_subjects = unique(as.integer(spec$n_subjects))
-  layout = .dummy_generate_layout(spec, n_rows, n_subjects)
+  layout = .dummy_generate_layout(spec, n_rows, n_subjects, structure)
   n_rows = layout$n_rows
   columns = list()
+  group_cache = new.env(parent = emptyenv())
+  groups = function(keys){
+    cache_key = .dummy_encode_values(keys)
+    if(!exists(cache_key, envir = group_cache, inherits = FALSE)){
+      data = as.data.frame(columns[keys], check.names = FALSE)
+      assign(cache_key, .dummy_group_ids(data, keys), envir = group_cache)
+    }
+    get(cache_key, envir = group_cache, inherits = FALSE)
+  }
   pending = seq_len(nrow(spec))
   while(length(pending) > 0){
     ready = pending[vapply(pending, function(i){
-      all(.dummy_decode_values(spec$depends_on[i]) %in% names(columns))
+      all(structure$dependencies[[i]] %in% names(columns))
     }, logical(1))]
     if(length(ready) == 0){
       cli_abort("Dataset {.val {spec$dataset[1]}} has circular dependencies.")
@@ -101,12 +114,11 @@ edc_dummy_database = function(spec, seed = NULL){
     i = ready[order(priority, spec$level[ready], na.last = TRUE)[1]]
     row = spec[i, , drop = FALSE]
     name = as.character(row$column)
-    keys = .dummy_decode_values(row$depends_on)
-    generated = as.data.frame(columns, check.names = FALSE)
+    keys = structure$dependencies[[i]]
     units = if(name %in% names(layout$codes)){
       layout$codes[[name]]
     } else if(length(keys) > 0){
-      .dummy_group_ids(generated, keys)
+      groups(keys)
     } else seq_len(n_rows)
     representatives = which(!duplicated(units))
     n_units = length(representatives)
@@ -120,23 +132,25 @@ edc_dummy_database = function(spec, seed = NULL){
         scopes = list(rep(1L, n_units))
         forced_missing = which(tabulate(match(units, units[representatives])) > 1L)
       } else {
-        partners = intersect(.dummy_decode_values(row$unique), names(columns))
+        partners = intersect(structure$partners[[i]], names(columns))
         for(partner in partners){
-          values = generated[[partner]]
+          values = columns[[partner]]
+          if(!anyDuplicated(values[!is.na(values)])) next
           pairs = data.frame(unit = units, value = values)
           repeated = !is.na(values) & duplicated(pairs)
           forced_missing = union(forced_missing, match(units[repeated], units[representatives]))
-          scope = .dummy_group_ids(generated[representatives, , drop = FALSE], partner)
+          scope = groups(partner)[representatives]
           scope[is.na(values[representatives])] = NA_integer_
           scopes = c(scopes, list(scope))
         }
       }
       if(!is.na(row$level) && length(keys) > 0){
-        scopes = c(scopes, list(.dummy_group_ids(generated[representatives, , drop = FALSE], keys)))
+        scopes = c(scopes, list(groups(keys)[representatives]))
       }
       weights = tabulate(match(units, units[representatives]), nbins = n_units)
-      capacity = .dummy_partner_capacity(spec, row)
-      x = .dummy_generate_missing(row, n_units, scopes, forced_missing, weights, capacity)
+      capacity = structure$capacities[i]
+      x = .dummy_generate_missing(row, n_units, scopes, forced_missing, weights, capacity,
+        prefer_singletons = structure$singleton_need[i] > 0)
       x = x[match(units, units[representatives])]
     }
     label = .dummy_scalar_character(row$column_label)
@@ -164,7 +178,7 @@ edc_dummy_database = function(spec, seed = NULL){
 }
 
 
-.dummy_generate_layout = function(spec, n_rows, n_subjects){
+.dummy_generate_layout = function(spec, n_rows, n_subjects, structure){
   levels = which(!is.na(spec$level))
   levels = levels[order(spec$level[levels])]
   if(length(levels) == 0 || n_rows == 0){
@@ -182,21 +196,37 @@ edc_dummy_database = function(spec, seed = NULL){
     n_parent = n_groups
   }
   n_rows = min(n_rows, max(n_parent, round(n_parent * as.numeric(spec$mean_rows[tail(levels, 1)]))))
-  capacity = .dummy_partner_capacity(spec, spec[levels[1], , drop = FALSE])
+  capacity = structure$capacities[levels[1]]
   n_rows = min(n_rows, group_counts[1] * capacity)
   codes = list()
   for(k in seq_along(levels)){
     column = as.character(spec$column[levels[k]])
     if(k == 1){
-      codes[[column]] = rep(seq_len(group_counts[k]), .dummy_balanced_counts(n_rows, group_counts[k]))
+      proportion = spec$singleton_prop[levels[k]]
+      if(is.na(proportion)) proportion = 0
+      minimum = max(0, 2 * group_counts[k] - n_rows)
+      maximum = if(n_rows == group_counts[k]) group_counts[k] else group_counts[k] - 1L
+      if(is.finite(capacity) && capacity > 1){
+        maximum = min(maximum, floor((capacity * group_counts[k] - n_rows) / (capacity - 1)))
+      }
+      singleton_n = min(maximum, max(minimum, round(group_counts[k] * proportion), structure$singleton_need[levels[k]]))
+      counts = .dummy_repetition_counts(n_rows, group_counts[k], singleton_n)
+      codes[[column]] = rep(seq_len(group_counts[k]), counts)
     } else {
       parents = split(seq_len(n_rows), codes[[k - 1L]])
       counts = .dummy_bounded_counts(group_counts[k], lengths(parents))
+      proportion = spec$singleton_prop[levels[k]]
+      if(is.na(proportion)) proportion = 0
+      desired = max(round(sum(counts) * proportion), structure$singleton_need[levels[k]])
+      minimum = pmax(0, 2 * counts - lengths(parents))
+      maximum = ifelse(counts == lengths(parents), counts, counts - 1L)
+      singletons = .dummy_bounded_counts(desired, maximum, minimum)
       child = integer(n_rows)
       offset = 0L
       for(j in seq_along(parents)){
         rows = parents[[j]]
-        child[rows] = offset + rep(seq_len(counts[j]), .dummy_balanced_counts(length(rows), counts[j]))
+        sizes = .dummy_repetition_counts(length(rows), counts[j], singletons[j])
+        child[rows] = offset + rep(seq_len(counts[j]), sizes)
         offset = offset + counts[j]
       }
       codes[[column]] = child
@@ -206,9 +236,9 @@ edc_dummy_database = function(spec, seed = NULL){
 }
 
 
-.dummy_bounded_counts = function(n, capacity){
-  n = max(length(capacity), min(n, sum(capacity)))
-  counts = rep(1L, length(capacity))
+.dummy_bounded_counts = function(n, capacity, minimum = rep(1L, length(capacity))){
+  n = max(sum(minimum), min(n, sum(capacity)))
+  counts = minimum
   remaining = n - sum(counts)
   while(remaining > 0){
     available = which(counts < capacity)
@@ -223,6 +253,12 @@ edc_dummy_database = function(spec, seed = NULL){
     }
   }
   counts
+}
+
+
+.dummy_repetition_counts = function(n, groups, singletons){
+  counts = c(rep(1L, singletons), .dummy_balanced_counts(n - singletons, groups - singletons))
+  counts[sample.int(length(counts))]
 }
 
 
@@ -281,8 +317,7 @@ edc_dummy_database = function(spec, seed = NULL){
 }
 
 
-.dummy_generate_unique = function(row, n, scopes){
-  x = .dummy_generate_values(row, n)
+.dummy_generate_unique = function(row, n, scopes, x = .dummy_generate_values(row, n)){
   if(n == 0 || length(scopes) == 0 || row$generator %in% c("text", "unsupported")) return(x)
   domain = .dummy_value_domain(row)
   scopes = .dummy_unique_scopes(scopes)
@@ -340,35 +375,62 @@ edc_dummy_database = function(spec, seed = NULL){
 }
 
 
-.dummy_partner_capacity = function(spec, row){
-  partners = .dummy_decode_values(row$unique)
-  capacities = vapply(seq_len(nrow(spec)), function(i){
-    target = spec[i, , drop = FALSE]
-    related = row$column %in% .dummy_decode_values(target$unique) || target$column %in% partners
-    if(!related || as.numeric(target$missing_prop) > 0) return(Inf)
-    domain = .dummy_value_domain(target)
+.dummy_compile_structure = function(spec){
+  dependencies = lapply(spec$depends_on, .dummy_decode_values)
+  partners = lapply(spec$unique, .dummy_decode_values)
+  domain_sizes = vapply(seq_len(nrow(spec)), function(i){
+    if(as.numeric(spec$missing_prop[i]) > 0) return(Inf)
+    domain = .dummy_value_domain(spec[i, , drop = FALSE])
     if(is.null(domain)) Inf else length(domain)
   }, numeric(1))
-  min(capacities)
+  capacities = vapply(seq_len(nrow(spec)), function(i){
+    related = spec$column %in% partners[[i]] |
+      vapply(partners, function(keys) spec$column[i] %in% keys, logical(1))
+    min(c(Inf, domain_sizes[related]))
+  }, numeric(1))
+  singleton_need = integer(nrow(spec))
+  levels = which(!is.na(spec$level))
+  for(i in levels){
+    keys = spec$column[!is.na(spec$level) & spec$level <= spec$level[i]]
+    groups = round(as.numeric(spec$n_rows[i]) / as.numeric(spec$mean_rows[i]))
+    for(j in seq_len(nrow(spec))){
+      if(!is.na(spec$level[j]) || !setequal(dependencies[[j]], keys)) next
+      if(identical(spec$unique[j], "*") || any(partners[[j]] %in% keys)){
+        needed = round(groups * (1 - as.numeric(spec$missing_prop[j])))
+        singleton_need[i] = max(singleton_need[i], needed)
+      }
+    }
+  }
+  list(dependencies = dependencies, partners = partners, capacities = capacities,
+    singleton_need = singleton_need)
 }
 
 
-.dummy_generate_missing = function(row, n, scopes, forced_missing, weights, capacity){
-  x = .dummy_generate_values(row, n)
+.dummy_generate_missing = function(row, n, scopes, forced_missing, weights, capacity, prefer_singletons = FALSE){
+  values = .dummy_generate_values(row, n)
+  x = values
   if(n == 0) return(x)
   x[] = NA
   target = n - round(n * as.numeric(row$missing_prop))
   candidates = setdiff(sample.int(n), union(forced_missing, which(weights > capacity)))
+  if(prefer_singletons) candidates = candidates[order(weights[candidates])]
   scopes = .dummy_unique_scopes(scopes)
   domain = if(length(scopes) > 0 || is.finite(capacity)) .dummy_value_domain(row) else NULL
   selected = integer()
   if(is.null(domain)){
     selected = head(candidates, target)
-    x[selected] = .dummy_generate_unique(row, length(selected), lapply(scopes, function(scope) scope[selected]))
+    x[selected] = .dummy_generate_unique(row, length(selected), lapply(scopes, function(scope) scope[selected]), x = values[selected])
+  } else if(length(scopes) == 1 && !is.finite(capacity) && !prefer_singletons){
+    eligible = split(candidates, scopes[[1]][candidates])
+    limits = pmin(lengths(eligible), length(domain))
+    counts = .dummy_bounded_counts(target, limits, rep(0L, length(limits)))
+    selected = unlist(lapply(seq_along(eligible), function(k) head(eligible[[k]], counts[k])), use.names = FALSE)
+    if(length(selected) > 0){
+      x[selected] = .dummy_generate_unique(row, length(selected), list(scopes[[1]][selected]), x = values[selected])
+    }
   } else {
     used = lapply(scopes, function(scope) vector("list", max(scope)))
     frequency = numeric(length(domain))
-    values = .dummy_generate_values(row, n)
     for(i in candidates){
       if(length(selected) >= target) break
       blocked = unique(unlist(lapply(seq_along(scopes), function(k){

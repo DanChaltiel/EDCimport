@@ -22,6 +22,8 @@
 #'   values within their parent group.
 #' - `mean_n` is the mean number of child groups per parent; `mean_rows` is
 #'   the mean number of rows per group. Both are rounded to one decimal.
+#' - `singleton_prop` is the proportion of groups with one row, rounded to
+#'   one decimal. It preserves small groups that a mean alone would remove.
 #'
 #' Column lists use the same encoding as categorical values, for example
 #' `1:SUBJID` or `2:SUBJID|DATE`. Names containing separators are URL-encoded.
@@ -162,6 +164,7 @@ edc_dummy_spec = function(db, subjid_collision = NA){
         level = structure$level[match(column_name, structure$column)],
         mean_n = structure$mean_n[match(column_name, structure$column)],
         mean_rows = structure$mean_rows[match(column_name, structure$column)],
+        singleton_prop = structure$singleton_prop[match(column_name, structure$column)],
         param1 = profile$param1,
         param2 = profile$param2,
         param3 = profile$param3,
@@ -183,7 +186,7 @@ edc_dummy_spec = function(db, subjid_collision = NA){
   columns = names(data)
   rtn = data.frame(
     column = columns, unique = NA_character_, depends_on = NA_character_,
-    level = NA_integer_, mean_n = NA_real_, mean_rows = NA_real_,
+    level = NA_integer_, mean_n = NA_real_, mean_rows = NA_real_, singleton_prop = NA_real_,
     stringsAsFactors = FALSE
   )
   if(nrow(data) == 0) return(rtn)
@@ -229,6 +232,7 @@ edc_dummy_spec = function(db, subjid_collision = NA){
     rtn$level[i] = 1L
     rtn$mean_n[i] = parent_n
     rtn$mean_rows[i] = round(nrow(data) / parent_n, 1)
+    rtn$singleton_prop[i] = round(mean(tabulate(.dummy_group_ids(data, hierarchy)) == 1L), 1)
   }
   dates = eligible[vapply(data[eligible], function(x){
     inherits(x, "Date") || !is.na(.dummy_character_date_format(x))
@@ -258,6 +262,7 @@ edc_dummy_spec = function(db, subjid_collision = NA){
         rtn$mean_n[i] = round(child_n / parent_n, 1)
         rtn$mean_rows[i] = round(nrow(data) / child_n, 1)
         hierarchy = c(hierarchy, column)
+        rtn$singleton_prop[i] = round(mean(tabulate(.dummy_group_ids(data, hierarchy)) == 1L), 1)
         parent_n = child_n
       }
     }

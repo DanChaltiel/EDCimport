@@ -27,14 +27,14 @@
 .dummy_structure_defaults = function(spec){
   defaults = list(
     unique = NA_character_, level = NA_integer_,
-    mean_n = NA_real_, mean_rows = NA_real_
+    mean_n = NA_real_, mean_rows = NA_real_, singleton_prop = NA_real_
   )
   for(name in names(defaults)){
     if(!name %in% names(spec)) spec[[name]] = defaults[[name]]
   }
   spec$unique = as.character(spec$unique)
   spec$depends_on = as.character(spec$depends_on)
-  for(name in c("level", "mean_n", "mean_rows")){
+  for(name in c("level", "mean_n", "mean_rows", "singleton_prop")){
     spec[[name]] = as.character(spec[[name]])
   }
   spec
@@ -51,6 +51,8 @@
 
 #' @importFrom stats complete.cases
 .dummy_check_structure = function(data, spec){
+  globally_unique = vapply(data, function(x) !anyDuplicated(x[!is.na(x)]), logical(1))
+  checked = new.env(parent = emptyenv())
   for(i in seq_len(nrow(spec))){
     column = as.character(spec$column[i])
     keys = .dummy_decode_values(spec$depends_on[i])
@@ -62,10 +64,14 @@
       list(column)
     } else lapply(.dummy_decode_values(spec$unique[i]), function(key) c(key, column))
     for(constraint in constraints){
+      if(length(constraint) > 1 && any(globally_unique[constraint])) next
+      cache_key = .dummy_encode_values(sort(constraint))
+      if(exists(cache_key, envir = checked, inherits = FALSE)) next
       observed = data[complete.cases(data[constraint]), constraint, drop = FALSE]
       if(anyDuplicated(observed)){
         cli_abort("Dataset {.val {spec$dataset[i]}}: generated {.field {column}} violates uniqueness. Edit its dependencies, repetition means, or uniqueness constraints.")
       }
+      assign(cache_key, TRUE, envir = checked)
     }
   }
   invisible(data)
@@ -133,6 +139,10 @@
       if(any(!is.na(levels) & (is.na(values) | !is.finite(values) | values < 1))){
         cli_abort("Dataset {.val {dataset_name}} needs finite {.field {field}} values of at least one for its levels.")
       }
+    }
+    singletons = suppressWarnings(as.numeric(rows$singleton_prop))
+    if(any(!is.na(rows$singleton_prop) & (is.na(singletons) | !is.finite(singletons) | singletons < 0 | singletons > 1))){
+      cli_abort("Dataset {.val {dataset_name}} has invalid {.field singleton_prop} values.")
     }
     for(i in seq_len(nrow(rows))){
       if(rows$generator[i] == "date_character" &&
