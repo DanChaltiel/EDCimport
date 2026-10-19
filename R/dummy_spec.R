@@ -195,17 +195,36 @@ edc_dummy_spec = function(db, subjid_collision = NA){
       is.factor(x) || inherits(x, "Date"))
   }, logical(1))
   eligible = columns[supported]
+  encoded = lapply(data[eligible], function(x) match(x, unique(x)))
+  known = lapply(data[eligible], function(x) !is.na(x))
+  cardinality = vapply(eligible, function(column){
+    length(unique(encoded[[column]][known[[column]]]))
+  }, integer(1))
+  group_cache = new.env(parent = emptyenv())
+  groups = function(keys){
+    if(length(keys) == 1) return(encoded[[keys]])
+    cache_key = paste(match(keys, eligible), collapse = ",")
+    if(!exists(cache_key, envir = group_cache, inherits = FALSE)){
+      parent = groups(head(keys, -1L))
+      pairs = .dummy_integer_pair(parent, encoded[[tail(keys, 1L)]])
+      assign(cache_key, match(pairs, unique(pairs)), envir = group_cache)
+    }
+    get(cache_key, envir = group_cache, inherits = FALSE)
+  }
   global = vapply(eligible, function(column){
-    x = data[[column]]
-    x = x[!is.na(x)]
-    length(x) > 1 && !anyDuplicated(x)
+    n = sum(known[[column]])
+    n > 1 && cardinality[[column]] == n
   }, logical(1))
   partners = set_names(vector("list", length(columns)), columns)
   if(length(eligible) > 1){
     pairs = utils::combn(eligible, 2, simplify = FALSE)
     for(pair in pairs){
-      observed = data[complete.cases(data[pair]), pair, drop = FALSE]
-      if(nrow(observed) > 1 && !anyDuplicated(observed)){
+      observed = known[[pair[1]]] & known[[pair[2]]]
+      n = sum(observed)
+      if(n <= 1 || as.double(cardinality[[pair[1]]]) * cardinality[[pair[2]]] < n) next
+      is_unique = any(global[pair]) ||
+        !anyDuplicated(.dummy_integer_pair(encoded[[pair[1]]][observed], encoded[[pair[2]]][observed]))
+      if(is_unique){
         partners[[pair[1]]] = c(partners[[pair[1]]], pair[2])
         partners[[pair[2]]] = c(partners[[pair[2]]], pair[1])
       }
@@ -227,12 +246,12 @@ edc_dummy_spec = function(db, subjid_collision = NA){
   if(length(id) > 0){
     hierarchy = id[1]
     processed = id
-    parent_n = nrow(unique(data[hierarchy]))
+    parent_n = max(groups(hierarchy))
     i = match(id[1], columns)
     rtn$level[i] = 1L
     rtn$mean_n[i] = parent_n
     rtn$mean_rows[i] = round(nrow(data) / parent_n, 1)
-    rtn$singleton_prop[i] = round(mean(tabulate(.dummy_group_ids(data, hierarchy)) == 1L), 1)
+    rtn$singleton_prop[i] = round(mean(tabulate(groups(hierarchy)) == 1L), 1)
   }
   dates = eligible[vapply(data[eligible], function(x){
     inherits(x, "Date") || !is.na(.dummy_character_date_format(x))
@@ -245,7 +264,10 @@ edc_dummy_spec = function(db, subjid_collision = NA){
     candidates = c(candidates, lapply(other[!global[other]], function(x) x))
     dependency = NULL
     for(keys in candidates){
-      if(.dummy_is_dependency(data, keys, column)){
+      if(!any(known[[column]])) break
+      group = groups(keys)
+      values = encoded[[column]]
+      if(all(values == values[match(group, group)])){
         dependency = keys
         break
       }
@@ -253,7 +275,7 @@ edc_dummy_spec = function(db, subjid_collision = NA){
     if(!is.null(dependency)){
       rtn$depends_on[i] = .dummy_encode_values(dependency)
     } else {
-      child_n = nrow(unique(data[c(hierarchy, column)]))
+      child_n = max(groups(c(hierarchy, column)))
       if(child_n > parent_n){
         if(length(hierarchy) > 0){
           rtn$depends_on[i] = .dummy_encode_values(hierarchy)
@@ -262,13 +284,22 @@ edc_dummy_spec = function(db, subjid_collision = NA){
         rtn$mean_n[i] = round(child_n / parent_n, 1)
         rtn$mean_rows[i] = round(nrow(data) / child_n, 1)
         hierarchy = c(hierarchy, column)
-        rtn$singleton_prop[i] = round(mean(tabulate(.dummy_group_ids(data, hierarchy)) == 1L), 1)
+        rtn$singleton_prop[i] = round(mean(tabulate(groups(hierarchy)) == 1L), 1)
         parent_n = child_n
       }
     }
     processed = c(processed, column)
   }
   rtn
+}
+
+
+.dummy_integer_pair = function(x, y){
+  if(length(x) == 0) return(numeric())
+  width = max(x)
+  if(as.double(width) * max(y) <= 2^53){
+    x + (as.double(y) - 1) * width
+  } else paste(x, y, sep = ":")
 }
 
 
