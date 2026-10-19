@@ -17,6 +17,8 @@
 #' raises an error rather than introducing missing values.
 #' Finite domains of non-missing unique partners also limit how often a value
 #' can be repeated, accounting for all rows represented by a generated group.
+#' Rows are allocated to the first level before constructing child groups,
+#' so rounding at successive levels does not compound within a subject.
 #' This should not be interpreted as an anonymisation or synthetic-data method
 #' preserving clinical or statistical relationships.
 #'
@@ -168,21 +170,59 @@ edc_dummy_database = function(spec, seed = NULL){
   if(length(levels) == 0 || n_rows == 0){
     return(list(n_rows = n_rows, codes = list()))
   }
-  codes = list()
+  group_counts = integer(length(levels))
   n_parent = 1L
-  for(i in levels){
+  for(k in seq_along(levels)){
+    i = levels[k]
     row = spec[i, , drop = FALSE]
     n_groups = if(row$generator == "identifier") n_subjects else
       max(n_parent, min(n_rows, round(n_parent * as.numeric(row$mean_n))))
     if(row$generator != "identifier" && identical(as.character(row$unique), "*")) n_groups = n_rows
-    parents = rep(seq_len(n_parent), .dummy_balanced_counts(n_groups, n_parent))
-    codes = lapply(codes, function(x) x[parents])
-    codes[[as.character(row$column)]] = seq_len(n_groups)
+    group_counts[k] = n_groups
     n_parent = n_groups
   }
-  n_rows = max(n_parent, round(n_parent * as.numeric(spec$mean_rows[tail(levels, 1)])))
-  leaves = rep(seq_len(n_parent), .dummy_balanced_counts(n_rows, n_parent))
-  list(n_rows = n_rows, codes = lapply(codes, function(x) x[leaves]))
+  n_rows = min(n_rows, max(n_parent, round(n_parent * as.numeric(spec$mean_rows[tail(levels, 1)]))))
+  capacity = .dummy_partner_capacity(spec, spec[levels[1], , drop = FALSE])
+  n_rows = min(n_rows, group_counts[1] * capacity)
+  codes = list()
+  for(k in seq_along(levels)){
+    column = as.character(spec$column[levels[k]])
+    if(k == 1){
+      codes[[column]] = rep(seq_len(group_counts[k]), .dummy_balanced_counts(n_rows, group_counts[k]))
+    } else {
+      parents = split(seq_len(n_rows), codes[[k - 1L]])
+      counts = .dummy_bounded_counts(group_counts[k], lengths(parents))
+      child = integer(n_rows)
+      offset = 0L
+      for(j in seq_along(parents)){
+        rows = parents[[j]]
+        child[rows] = offset + rep(seq_len(counts[j]), .dummy_balanced_counts(length(rows), counts[j]))
+        offset = offset + counts[j]
+      }
+      codes[[column]] = child
+    }
+  }
+  list(n_rows = n_rows, codes = codes)
+}
+
+
+.dummy_bounded_counts = function(n, capacity){
+  n = max(length(capacity), min(n, sum(capacity)))
+  counts = rep(1L, length(capacity))
+  remaining = n - sum(counts)
+  while(remaining > 0){
+    available = which(counts < capacity)
+    if(remaining < length(available)){
+      chosen = available[sample.int(length(available), remaining)]
+      counts[chosen] = counts[chosen] + 1L
+      remaining = 0L
+    } else {
+      additions = pmin(capacity[available] - counts[available], remaining %/% length(available))
+      counts[available] = counts[available] + additions
+      remaining = remaining - sum(additions)
+    }
+  }
+  counts
 }
 
 
