@@ -270,7 +270,7 @@ edc_dummy_database = function(spec, seed = NULL){
     as.character(row$generator),
     categorical = .dummy_generate_categorical(n, class_string, param1),
     logical = runif(n) < .dummy_number(param1, 0.5),
-    integer = .dummy_generate_integer(n, param1, param2),
+    integer = .dummy_integer_type(.dummy_generate_integer(n, param1, param2), class_string),
     numeric = .dummy_generate_numeric(n, param1, param2),
     constant = .dummy_generate_constant(n, class_string, param1),
     date = .dummy_generate_date(n, param1, param2),
@@ -308,7 +308,7 @@ edc_dummy_database = function(spec, seed = NULL){
     lower = ceiling(bounds[1])
     upper = floor(bounds[2])
     if(lower > upper) lower = upper
-    if(upper - lower <= 1000000L) return(as.integer(seq.int(lower, upper)))
+    if(upper - lower <= 1000000L) return(.dummy_integer_type(seq.int(lower, upper), row$class))
   }
   if(row$generator == "numeric" && identical(row$param1, row$param2)){
     return(.dummy_generate_values(row, 1))
@@ -475,6 +475,13 @@ edc_dummy_database = function(spec, seed = NULL){
     ))
   }
   sampled
+}
+
+
+.dummy_integer_type = function(x, class_string){
+  if(.dummy_has_class(class_string, "numeric") || .dummy_has_class(class_string, "double")){
+    as.numeric(x)
+  } else as.integer(x)
 }
 
 

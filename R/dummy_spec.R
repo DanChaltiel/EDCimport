@@ -33,6 +33,8 @@
 #' `date_character` generation.
 #' Their class and precision are preserved. `param3` records the format;
 #' `param1` and `param2` give an artificial start and a coarse span in days.
+#' Numeric columns containing only finite whole values within R's integer
+#' range use the `integer` generator while retaining their source class.
 #'
 #' Real subject identifiers, character values, and calendar dates are not copied
 #' into the specification. Factor levels are treated as structural metadata and
@@ -422,8 +424,10 @@ edc_dummy_spec = function(db, subjid_collision = NA){
       ))
     }
     bounds = if(length(y) == 0) c(0, 1) else range(y)
+    whole = length(y) > 0 && all(is.finite(y)) && all(y == trunc(y)) &&
+      all(y >= -.Machine$integer.max & y <= .Machine$integer.max)
     return(list(
-      generator = "numeric",
+      generator = if(whole) "integer" else "numeric",
       param1 = as.character(bounds[1]),
       param2 = as.character(bounds[2]),
       param3 = NA_character_
