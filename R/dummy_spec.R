@@ -35,6 +35,11 @@
 #' `param1` and `param2` give an artificial start and a coarse span in days.
 #' Numeric columns containing only finite whole values within R's integer
 #' range use the `integer` generator while retaining their source class.
+#' Character columns use categorical generation when they have at most ten
+#' distinct values, or at least five non-missing observations per distinct
+#' value on average. For dependent columns, observations are counted once
+#' per dependency group. Source character values are replaced by artificial
+#' category names and the column remains character.
 #'
 #' Real subject identifiers, character values, and calendar dates are not copied
 #' into the specification. Factor levels are treated as structural metadata and
@@ -148,10 +153,22 @@ edc_dummy_spec = function(db, subjid_collision = NA){
       structure_data[[id_index[1]]] = ids
     }
     structure = .dummy_profile_structure(structure_data)
+    profile_cache = new.env(parent = emptyenv())
 
     rows = lapply(names(data), function(column_name){
       x = data[[column_name]]
-      profile = .dummy_profile_column(column_name, x)
+      profile_x = x
+      index = match(column_name, structure$column)
+      dependency = structure$depends_on[index]
+      if(is.character(x) && is.na(structure$level[index]) && !is.na(dependency)){
+        if(!exists(dependency, envir = profile_cache, inherits = FALSE)){
+          keys = .dummy_decode_values(dependency)
+          groups = .dummy_group_ids(structure_data, keys)
+          assign(dependency, which(!duplicated(groups)), envir = profile_cache)
+        }
+        profile_x = x[get(dependency, envir = profile_cache, inherits = FALSE)]
+      }
+      profile = .dummy_profile_column(column_name, profile_x)
       data.frame(
         dataset = dataset_name,
         dataset_label = .dummy_label(data),
@@ -435,9 +452,10 @@ edc_dummy_spec = function(db, subjid_collision = NA){
   }
 
   if(is.character(x)){
-    y = unique(x[!is.na(x)])
-    if(length(y) <= 10){
-      categories = paste0("category_", seq_len(max(1, length(y))))
+    y = x[!is.na(x)]
+    n_values = length(unique(y))
+    if(n_values <= 10 || n_values * 5 <= length(y)){
+      categories = paste0("category_", seq_len(max(1, n_values)))
       return(list(
         generator = "categorical",
         param1 = .dummy_encode_values(categories),
